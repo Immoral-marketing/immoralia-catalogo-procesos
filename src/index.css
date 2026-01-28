@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Immoralia Dark Automation Theme - Lighter Version */
+    --background: 220 30% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 25% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 25% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Bright cyan primary for CTAs and selections */
+    --primary: 190 90% 55%;
+    --primary-foreground: 220 30% 8%;
+
+    /* Medium blue for titles and labels */
+    --secondary: 220 70% 60%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 10% 65%;
+
+    --accent: 190 90% 55%;
+    --accent-foreground: 220 30% 8%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 18%;
+    --ring: 190 90% 55%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --card-hover: 220 25% 15%;
+    --glow-primary: 190 90% 55%;
+    --glow-secondary: 220 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--glow-primary) / 0.3);
+  }
+  
+  .glow-secondary {
+    box-shadow: 0 0 15px hsl(var(--glow-secondary) / 0.2);
+  }
+
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 25px hsl(var(--glow-primary) / 0.4);
+  }
+}
