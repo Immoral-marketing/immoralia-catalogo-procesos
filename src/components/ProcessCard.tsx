@@ -1,4 +1,4 @@
-import { Check, ChevronRight } from "lucide-react";
+import { Check, ChevronRight, Star } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -20,11 +20,19 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: Pr
       )}
       onClick={onViewDetails}
     >
-      {/* Category Badge */}
+      {/* Category Badge and Recommended Badge */}
       <div className="flex items-start justify-between mb-3">
-        <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
-          {process.categoriaNombre}
-        </Badge>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
+            {process.categoriaNombre}
+          </Badge>
+          {process.recomendado && (
+            <Badge className="text-xs font-medium bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/30 flex items-center gap-1">
+              <Star className="w-3 h-3 fill-current" />
+              Recomendado
+            </Badge>
+          )}
+        </div>
       </div>
 
       {/* Process Name */}

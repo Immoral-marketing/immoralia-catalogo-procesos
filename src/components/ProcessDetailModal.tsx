@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Check, X, Star } from "lucide-react";
 import { useState } from "react";
 import { Process } from "@/data/processes";
 import {
@@ -29,7 +29,7 @@ export const ProcessDetailModal = ({
   onToggleSelect,
 }: ProcessDetailModalProps) => {
   const [customizationNote, setCustomizationNote] = useState("");
-  
+
   if (!process) return null;
 
   return (
@@ -38,10 +38,16 @@ export const ProcessDetailModal = ({
         <DialogHeader>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
                   {process.categoriaNombre}
                 </Badge>
+                {process.recomendado && (
+                  <Badge className="text-xs font-medium bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/30 flex items-center gap-1">
+                    <Star className="w-3 h-3 fill-current" />
+                    Recomendado
+                  </Badge>
+                )}
               </div>
               <DialogTitle className="text-2xl font-bold text-foreground">
                 {process.nombre}
