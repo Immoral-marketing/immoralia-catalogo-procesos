@@ -4,37 +4,13 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
+import { calculatePrice, getNextPackInfo } from "@/lib/pricing";
 
 interface SelectionSummaryProps {
   selectedProcesses: Process[];
   onRemove: (id: string) => void;
   onContact: () => void;
 }
-
-const calculatePrice = (count: number): { price: number; packName: string } | null => {
-  if (count === 0) return null;
-  if (count <= 3) return { price: 4000, packName: "Pack hasta 3 procesos" };
-  if (count <= 5) return { price: 6000, packName: "Pack hasta 5 procesos" };
-  if (count <= 10) return { price: 10000, packName: "Pack hasta 10 procesos" };
-  if (count <= 15) return { price: 13000, packName: "Pack hasta 15 procesos" };
-  return null;
-};
-
-const getNextPackInfo = (count: number): { remaining: number; nextPackSize: number; progress: number } | null => {
-  if (count >= 15) return null;
-  
-  let nextPackSize: number;
-  if (count < 3) nextPackSize = 3;
-  else if (count < 5) nextPackSize = 5;
-  else if (count < 10) nextPackSize = 10;
-  else nextPackSize = 15;
-  
-  const remaining = nextPackSize - count;
-  const previousPackSize = nextPackSize === 3 ? 0 : nextPackSize === 5 ? 3 : nextPackSize === 10 ? 5 : 10;
-  const progress = ((count - previousPackSize) / (nextPackSize - previousPackSize)) * 100;
-  
-  return { remaining, nextPackSize, progress };
-};
 
 export const SelectionSummary = ({
   selectedProcesses,
@@ -118,7 +94,7 @@ export const SelectionSummary = ({
             <p className="text-sm text-muted-foreground">
               Añade procesos para ver el presupuesto estimado
             </p>
-          ) : priceInfo ? (
+          ) : priceInfo && !priceInfo.isCustom ? (
             <>
               <p className="text-xs text-muted-foreground mb-1">{priceInfo.packName}</p>
               <p className="text-3xl font-bold text-primary">

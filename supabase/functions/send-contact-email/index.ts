@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { calculatePrice } from "../../../src/lib/pricing.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
@@ -69,11 +70,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { nombre, email, empresa, comentario, selectedProcesses } = validationResult.data;
 
+    // Calculate estimated price
+    const processCount = selectedProcesses.length;
+    const priceResult = calculatePrice(processCount);
+    const estimatedPrice = priceResult?.isCustom || !priceResult
+      ? "A medida"
+      : `${priceResult.price.toLocaleString("es-ES")}€`;
+
     console.log("Sending contact email for:", {
       nombre: escapeHtml(nombre),
       email: escapeHtml(email),
       empresa: escapeHtml(empresa),
       processCount: selectedProcesses.length,
+      estimatedPrice: estimatedPrice,
     });
 
     // Create processes list HTML with escaped content
@@ -90,12 +99,16 @@ const handler = async (req: Request): Promise<Response> => {
       .join("");
 
     // Calculate estimated price
-    const processCount = selectedProcesses.length;
-    let estimatedPrice = "A medida";
-    if (processCount <= 3) estimatedPrice = "4.000€";
-    else if (processCount <= 5) estimatedPrice = "6.000€";
-    else if (processCount <= 10) estimatedPrice = "10.000€";
-    else if (processCount <= 15) estimatedPrice = "13.000€";
+    // Calculate estimated price
+    // Importación dinámica para evitar problemas de top-level await o resolución si el entorno es estricto, 
+    // aunque un import estático arriba sería mejor si estamos seguros del soporte.
+    // DADO que Deno lo soporta, haré import arriba.
+
+    // NOTA: Para este replace específico, voy a poner la lógica usando la función importada.
+    // Asumiré que agregaré el import statement al principio del archivo en un paso separado o 
+    // usaré multi_replace para hacerlo todo junto.
+    // Mejor uso multi_replace para añadir el import y cambiar la lógica a la vez.
+
 
     // Escape user inputs for email content
     const safeNombre = escapeHtml(nombre);
@@ -126,13 +139,12 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Estimación:</strong> ${estimatedPrice}</p>
           ${processesListHTML}
           
-          ${
-            safeComentario
-              ? `
+          ${safeComentario
+            ? `
             <h2 style="color: #666;">Comentario adicional:</h2>
             <p style="padding: 10px; background-color: #f9f9f9; border-left: 3px solid #0066cc;">${safeComentario}</p>
           `
-              : ""
+            : ""
           }
           
           <p style="margin-top: 30px; color: #888; font-size: 12px;">
