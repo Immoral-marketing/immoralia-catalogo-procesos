@@ -207,8 +207,8 @@ export const processes: Process[] = [
   {
     id: "D13",
     codigo: "D13",
-    categoria: "A",
-    categoriaNombre: "Facturas y Gastos",
+    categoria: "D",
+    categoriaNombre: "Internos Agencias",
     nombre: "Registro automático de gastos",
     tagline: "Agiliza la gestión de facturas de gasto al máximo.",
     recomendado: true,
