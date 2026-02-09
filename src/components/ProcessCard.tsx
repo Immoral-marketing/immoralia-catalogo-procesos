@@ -46,11 +46,11 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: Pr
       </p>
 
       {/* Actions */}
-      <div className="flex items-center justify-between gap-3 mt-4">
+      <div className="flex items-center justify-between gap-2 mt-4 flex-wrap">
         <Button
           variant="ghost"
           size="sm"
-          className="text-primary hover:text-primary hover:bg-primary/10"
+          className="text-primary hover:text-primary hover:bg-primary/10 flex-1 min-w-[140px] justify-center"
           onClick={(e) => {
             e.stopPropagation();
             onViewDetails();
@@ -64,7 +64,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: Pr
           variant={isSelected ? "default" : "outline"}
           size="sm"
           className={cn(
-            "gap-2",
+            "gap-2 flex-1 min-w-[140px] justify-center",
             isSelected
               ? "bg-primary text-primary-foreground hover:bg-primary/90"
               : "border-primary text-primary hover:bg-primary/10"

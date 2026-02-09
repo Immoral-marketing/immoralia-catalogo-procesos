@@ -88,7 +88,7 @@ const Index = () => {
         </div>
 
         {/* Desktop: 3-Column Layout */}
-        <div className="grid lg:grid-cols-[280px,1fr,360px] gap-6 pb-24 lg:pb-8">
+        <div className="grid lg:grid-cols-[240px,1fr,320px] gap-6 pb-24 lg:pb-8">
           {/* Left: Filters */}
           <aside className="space-y-4">
             <div className="bg-card border border-border rounded-lg p-4 sticky top-24">
