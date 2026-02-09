@@ -56,7 +56,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: Pr
             onViewDetails();
           }}
         >
-          Ver detalles
+          Más información
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
 
@@ -77,7 +77,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: Pr
           {isSelected ? (
             <>
               <Check className="w-4 h-4" />
-              Seleccionado
+              Añadido
             </>
           ) : (
             "Seleccionar"

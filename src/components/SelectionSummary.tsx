@@ -126,7 +126,7 @@ export const SelectionSummary = ({
         disabled={count === 0}
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-primary"
       >
-        Quiero automatizar estos procesos
+        Solicitar propuesta personalizada
       </Button>
     </Card>
   );
