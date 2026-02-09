@@ -82,9 +82,9 @@ export const SelectionSummary = ({
                 {count === 0 ? (
                   "Añade procesos para ver tu pack"
                 ) : nextPackInfo.remaining === 1 ? (
-                  <>¡Solo <span className="text-primary font-bold">1 proceso más</span> para el pack de {nextPackInfo.nextPackSize} procesos!</>
+                  <>¡Estás a un paso! Añade <span className="text-primary font-bold">1 proceso más</span> y desbloquea el pack de {nextPackInfo.nextPackSize}</>
                 ) : (
-                  <>Añade <span className="text-primary font-bold">{nextPackInfo.remaining} procesos más</span> para el pack de {nextPackInfo.nextPackSize} procesos</>
+                  <>¡Solo te faltan <span className="text-primary font-bold">{nextPackInfo.remaining} procesos</span> para desbloquear el pack de {nextPackInfo.nextPackSize}! Añade más y ahorra</>
                 )}
               </p>
               {count > 0 && (
@@ -113,7 +113,7 @@ export const SelectionSummary = ({
                 Presupuesto personalizado
               </p>
               <p className="text-xs text-muted-foreground">
-                Con {count} procesos, te prepararemos un presupuesto a medida.
+                Con {count} procesos seleccionados, mereces una propuesta exclusiva. Te contactaremos para diseñar un plan totalmente adaptado a tu agencia.
               </p>
             </div>
           )}
