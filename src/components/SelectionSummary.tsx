@@ -29,7 +29,7 @@ export const SelectionSummary = ({
       <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
         {count === 0 ? (
           <p className="text-sm text-muted-foreground italic">
-            No has seleccionado ningún proceso todavía
+            Explora el catálogo y selecciona los procesos que quieras automatizar. ¡Puedes elegir tantos como necesites!
           </p>
         ) : (
           selectedProcesses.map((process) => (
@@ -69,7 +69,13 @@ export const SelectionSummary = ({
         </div>
 
         {/* Progress to Next Pack */}
-        {nextPackInfo && (
+        {count >= 15 ? (
+          <div className="mt-4 pt-4 border-t border-border">
+            <p className="text-sm font-medium text-primary">
+              ¡Genial! Has seleccionado muchos procesos. Te prepararemos una propuesta totalmente personalizada
+            </p>
+          </div>
+        ) : nextPackInfo && (
           <div className="mt-4 pt-4 border-t border-border">
             <div className="mb-2">
               <p className="text-sm font-medium text-foreground mb-1">

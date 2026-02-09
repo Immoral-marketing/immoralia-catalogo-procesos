@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { Process } from "@/data/processes";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -106,7 +107,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
 
       toast({
         title: "¡Solicitud enviada!",
-        description: "Te contactaremos pronto para diseñar tu proyecto de automatización.",
+        description: "¡Solicitud enviada! Revisa tu email: te hemos enviado una confirmación. Nos pondremos en contacto contigo en menos de 24 horas.",
       });
     } catch (error: any) {
       console.error("Error sending email:", error);
@@ -161,10 +162,9 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
                 />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-2">¡Gracias!</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-2">¡Solicitud enviada!</h3>
             <p className="text-muted-foreground mb-6">
-              Te contactaremos para diseñar tu proyecto de automatización con la selección que has
-              hecho.
+              Revisa tu email: te hemos enviado una confirmación. Nos pondremos en contacto contigo en menos de 24 horas.
             </p>
             <Button onClick={handleClose} className="bg-primary hover:bg-primary/90">
               Cerrar
@@ -281,7 +281,14 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
                 Cancelar
               </Button>
               <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
-                {isSubmitting ? "Enviando..." : "Enviar solicitud"}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Enviando tu solicitud...
+                  </>
+                ) : (
+                  "Enviar solicitud"
+                )}
               </Button>
             </div>
           </form>
