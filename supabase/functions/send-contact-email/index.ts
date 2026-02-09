@@ -1,14 +1,23 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { calculatePrice } from "../../../src/lib/pricing.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+// Rate limiting configuration
+const RATE_LIMIT_PERIOD_MS = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS_PER_PERIOD = 3;
 
 // Zod validation schemas
 const ProcessSchema = z.object({
@@ -47,6 +56,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Get client IP address
+    const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+
     // Parse and validate input
     const rawData = await req.json();
     const validationResult = ContactRequestSchema.safeParse(rawData);
@@ -69,6 +81,41 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { nombre, email, empresa, comentario, selectedProcesses } = validationResult.data;
+
+    // --- RATE LIMIT CHECK ---
+    const oneHourAgo = new Date(Date.now() - RATE_LIMIT_PERIOD_MS).toISOString();
+
+    // Check by IP and Email combined
+    const { count, error: countError } = await supabase
+      .from("contact_requests_log")
+      .select("*", { count: "exact", head: true })
+      .or(`ip_address.eq.${clientIP},email.eq.${email}`)
+      .eq("status", "success")
+      .gt("created_at", oneHourAgo);
+
+    if (countError) {
+      console.error("Error checking rate limit:", countError);
+    } else if (count !== null && count >= MAX_REQUESTS_PER_PERIOD) {
+      console.warn(`Rate limit exceeded for IP: ${clientIP} or Email: ${email}`);
+
+      // Log the blocked attempt
+      await supabase.from("contact_requests_log").insert({
+        ip_address: clientIP,
+        email: email,
+        status: "blocked"
+      });
+
+      return new Response(
+        JSON.stringify({
+          error: "Has superado el límite de solicitudes por hoy (3 por hora). Por favor, inténtalo más tarde o contáctanos directamente.",
+        }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+    // ------------------------
 
     // Calculate estimated price
     const processCount = selectedProcesses.length;
@@ -97,17 +144,6 @@ const handler = async (req: Request): Promise<Response> => {
     `
       )
       .join("");
-
-    // Calculate estimated price
-    // Calculate estimated price
-    // Importación dinámica para evitar problemas de top-level await o resolución si el entorno es estricto, 
-    // aunque un import estático arriba sería mejor si estamos seguros del soporte.
-    // DADO que Deno lo soporta, haré import arriba.
-
-    // NOTA: Para este replace específico, voy a poner la lógica usando la función importada.
-    // Asumiré que agregaré el import statement al principio del archivo en un paso separado o 
-    // usaré multi_replace para hacerlo todo junto.
-    // Mejor uso multi_replace para añadir el import y cambiar la lógica a la vez.
 
 
     // Escape user inputs for email content
@@ -205,6 +241,13 @@ const handler = async (req: Request): Promise<Response> => {
     const clientEmailData = await clientEmailResponse.json();
 
     console.log("Emails sent successfully:", { businessEmailData, clientEmailData });
+
+    // Log the successful attempt
+    await supabase.from("contact_requests_log").insert({
+      ip_address: clientIP,
+      email: email,
+      status: "success"
+    });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
