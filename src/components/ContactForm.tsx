@@ -30,12 +30,50 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
     empresa: "",
     comentario: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = "Escribe tu nombre completo para poder contactarte";
+    } else if (formData.nombre.trim().length < 2) {
+      newErrors.nombre = "El nombre parece incompleto. ¿Puedes verificarlo?";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Necesitamos tu email para enviarte la propuesta";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Este email no parece válido. Revisa que esté bien escrito";
+    }
+
+    if (!formData.empresa.trim()) {
+      newErrors.empresa = "Indícanos el nombre de tu agencia o empresa";
+    }
+
+    if (formData.comentario.length > 2000) {
+      newErrors.comentario = "El comentario es demasiado largo. Intenta resumirlo un poco";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast({
+        title: "Error de validación",
+        description: "Por favor, revisa los campos señalados",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -99,6 +137,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
       empresa: "",
       comentario: "",
     });
+    setErrors({});
     onClose();
   };
 
@@ -169,50 +208,71 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
             {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="nombre">Nombre *</Label>
+                <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
+                  Nombre *
+                </Label>
                 <Input
                   id="nombre"
-                  required
                   value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                  className="bg-background border-border"
+                  onChange={(e) => {
+                    setFormData({ ...formData, nombre: e.target.value });
+                    if (errors.nombre) setErrors({ ...errors, nombre: "" });
+                  }}
+                  className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
                 />
+                {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
+                  Email *
+                </Label>
                 <Input
                   id="email"
                   type="email"
-                  required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-background border-border"
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    if (errors.email) setErrors({ ...errors, email: "" });
+                  }}
+                  className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
                 />
+                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="empresa">Empresa *</Label>
+                <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
+                  Empresa *
+                </Label>
                 <Input
                   id="empresa"
-                  required
                   value={formData.empresa}
-                  onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                  className="bg-background border-border"
+                  onChange={(e) => {
+                    setFormData({ ...formData, empresa: e.target.value });
+                    if (errors.empresa) setErrors({ ...errors, empresa: "" });
+                  }}
+                  className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
                 />
+                {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="comentario">Comentario adicional</Label>
+              <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
+                Comentario adicional
+              </Label>
               <Textarea
                 id="comentario"
                 rows={4}
                 value={formData.comentario}
-                onChange={(e) => setFormData({ ...formData, comentario: e.target.value })}
-                className="bg-background border-border resize-none"
+                onChange={(e) => {
+                  setFormData({ ...formData, comentario: e.target.value });
+                  if (errors.comentario) setErrors({ ...errors, comentario: "" });
+                }}
+                className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
                 placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
               />
+              {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
             </div>
 
             {/* Submit Button */}

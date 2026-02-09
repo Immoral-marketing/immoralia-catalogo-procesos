@@ -29,10 +29,28 @@ const ProcessSchema = z.object({
 });
 
 const ContactRequestSchema = z.object({
-  nombre: z.string().trim().min(2, "Nombre muy corto").max(100, "Nombre muy largo"),
-  email: z.string().trim().email("Email inválido").max(255),
-  empresa: z.string().trim().min(2, "Empresa muy corta").max(200, "Empresa muy larga"),
-  comentario: z.string().max(2000, "Comentario muy largo").default(""),
+  nombre: z
+    .string({ required_error: "Escribe tu nombre completo para poder contactarte" })
+    .trim()
+    .min(1, "Escribe tu nombre completo para poder contactarte")
+    .min(2, "El nombre parece incompleto. ¿Puedes verificarlo?")
+    .max(100, "Nombre muy largo"),
+  email: z
+    .string({ required_error: "Necesitamos tu email para enviarte la propuesta" })
+    .trim()
+    .min(1, "Necesitamos tu email para enviarte la propuesta")
+    .email("Este email no parece válido. Revisa que esté bien escrito")
+    .max(255),
+  empresa: z
+    .string({ required_error: "Indícanos el nombre de tu agencia o empresa" })
+    .trim()
+    .min(1, "Indícanos el nombre de tu agencia o empresa")
+    .min(2, "Empresa muy corta")
+    .max(200, "Empresa muy larga"),
+  comentario: z
+    .string()
+    .max(2000, "El comentario es demasiado largo. Intenta resumirlo un poco")
+    .default(""),
   selectedProcesses: z
     .array(ProcessSchema)
     .min(1, "Selecciona al menos un proceso")
