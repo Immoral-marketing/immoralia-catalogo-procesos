@@ -39,7 +39,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+      const invokePromise = supabase.functions.invoke('send-contact-email', {
         body: {
           nombre: formData.nombre,
           email: formData.email,
@@ -55,20 +55,35 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
         },
       });
 
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out')), 15000);
+      });
+
+      const { data, error } = await Promise.race([invokePromise, timeoutPromise]) as any;
+
       if (error) throw error;
 
       console.log("Email sent successfully:", data);
       setSubmitted(true);
-      
+
       toast({
         title: "¡Solicitud enviada!",
         description: "Te contactaremos pronto para diseñar tu proyecto de automatización.",
       });
     } catch (error: any) {
       console.error("Error sending email:", error);
+      let description = "No hemos podido enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo. Si el problema persiste, escríbenos a team@immoral.com";
+
+      // Check for server error (500)
+      if (error?.status === 500 || error?.code === 500 || error?.message?.includes('500')) {
+        description = "Algo ha fallado por nuestra parte. Estamos trabajando en solucionarlo. Puedes intentarlo en unos minutos o contactarnos directamente";
+      } else if (error?.message === 'Request timed out') {
+        description = "La solicitud está tardando más de lo normal. Por favor, espera un momento o inténtalo de nuevo";
+      }
+
       toast({
         title: "Error al enviar",
-        description: "Hubo un problema al enviar tu solicitud. Por favor, intenta de nuevo.",
+        description,
         variant: "destructive",
       });
     } finally {
