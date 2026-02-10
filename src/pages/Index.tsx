@@ -106,7 +106,7 @@ const Index = () => {
                   Todas
                 </Button>
                 {categories.map(cat => <Button key={cat.id} variant={selectedCategory === cat.id ? "default" : "ghost"} size="sm" className="w-full justify-start text-left" onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}>
-                  <span className="text-xs opacity-60 mr-2">{cat.id}.</span>
+                  <span className="text-base mr-[8px] flex items-center">{cat.emoji}</span>
                   <span className="truncate">{cat.name}</span>
                 </Button>)}
               </div>

@@ -273,8 +273,8 @@ export const processes: Process[] = [
 ];
 
 export const categories = [
-  { id: "A", name: "Facturas y Gastos" },
-  { id: "B", name: "Horarios y Proyectos" },
-  { id: "C", name: "Finanzas y Tesorería" },
-  { id: "D", name: "Internos Agencias" }
+  { id: "A", name: "Facturas y Gastos", emoji: "🧾" },
+  { id: "B", name: "Horarios y Proyectos", emoji: "📅" },
+  { id: "C", name: "Finanzas y Tesorería", emoji: "💰" },
+  { id: "D", name: "Internos Agencias", emoji: "🏢" }
 ];
