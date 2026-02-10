@@ -1,4 +1,4 @@
-import { Check, X, Star } from "lucide-react";
+import { Check, X, Star, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Process } from "@/data/processes";
 import {
@@ -19,6 +19,7 @@ interface ProcessDetailModalProps {
   onClose: () => void;
   isSelected: boolean;
   onToggleSelect: () => void;
+  isSpecialized?: boolean;
 }
 
 export const ProcessDetailModal = ({
@@ -27,6 +28,7 @@ export const ProcessDetailModal = ({
   onClose,
   isSelected,
   onToggleSelect,
+  isSpecialized,
 }: ProcessDetailModalProps) => {
   const [customizationNote, setCustomizationNote] = useState("");
 
@@ -42,7 +44,13 @@ export const ProcessDetailModal = ({
                 <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
                   {process.categoriaNombre}
                 </Badge>
-                {process.recomendado && (
+
+                {isSpecialized ? (
+                  <Badge className="text-xs font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 fill-current" />
+                    Para ti
+                  </Badge>
+                ) : process.recomendado && (
                   <Badge className="text-xs font-medium bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/30 flex items-center gap-1">
                     <Star className="w-3 h-3 fill-current" />
                     Recomendado

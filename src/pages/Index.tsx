@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { processes, categories, Process } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { ProcessDetailModal } from "@/components/ProcessDetailModal";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
-import { Badge } from "@/components/ui/badge";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
+import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
+import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+
 const Index = () => {
   const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(() => {
     try {
@@ -15,7 +17,6 @@ const Index = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          // Validar que los IDs existan realmente en nuestros datos
           const validIds = parsed.filter((id) => processes.some((p) => p.id === id));
           return new Set(validIds);
         }
@@ -26,17 +27,42 @@ const Index = () => {
     return new Set();
   });
 
-  // Persistir cambios en localStorage
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
+
+  useEffect(() => {
+    if (!isOnboardingCompleted()) {
+      setOnboardingOpen(true);
+    } else {
+      setOnboardingAnswers(getOnboardingAnswers());
+    }
+  }, []);
+
+  const handleOnboardingClose = () => {
+    setOnboardingOpen(false);
+    setOnboardingAnswers(getOnboardingAnswers());
+  };
+
+  const handleReset = () => {
+    if (confirm("¿Estás seguro de que quieres restablecer todas tus respuestas y selección?")) {
+      resetOnboarding();
+      setSelectedProcessIds(new Set());
+      setOnboardingAnswers(null);
+      setOnboardingOpen(true);
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem(
       "immoralia_selected_processes",
       JSON.stringify(Array.from(selectedProcessIds))
     );
   }, [selectedProcessIds]);
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [detailProcess, setDetailProcess] = useState<Process | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const toggleProcess = (id: string) => {
     const newSet = new Set(selectedProcessIds);
     if (newSet.has(id)) {
@@ -46,107 +72,201 @@ const Index = () => {
     }
     setSelectedProcessIds(newSet);
   };
+
+  const recommendedProcesses = useMemo(() => {
+    if (!onboardingAnswers) return [];
+
+    return processes
+      .filter(p => {
+        // Scoring logic
+        let score = 0;
+        const sector = onboardingAnswers.sector;
+        const tools = Array.isArray(onboardingAnswers.tools) ? onboardingAnswers.tools : [];
+        const pains = Array.isArray(onboardingAnswers.pains) ? onboardingAnswers.pains : [];
+
+        if (sector && p.sectores?.includes(sector)) score += 5;
+        if (tools.length > 0 && p.herramientas?.some(h => tools.includes(h))) score += 3;
+        if (pains.length > 0 && p.dolores?.some(d => pains.includes(d))) score += 4;
+        return score >= 5;
+      })
+      .slice(0, 4);
+  }, [onboardingAnswers]);
+
   const filteredProcesses = processes.filter(process => {
     if (selectedCategory && process.categoria !== selectedCategory) return false;
     return true;
   });
+
   const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
-  return <div className="min-h-screen bg-background">
-    {/* Header */}
-    <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-      <div className="container mx-auto px-4 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
-            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
-          </div>
-          <p className="text-muted-foreground mt-2">Elige los procesos que quieres automatizar</p>
-        </div>
-      </div>
-    </header>
 
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Mobile: Summary Bar */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-50">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground">Seleccionados</p>
-                <p className="text-lg font-bold text-primary">{selectedProcessIds.size}</p>
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-6">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-3">
+                <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
               </div>
-              {selectedProcessIds.size > 0 && <div>
-                <p className="text-xs text-muted-foreground">Estimado</p>
-                <p className="text-lg font-bold text-foreground">
-                  {selectedProcessIds.size <= 15 ? `${selectedProcessIds.size <= 3 ? "4.000" : selectedProcessIds.size <= 5 ? "6.000" : selectedProcessIds.size <= 10 ? "10.000" : "13.000"}€` : "A medida"}
-                </p>
-              </div>}
+              <p className="text-muted-foreground mt-2">Elige los procesos que quieres automatizar</p>
             </div>
-            <Button onClick={() => setShowContactForm(true)} disabled={selectedProcessIds.size === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              Ver resumen
-            </Button>
-          </div>
-        </div>
 
-        {/* Desktop: 3-Column Layout */}
-        <div className="grid lg:grid-cols-[240px,1fr,320px] gap-6 pb-24 lg:pb-8">
-          {/* Left: Filters */}
-          <aside className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-4 sticky top-24">
-              <div className="flex items-center gap-2 mb-4">
-                <Filter className="w-4 h-4 text-secondary" />
-                <h3 className="font-semibold text-foreground">Filtros</h3>
-              </div>
-
-              {/* Category Filters */}
-              <div className="space-y-2 mb-4">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
-                  Categoría
-                </p>
-                <Button variant={selectedCategory === null ? "default" : "ghost"} size="sm" className="w-full justify-start" onClick={() => setSelectedCategory(null)}>
-                  Todas
+            {onboardingAnswers ? (
+              <div className="hidden md:flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2">
+                  <Settings2 className="w-4 h-4" /> Editar respuestas
                 </Button>
-                {categories.map(cat => <Button key={cat.id} variant={selectedCategory === cat.id ? "default" : "ghost"} size="sm" className="w-full justify-start text-left" onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}>
-                  <span className="text-base mr-[8px] flex items-center">{cat.emoji}</span>
-                  <span className="truncate">{cat.name}</span>
-                </Button>)}
+                <Button variant="ghost" size="sm" onClick={handleReset} className="text-muted-foreground hover:text-destructive">
+                  <RotateCcw className="w-4 h-4" /> Restablecer
+                </Button>
               </div>
-            </div>
-          </aside>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-primary/50 text-primary hover:bg-primary/5">
+                  <Sparkles className="w-4 h-4" /> Personalizar catálogo
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
 
-          {/* Center: Catalog */}
-          <main>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {filteredProcesses.length} proceso{filteredProcesses.length !== 1 ? "s" : ""}{" "}
-                disponible{filteredProcesses.length !== 1 ? "s" : ""}
-              </p>
-            </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Onboarding Summary / Recommendations */}
+          {recommendedProcesses.length > 0 && (
+            <section className="mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </div>
+                <h2 className="text-2xl font-bold">Recomendados para ti</h2>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {recommendedProcesses.map(process => (
+                  <ProcessCard
+                    key={`rec-${process.id}`}
+                    process={process}
+                    isSelected={selectedProcessIds.has(process.id)}
+                    onSelect={() => toggleProcess(process.id)}
+                    onViewDetails={() => setDetailProcess(process)}
+                    isSpecialized={true}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {filteredProcesses.map(process => <ProcessCard key={process.id} process={process} isSelected={selectedProcessIds.has(process.id)} onSelect={() => toggleProcess(process.id)} onViewDetails={() => setDetailProcess(process)} />)}
-            </div>
+          <div className="grid lg:grid-cols-[240px,1fr,320px] gap-6 pb-24 lg:pb-8">
+            <aside className="space-y-4">
+              <div className="bg-card border border-border rounded-lg p-4 sticky top-24">
+                <div className="flex items-center gap-2 mb-4">
+                  <Filter className="w-4 h-4 text-secondary" />
+                  <h3 className="font-semibold text-foreground">Filtros</h3>
+                </div>
 
-            {filteredProcesses.length === 0 && <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                No hay procesos que coincidan con los filtros seleccionados
-              </p>
-            </div>}
-          </main>
+                <div className="space-y-2 mb-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                    Categoría
+                  </p>
+                  <Button variant={selectedCategory === null ? "default" : "ghost"} size="sm" className="w-full justify-start" onClick={() => setSelectedCategory(null)}>
+                    Todas
+                  </Button>
+                  {categories.map(cat => (
+                    <Button key={cat.id} variant={selectedCategory === cat.id ? "default" : "ghost"} size="sm" className="w-full justify-start text-left" onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}>
+                      <span className="text-base mr-[8px] flex items-center">{cat.emoji}</span>
+                      <span className="truncate">{cat.name}</span>
+                    </Button>
+                  ))}
+                </div>
 
-          {/* Right: Selection Summary (Desktop Only) */}
-          <aside className="hidden lg:block">
-            <SelectionSummary selectedProcesses={selectedProcesses} onRemove={id => toggleProcess(id)} onContact={() => setShowContactForm(true)} />
-          </aside>
+                {onboardingAnswers ? (
+                  <div className="md:hidden pt-4 border-t border-border flex flex-col gap-2">
+                    <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2">
+                      <Settings2 className="w-4 h-4" /> Editar respuestas
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleReset} className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
+                      <RotateCcw className="w-4 h-4" /> Restablecer
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="md:hidden pt-4 border-t border-border flex flex-col gap-2">
+                    <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2 border-primary/50 text-primary">
+                      <Sparkles className="w-4 h-4" /> Personalizar catálogo
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </aside>
+
+            <main>
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {filteredProcesses.length} proceso{filteredProcesses.length !== 1 ? "s" : ""}{" "}
+                  disponible{filteredProcesses.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {filteredProcesses.map(process => {
+                  const isSpecialized = recommendedProcesses.some(rp => rp.id === process.id);
+                  return (
+                    <ProcessCard
+                      key={process.id}
+                      process={process}
+                      isSelected={selectedProcessIds.has(process.id)}
+                      onSelect={() => toggleProcess(process.id)}
+                      onViewDetails={() => setDetailProcess(process)}
+                      isSpecialized={isSpecialized}
+                    />
+                  );
+                })}
+              </div>
+
+              {filteredProcesses.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">
+                    No hay procesos que coincidan con los filtros seleccionados
+                  </p>
+                </div>
+              )}
+            </main>
+
+            <aside className="hidden lg:block">
+              <SelectionSummary
+                selectedProcesses={selectedProcesses}
+                onRemove={id => toggleProcess(id)}
+                onContact={() => setShowContactForm(true)}
+              />
+            </aside>
+          </div>
         </div>
       </div>
+
+      <OnboardingModal
+        isOpen={onboardingOpen}
+        onClose={handleOnboardingClose}
+        initialAnswers={onboardingAnswers}
+      />
+
+      <ProcessDetailModal
+        process={detailProcess}
+        isOpen={!!detailProcess}
+        onClose={() => setDetailProcess(null)}
+        isSelected={detailProcess ? selectedProcessIds.has(detailProcess.id) : false}
+        onToggleSelect={() => {
+          if (detailProcess) toggleProcess(detailProcess.id);
+        }}
+        isSpecialized={detailProcess ? recommendedProcesses.some(rp => rp.id === detailProcess.id) : false}
+      />
+
+      <ContactForm
+        isOpen={showContactForm}
+        onClose={() => setShowContactForm(false)}
+        selectedProcesses={selectedProcesses}
+      />
     </div>
-
-    {/* Modals */}
-    <ProcessDetailModal process={detailProcess} isOpen={!!detailProcess} onClose={() => setDetailProcess(null)} isSelected={detailProcess ? selectedProcessIds.has(detailProcess.id) : false} onToggleSelect={() => {
-      if (detailProcess) toggleProcess(detailProcess.id);
-    }} />
-
-    <ContactForm isOpen={showContactForm} onClose={() => setShowContactForm(false)} selectedProcesses={selectedProcesses} />
-  </div>;
+  );
 };
+
 export default Index;

@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Star } from "lucide-react";
+import { Check, ChevronRight, Star, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -9,24 +9,32 @@ interface ProcessCardProps {
   isSelected: boolean;
   onSelect: () => void;
   onViewDetails: () => void;
+  isSpecialized?: boolean;
 }
 
-export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails }: ProcessCardProps) => {
+export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSpecialized }: ProcessCardProps) => {
   return (
     <div
       className={cn(
         "group relative bg-card border border-border rounded-lg p-6 transition-all duration-300 hover:bg-card-hover hover-glow cursor-pointer h-full flex flex-col",
-        isSelected && "border-primary glow-primary"
+        isSelected && "border-primary glow-primary",
+        isSpecialized && "border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
       )}
       onClick={onViewDetails}
     >
-      {/* Category Badge and Recommended Badge */}
+      {/* Category Badge and Recommendation Badges */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2 flex-wrap">
           <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
             {process.categoriaNombre}
           </Badge>
-          {process.recomendado && (
+
+          {isSpecialized ? (
+            <Badge className="text-xs font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 flex items-center gap-1 animate-pulse">
+              <Sparkles className="w-3 h-3 fill-current" />
+              Para ti
+            </Badge>
+          ) : process.recomendado && (
             <Badge className="text-xs font-medium bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/30 flex items-center gap-1">
               <Star className="w-3 h-3 fill-current" />
               Recomendado

@@ -17,6 +17,8 @@ import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
 
+import { OnboardingAnswers, getOnboardingAnswers } from "@/lib/onboarding-utils";
+
 interface ContactFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -25,6 +27,7 @@ interface ContactFormProps {
 
 export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormProps) => {
   const { toast } = useToast();
+  const [onboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -84,6 +87,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
           email: formData.email,
           empresa: formData.empresa,
           comentario: formData.comentario,
+          onboardingAnswers,
           selectedProcesses: selectedProcesses.map(p => ({
             id: p.id,
             codigo: p.codigo,
@@ -93,6 +97,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
           })),
         },
       });
+
 
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Request timed out')), 15000);

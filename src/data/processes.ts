@@ -9,7 +9,13 @@ export interface Process {
   descripcionDetallada: string;
   pasos: string[];
   personalizacion: string;
+  sectores?: string[];
+  herramientas?: string[];
+  canales?: string[];
+  madurez?: ("Básico" | "Intermedio" | "Avanzado")[];
+  dolores?: string[];
 }
+
 
 export const processes: Process[] = [
   {
@@ -26,8 +32,12 @@ export const processes: Process[] = [
       "Creamos la factura borrador en Holded con líneas, cantidades y periodo, asignada a cada cliente",
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
-    personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia."
+    personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
+    herramientas: ["Holded", "Google Sheets", "Excel"],
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"]
   },
+
   {
     id: "A2",
     codigo: "A2",
@@ -42,8 +52,12 @@ export const processes: Process[] = [
       "Calculamos antigüedad, importe total y asignamos cliente",
       "Generamos un informe automático"
     ],
-    personalizacion: "Decide cuándo recibes el informe y si es por email, Slack o Drive."
+    personalizacion: "Decide cuándo recibes el informe y si es por email, Slack o Drive.",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
+    herramientas: ["Holded", "Slack", "Email"],
+    dolores: ["Necesito centralizar la información de clientes"]
   },
+
   {
     id: "A3",
     codigo: "A3",
@@ -58,8 +72,12 @@ export const processes: Process[] = [
       "Creamos el presupuesto con líneas y totales",
       "Notificamos al responsable para envío o revisión"
     ],
-    personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises."
+    personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.",
+    sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria"],
+    herramientas: ["Holded", "Google Sheets", "Excel"],
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"]
   },
+
   {
     id: "A4",
     codigo: "A4",
@@ -74,8 +92,12 @@ export const processes: Process[] = [
       "Detectamos inactividad",
       "Disparamos alerta o email de seguimiento"
     ],
-    personalizacion: "Elige el canal del aviso y los días sin respuesta."
+    personalizacion: "Elige el canal del aviso y los días sin respuesta.",
+    sectores: ["Agencia/marketing", "Inmobiliaria", "Retail"],
+    herramientas: ["Holded", "WhatsApp", "Email"],
+    dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"]
   },
+
   {
     id: "A5",
     codigo: "A5",
@@ -90,7 +112,10 @@ export const processes: Process[] = [
       "Generación del mensaje con plantilla dinámica",
       "Envío automático al correo del cliente"
     ],
-    personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente."
+    personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
+    sectores: ["Retail", "E-commerce", "Servicios profesionales"],
+    herramientas: ["Holded", "WhatsApp", "Email"],
+    dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"]
   },
   {
     id: "B6",
@@ -106,8 +131,12 @@ export const processes: Process[] = [
       "Detectamos anomalías (faltantes, duplicados, exceso)",
       "Generamos alerta al manager"
     ],
-    personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto."
+    personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
+    sectores: ["Servicios profesionales", "Agencia/marketing"],
+    herramientas: ["Clockify", "Toggl", "ClickUp"],
+    dolores: ["Quiero ordenar tareas y que se asignen solas", "Me escriben mucho y no doy abasto"]
   },
+
   {
     id: "B7",
     codigo: "B7",
@@ -122,8 +151,12 @@ export const processes: Process[] = [
       "Calculamos desviaciones individuales y por proyecto",
       "Generamos un informe detallado"
     ],
-    personalizacion: "Elige formato del informe (PDF, Excel)."
+    personalizacion: "Elige formato del informe (PDF, Excel).",
+    sectores: ["Agencia/marketing", "Servicios profesionales"],
+    herramientas: ["ClickUp", "Asana", "Excel"],
+    dolores: ["Quiero ordenar tareas y que se asignen solas"]
   },
+
   {
     id: "B8",
     codigo: "B8",
@@ -138,8 +171,12 @@ export const processes: Process[] = [
       "Detectamos el umbral superado",
       "Enviamos notificaciones automáticas"
     ],
-    personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe."
+    personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
+    sectores: ["Agencia/marketing", "Servicios profesionales"],
+    herramientas: ["ClickUp", "Notion", "Slack"],
+    dolores: ["Me escriben mucho y no doy abasto", "Quiero ordenar tareas y que se asignen solas"]
   },
+
   {
     id: "C9",
     codigo: "C9",
@@ -154,8 +191,12 @@ export const processes: Process[] = [
       "Calculamos los días restantes",
       "Enviamos alertas individuales"
     ],
-    personalizacion: "Decide días de anticipación y por dónde recibir el aviso."
+    personalizacion: "Decide días de anticipación y por dónde recibir el aviso.",
+    sectores: ["Retail", "E-commerce", "Restauración"],
+    herramientas: ["Holded", "Email", "WhatsApp"],
+    dolores: ["Tardamos en responder y perdemos clientes"]
   },
+
   {
     id: "C10",
     codigo: "C10",
@@ -170,7 +211,10 @@ export const processes: Process[] = [
       "Calculamos KPIs clave",
       "Enviamos informe por correo"
     ],
-    personalizacion: "Elige tu fecha de cierre y tus KPIs."
+    personalizacion: "Elige tu fecha de cierre y tus KPIs.",
+    sectores: ["E-commerce", "Retail", "Agencia/marketing"],
+    herramientas: ["Holded", "Excel", "Google Sheets"],
+    dolores: ["Necesito centralizar la información de clientes", "Quiero automatizar presupuestos y respuestas"]
   },
   {
     id: "C11",
@@ -186,8 +230,12 @@ export const processes: Process[] = [
       "Calculamos escenarios moderados y alcistas",
       "Generamos un forecast en gráfico + tabla"
     ],
-    personalizacion: "Elige entre visión moderada, alcista o pesimista."
+    personalizacion: "Elige entre visión moderada, alcista o pesimista.",
+    sectores: ["E-commerce", "Retail", "Agencia/marketing"],
+    herramientas: ["Excel", "Google Sheets", "Holded"],
+    dolores: ["Necesito centralizar la información de clientes"]
   },
+
   {
     id: "C12",
     codigo: "C12",
@@ -202,8 +250,12 @@ export const processes: Process[] = [
       "Generamos documento oficial de solicitud de traspaso",
       "Notificamos al responsable"
     ],
-    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, Slack o Drive)."
+    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, Slack o Drive).",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
+    herramientas: ["Holded", "Excel", "Drive"],
+    dolores: ["Quiero automatizar presupuestos y respuestas"]
   },
+
   {
     id: "D13",
     codigo: "D13",
@@ -220,7 +272,10 @@ export const processes: Process[] = [
       "Asignación a proveedor",
       "Notificación al responsable para su revisión (opcional)"
     ],
-    personalizacion: "Elige la carpeta de Drive."
+    personalizacion: "Elige la carpeta de Drive.",
+    sectores: ["Agencia/marketing", "Retail", "E-commerce"],
+    herramientas: ["Holded", "Drive", "OneDrive"],
+    dolores: ["Me escriben mucho y no doy abasto", "Pierdo solicitudes entre WhatsApp/Instagram/email"]
   },
   {
     id: "D14",
@@ -236,8 +291,12 @@ export const processes: Process[] = [
       "Creamos metas dinámicas en ClickUp por usuario/equipo",
       "Configuramos seguimiento automático de KPIs"
     ],
-    personalizacion: "Elige colores por cliente/equipo."
+    personalizacion: "Elige colores por cliente/equipo.",
+    sectores: ["Agencia/marketing", "Servicios profesionales"],
+    herramientas: ["ClickUp", "Notion"],
+    dolores: ["Quiero ordenar tareas y que se asignen solas"]
   },
+
   {
     id: "D15",
     codigo: "D15",
@@ -252,8 +311,12 @@ export const processes: Process[] = [
       "Multiplicamos por tarifa asociada",
       "Creamos factura de gasto y la asignamos al proyecto/cliente"
     ],
-    personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura."
+    personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura.",
+    sectores: ["Agencia/marketing", "Servicios profesionales"],
+    herramientas: ["Holded", "Toggl", "Clockify"],
+    dolores: ["Quiero automatizar presupuestos y respuestas"]
   },
+
   {
     id: "D16",
     codigo: "D16",
@@ -268,7 +331,10 @@ export const processes: Process[] = [
       "Calculamos el % correspondiente",
       "Creamos asiento contable y aviso de pago"
     ],
-    personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso de pago."
+    personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso de pago.",
+    sectores: ["Agencia/marketing", "Servicios profesionales"],
+    herramientas: ["Holded", "Excel"],
+    dolores: ["Quiero automatizar presupuestos y respuestas"]
   }
 ];
 
