@@ -93,8 +93,8 @@ export const processes: Process[] = [
       "Disparamos alerta o email de seguimiento"
     ],
     personalizacion: "Elige el canal del aviso y los días sin respuesta.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "Retail"],
-    herramientas: ["Holded", "WhatsApp", "Email"],
+    sectores: ["Agencia/marketing", "Inmobiliaria", "Retail", "Servicios profesionales"],
+    herramientas: ["Holded", "WhatsApp", "Email", "Pipedrive", "HubSpot"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"]
   },
 
@@ -113,8 +113,8 @@ export const processes: Process[] = [
       "Envío automático al correo del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Retail", "E-commerce", "Servicios profesionales"],
-    herramientas: ["Holded", "WhatsApp", "Email"],
+    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing"],
+    herramientas: ["Holded", "WhatsApp", "Email", "Holded"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"]
   },
   {
@@ -132,9 +132,9 @@ export const processes: Process[] = [
       "Generamos alerta al manager"
     ],
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
-    sectores: ["Servicios profesionales", "Agencia/marketing"],
-    herramientas: ["Clockify", "Toggl", "ClickUp"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas", "Me escriben mucho y no doy abasto"]
+    sectores: ["Servicios profesionales", "Agencia/marketing", "Clínica", "Peluquería/estética"],
+    herramientas: ["Clockify", "Toggl", "ClickUp", "Factorial"],
+    dolores: ["Quiero ordenar tareas y que se asignen solas", "Me escriben mucho y no doy abasto", "Necesito centralizar la información de clientes"]
   },
 
   {
@@ -152,9 +152,9 @@ export const processes: Process[] = [
       "Generamos un informe detallado"
     ],
     personalizacion: "Elige formato del informe (PDF, Excel).",
-    sectores: ["Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["ClickUp", "Asana", "Excel"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas"]
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
+    herramientas: ["ClickUp", "Asana", "Excel", "Monday"],
+    dolores: ["Quiero ordenar tareas y que se asignen solas", "Necesito centralizar la información de clientes"]
   },
 
   {
@@ -172,8 +172,8 @@ export const processes: Process[] = [
       "Enviamos notificaciones automáticas"
     ],
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
-    sectores: ["Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["ClickUp", "Notion", "Slack"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
+    herramientas: ["ClickUp", "Notion", "Slack", "Teams"],
     dolores: ["Me escriben mucho y no doy abasto", "Quiero ordenar tareas y que se asignen solas"]
   },
 
@@ -231,9 +231,9 @@ export const processes: Process[] = [
       "Generamos un forecast en gráfico + tabla"
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
-    sectores: ["E-commerce", "Retail", "Agencia/marketing"],
+    sectores: ["E-commerce", "Retail", "Agencia/marketing", "Servicios profesionales"],
     herramientas: ["Excel", "Google Sheets", "Holded"],
-    dolores: ["Necesito centralizar la información de clientes"]
+    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas"]
   },
 
   {
@@ -251,9 +251,9 @@ export const processes: Process[] = [
       "Notificamos al responsable"
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, Slack o Drive).",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
-    herramientas: ["Holded", "Excel", "Drive"],
-    dolores: ["Quiero automatizar presupuestos y respuestas"]
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "E-commerce"],
+    herramientas: ["Holded", "Excel", "Drive", "OneDrive"],
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"]
   },
 
   {
@@ -312,9 +312,9 @@ export const processes: Process[] = [
       "Creamos factura de gasto y la asignamos al proyecto/cliente"
     ],
     personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura.",
-    sectores: ["Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["Holded", "Toggl", "Clockify"],
-    dolores: ["Quiero automatizar presupuestos y respuestas"]
+    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
+    herramientas: ["Holded", "Toggl", "Clockify", "Factorial"],
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Me escriben mucho y no doy abasto"]
   },
 
   {
@@ -332,9 +332,9 @@ export const processes: Process[] = [
       "Creamos asiento contable y aviso de pago"
     ],
     personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso de pago.",
-    sectores: ["Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["Holded", "Excel"],
-    dolores: ["Quiero automatizar presupuestos y respuestas"]
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
+    herramientas: ["Holded", "Excel", "Sheets"],
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"]
   },
 
   {
@@ -453,9 +453,9 @@ export const processes: Process[] = [
       "(Opcional) Marcamos la conversación como “pendiente”, “en curso” o “resuelta”"
     ],
     personalizacion: "Define preguntas frecuentes, tono, mensajes por tipo de consulta, reglas de derivación y palabras clave a detectar.",
-    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Restauración"],
-    herramientas: ["Instagram DM", "Make", "ManyChat"],
-    dolores: ["Me escriben mucho y no doy abasto", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)"]
+    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Restauración", "Inmobiliaria"],
+    herramientas: ["Instagram DM", "Make", "ManyChat", "Zapier"],
+    dolores: ["Me escriben mucho y no doy abasto", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)", "Tardamos en responder y perdemos clientes"]
   },
   {
     id: "E23",
@@ -493,9 +493,9 @@ export const processes: Process[] = [
       "Avisamos al responsable si requiere acción"
     ],
     personalizacion: "Define qué datos guardar, estados, notas automáticas y cuándo avisar al equipo.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales"],
-    herramientas: ["Holded", "HubSpot", "Pipedrive", "Notion"],
-    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas"]
+    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales", "Retail"],
+    herramientas: ["Holded", "HubSpot", "Pipedrive", "Notion", "ClickUp"],
+    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas", "Pierdo solicitudes entre WhatsApp/Instagram/email"]
   }
 ];
 

@@ -84,10 +84,17 @@ const Index = () => {
         const sector = onboardingAnswers.sector;
         const tools = Array.isArray(onboardingAnswers.tools) ? onboardingAnswers.tools : [];
         const pains = Array.isArray(onboardingAnswers.pains) ? onboardingAnswers.pains : [];
+        const channelsClients = onboardingAnswers.channels?.clients || [];
+        const channelsInternal = onboardingAnswers.channels?.internal || [];
 
         if (sector && p.sectores?.includes(sector)) score += 5;
         if (tools.length > 0 && p.herramientas?.some(h => tools.includes(h))) score += 3;
         if (pains.length > 0 && p.dolores?.some(d => pains.includes(d))) score += 4;
+
+        // Channel matching
+        if (channelsClients.length > 0 && p.canales?.some(c => channelsClients.includes(c))) score += 2;
+        if (channelsInternal.length > 0 && p.canales?.some(c => channelsInternal.includes(c))) score += 2;
+
         return score >= 5;
       })
       .slice(0, 4);
