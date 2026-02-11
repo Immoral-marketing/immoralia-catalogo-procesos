@@ -55,6 +55,7 @@ const ContactRequestSchema = z.object({
     .array(ProcessSchema)
     .min(1, "Selecciona al menos un proceso")
     .max(50, "Demasiados procesos seleccionados"),
+  onboardingAnswers: z.any().optional(),
 });
 
 // HTML escape function to prevent injection
@@ -98,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { nombre, email, empresa, comentario, selectedProcesses } = validationResult.data;
+    const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers } = validationResult.data;
 
     // --- RATE LIMIT CHECK ---
     const oneHourAgo = new Date(Date.now() - RATE_LIMIT_PERIOD_MS).toISOString();
@@ -163,6 +164,23 @@ const handler = async (req: Request): Promise<Response> => {
       )
       .join("");
 
+    // Create onboarding answers HTML
+    let onboardingHTML = "";
+    if (onboardingAnswers) {
+      onboardingHTML = `
+        <h2 style="color: #666;">Datos del Onboarding:</h2>
+        <div style="padding: 10px; background-color: #f0f7ff; border-radius: 5px; border-left: 4px solid #0066cc;">
+          <p><strong>Sector:</strong> ${escapeHtml(onboardingAnswers.sector || "No especificado")} ${onboardingAnswers.otherSector ? `(${escapeHtml(onboardingAnswers.otherSector)})` : ""}</p>
+          <p><strong>Herramientas:</strong> ${escapeHtml(Array.isArray(onboardingAnswers.tools) ? onboardingAnswers.tools.join(", ") : "Ninguna")} ${onboardingAnswers.otherTool ? `(Otro: ${escapeHtml(onboardingAnswers.otherTool)})` : ""}</p>
+          <p><strong>Madurez Digital:</strong> ${escapeHtml(onboardingAnswers.maturity || "No especificada")}</p>
+          <p><strong>Usa IA:</strong> ${onboardingAnswers.usesAI ? "Sí" : "No"}</p>
+          ${onboardingAnswers.aiTools ? `<p><strong>Herramientas IA:</strong> ${escapeHtml(onboardingAnswers.aiTools)}</p>` : ""}
+          ${onboardingAnswers.aiUsagePurpose ? `<p><strong>Propósito IA:</strong> ${escapeHtml(onboardingAnswers.aiUsagePurpose)}</p>` : ""}
+          <p><strong>Dolores/Puntos críticos:</strong> ${escapeHtml(Array.isArray(onboardingAnswers.pains) ? onboardingAnswers.pains.join(", ") : "Ninguno")} ${onboardingAnswers.otherPain ? `(Otro: ${escapeHtml(onboardingAnswers.otherPain)})` : ""}</p>
+          ${onboardingAnswers.biggestPain ? `<p><strong>Mayor dolor:</strong> ${escapeHtml(onboardingAnswers.biggestPain)}</p>` : ""}
+        </div>
+      `;
+    }
 
     // Escape user inputs for email content
     const safeNombre = escapeHtml(nombre);
@@ -179,7 +197,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "Immoralia <noreply@send.immoralia.es>",
-        to: ["marco@immoral.marketing"],
+        to: ["david@immoral.es"],
         subject: `Nueva solicitud de automatización - ${safeEmpresa}`,
         html: `
           <h1 style="color: #333;">Nueva solicitud de propuesta</h1>
@@ -189,6 +207,8 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Email:</strong> ${safeEmail}</p>
           <p><strong>Empresa:</strong> ${safeEmpresa}</p>
           
+          ${onboardingHTML}
+
           <h2 style="color: #666;">Procesos seleccionados (${selectedProcesses.length}):</h2>
           <p><strong>Estimación:</strong> ${estimatedPrice}</p>
           ${processesListHTML}
@@ -207,6 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
         `,
       }),
     });
+
 
     if (!businessEmailResponse.ok) {
       const error = await businessEmailResponse.text();
