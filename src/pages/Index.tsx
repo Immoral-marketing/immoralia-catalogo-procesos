@@ -31,10 +31,11 @@ const Index = () => {
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
-    if (!isOnboardingCompleted()) {
+    const answers = getOnboardingAnswers();
+    if (!answers) {
       setOnboardingOpen(true);
     } else {
-      setOnboardingAnswers(getOnboardingAnswers());
+      setOnboardingAnswers(answers);
     }
   }, []);
 
