@@ -15,6 +15,10 @@ export interface OnboardingAnswers {
     pains: string[];
     otherPain?: string;
     biggestPain?: string;
+    // Campos de contacto (Lead Magnet)
+    nombre?: string;
+    email?: string;
+    telefono?: string;
     [key: string]: any;
 }
 

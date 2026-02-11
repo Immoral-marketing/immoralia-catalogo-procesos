@@ -5,7 +5,7 @@ import { calculatePrice } from "../../../src/lib/pricing.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -101,6 +101,37 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers } = validationResult.data;
 
+    // --- SAVE TO DATABASE ---
+    console.log("Iniciando inserción en base de datos para:", email);
+    const { error: insertError } = await supabase
+      .from("contact_submissions")
+      .insert({
+        nombre,
+        email,
+        empresa,
+        comentario,
+        selected_processes: selectedProcesses,
+        onboarding_answers: onboardingAnswers,
+        ip_address: clientIP,
+      });
+
+    let submissionId = null;
+    if (insertError) {
+      console.error("ERROR en base de datos (contact_submissions):", insertError);
+    } else {
+      console.log("Inserción exitosa en contact_submissions");
+      // Getting the ID if we need to update it with errors later
+      const { data: insertedData } = await supabase
+        .from("contact_submissions")
+        .select("id")
+        .eq("email", email)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+      submissionId = insertedData?.id;
+    }
+    // ------------------------
+
     // --- RATE LIMIT CHECK ---
     const oneHourAgo = new Date(Date.now() - RATE_LIMIT_PERIOD_MS).toISOString();
 
@@ -126,7 +157,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       return new Response(
         JSON.stringify({
-          error: "Has superado el límite de solicitudes por hoy (3 por hora). Por favor, inténtalo más tarde o contáctanos directamente.",
+          error: "Has superada el límite de solicitudes por hoy (3 por hora). Por favor, inténtalo más tarde o contáctanos directamente.",
         }),
         {
           status: 429,
@@ -167,17 +198,64 @@ const handler = async (req: Request): Promise<Response> => {
     // Create onboarding answers HTML
     let onboardingHTML = "";
     if (onboardingAnswers) {
+      // Helper to format tools list with "Other" values
+      const formatTools = () => {
+        const tools = Array.isArray(onboardingAnswers.tools) ? onboardingAnswers.tools : [];
+        const otherFields = Object.keys(onboardingAnswers).filter(k => k.startsWith('other_'));
+
+        let toolsText = tools.filter(t => !t.includes(': Otro')).join(", ");
+
+        const otherValues = otherFields
+          .map(k => {
+            const cat = k.replace('other_', '');
+            return onboardingAnswers[k] ? `${cat}: ${onboardingAnswers[k]}` : null;
+          })
+          .filter(Boolean);
+
+        if (otherValues.length > 0) {
+          toolsText += (toolsText ? ", " : "") + otherValues.join(", ");
+        }
+
+        return toolsText || "Ninguna seleccionada";
+      };
+
+      // Helper for channels
+      const formatChannels = (type: 'clients' | 'internal') => {
+        const channels = onboardingAnswers.channels?.[type] || [];
+        let text = channels.filter((c: string) => c !== "Otro").join(", ");
+        const other = type === 'clients' ? onboardingAnswers.otherClientChannel : onboardingAnswers.otherInternalChannel;
+        if (channels.includes("Otro") && other) {
+          text += (text ? ", " : "") + `Otros: ${other}`;
+        }
+        return text || "No especificado";
+      };
+
       onboardingHTML = `
         <h2 style="color: #666;">Datos del Onboarding:</h2>
-        <div style="padding: 10px; background-color: #f0f7ff; border-radius: 5px; border-left: 4px solid #0066cc;">
+        <div style="padding: 15px; background-color: #f0f7ff; border-radius: 8px; border-left: 4px solid #0066cc; line-height: 1.6;">
           <p><strong>Sector:</strong> ${escapeHtml(onboardingAnswers.sector || "No especificado")} ${onboardingAnswers.otherSector ? `(${escapeHtml(onboardingAnswers.otherSector)})` : ""}</p>
-          <p><strong>Herramientas:</strong> ${escapeHtml(Array.isArray(onboardingAnswers.tools) ? onboardingAnswers.tools.join(", ") : "Ninguna")} ${onboardingAnswers.otherTool ? `(Otro: ${escapeHtml(onboardingAnswers.otherTool)})` : ""}</p>
+          
+          <p><strong>Herramientas actuales:</strong><br/>
+          <span style="color: #444;">${escapeHtml(formatTools())}</span></p>
+          
+          <p><strong>Canales de contacto clientes:</strong><br/>
+          <span style="color: #444;">${escapeHtml(formatChannels('clients'))}</span></p>
+          
+          <p><strong>Comunicación interna:</strong><br/>
+          <span style="color: #444;">${escapeHtml(formatChannels('internal'))}</span></p>
+          
           <p><strong>Madurez Digital:</strong> ${escapeHtml(onboardingAnswers.maturity || "No especificada")}</p>
-          <p><strong>Usa IA:</strong> ${onboardingAnswers.usesAI ? "Sí" : "No"}</p>
-          ${onboardingAnswers.aiTools ? `<p><strong>Herramientas IA:</strong> ${escapeHtml(onboardingAnswers.aiTools)}</p>` : ""}
-          ${onboardingAnswers.aiUsagePurpose ? `<p><strong>Propósito IA:</strong> ${escapeHtml(onboardingAnswers.aiUsagePurpose)}</p>` : ""}
-          <p><strong>Dolores/Puntos críticos:</strong> ${escapeHtml(Array.isArray(onboardingAnswers.pains) ? onboardingAnswers.pains.join(", ") : "Ninguno")} ${onboardingAnswers.otherPain ? `(Otro: ${escapeHtml(onboardingAnswers.otherPain)})` : ""}</p>
-          ${onboardingAnswers.biggestPain ? `<p><strong>Mayor dolor:</strong> ${escapeHtml(onboardingAnswers.biggestPain)}</p>` : ""}
+          
+          <p><strong>Uso de IA:</strong> ${onboardingAnswers.usesAI ? "Sí" : "No"}</p>
+          ${onboardingAnswers.aiTools ? `<p style="margin-left: 20px;"><strong>Herramientas:</strong> ${escapeHtml(onboardingAnswers.aiTools)}</p>` : ""}
+          ${onboardingAnswers.aiUsagePurpose ? `<p style="margin-left: 20px;"><strong>Tareas:</strong> ${escapeHtml(onboardingAnswers.aiUsagePurpose)}</p>` : ""}
+          
+          <p><strong>Cuellos de botella (Pains):</strong><br/>
+          <span style="color: #444;">${escapeHtml(Array.isArray(onboardingAnswers.pains) ? onboardingAnswers.pains.join(", ") : "Ninguno")}</span>
+          ${onboardingAnswers.otherPain ? `<br/><em>Otros dolores: ${escapeHtml(onboardingAnswers.otherPain)}</em>` : ""}
+          </p>
+          
+          ${onboardingAnswers.biggestPain ? `<p><strong>Mayor freno operativo:</strong><br/><span style="color: #d32f2f;">${escapeHtml(onboardingAnswers.biggestPain)}</span></p>` : ""}
         </div>
       `;
     }
@@ -196,33 +274,41 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Immoralia <noreply@send.immoralia.es>",
+        from: "Catálogo de Procesos <onboarding@resend.dev>",
         to: ["david@immoral.es"],
         subject: `Nueva solicitud de automatización - ${safeEmpresa}`,
         html: `
-          <h1 style="color: #333;">Nueva solicitud de propuesta</h1>
+          <h1 style="color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">Nueva solicitud de propuesta</h1>
           
-          <h2 style="color: #666;">Datos del contacto:</h2>
-          <p><strong>Nombre:</strong> ${safeNombre}</p>
-          <p><strong>Email:</strong> ${safeEmail}</p>
-          <p><strong>Empresa:</strong> ${safeEmpresa}</p>
+          <div style="margin-bottom: 20px;">
+            <h2 style="color: #666; margin-bottom: 5px;">Datos del contacto:</h2>
+            <p style="margin: 2px 0;"><strong>Nombre:</strong> ${safeNombre}</p>
+            <p style="margin: 2px 0;"><strong>Email:</strong> ${safeEmail}</p>
+            <p style="margin: 2px 0;"><strong>Empresa:</strong> ${safeEmpresa}</p>
+          </div>
           
           ${onboardingHTML}
 
-          <h2 style="color: #666;">Procesos seleccionados (${selectedProcesses.length}):</h2>
-          <p><strong>Estimación:</strong> ${estimatedPrice}</p>
-          ${processesListHTML}
+          <div style="margin-top: 25px;">
+            <h2 style="color: #666; margin-bottom: 5px;">Procesos seleccionados (${selectedProcesses.length}):</h2>
+            <p><strong>Estimación:</strong> <span style="font-size: 18px; color: #0066cc; font-weight: bold;">${estimatedPrice}</span></p>
+            ${processesListHTML}
+          </div>
           
           ${safeComentario
             ? `
-            <h2 style="color: #666;">Comentario adicional:</h2>
-            <p style="padding: 10px; background-color: #f9f9f9; border-left: 3px solid #0066cc;">${safeComentario}</p>
+            <div style="margin-top: 25px;">
+              <h2 style="color: #666; margin-bottom: 5px;">Comentario adicional:</h2>
+              <div style="padding: 15px; background-color: #f9f9f9; border-left: 4px solid #ddd; font-style: italic;">
+                ${safeComentario}
+              </div>
+            </div>
           `
             : ""
           }
           
-          <p style="margin-top: 30px; color: #888; font-size: 12px;">
-            Este email fue generado automáticamente desde el catálogo de procesos de Immoralia Admin.
+          <p style="margin-top: 40px; color: #888; font-size: 12px; border-top: 1px solid #eee; pt: 10px;">
+            Este email fue generado automáticamente desde el catálogo de procesos de Immoralia Admin y los datos han sido guardados en la base de datos de Supabase.
           </p>
         `,
       }),
@@ -242,7 +328,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Immoralia <noreply@send.immoralia.es>",
+        from: "Catálogo de Procesos <onboarding@resend.dev>",
         to: [email], // Use the validated email directly
         subject: "Hemos recibido tu solicitud de automatización",
         html: `
@@ -253,7 +339,7 @@ const handler = async (req: Request): Promise<Response> => {
           <h2 style="color: #666;">Procesos que seleccionaste (${selectedProcesses.length}):</h2>
           ${processesListHTML}
           
-          <p><strong>Estimación orientativa:</strong> ${estimatedPrice}</p>
+          <p><strong>Estimación orientativa:</strong> <span style="font-size: 16px; color: #0066cc; font-weight: bold;">${estimatedPrice}</span></p>
           
           <p style="margin-top: 20px;">
             Nos pondremos en contacto contigo pronto para diseñar tu proyecto de automatización personalizado.
@@ -298,8 +384,17 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: unknown) {
     console.error("Error in send-contact-email function:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+
+    // Attempt to log the error back to the submission record if we have an ID
+    // Note: We need a column for this, or just rely on console logs.
+    // Given the user is frustrated, I'll be very verbose in the 500 response.
+
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+        suggestion: "Verifica que el dominio 'send.immoralia.es' esté verificado en tu panel de Resend o intenta usar 'onboarding@resend.dev' como remitente."
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -13,6 +13,9 @@ import { Progress } from "./ui/progress";
 import { Search, ChevronRight, ChevronLeft, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OnboardingAnswers, saveOnboardingData, skipOnboarding } from "@/lib/onboarding-utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 interface OnboardingModalProps {
     isOpen: boolean;
@@ -101,15 +104,21 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
         usesAI: initialAnswers?.usesAI || false,
         volume: initialAnswers?.volume || "",
         pains: Array.isArray(initialAnswers?.pains) ? initialAnswers.pains : [],
+        nombre: initialAnswers?.nombre || "",
+        email: initialAnswers?.email || "",
+        telefono: initialAnswers?.telefono || "",
         ...(initialAnswers || {})
     }));
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+
     const [searchTerm, setSearchTerm] = useState("");
 
-    const progress = (step / 5) * 100;
+    const progress = (step / 6) * 100;
 
     const nextStep = () => {
-        if (step < 5) setStep(step + 1);
+        if (step < 6) setStep(step + 1);
         else handleFinish();
     };
 
@@ -122,9 +131,43 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
         onClose();
     };
 
-    const handleFinish = () => {
-        saveOnboardingData(answers);
-        onClose();
+    const handleFinish = async () => {
+        setIsSubmitting(true);
+        try {
+            console.log("Iniciando envío de lead de onboarding:", answers.email);
+
+            const { data, error } = await supabase.functions.invoke("submit-onboarding-lead", {
+                body: {
+                    nombre: answers.nombre,
+                    email: answers.email,
+                    telefono: answers.telefono,
+                    answers: answers
+                }
+            });
+
+            if (error) throw error;
+
+            console.log("Lead de onboarding enviado con éxito:", data);
+            toast({
+                title: "¡Gracias por completar el onboarding!",
+                description: "Hemos recibido tu información. Ahora puedes explorar los procesos recomendados.",
+            });
+
+            saveOnboardingData(answers);
+            onClose();
+        } catch (error: any) {
+            console.error("Error al enviar lead de onboarding:", error);
+            toast({
+                variant: "destructive",
+                title: "Error al guardar información",
+                description: "No hemos podido enviar tus datos de contacto por un error técnico, pero puedes seguir explorando el catálogo.",
+            });
+            // A pesar del error, dejamos que siga para no bloquear al usuario
+            saveOnboardingData(answers);
+            onClose();
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const toggleItem = (list: string[], item: string) => {
@@ -138,8 +181,8 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
             <DialogContent className="max-w-2xl bg-card border-border p-0 overflow-hidden flex flex-col max-h-[90vh]">
                 <div className="p-6 border-b border-border">
                     <div className="flex items-center justify-between mb-4 pr-8">
-                        <span className="text-sm font-medium text-muted-foreground">Paso {step} de 5</span>
-                        <Button variant="ghost" size="sm" onClick={handleSkip} className="text-muted-foreground hover:text-foreground">
+                        <span className="text-sm font-medium text-muted-foreground">Paso {step} de 6</span>
+                        <Button variant="ghost" size="sm" onClick={handleSkip} className="text-muted-foreground hover:text-foreground" disabled={isSubmitting}>
                             Omitir por ahora
                         </Button>
                     </div>
@@ -406,6 +449,49 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                             </div>
                         </div>
                     )}
+
+                    {step === 6 && (
+                        <div className="space-y-6">
+                            <h2 className="text-2xl font-bold">Por último, ¿cómo podemos contactarte?</h2>
+                            <p className="text-muted-foreground">
+                                Tu perfil de automatización está listo. Danos tus datos para enviarte el resumen y que podamos darte un presupuesto exacto.
+                            </p>
+                            <div className="space-y-4 pt-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Nombre completo *</Label>
+                                    <Input
+                                        id="name"
+                                        placeholder="Tu nombre..."
+                                        value={answers.nombre || ""}
+                                        onChange={(e) => setAnswers({ ...answers, nombre: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Correo electrónico *</Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        placeholder="tu@email.com"
+                                        value={answers.email || ""}
+                                        onChange={(e) => setAnswers({ ...answers, email: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone">Teléfono (opcional)</Label>
+                                    <Input
+                                        id="phone"
+                                        type="tel"
+                                        placeholder="+34 600 000 000"
+                                        value={answers.telefono || ""}
+                                        onChange={(e) => setAnswers({ ...answers, telefono: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-4 italic">
+                                * Al finalizar, recibirás un correo con el análisis de madurez digital basado en tus respuestas.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
 
@@ -413,7 +499,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                     <Button
                         variant="ghost"
                         onClick={prevStep}
-                        disabled={step === 1}
+                        disabled={step === 1 || isSubmitting}
                         className={step === 1 ? "invisible" : ""}
                     >
                         <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
@@ -421,11 +507,22 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                     <Button
                         onClick={nextStep}
                         disabled={
+                            isSubmitting ||
                             (step === 1 && !answers.sector) ||
-                            (step === 2 && answers.tools.length === 0 && !answers.otherTool)
+                            (step === 2 && answers.tools.length === 0 && !answers.otherTool) ||
+                            (step === 6 && (!answers.nombre || !answers.email || !answers.email.includes("@")))
                         }
                     >
-                        {step === 5 ? "Finalizar" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Enviando...
+                            </>
+                        ) : (
+                            <>
+                                {step === 6 ? "Finalizar" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
+                            </>
+                        )}
                     </Button>
                 </div>
             </DialogContent>
