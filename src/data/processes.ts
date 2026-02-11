@@ -1,7 +1,7 @@
 export interface Process {
   id: string;
   codigo: string;
-  categoria: "A" | "B" | "C" | "D";
+  categoria: "A" | "B" | "C" | "D" | "E";
   categoriaNombre: string;
   nombre: string;
   tagline: string;
@@ -335,6 +335,167 @@ export const processes: Process[] = [
     sectores: ["Agencia/marketing", "Servicios profesionales"],
     herramientas: ["Holded", "Excel"],
     dolores: ["Quiero automatizar presupuestos y respuestas"]
+  },
+
+  {
+    id: "E17",
+    codigo: "E17",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Atención automática por WhatsApp",
+    tagline: "Responde al instante a dudas frecuentes y deriva a una persona cuando haga falta.",
+    recomendado: true,
+    descripcionDetallada: "Automatizamos la atención inicial por WhatsApp para responder consultas repetidas (horarios, precios, ubicación, servicios, disponibilidad, etc.). Cuando el cliente pregunta algo complejo o fuera de lo previsto, el sistema deriva la conversación a un responsable con el contexto necesario para continuar sin perder tiempo.",
+    pasos: [
+      "Detectamos el tipo de consulta del cliente (por palabras clave y contexto)",
+      "Respondemos con mensajes automatizados personalizados según la consulta",
+      "Si la conversación requiere atención humana, derivamos a un responsable",
+      "Guardamos el contexto para retomar sin perder información"
+    ],
+    personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "Restauración"],
+    herramientas: ["WhatsApp", "Make", "Zapier"],
+    dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)"]
+  },
+  {
+    id: "E18",
+    codigo: "E18",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Asistente de reservas y recordatorios",
+    tagline: "Gestiona reservas de forma ágil y reduce ausencias con confirmaciones y recordatorios.",
+    recomendado: true,
+    descripcionDetallada: "Facilitamos que los clientes reserven sin esperas: el asistente recopila la información necesaria, confirma la reserva y envía recordatorios. También permite cambios o reprogramaciones con un flujo guiado para evitar pérdidas de tiempo y reducir las ausencias a citas.",
+    pasos: [
+      "Pedimos los datos necesarios para la reserva (servicio, día, hora y contacto)",
+      "Confirmamos la solicitud y guiamos al cliente hasta dejarla cerrada",
+      "Enviamos recordatorios antes de la cita para reducir ausencias",
+      "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
+    ],
+    personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
+    sectores: ["Peluquería/estética", "Gimnasio/yoga", "Clínica", "Restauración", "Servicios profesionales"],
+    herramientas: ["Calendly", "Booksy", "WhatsApp", "Google Sheets"],
+    dolores: ["Se olvidan de la cita / hay muchas ausencias", "Necesito más reservas / más clientes"]
+  },
+  {
+    id: "E19",
+    codigo: "E19",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Captura y organización automática de solicitudes",
+    tagline: "Recoge solicitudes desde distintos canales y las deja ordenadas para gestionarlas rápido.",
+    recomendado: true,
+    descripcionDetallada: "Cuando llegan solicitudes desde formularios o mensajes, las centralizamos y organizamos para que no se pierdan. El objetivo es pasar de “mensajes sueltos” a un sistema claro: qué ha pedido la persona, por qué canal llegó y en qué estado está.",
+    pasos: [
+      "Recibimos solicitudes desde los canales definidos (por ejemplo, formulario, WhatsApp o Instagram)",
+      "Extraemos la información clave (contacto, motivo, servicio y urgencia)",
+      "Guardamos cada solicitud en un listado organizado para su seguimiento",
+      "Notificamos al responsable para que actúe sin retrasos"
+    ],
+    personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
+    sectores: ["Agencia/marketing", "Inmobiliaria", "Servicios profesionales"],
+    herramientas: ["Formulario web", "WhatsApp", "Instagram DM", "ClickUp", "Notion", "Google Sheets"],
+    dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email", "Necesito centralizar la información de clientes"]
+  },
+  {
+    id: "E20",
+    codigo: "E20",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Seguimiento automático de solicitudes",
+    tagline: "Automatiza el seguimiento para que nadie se quede sin respuesta.",
+    recomendado: true,
+    descripcionDetallada: "Creamos un flujo de seguimiento para retomar conversaciones y solicitudes que no avanzan. El sistema envía mensajes según el estado (pendiente de respuesta, esperando confirmación, propuesta enviada, etc.) y evita que se pierdan solicitudes por falta de seguimiento.",
+    pasos: [
+      "Detectamos solicitudes sin respuesta o estancadas según estado y tiempo",
+      "Enviamos un mensaje de seguimiento personalizado",
+      "Si la persona responde, se actualiza el estado y se deriva al responsable si corresponde",
+      "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
+    ],
+    personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
+    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales"],
+    herramientas: ["WhatsApp", "Email", "Pipedrive", "HubSpot"],
+    dolores: ["No hago seguimiento a las personas interesadas", "Tardamos en responder y perdemos clientes"]
+  },
+  {
+    id: "E21",
+    codigo: "E21",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Solicitud automática de reseñas",
+    tagline: "Pide reseñas tras el servicio para aumentar valoraciones y reputación online.",
+    recomendado: true,
+    descripcionDetallada: "Automatizamos el envío de mensajes para pedir una reseña después de una cita o servicio. El flujo es simple y respetuoso: se envía en el momento adecuado y con un texto alineado al negocio para aumentar la tasa de reseñas sin molestar al cliente.",
+    pasos: [
+      "Tras finalizar el servicio, identificamos a quién enviar la solicitud",
+      "Enviamos un mensaje con enlace y texto personalizado",
+      "Si no responde, enviamos un recordatorio suave (opcional)",
+      "Opcionalmente, registramos el resultado para mejorar el servicio"
+    ],
+    personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
+    sectores: ["Restauración", "Peluquería/estética", "Retail", "Clínica"],
+    herramientas: ["WhatsApp", "Email", "Google Business Messages"],
+    dolores: ["Quiero pedir reseñas de forma automática"]
+  },
+  {
+    id: "E22",
+    codigo: "E22",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Atención automática por Instagram (mensajes y comentarios)",
+    tagline: "Responde dudas frecuentes en Instagram y deriva los casos complejos al equipo.",
+    recomendado: false,
+    descripcionDetallada: "Automatizamos respuestas a mensajes de Instagram con consultas típicas y ayudamos a gestionar preguntas repetidas que aparecen en comentarios. El objetivo es responder más rápido, mantener un tono coherente y no perder solicitudes por falta de tiempo.",
+    pasos: [
+      "Detectamos el motivo del mensaje (precio, horario, ubicación, reservas, servicios)",
+      "Respondemos con mensajes automatizados personalizados según el caso",
+      "Si la consulta es compleja, derivamos a una persona responsable con el contexto",
+      "(Opcional) Marcamos la conversación como “pendiente”, “en curso” o “resuelta”"
+    ],
+    personalizacion: "Define preguntas frecuentes, tono, mensajes por tipo de consulta, reglas de derivación y palabras clave a detectar.",
+    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Restauración"],
+    herramientas: ["Instagram DM", "Make", "ManyChat"],
+    dolores: ["Me escriben mucho y no doy abasto", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)"]
+  },
+  {
+    id: "E23",
+    codigo: "E23",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Reducción de ausencias a citas (confirmación + recordatorios)",
+    tagline: "Confirma citas, recuerda automáticamente y facilita reprogramar para evitar huecos perdidos.",
+    recomendado: false,
+    descripcionDetallada: "Creamos un flujo de confirmación y recordatorios para reducir las ausencias a citas. El cliente puede confirmar de forma sencilla y, si no puede asistir, se le guía para cambiar la cita sin llamadas ni idas y vueltas.",
+    pasos: [
+      "Enviamos un mensaje de confirmación tras la reserva (o antes de la cita)",
+      "Enviamos recordatorios en los momentos definidos",
+      "Si el cliente no puede asistir, le guiamos para reprogramar o cancelar fácilmente",
+      "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
+    ],
+    personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
+    sectores: ["Peluquería/estética", "Clínica", "Gimnasio/yoga", "Servicios profesionales"],
+    herramientas: ["WhatsApp", "Google Calendar", "Calendly"],
+    dolores: ["Se olvidan de la cita / hay muchas ausencias"]
+  },
+  {
+    id: "E24",
+    codigo: "E24",
+    categoria: "E",
+    categoriaNombre: "Atención y Captura",
+    nombre: "Alta automática de clientes y solicitudes",
+    tagline: "Crea una ficha con los datos clave cuando alguien pregunta o reserva, sin hacerlo a mano.",
+    recomendado: false,
+    descripcionDetallada: "Cada vez que entra una consulta o una reserva, generamos una ficha con la información importante para tener historial y contexto: quién es, qué pidió, por qué canal llegó y qué se le respondió. Esto evita perder datos y facilita el seguimiento.",
+    pasos: [
+      "Capturamos datos básicos de la persona (contacto y motivo)",
+      "Creamos una ficha con historial y estado (pendiente/en curso/resuelta)",
+      "Guardamos un resumen automático de la consulta para tener contexto",
+      "Avisamos al responsable si requiere acción"
+    ],
+    personalizacion: "Define qué datos guardar, estados, notas automáticas y cuándo avisar al equipo.",
+    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales"],
+    herramientas: ["Holded", "HubSpot", "Pipedrive", "Notion"],
+    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas"]
   }
 ];
 
@@ -342,5 +503,6 @@ export const categories = [
   { id: "A", name: "Facturas y Gastos", emoji: "🧾" },
   { id: "B", name: "Horarios y Proyectos", emoji: "📅" },
   { id: "C", name: "Finanzas y Tesorería", emoji: "💰" },
-  { id: "D", name: "Internos Agencias", emoji: "🏢" }
+  { id: "D", name: "Internos Agencias", emoji: "🏢" },
+  { id: "E", name: "Atención y Captura", emoji: "💬" }
 ];
