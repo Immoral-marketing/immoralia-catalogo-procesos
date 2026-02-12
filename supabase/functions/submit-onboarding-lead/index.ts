@@ -14,7 +14,7 @@ const corsHeaders = {
 };
 
 const leadSchema = z.object({
-    nombre: z.string().min(2),
+    nombre: z.string().min(1),
     email: z.string().email(),
     telefono: z.string().optional(),
     answers: z.any(),
