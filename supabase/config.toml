@@ -3,5 +3,5 @@ project_id = "cvnuwrzpbvxtdxolwmxf"
 [functions.send-contact-email]
 verify_jwt = false
 
-[functions.submit-onboarding-lead]
+[functions.process-onboarding]
 verify_jwt = false

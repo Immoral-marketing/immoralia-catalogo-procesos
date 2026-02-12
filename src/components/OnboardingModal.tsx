@@ -172,7 +172,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
         try {
             console.log("Iniciando envío de lead de onboarding:", answers.email);
 
-            const { data, error } = await supabase.functions.invoke("submit-onboarding-lead", {
+            const { data, error } = await supabase.functions.invoke("process-onboarding", {
                 body: {
                     nombre: answers.nombre,
                     email: answers.email,
