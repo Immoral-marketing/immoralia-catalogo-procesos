@@ -113,6 +113,42 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
 
+    // Sincronizar estado cuando se abre el modal o cambian las respuestas iniciales
+    useEffect(() => {
+        if (isOpen) {
+            if (initialAnswers) {
+                setAnswers({
+                    sector: initialAnswers.sector || "",
+                    tools: Array.isArray(initialAnswers.tools) ? initialAnswers.tools : [],
+                    channels: initialAnswers.channels || { clients: [], internal: [] },
+                    maturity: initialAnswers.maturity || "Básico",
+                    usesAI: initialAnswers.usesAI || false,
+                    volume: initialAnswers.volume || "",
+                    pains: Array.isArray(initialAnswers.pains) ? initialAnswers.pains : [],
+                    nombre: initialAnswers.nombre || "",
+                    email: initialAnswers.email || "",
+                    telefono: initialAnswers.telefono || "",
+                    ...initialAnswers
+                });
+            } else {
+                // Si no hay respuestas iniciales (ej: al restablecer), limpiar todo
+                setStep(1);
+                setAnswers({
+                    sector: "",
+                    tools: [],
+                    channels: { clients: [], internal: [] },
+                    maturity: "Básico",
+                    usesAI: false,
+                    volume: "",
+                    pains: [],
+                    nombre: "",
+                    email: "",
+                    telefono: ""
+                });
+            }
+        }
+    }, [isOpen, initialAnswers]);
+
     const [searchTerm, setSearchTerm] = useState("");
 
     const progress = (step / 6) * 100;
@@ -157,10 +193,19 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
             onClose();
         } catch (error: any) {
             console.error("Error al enviar lead de onboarding:", error);
+
+            // Intentar extraer mensaje de error del servidor
+            let errorMessage = "No hemos podido enviar tus datos de contacto por un error técnico, pero puedes seguir explorando el catálogo.";
+            if (error?.context?.status === 401) {
+                errorMessage = "Error de autorización (401). El servidor no permite envíos públicos todavía.";
+            } else if (error?.message) {
+                errorMessage = `Error técnico: ${error.message}`;
+            }
+
             toast({
                 variant: "destructive",
                 title: "Error al guardar información",
-                description: "No hemos podido enviar tus datos de contacto por un error técnico, pero puedes seguir explorando el catálogo.",
+                description: errorMessage,
             });
             // A pesar del error, dejamos que siga para no bloquear al usuario
             saveOnboardingData(answers);

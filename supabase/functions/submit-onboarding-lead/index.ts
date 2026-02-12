@@ -38,10 +38,12 @@ serve(async (req) => {
 
     try {
         const body = await req.json();
+        console.log("Request body received:", JSON.stringify(body));
+
         const { nombre, email, telefono, answers } = leadSchema.parse(body);
         const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
 
-        console.log(`Nuevo lead de onboarding capturado: ${email}`);
+        console.log(`Procesando lead de onboarding: ${email}`);
 
         // 1. Guardar en base de datos
         const { error: dbError } = await supabase
@@ -55,38 +57,47 @@ serve(async (req) => {
             });
 
         if (dbError) {
-            console.error("Error al guardar lead en DB:", dbError);
+            console.error("CRITICAL: Error al guardar lead en DB:", JSON.stringify(dbError));
+            throw new Error(`Error en base de datos: ${dbError.message}`);
         }
 
         // 2. Preparar el contenido del email para el administrador
         const formatTools = () => {
-            const tools = answers.tools || [];
-            const result: string[] = [];
+            try {
+                const tools = answers.tools || [];
+                const result: string[] = [];
+                const categorized: Record<string, string[]> = {};
 
-            // Clasificar herramientas
-            const categorized: Record<string, string[]> = {};
-            tools.forEach((t: string) => {
-                if (t.includes(": Otro")) {
-                    const cat = t.split(":")[0];
-                    const otherVal = answers[`other_${cat}`];
-                    if (otherVal) categorized[cat] = [...(categorized[cat] || []), `Otro (${otherVal})`];
-                } else {
-                    // Intentar encontrar la categoría si es una herramienta conocida
-                    result.push(t);
-                }
-            });
+                tools.forEach((t: string) => {
+                    if (typeof t !== 'string') return;
+                    if (t.includes(": Otro")) {
+                        const cat = t.split(":")[0];
+                        const otherVal = answers[`other_${cat}`];
+                        if (otherVal) categorized[cat] = [...(categorized[cat] || []), `Otro (${otherVal})`];
+                    } else {
+                        result.push(t);
+                    }
+                });
 
-            return [...result, ...Object.entries(categorized).map(([cat, val]) => `${cat}: ${val.join(", ")}`)].join(", ");
+                return [...result, ...Object.entries(categorized).map(([cat, val]) => `${cat}: ${val.join(", ")}`)].join(", ");
+            } catch (e) {
+                console.error("Error al formatear herramientas:", e);
+                return "Error al procesar herramientas";
+            }
         };
 
         const formatChannels = (type: 'clients' | 'internal') => {
-            const channels = answers.channels?.[type] || [];
-            const result = channels.filter((c: string) => c !== "Otro");
-            if (channels.includes("Otro")) {
-                const otherVal = type === 'clients' ? answers.otherClientChannel : answers.otherInternalChannel;
-                if (otherVal) result.push(`Otro (${otherVal})`);
+            try {
+                const channels = answers.channels?.[type] || [];
+                const result = channels.filter((c: string) => c !== "Otro");
+                if (channels.includes("Otro")) {
+                    const otherVal = type === 'clients' ? answers.otherClientChannel : answers.otherInternalChannel;
+                    if (otherVal) result.push(`Otro (${otherVal})`);
+                }
+                return result.join(", ");
+            } catch (e) {
+                return "No especificado";
             }
-            return result.join(", ");
         };
 
         const emailHtml = `
@@ -126,6 +137,7 @@ serve(async (req) => {
 
         // 3. Enviar email a David
         if (RESEND_API_KEY) {
+            console.log("Enviando email de notificación...");
             const res = await fetch("https://api.resend.com/emails", {
                 method: "POST",
                 headers: {
@@ -143,7 +155,11 @@ serve(async (req) => {
             if (!res.ok) {
                 const error = await res.text();
                 console.error("Error al enviar email a admin:", error);
+            } else {
+                console.log("Email enviado con éxito.");
             }
+        } else {
+            console.warn("ADVERTENCIA: RESEND_API_KEY no configurado. Se omite el envío de email.");
         }
 
         return new Response(JSON.stringify({ success: true, message: "Lead capturado correctamente" }), {
@@ -151,8 +167,12 @@ serve(async (req) => {
             status: 200,
         });
     } catch (error: any) {
-        console.error("Error en submit-onboarding-lead:", error);
-        return new Response(JSON.stringify({ error: error.message || "Error interno" }), {
+        console.error("ERROR CRÍTICO en submit-onboarding-lead:", error);
+        return new Response(JSON.stringify({
+            error: error.message || "Error interno",
+            details: error.toString(),
+            hint: "Verifica que el nombre y email cumplan el formato y que las tablas existan."
+        }), {
             headers: { "Content-Type": "application/json", ...corsHeaders },
             status: 500,
         });
