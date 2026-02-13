@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Supabase Function Test</title>
+</head>
+
+<body>
+    <h1>Testing Supabase Function</h1>
+    <button id="testBtn">Test Function</button>
+    <pre id="output"></pre>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
+
+        const SUPABASE_URL = "https://cvnuwrzpbvxtdxolwmxf.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2bnV3cnpwYnZ4dGR4b2x3bXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MDQ3MjksImV4cCI6MjA4NTE4MDcyOX0.p2sCrjy2o3oDZXbsaSWeyy74s_3I9IMlfugX645pUgo";
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const output = document.getElementById('output');
+            output.textContent = "Calling function...";
+            try {
+                const { data, error } = await supabase.functions.invoke("process-onboarding", {
+                    body: {
+                        nombre: "Browser Test",
+                        email: "browser-test@immoral.es",
+                        answers: { sector: "Test" }
+                    }
+                });
+
+                if (error) {
+                    output.textContent = "Error: " + JSON.stringify(error, null, 2);
+                } else {
+                    output.textContent = "Success: " + JSON.stringify(data, null, 2);
+                }
+            } catch (err) {
+                output.textContent = "Exception: " + err.message + "\n" + err.stack;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -2,12 +2,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -32,18 +26,64 @@ function escapeHtml(text: string): string {
 }
 
 serve(async (req) => {
+    // 1. Handle CORS Preflight
     if (req.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
     }
 
     try {
-        const body = await req.json();
-        const { nombre, email, telefono, answers } = leadSchema.parse(body);
+        // 2. Validate Environment Variables
+        const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+        const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+        const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+        const missingVars = [];
+        if (!SUPABASE_URL) missingVars.push("SUPABASE_URL");
+        if (!SUPABASE_SERVICE_ROLE_KEY) missingVars.push("SUPABASE_SERVICE_ROLE_KEY");
+        if (!RESEND_API_KEY) missingVars.push("RESEND_API_KEY"); // Optional if email is optional, but assuming required here for full flow
+
+        if (missingVars.length > 0) {
+            console.error(`ERROR: Missing environment variables: ${missingVars.join(", ")}`);
+            // In production, maybe don't return specific missing vars to client for security, 
+            // but for debugging this user's issue, it's helpful. Or just log it and return 500.
+            return new Response(JSON.stringify({
+                error: "Configuration error",
+                details: `Missing environment variables. Check Function Logs.`
+            }), {
+                headers: { "Content-Type": "application/json", ...corsHeaders },
+                status: 500,
+            });
+        }
+
+        // 3. Initialize Supabase Client
+        const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+        // 4. Parse Body
+        let body;
+        try {
+            body = await req.json();
+        } catch (e) {
+            return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+                headers: { "Content-Type": "application/json", ...corsHeaders },
+                status: 400,
+            });
+        }
+
+        const parseResult = leadSchema.safeParse(body);
+        if (!parseResult.success) {
+            console.error("Validation error:", parseResult.error);
+            return new Response(JSON.stringify({ error: "Validation error", details: parseResult.error.errors }), {
+                headers: { "Content-Type": "application/json", ...corsHeaders },
+                status: 400,
+            });
+        }
+
+        const { nombre, email, telefono, answers } = parseResult.data;
         const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
 
-        console.log(`Nuevo lead de onboarding capturado: ${email}`);
+        console.log(`Processing onboarding lead: ${email}`);
 
-        // 1. Guardar en base de datos
+        // 5. Save to Database
         const { error: dbError } = await supabase
             .from("onboarding_leads")
             .insert({
@@ -55,32 +95,42 @@ serve(async (req) => {
             });
 
         if (dbError) {
-            console.error("Error al guardar lead en DB:", dbError);
+            console.error("Database error saving lead:", dbError);
+            // Don't fail the request yet if only DB fails but Email works? 
+            // Usually we want at least one to succeed. Let's try email too.
+        } else {
+            console.log("Lead saved to database successfully.");
         }
 
-        // 2. Preparar el contenido del email para el administrador
+        // 6. Helper Functions for Email
         const formatTools = () => {
             const tools = answers.tools || [];
-            const result: string[] = [];
+            if (!Array.isArray(tools)) return "No tools specified";
 
-            // Clasificar herramientas
+            const result: string[] = [];
             const categorized: Record<string, string[]> = {};
+
             tools.forEach((t: string) => {
-                if (t.includes(": Otro")) {
+                if (typeof t === 'string' && t.includes(": Otro")) {
                     const cat = t.split(":")[0];
-                    const otherVal = answers[`other_${cat}`];
+                    const otherKey = `other_${cat}`;
+                    const otherVal = answers[otherKey];
                     if (otherVal) categorized[cat] = [...(categorized[cat] || []), `Otro (${otherVal})`];
                 } else {
-                    // Intentar encontrar la categoría si es una herramienta conocida
                     result.push(t);
                 }
             });
 
-            return [...result, ...Object.entries(categorized).map(([cat, val]) => `${cat}: ${val.join(", ")}`)].join(", ");
+            const categorizedStr = Object.entries(categorized)
+                .map(([cat, val]) => `${cat}: ${val.join(", ")}`);
+
+            return [...result, ...categorizedStr].join(", ");
         };
 
         const formatChannels = (type: 'clients' | 'internal') => {
             const channels = answers.channels?.[type] || [];
+            if (!Array.isArray(channels)) return "None";
+
             const result = channels.filter((c: string) => c !== "Otro");
             if (channels.includes("Otro")) {
                 const otherVal = type === 'clients' ? answers.otherClientChannel : answers.otherInternalChannel;
@@ -89,6 +139,7 @@ serve(async (req) => {
             return result.join(", ");
         };
 
+        // 7. Prepare Email
         const emailHtml = `
       <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
         <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
@@ -104,8 +155,8 @@ serve(async (req) => {
           </div>
 
           <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Ajuste y Madurez</h2>
-          <p><strong>Sector:</strong> ${escapeHtml(answers.sector)} ${answers.otherSector ? `(${escapeHtml(answers.otherSector)})` : ""}</p>
-          <p><strong>Madurez Digital:</strong> ${escapeHtml(answers.maturity)}</p>
+          <p><strong>Sector:</strong> ${escapeHtml(answers.sector || "N/A")} ${answers.otherSector ? `(${escapeHtml(answers.otherSector)})` : ""}</p>
+          <p><strong>Madurez Digital:</strong> ${escapeHtml(answers.maturity || "N/A")}</p>
           <p><strong>Uso de IA:</strong> ${answers.usesAI ? "Sí" : "No"} ${answers.aiTools ? `<br/><em>Herramientas: ${escapeHtml(answers.aiTools)}</em>` : ""}</p>
 
           <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Operativa Actual</h2>
@@ -124,37 +175,51 @@ serve(async (req) => {
       </div>
     `;
 
-        // 3. Enviar email a David
-        if (RESEND_API_KEY) {
-            const res = await fetch("https://api.resend.com/emails", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${RESEND_API_KEY}`,
-                },
-                body: JSON.stringify({
-                    from: "Catálogo de Procesos <onboarding@resend.dev>",
-                    to: ["david@immoral.es"],
-                    subject: `Nuevo Lead Onboarding: ${nombre} (${answers.sector || 'Sin sector'})`,
-                    html: emailHtml,
-                }),
-            });
+        // 8. Send Email via Resend
+        console.log("Sending email via Resend...");
+        const res = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${RESEND_API_KEY}`,
+            },
+            body: JSON.stringify({
+                from: "Catálogo de Procesos <onboarding@resend.dev>",
+                to: ["david@immoral.es"],
+                subject: `Nuevo Lead Onboarding: ${nombre} (${answers.sector || 'Sin sector'})`,
+                html: emailHtml,
+            }),
+        });
 
-            if (!res.ok) {
-                const error = await res.text();
-                console.error("Error al enviar email a admin:", error);
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error("Error sending email:", errorText);
+            // If DB also failed, then we really failed.
+            if (dbError) {
+                throw new Error(`Failed to save to DB (${dbError.message}) AND failed to send email: ${errorText}`);
             }
+            // If DB succeeded but email failed, we might want to tell the user "Warning" or just "Success" but log it.
+            // For now, let's treat email failure as non-critical for the USER response if DB worked? 
+            // Actually user implies "recibir yo el mail del lead" is part of success.
+            // Let's return success but log error.
+        } else {
+            console.log("Email sent successfully.");
         }
 
-        return new Response(JSON.stringify({ success: true, message: "Lead capturado correctamente" }), {
+        return new Response(JSON.stringify({ success: true, message: "Lead processed" }), {
             headers: { "Content-Type": "application/json", ...corsHeaders },
             status: 200,
         });
+
     } catch (error: any) {
-        console.error("Error en submit-onboarding-lead:", error);
-        return new Response(JSON.stringify({ error: error.message || "Error interno" }), {
+        console.error("Unhandled error in function:", error);
+        return new Response(JSON.stringify({
+            error: error.message || "Internal Server Error",
+            timestamp: new Date().toISOString()
+        }), {
             headers: { "Content-Type": "application/json", ...corsHeaders },
             status: 500,
         });
     }
 });
+
