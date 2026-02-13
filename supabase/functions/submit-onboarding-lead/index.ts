@@ -33,26 +33,29 @@ serve(async (req) => {
 
     try {
         // 2. Validate Environment Variables
+        // Make RESEND_API_KEY optional to prevent crashes if missing
         const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
         const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
         const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
+        // Only critical vars are strictly required for basic functionality (DB save)
         const missingVars = [];
         if (!SUPABASE_URL) missingVars.push("SUPABASE_URL");
         if (!SUPABASE_SERVICE_ROLE_KEY) missingVars.push("SUPABASE_SERVICE_ROLE_KEY");
-        if (!RESEND_API_KEY) missingVars.push("RESEND_API_KEY"); // Optional if email is optional, but assuming required here for full flow
 
         if (missingVars.length > 0) {
-            console.error(`ERROR: Missing environment variables: ${missingVars.join(", ")}`);
-            // In production, maybe don't return specific missing vars to client for security, 
-            // but for debugging this user's issue, it's helpful. Or just log it and return 500.
+            console.error(`ERROR: Critical config missing: ${missingVars.join(", ")}`);
             return new Response(JSON.stringify({
                 error: "Configuration error",
-                details: `Missing environment variables. Check Function Logs.`
+                details: `Missing critical environment variables. Check Function Logs.`
             }), {
                 headers: { "Content-Type": "application/json", ...corsHeaders },
                 status: 500,
             });
+        }
+
+        if (!RESEND_API_KEY) {
+            console.warn("WARNING: RESEND_API_KEY is missing. Emails will NOT be sent.");
         }
 
         // 3. Initialize Supabase Client
@@ -96,13 +99,16 @@ serve(async (req) => {
 
         if (dbError) {
             console.error("Database error saving lead:", dbError);
-            // Don't fail the request yet if only DB fails but Email works? 
-            // Usually we want at least one to succeed. Let's try email too.
+            return new Response(JSON.stringify({ error: "Database error", details: dbError.message }), {
+                headers: { "Content-Type": "application/json", ...corsHeaders },
+                status: 500, // If DB fails, we should probably fail.
+            });
         } else {
             console.log("Lead saved to database successfully.");
         }
 
         // 6. Helper Functions for Email
+        // Define these only if we are going to send email, or just leave them here
         const formatTools = () => {
             const tools = answers.tools || [];
             if (!Array.isArray(tools)) return "No tools specified";
@@ -139,74 +145,80 @@ serve(async (req) => {
             return result.join(", ");
         };
 
-        // 7. Prepare Email
-        const emailHtml = `
-      <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-        <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">¡Nuevo Lead de Onboarding!</h1>
-        </div>
-        <div style="padding: 30px;">
-          <p style="font-size: 16px; line-height: 1.5;">Se ha completado un nuevo onboarding en el catálogo de procesos:</p>
-          
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 5px 0;"><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
-            <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}">${escapeHtml(email)}</a></p>
-            <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${escapeHtml(telefono || "No proporcionado")}</p>
-          </div>
+        // 7. Prepare & Send Email (Only if key exists)
+        if (RESEND_API_KEY) {
+            const emailHtml = `
+              <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
+                  <h1 style="margin: 0; font-size: 24px;">¡Nuevo Lead de Onboarding!</h1>
+                </div>
+                <div style="padding: 30px;">
+                  <p style="font-size: 16px; line-height: 1.5;">Se ha completado un nuevo onboarding en el catálogo de procesos:</p>
 
-          <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Ajuste y Madurez</h2>
-          <p><strong>Sector:</strong> ${escapeHtml(answers.sector || "N/A")} ${answers.otherSector ? `(${escapeHtml(answers.otherSector)})` : ""}</p>
-          <p><strong>Madurez Digital:</strong> ${escapeHtml(answers.maturity || "N/A")}</p>
-          <p><strong>Uso de IA:</strong> ${answers.usesAI ? "Sí" : "No"} ${answers.aiTools ? `<br/><em>Herramientas: ${escapeHtml(answers.aiTools)}</em>` : ""}</p>
+                  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 5px 0;"><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
+                    <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}">${escapeHtml(email)}</a></p>
+                    <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${escapeHtml(telefono || "No proporcionado")}</p>
+                  </div>
 
-          <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Operativa Actual</h2>
-          <p><strong>Herramientas:</strong> ${escapeHtml(formatTools())}</p>
-          <p><strong>Canales Clientes:</strong> ${escapeHtml(formatChannels('clients'))}</p>
-          <p><strong>Comunicación Interna:</strong> ${escapeHtml(formatChannels('internal'))}</p>
+                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Ajuste y Madurez</h2>
+                  <p><strong>Sector:</strong> ${escapeHtml(answers.sector || "N/A")} ${answers.otherSector ? `(${escapeHtml(answers.otherSector)})` : ""}</p>
+                  <p><strong>Madurez Digital:</strong> ${escapeHtml(answers.maturity || "N/A")}</p>
+                  <p><strong>Uso de IA:</strong> ${answers.usesAI ? "Sí" : "No"} ${answers.aiTools ? `<br/><em>Herramientas: ${escapeHtml(answers.aiTools)}</em>` : ""}</p>
 
-          <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Puntos Críticos</h2>
-          <p><strong>Cuellos de botella:</strong> ${escapeHtml(Array.isArray(answers.pains) ? answers.pains.join(", ") : "Ninguno")}</p>
-          ${answers.otherPain ? `<p><strong>Otros dolores:</strong> ${escapeHtml(answers.otherPain)}</p>` : ""}
-          ${answers.biggestPain ? `<p style="color: #d32f2f;"><strong>Freno principal:</strong> ${escapeHtml(answers.biggestPain)}</p>` : ""}
-        </div>
-        <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888;">
-          Este lead ha sido capturado automáticamente al finalizar el onboarding.
-        </div>
-      </div>
-    `;
+                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Operativa Actual</h2>
+                  <p><strong>Herramientas:</strong> ${escapeHtml(formatTools())}</p>
+                  <p><strong>Canales Clientes:</strong> ${escapeHtml(formatChannels('clients'))}</p>
+                  <p><strong>Comunicación Interna:</strong> ${escapeHtml(formatChannels('internal'))}</p>
 
-        // 8. Send Email via Resend
-        console.log("Sending email via Resend...");
-        const res = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${RESEND_API_KEY}`,
-            },
-            body: JSON.stringify({
-                from: "Catálogo de Procesos <onboarding@resend.dev>",
-                to: ["david@immoral.es"],
-                subject: `Nuevo Lead Onboarding: ${nombre} (${answers.sector || 'Sin sector'})`,
-                html: emailHtml,
-            }),
-        });
+                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Puntos Críticos</h2>
+                  <p><strong>Cuellos de botella:</strong> ${escapeHtml(Array.isArray(answers.pains) ? answers.pains.join(", ") : "Ninguno")}</p>
+                  ${answers.otherPain ? `<p><strong>Otros dolores:</strong> ${escapeHtml(answers.otherPain)}</p>` : ""}
+                  ${answers.biggestPain ? `<p style="color: #d32f2f;"><strong>Freno principal:</strong> ${escapeHtml(answers.biggestPain)}</p>` : ""}
+                </div>
+                <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888;">
+                  Este lead ha sido capturado automáticamente al finalizar el onboarding.
+                </div>
+              </div>
+            `;
 
-        if (!res.ok) {
-            const errorText = await res.text();
-            console.error("Error sending email:", errorText);
-            // If DB also failed, then we really failed.
-            if (dbError) {
-                throw new Error(`Failed to save to DB (${dbError.message}) AND failed to send email: ${errorText}`);
+            console.log("Sending email via Resend...");
+            try {
+                const res = await fetch("https://api.resend.com/emails", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${RESEND_API_KEY}`,
+                    },
+                    body: JSON.stringify({
+                        from: "Catálogo de Procesos <onboarding@resend.dev>",
+                        to: ["david@immoral.es"],
+                        subject: `Nuevo Lead Onboarding: ${nombre} (${answers.sector || 'Sin sector'})`,
+                        html: emailHtml,
+                    }),
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("Error sending email:", errorText);
+                    // Do NOT throw. Swallow the error so client receives Success.
+                } else {
+                    console.log("Email sent successfully.");
+                }
+            } catch (emailErr) {
+                console.error("Exception sending email:", emailErr);
+                // Also swallow
             }
-            // If DB succeeded but email failed, we might want to tell the user "Warning" or just "Success" but log it.
-            // For now, let's treat email failure as non-critical for the USER response if DB worked? 
-            // Actually user implies "recibir yo el mail del lead" is part of success.
-            // Let's return success but log error.
         } else {
-            console.log("Email sent successfully.");
+            console.log("Skipping email send because RESEND_API_KEY is not configured.");
         }
 
-        return new Response(JSON.stringify({ success: true, message: "Lead processed" }), {
+        // Return Success regardless of email outcome, as long as DB saved
+        return new Response(JSON.stringify({
+            success: true,
+            message: "Lead processed successfully",
+            emailSent: !!RESEND_API_KEY
+        }), {
             headers: { "Content-Type": "application/json", ...corsHeaders },
             status: 200,
         });
