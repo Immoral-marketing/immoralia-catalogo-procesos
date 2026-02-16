@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
-import { calculatePrice, getNextPackInfo } from "@/lib/pricing";
+
 
 interface SelectionSummaryProps {
   selectedProcesses: Process[];
@@ -18,8 +18,7 @@ export const SelectionSummary = ({
   onContact,
 }: SelectionSummaryProps) => {
   const count = selectedProcesses.length;
-  const priceInfo = calculatePrice(count);
-  const nextPackInfo = getNextPackInfo(count);
+
 
   return (
     <Card className="bg-card border-border p-6 sticky top-6">
@@ -68,54 +67,17 @@ export const SelectionSummary = ({
           <span className="text-2xl font-bold text-primary">{count}</span>
         </div>
 
-        {/* Progress to Next Pack */}
-        {count >= 15 ? (
-          <div className="mt-4 pt-4 border-t border-border">
-            <p className="text-sm font-medium text-primary">
-              ¡Genial! Has seleccionado muchos procesos. Te prepararemos una propuesta totalmente personalizada
-            </p>
-          </div>
-        ) : nextPackInfo && (
-          <div className="mt-4 pt-4 border-t border-border">
-            <div className="mb-2">
-              <p className="text-sm font-medium text-foreground mb-1">
-                {count === 0 ? (
-                  "Añade procesos para ver tu pack"
-                ) : nextPackInfo.remaining === 1 ? (
-                  <>¡Estás a un paso! Añade <span className="text-primary font-bold">1 proceso más</span> y desbloquea el pack de {nextPackInfo.nextPackSize}</>
-                ) : (
-                  <>¡Solo te faltan <span className="text-primary font-bold">{nextPackInfo.remaining} procesos</span> para desbloquear el pack de {nextPackInfo.nextPackSize}! Añade más y ahorra</>
-                )}
-              </p>
-              {count > 0 && (
-                <Progress value={nextPackInfo.progress} className="h-2 mt-2" />
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Price Calculator */}
+        {/* Call to Action Text */}
         <div className="mt-4 pt-4 border-t border-border">
-          {count === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Añade procesos para ver el presupuesto estimado
+          <p className="text-sm font-medium text-foreground mb-1">
+            {count === 0
+              ? "Añade procesos para solicitar tu oferta"
+              : "Solicita tu oferta personalizada"}
+          </p>
+          {count > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Analizaremos tu selección y te enviaremos una propuesta adaptada a tus necesidades.
             </p>
-          ) : priceInfo && !priceInfo.isCustom ? (
-            <>
-              <p className="text-xs text-muted-foreground mb-1">{priceInfo.packName}</p>
-              <p className="text-3xl font-bold text-primary">
-                {priceInfo.price.toLocaleString("es-ES")}€
-              </p>
-            </>
-          ) : (
-            <div>
-              <p className="text-sm font-semibold text-foreground mb-1">
-                Presupuesto personalizado
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Con {count} procesos seleccionados, mereces una propuesta exclusiva. Te contactaremos para diseñar un plan totalmente adaptado a tu agencia.
-              </p>
-            </div>
           )}
         </div>
       </div>
@@ -126,7 +88,7 @@ export const SelectionSummary = ({
         disabled={count === 0}
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-primary"
       >
-        Solicitar propuesta personalizada
+        Solicitar Oferta
       </Button>
     </Card>
   );

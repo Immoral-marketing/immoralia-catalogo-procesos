@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import { calculatePrice } from "../../../src/lib/pricing.ts";
+
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -167,19 +167,13 @@ const handler = async (req: Request): Promise<Response> => {
     }
     // ------------------------
 
-    // Calculate estimated price
-    const processCount = selectedProcesses.length;
-    const priceResult = calculatePrice(processCount);
-    const estimatedPrice = priceResult?.isCustom || !priceResult
-      ? "A medida"
-      : `${priceResult.price.toLocaleString("es-ES")}€`;
+
 
     console.log("Sending contact email for:", {
       nombre: escapeHtml(nombre),
       email: escapeHtml(email),
       empresa: escapeHtml(empresa),
       processCount: selectedProcesses.length,
-      estimatedPrice: estimatedPrice,
     });
 
     // Create processes list HTML with escaped content
@@ -291,7 +285,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           <div style="margin-top: 25px;">
             <h2 style="color: #666; margin-bottom: 5px;">Procesos seleccionados (${selectedProcesses.length}):</h2>
-            <p><strong>Estimación:</strong> <span style="font-size: 18px; color: #0066cc; font-weight: bold;">${estimatedPrice}</span></p>
+            <h2 style="color: #666; margin-bottom: 5px;">Procesos seleccionados (${selectedProcesses.length}):</h2>
             ${processesListHTML}
           </div>
           
@@ -339,10 +333,10 @@ const handler = async (req: Request): Promise<Response> => {
           <h2 style="color: #666;">Procesos que seleccionaste (${selectedProcesses.length}):</h2>
           ${processesListHTML}
           
-          <p><strong>Estimación orientativa:</strong> <span style="font-size: 16px; color: #0066cc; font-weight: bold;">${estimatedPrice}</span></p>
+
           
           <p style="margin-top: 20px;">
-            Nos pondremos en contacto contigo pronto para diseñar tu proyecto de automatización personalizado.
+            Nos pondremos en contacto contigo pronto para presentarte una oferta personalizada.
           </p>
           
           <p style="margin-top: 30px;">
