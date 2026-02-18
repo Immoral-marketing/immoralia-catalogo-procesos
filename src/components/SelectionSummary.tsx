@@ -10,12 +10,14 @@ interface SelectionSummaryProps {
   selectedProcesses: Process[];
   onRemove: (id: string) => void;
   onContact: () => void;
+  onOpenCalendly?: () => void;
 }
 
 export const SelectionSummary = ({
   selectedProcesses,
   onRemove,
   onContact,
+  onOpenCalendly,
 }: SelectionSummaryProps) => {
   const count = selectedProcesses.length;
 
@@ -90,6 +92,23 @@ export const SelectionSummary = ({
       >
         Solicitar Oferta
       </Button>
+
+      {/* Calendly CTA */}
+      <div className="mt-8 pt-8 border-t border-border space-y-4">
+        <div className="space-y-2">
+          <h4 className="font-bold text-foreground">¿No encuentras tu proceso?</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Agenda una llamada de 15–30 min y cuéntanos tu caso. Si encaja, te propondremos una auditoría para definir el alcance y automatizarlo.
+          </p>
+        </div>
+        <Button
+          variant="secondary"
+          className="w-full border-secondary text-secondary-foreground hover:bg-secondary/10"
+          onClick={() => onOpenCalendly?.()}
+        >
+          Agendar llamada
+        </Button>
+      </div>
     </Card>
   );
 };

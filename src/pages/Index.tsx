@@ -5,6 +5,7 @@ import { ProcessDetailModal } from "@/components/ProcessDetailModal";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
+import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { Button } from "@/components/ui/button";
 import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
@@ -63,6 +64,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [detailProcess, setDetailProcess] = useState<Process | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   const toggleProcess = (id: string) => {
     const newSet = new Set(selectedProcessIds);
@@ -229,6 +231,22 @@ const Index = () => {
                     />
                   );
                 })}
+
+                {/* Optional: Add "Can't find your process?" card at the end of the grid */}
+                <div className="bg-card/30 border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:border-primary/50 transition-colors group cursor-pointer" onClick={() => setShowCalendlyModal(true)}>
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-8 h-8 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold">¿No encuentras tu proceso?</h3>
+                    <p className="text-muted-foreground text-sm max-w-[200px]">
+                      Cuéntanos tu caso y agendamos una llamada de 15-30 min para ayudarte.
+                    </p>
+                  </div>
+                  <Button variant="outline" className="mt-2 border-primary/30 group-hover:border-primary group-hover:bg-primary/5">
+                    Contar mi caso
+                  </Button>
+                </div>
               </div>
 
               {filteredProcesses.length === 0 && (
@@ -245,6 +263,7 @@ const Index = () => {
                 selectedProcesses={selectedProcesses}
                 onRemove={id => toggleProcess(id)}
                 onContact={() => setShowContactForm(true)}
+                onOpenCalendly={() => setShowCalendlyModal(true)}
               />
             </aside>
           </div>
@@ -272,6 +291,13 @@ const Index = () => {
         isOpen={showContactForm}
         onClose={() => setShowContactForm(false)}
         selectedProcesses={selectedProcesses}
+      />
+
+      <CalendlyLeadModal
+        isOpen={showCalendlyModal}
+        onClose={() => setShowCalendlyModal(false)}
+        activeCategory={selectedCategory}
+        selectedProcessIds={Array.from(selectedProcessIds)}
       />
     </div>
   );
