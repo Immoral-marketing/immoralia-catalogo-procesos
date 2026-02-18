@@ -46,11 +46,6 @@ export const isOnboardingCompleted = (): boolean => {
     return localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true";
 };
 
-export const hasFilledOnboarding = (): boolean => {
-    const answers = getOnboardingAnswers();
-    return !!(answers && answers.nombre && answers.email);
-};
-
 export const skipOnboarding = () => {
     localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
 };

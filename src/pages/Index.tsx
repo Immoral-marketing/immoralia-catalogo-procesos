@@ -7,8 +7,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { Button } from "@/components/ui/button";
 import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
-import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers, hasFilledOnboarding } from "@/lib/onboarding-utils";
-import { useToast } from "@/hooks/use-toast";
+import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const Index = () => {
@@ -64,7 +63,6 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [detailProcess, setDetailProcess] = useState<Process | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
-  const { toast } = useToast();
 
   const toggleProcess = (id: string) => {
     const newSet = new Set(selectedProcessIds);
@@ -246,18 +244,7 @@ const Index = () => {
               <SelectionSummary
                 selectedProcesses={selectedProcesses}
                 onRemove={id => toggleProcess(id)}
-                onContact={() => {
-                  if (hasFilledOnboarding()) {
-                    setShowContactForm(true);
-                  } else {
-                    toast({
-                      title: "Información requerida",
-                      description: "Para solicitar una oferta personalizada, primero necesitamos que completes unas breves preguntas sobre tu negocio.",
-                      variant: "default",
-                    });
-                    setOnboardingOpen(true);
-                  }
-                }}
+                onContact={() => setShowContactForm(true)}
               />
             </aside>
           </div>
