@@ -1,7 +1,7 @@
 export interface Process {
   id: string;
   codigo: string;
-  categoria: "A" | "B" | "C" | "D" | "E";
+  categoria: "A" | "B" | "C" | "D" | "E" | "F";
   categoriaNombre: string;
   nombre: string;
   tagline: string;
@@ -496,6 +496,31 @@ export const processes: Process[] = [
     sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales", "Retail"],
     herramientas: ["Holded", "HubSpot", "Pipedrive", "Notion", "ClickUp"],
     dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas", "Pierdo solicitudes entre WhatsApp/Instagram/email"]
+  },
+  {
+    id: "F25",
+    codigo: "F25",
+    categoria: "F",
+    categoriaNombre: "Auditoría tecnológica",
+    nombre: "Auditoría tecnológica (IA + Automatización)",
+    tagline: "Analizamos tus procesos y definimos un plan de automatización con IA: quick wins, roadmap y ROI.",
+    recomendado: false,
+    descripcionDetallada: "Analizamos en profundidad con tus equipos actuales cómo fluye la información en tu negocio. El objetivo es identificar dónde la IA y la automatización pueden generar mayor impacto inmediato (Quick Wins) y trazar una hoja de ruta clara para escalar tu eficiencia operativa sin fricciones.",
+    pasos: [
+      "Mapa de procesos y pain points",
+      "Identificación de quick wins y automatizaciones",
+      "Propuesta de enfoque/herramientas",
+      "Estimación impacto vs esfuerzo (ROI/horas)",
+      "Roadmap por fases + backlog priorizado"
+    ],
+    personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínica", "Restauración"],
+    herramientas: ["IA", "Automatización", "Custom Scripts"],
+    dolores: [
+      "No sé por dónde empezar con la IA",
+      "Quiero automatizar pero no tengo roadmap",
+      "Mis equipos pierden tiempo en tareas manuales complejas"
+    ]
   }
 ];
 
@@ -504,5 +529,6 @@ export const categories = [
   { id: "B", name: "Horarios y Proyectos", emoji: "📅" },
   { id: "C", name: "Finanzas y Tesorería", emoji: "💰" },
   { id: "D", name: "Internos Agencias", emoji: "🏢" },
-  { id: "E", name: "Atención y Captura", emoji: "💬" }
+  { id: "E", name: "Atención y Captura", emoji: "💬" },
+  { id: "F", name: "Auditoría tecnológica", emoji: "🔍" }
 ];
