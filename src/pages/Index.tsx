@@ -66,6 +66,8 @@ const Index = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
+  const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>('setup');
+
   const toggleProcess = (id: string) => {
     const newSet = new Set(selectedProcessIds);
     if (newSet.has(id)) {
@@ -264,6 +266,8 @@ const Index = () => {
                 onRemove={id => toggleProcess(id)}
                 onContact={() => setShowContactForm(true)}
                 onOpenCalendly={() => setShowCalendlyModal(true)}
+                n8nHosting={n8nHosting}
+                onHostingChange={setN8nHosting}
               />
             </aside>
           </div>
@@ -291,6 +295,7 @@ const Index = () => {
         isOpen={showContactForm}
         onClose={() => setShowContactForm(false)}
         selectedProcesses={selectedProcesses}
+        n8nHosting={n8nHosting}
       />
 
       <CalendlyLeadModal
