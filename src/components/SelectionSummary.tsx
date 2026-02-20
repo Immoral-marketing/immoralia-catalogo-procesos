@@ -1,9 +1,10 @@
-import { X } from "lucide-react";
+import { X, Server, Database } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
-import { Progress } from "./ui/progress";
+import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 
 interface SelectionSummaryProps {
@@ -11,6 +12,8 @@ interface SelectionSummaryProps {
   onRemove: (id: string) => void;
   onContact: () => void;
   onOpenCalendly?: () => void;
+  n8nHosting?: 'setup' | 'own';
+  onHostingChange?: (value: 'setup' | 'own') => void;
 }
 
 export const SelectionSummary = ({
@@ -18,6 +21,8 @@ export const SelectionSummary = ({
   onRemove,
   onContact,
   onOpenCalendly,
+  n8nHosting = 'setup',
+  onHostingChange,
 }: SelectionSummaryProps) => {
   const count = selectedProcesses.length;
 
@@ -62,6 +67,36 @@ export const SelectionSummary = ({
         )}
       </div>
 
+      {/* Hosting Configuration */}
+      {count > 0 && (
+        <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-lg animate-in fade-in slide-in-from-top-2">
+          <h4 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+            <Server className="w-4 h-4 text-primary" />
+            Configuración de n8n
+          </h4>
+          <RadioGroup
+            value={n8nHosting}
+            onValueChange={(value) => onHostingChange?.(value as 'setup' | 'own')}
+            className="space-y-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="setup" id="setup" />
+              <Label htmlFor="setup" className="text-xs flex-1 cursor-pointer leading-tight">
+                Necesito <strong>Setup de Auto</strong> <br />
+                <span className="text-muted-foreground">(Alojado por Immoralia)</span>
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="own" id="own" />
+              <Label htmlFor="own" className="text-xs flex-1 cursor-pointer leading-tight">
+                Ya dispongo de <strong>n8n</strong> <br />
+                <span className="text-muted-foreground">(En servidor propio)</span>
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
+      )}
+
       {/* Summary Stats */}
       <div className="mb-6 p-4 bg-muted rounded-lg">
         <div className="flex justify-between items-center mb-2">
@@ -78,7 +113,7 @@ export const SelectionSummary = ({
           </p>
           {count > 0 && (
             <p className="text-xs text-muted-foreground">
-              Analizaremos tu selección y te enviaremos una propuesta adaptada a tus necesidades.
+              Analizaremos tu selección y el tipo de hosting para enviarte una propuesta detallada.
             </p>
           )}
         </div>

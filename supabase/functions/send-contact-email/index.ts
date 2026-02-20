@@ -56,6 +56,7 @@ const ContactRequestSchema = z.object({
     .min(1, "Selecciona al menos un proceso")
     .max(50, "Demasiados procesos seleccionados"),
   onboardingAnswers: z.any().optional(),
+  n8nHosting: z.enum(["setup", "own"]).default("setup"),
 });
 
 // HTML escape function to prevent injection
@@ -99,7 +100,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers } = validationResult.data;
+    const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers, n8nHosting } = validationResult.data;
 
     // --- SAVE TO DATABASE ---
     console.log("Iniciando inserción en base de datos para:", email);
@@ -279,6 +280,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="margin: 2px 0;"><strong>Nombre:</strong> ${safeNombre}</p>
             <p style="margin: 2px 0;"><strong>Email:</strong> ${safeEmail}</p>
             <p style="margin: 2px 0;"><strong>Empresa:</strong> ${safeEmpresa}</p>
+            <p style="margin: 2px 0;"><strong>Preferencia n8n:</strong> ${n8nHosting === 'own' ? '<span style="color: #2e7d32; font-weight: bold;">Ya dispone de n8n (Servidor propio)</span>' : '<span style="color: #d32f2f; font-weight: bold;">Necesita Setup de Auto (Alojado por Immoralia)</span>'}</p>
           </div>
           
           ${onboardingHTML}
@@ -329,6 +331,7 @@ const handler = async (req: Request): Promise<Response> => {
           <h1 style="color: #333;">¡Gracias por tu interés, ${safeNombre}!</h1>
           
           <p>Hemos recibido tu solicitud de automatización para <strong>${safeEmpresa}</strong>.</p>
+          <p>Has indicado que: <strong>${n8nHosting === 'own' ? 'Ya dispones de n8n en servidor propio' : 'Necesitas el Setup de Auto (alojado por nosotros)'}</strong>. Tendremos esto en cuenta para ajustar tu presupuesto.</p>
           
           <h2 style="color: #666;">Procesos que seleccionaste (${selectedProcesses.length}):</h2>
           ${processesListHTML}

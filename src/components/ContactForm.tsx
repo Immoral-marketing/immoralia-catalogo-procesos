@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Server } from "lucide-react";
 import { Process } from "@/data/processes";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -23,9 +23,10 @@ interface ContactFormProps {
   isOpen: boolean;
   onClose: () => void;
   selectedProcesses: Process[];
+  n8nHosting: 'setup' | 'own';
 }
 
-export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormProps) => {
+export const ContactForm = ({ isOpen, onClose, selectedProcesses, n8nHosting }: ContactFormProps) => {
   const { toast } = useToast();
   const [onboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
   const [formData, setFormData] = useState({
@@ -88,6 +89,7 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
           empresa: formData.empresa,
           comentario: formData.comentario,
           onboardingAnswers,
+          n8nHosting,
           selectedProcesses: selectedProcesses.map(p => ({
             id: p.id,
             codigo: p.codigo,
@@ -193,20 +195,45 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
         <ScrollArea className="max-h-[70vh] pr-4">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Selected Processes Summary */}
-            <div className="bg-muted p-4 rounded-lg">
-              <h4 className="text-sm font-semibold text-foreground mb-2">
-                Procesos seleccionados ({selectedProcesses.length})
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedProcesses.map((process) => (
-                  <Badge
-                    key={process.id}
-                    variant="outline"
-                    className="text-xs border-primary/30 text-primary"
-                  >
-                    {process.nombre}
-                  </Badge>
-                ))}
+            <div className="bg-muted p-4 rounded-lg space-y-4">
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-2">
+                  Procesos seleccionados ({selectedProcesses.length})
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProcesses.map((process) => (
+                    <Badge
+                      key={process.id}
+                      variant="outline"
+                      className="text-xs border-primary/30 text-primary"
+                    >
+                      {process.nombre}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-border/50">
+                <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                  <Server className="w-4 h-4 text-primary" />
+                  Configuración de n8n
+                </h4>
+                <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
+                  {n8nHosting === 'setup' ? (
+                    <>
+                      <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                      <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-2 h-2 rounded-full bg-secondary" />
+                      <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
+                    </>
+                  )}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-2 italic">
+                  * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
+                </p>
               </div>
             </div>
 
