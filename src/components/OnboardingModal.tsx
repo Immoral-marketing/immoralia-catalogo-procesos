@@ -454,7 +454,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold">Por último, ¿cómo podemos contactarte?</h2>
                             <p className="text-muted-foreground">
-                                Tu perfil de automatización está listo. Danos tus datos para enviarte el resumen y que podamos darte un presupuesto exacto.
+                                Tu perfil de automatización está listo. Danos tus datos para ver tus recomendaciones personalizadas y guardar tu progreso.
                             </p>
                             <div className="space-y-4 pt-2">
                                 <div className="space-y-2">
@@ -487,9 +487,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                     />
                                 </div>
                             </div>
-                            <p className="text-xs text-muted-foreground mt-4 italic">
-                                * Al finalizar, recibirás un correo con el análisis de madurez digital basado en tus respuestas.
-                            </p>
+
                         </div>
                     )}
                 </div>
