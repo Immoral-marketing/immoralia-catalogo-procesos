@@ -11,6 +11,8 @@ const leadSchema = z.object({
     nombre: z.string().min(2),
     email: z.string().email(),
     telefono: z.string().optional(),
+    utm: z.string().optional(),
+    source: z.string().optional(),
     answers: z.any(),
 });
 
@@ -25,6 +27,9 @@ function escapeHtml(text: string): string {
         .replace(/'/g, "&#039;");
 }
 
+const CLICKUP_TOKEN = Deno.env.get("CLICKUP_TOKEN");
+const CLICKUP_LIST_ID = "901521069796";
+
 serve(async (req) => {
     // 1. Handle CORS Preflight
     if (req.method === "OPTIONS") {
@@ -33,55 +38,29 @@ serve(async (req) => {
 
     try {
         // 2. Validate Environment Variables
-        // Make RESEND_API_KEY optional to prevent crashes if missing
         const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
         const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
         const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-        // Only critical vars are strictly required for basic functionality (DB save)
-        const missingVars = [];
-        if (!SUPABASE_URL) missingVars.push("SUPABASE_URL");
-        if (!SUPABASE_SERVICE_ROLE_KEY) missingVars.push("SUPABASE_SERVICE_ROLE_KEY");
-
-        if (missingVars.length > 0) {
-            console.error(`ERROR: Critical config missing: ${missingVars.join(", ")}`);
-            return new Response(JSON.stringify({
-                error: "Configuration error",
-                details: `Missing critical environment variables. Check Function Logs.`
-            }), {
-                headers: { "Content-Type": "application/json", ...corsHeaders },
-                status: 500,
-            });
-        }
-
-        if (!RESEND_API_KEY) {
-            console.warn("WARNING: RESEND_API_KEY is missing. Emails will NOT be sent.");
+        if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+            console.error("Critical config missing");
+            return new Response(JSON.stringify({ error: "Configuration error" }), { status: 500, headers: corsHeaders });
         }
 
         // 3. Initialize Supabase Client
         const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
         // 4. Parse Body
-        let body;
-        try {
-            body = await req.json();
-        } catch (e) {
-            return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
-                headers: { "Content-Type": "application/json", ...corsHeaders },
-                status: 400,
-            });
-        }
-
+        const body = await req.json();
         const parseResult = leadSchema.safeParse(body);
         if (!parseResult.success) {
-            console.error("Validation error:", parseResult.error);
             return new Response(JSON.stringify({ error: "Validation error", details: parseResult.error.errors }), {
                 headers: { "Content-Type": "application/json", ...corsHeaders },
                 status: 400,
             });
         }
 
-        const { nombre, email, telefono, answers } = parseResult.data;
+        const { nombre, email, telefono, answers, utm, source } = parseResult.data;
         const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
 
         console.log(`Processing onboarding lead: ${email}`);
@@ -99,125 +78,115 @@ serve(async (req) => {
 
         if (dbError) {
             console.error("Database error saving lead:", dbError);
-            return new Response(JSON.stringify({ error: "Database error", details: dbError.message }), {
-                headers: { "Content-Type": "application/json", ...corsHeaders },
-                status: 500, // If DB fails, we should probably fail.
-            });
-        } else {
-            console.log("Lead saved to database successfully.");
         }
 
-        // 6. Helper Functions for Email
-        // Define these only if we are going to send email, or just leave them here
-        const formatTools = () => {
-            const tools = answers.tools || [];
-            if (!Array.isArray(tools)) return "No tools specified";
+        // ... (EMAILS)
 
-            const result: string[] = [];
-            const categorized: Record<string, string[]> = {};
-
-            tools.forEach((t: string) => {
-                if (typeof t === 'string' && t.includes(": Otro")) {
-                    const cat = t.split(":")[0];
-                    const otherKey = `other_${cat}`;
-                    const otherVal = answers[otherKey];
-                    if (otherVal) categorized[cat] = [...(categorized[cat] || []), `Otro (${otherVal})`];
-                } else {
-                    result.push(t);
-                }
-            });
-
-            const categorizedStr = Object.entries(categorized)
-                .map(([cat, val]) => `${cat}: ${val.join(", ")}`);
-
-            return [...result, ...categorizedStr].join(", ");
-        };
-
-        const formatChannels = (type: 'clients' | 'internal') => {
-            const channels = answers.channels?.[type] || [];
-            if (!Array.isArray(channels)) return "None";
-
-            const result = channels.filter((c: string) => c !== "Otro");
-            if (channels.includes("Otro")) {
-                const otherVal = type === 'clients' ? answers.otherClientChannel : answers.otherInternalChannel;
-                if (otherVal) result.push(`Otro (${otherVal})`);
-            }
-            return result.join(", ");
-        };
-
-        // 7. Prepare & Send Email (Only if key exists)
-        if (RESEND_API_KEY) {
-            const emailHtml = `
-              <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-                <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
-                  <h1 style="margin: 0; font-size: 24px;">¡Nuevo Lead de Onboarding!</h1>
-                </div>
-                <div style="padding: 30px;">
-                  <p style="font-size: 16px; line-height: 1.5;">Se ha completado un nuevo onboarding en el catálogo de procesos:</p>
-
-                  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <p style="margin: 5px 0;"><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
-                    <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}">${escapeHtml(email)}</a></p>
-                    <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${escapeHtml(telefono || "No proporcionado")}</p>
-                  </div>
-
-                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Ajuste y Madurez</h2>
-                  <p><strong>Sector:</strong> ${escapeHtml(answers.sector || "N/A")} ${answers.otherSector ? `(${escapeHtml(answers.otherSector)})` : ""}</p>
-                  <p><strong>Madurez Digital:</strong> ${escapeHtml(answers.maturity || "N/A")}</p>
-                  <p><strong>Uso de IA:</strong> ${answers.usesAI ? "Sí" : "No"} ${answers.aiTools ? `<br/><em>Herramientas: ${escapeHtml(answers.aiTools)}</em>` : ""}</p>
-
-                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Operativa Actual</h2>
-                  <p><strong>Herramientas:</strong> ${escapeHtml(formatTools())}</p>
-                  <p><strong>Canales Clientes:</strong> ${escapeHtml(formatChannels('clients'))}</p>
-                  <p><strong>Comunicación Interna:</strong> ${escapeHtml(formatChannels('internal'))}</p>
-
-                  <h2 style="color: #666; border-bottom: 2px solid #eee; padding-bottom: 5px;">Puntos Críticos</h2>
-                  <p><strong>Cuellos de botella:</strong> ${escapeHtml(Array.isArray(answers.pains) ? answers.pains.join(", ") : "Ninguno")}</p>
-                  ${answers.otherPain ? `<p><strong>Otros dolores:</strong> ${escapeHtml(answers.otherPain)}</p>` : ""}
-                  ${answers.biggestPain ? `<p style="color: #d32f2f;"><strong>Freno principal:</strong> ${escapeHtml(answers.biggestPain)}</p>` : ""}
-                </div>
-                <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888;">
-                  Este lead ha sido capturado automáticamente al finalizar el onboarding.
-                </div>
-              </div>
-            `;
-
-            console.log("Sending email via Resend...");
+        // --- CLICKUP INTEGRATION ---
+        let clickupTaskId = null;
+        if (CLICKUP_TOKEN) {
+            console.log("Iniciando creación de tarea en ClickUp para lead de onboarding...");
             try {
-                const res = await fetch("https://api.resend.com/emails", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${RESEND_API_KEY}`,
-                    },
-                    body: JSON.stringify({
-                        from: "Catálogo de Procesos <onboarding@resend.dev>",
-                        to: ["david@immoral.es"],
-                        subject: `Nuevo Lead Onboarding: ${nombre} (${answers.sector || 'Sin sector'})`,
-                        html: emailHtml,
-                    }),
-                });
+                const isoDatetime = new Date().toISOString();
 
-                if (!res.ok) {
-                    const errorText = await res.text();
-                    console.error("Error sending email:", errorText);
-                    // Do NOT throw. Swallow the error so client receives Success.
-                } else {
-                    console.log("Email sent successfully.");
+                // Helper to format onboarding answers into a readable string
+                const formatOnboarding = (answers: any) => {
+                    if (!answers) return "No se proporcionaron respuestas de onboarding.";
+
+                    let text = "";
+                    if (answers.sector) text += `Sector: ${answers.sector}${answers.otherSector ? ` (${answers.otherSector})` : ""}\n`;
+                    if (answers.maturity) text += `Madurez: ${answers.maturity}\n`;
+
+                    if (answers.tools && Array.isArray(answers.tools)) {
+                        text += `Herramientas: ${answers.tools.join(", ")}\n`;
+                    }
+
+                    if (answers.channels) {
+                        if (answers.channels.clients?.length) text += `Canales Clientes: ${answers.channels.clients.join(", ")}\n`;
+                        if (answers.channels.internal?.length) text += `Canales Internos: ${answers.channels.internal.join(", ")}\n`;
+                    }
+
+                    if (answers.usesAI !== undefined) {
+                        text += `Usa IA: ${answers.usesAI ? "Sí" : "No"}\n`;
+                        if (answers.usesAI) {
+                            if (answers.aiTools) text += `- Herramientas IA: ${answers.aiTools}\n`;
+                            if (answers.aiUsagePurpose) text += `- Propósito IA: ${answers.aiUsagePurpose}\n`;
+                        }
+                    }
+
+                    if (answers.pains && Array.isArray(answers.pains) && answers.pains.length) {
+                        text += `Dolores/Necesidades:\n- ${answers.pains.join("\n- ")}\n`;
+                    }
+                    if (answers.otherPain) text += `Otros dolores: ${answers.otherPain}\n`;
+                    if (answers.biggestPain) text += `Mayor freno: ${answers.biggestPain}\n`;
+
+                    return text;
+                };
+
+                const onboardingText = formatOnboarding(answers);
+
+                const description = `Lead Onboarding desde Web
+
+### Información de Contacto
+**Persona:** ${nombre}
+**Email:** ${email}
+**Tel:** ${telefono || "No proporcionado"}
+
+### Contexto
+**Origen:** ${source || "Web"}
+**UTM:** ${utm || "Ninguna"}
+**Fecha:** ${isoDatetime}
+
+### Onboarding
+${onboardingText}`;
+
+                const createTask = async (withStatus = true) => {
+                    const body: any = {
+                        name: `Lead Onboarding: ${nombre}`,
+                        description,
+                        priority: 3,
+                    };
+                    if (withStatus) {
+                        body.status = "CONOCIDO";
+                    }
+
+                    const response = await fetch(`https://api.clickup.com/api/v2/list/${CLICKUP_LIST_ID}/task`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: CLICKUP_TOKEN,
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw { status: response.status, data: errorData };
+                    }
+
+                    return await response.json();
+                };
+
+                try {
+                    const task = await createTask(true);
+                    clickupTaskId = task.id;
+                    console.log("Tarea de onboarding creada en ClickUp:", clickupTaskId);
+                } catch (err: any) {
+                    console.error("Error al crear tarea en ClickUp (con status):", err);
+                    console.log("Reintentando sin status...");
+                    const task = await createTask(false);
+                    clickupTaskId = task.id;
                 }
-            } catch (emailErr) {
-                console.error("Exception sending email:", emailErr);
-                // Also swallow
+            } catch (clickupError) {
+                console.error("Fallo definitivo en la integración con ClickUp (onboarding):", clickupError);
             }
-        } else {
-            console.log("Skipping email send because RESEND_API_KEY is not configured.");
         }
 
-        // Return Success regardless of email outcome, as long as DB saved
         return new Response(JSON.stringify({
             success: true,
             message: "Lead processed successfully",
-            emailSent: !!RESEND_API_KEY
+            emailSent: !!RESEND_API_KEY,
+            clickup_task_id: clickupTaskId
         }), {
             headers: { "Content-Type": "application/json", ...corsHeaders },
             status: 200,
@@ -234,4 +203,3 @@ serve(async (req) => {
         });
     }
 });
-
