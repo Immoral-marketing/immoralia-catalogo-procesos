@@ -177,19 +177,32 @@ const Index = () => {
                   <h3 className="font-semibold text-foreground">Filtros</h3>
                 </div>
 
-                <div className="space-y-2 mb-4">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                <div className="space-y-[8px] mb-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1">
                     Categoría
                   </p>
-                  <Button variant={selectedCategory === null ? "default" : "ghost"} size="sm" className="w-full justify-start" onClick={() => setSelectedCategory(null)}>
-                    Todas
+                  <Button
+                    variant={selectedCategory === null ? "secondary" : "ghost"}
+                    className={`w-full justify-start h-[42px] px-4 gap-[11px] font-medium text-[14px] ${selectedCategory === null ? 'bg-secondary/10 border border-secondary/20' : ''}`}
+                    onClick={() => setSelectedCategory(null)}
+                  >
+                    <div className="w-[10px] h-[20px] rounded-[10px] bg-primary shrink-0" />
+                    <span className="truncate">Todas</span>
                   </Button>
-                  {categories.map(cat => (
-                    <Button key={cat.id} variant={selectedCategory === cat.id ? "default" : "ghost"} size="sm" className="w-full justify-start text-left" onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}>
-                      <span className="text-base mr-[8px] flex items-center">{cat.emoji}</span>
-                      <span className="truncate">{cat.name}</span>
-                    </Button>
-                  ))}
+                  {categories.map(cat => {
+                    const isActive = selectedCategory === cat.id;
+                    return (
+                      <Button
+                        key={cat.id}
+                        variant={isActive ? "secondary" : "ghost"}
+                        className={`w-full justify-start text-left h-[42px] px-4 gap-[11px] font-medium text-[14px] ${isActive ? 'bg-secondary/10 border border-secondary/20' : ''}`}
+                        onClick={() => setSelectedCategory(isActive ? null : cat.id)}
+                      >
+                        <div className="w-[10px] h-[20px] rounded-[10px] bg-primary shrink-0" />
+                        <span className="truncate">{cat.name}</span>
+                      </Button>
+                    );
+                  })}
                 </div>
 
                 {onboardingAnswers ? (
