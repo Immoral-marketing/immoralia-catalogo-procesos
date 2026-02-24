@@ -120,7 +120,6 @@ const Index = () => {
               <div className="flex items-center gap-3">
                 <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
               </div>
-              <p className="text-muted-foreground mt-2">Elige los procesos que quieres automatizar</p>
             </div>
 
             {onboardingAnswers ? (
@@ -141,7 +140,7 @@ const Index = () => {
             )}
           </div>
         </div>
-      </header>
+      </header >
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
@@ -252,9 +251,9 @@ const Index = () => {
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Sparkles className="w-8 h-8 text-primary" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 flex flex-col items-center">
                     <h3 className="text-xl font-bold">¿No encuentras tu proceso?</h3>
-                    <p className="text-muted-foreground text-sm max-w-[200px]">
+                    <p className="text-muted-foreground text-sm max-w-[200px] mx-auto">
                       Cuéntanos tu caso y agendamos una llamada de 15-30 min para ayudarte.
                     </p>
                   </div>
@@ -317,7 +316,7 @@ const Index = () => {
         activeCategory={selectedCategory}
         selectedProcessIds={Array.from(selectedProcessIds)}
       />
-    </div>
+    </div >
   );
 };
 

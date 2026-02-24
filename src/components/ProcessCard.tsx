@@ -47,11 +47,8 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSp
       <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
         {process.nombre}
       </h3>
+      <div className="flex-1" />
 
-      {/* Tagline */}
-      <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-1">
-        {process.tagline}
-      </p>
 
       {/* Actions */}
       <div className="flex items-center justify-between gap-2 mt-4 flex-wrap">
