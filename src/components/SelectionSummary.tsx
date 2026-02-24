@@ -1,4 +1,4 @@
-import { X, Server, Database } from "lucide-react";
+import { X, Server, Database, Info, HelpCircle, ExternalLink } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -7,6 +7,8 @@ import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { useSelection } from "@/lib/SelectionContext";
 import { processes } from "@/data/processes";
+
+import { cn } from "@/lib/utils";
 
 
 interface SelectionSummaryProps {
@@ -69,31 +71,83 @@ export const SelectionSummary = ({
 
       {/* Hosting Configuration */}
       {count > 0 && (
-        <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-lg animate-in fade-in slide-in-from-top-2">
-          <h4 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-            <Server className="w-4 h-4 text-primary" />
-            Configuración de n8n
-          </h4>
-          <RadioGroup
-            value={n8nHosting}
-            onValueChange={(value) => onHostingChange?.(value as 'setup' | 'own')}
-            className="space-y-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="setup" id="setup" />
-              <Label htmlFor="setup" className="text-xs flex-1 cursor-pointer leading-tight">
-                Necesito <strong>Setup de Auto</strong> <br />
-                <span className="text-muted-foreground">(Alojado por Immoralia)</span>
-              </Label>
+        <div className="mb-6 p-5 bg-primary/10 border-2 border-primary/30 rounded-xl animate-in fade-in slide-in-from-top-2 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none">
+            <Server className="w-12 h-12" />
+          </div>
+
+          <div className="relative z-10 space-y-4">
+            <div className="flex items-center gap-2">
+              <Server className="w-4 h-4 text-primary" />
+              <h4 className="text-sm font-bold text-foreground">
+                Configuración de n8n
+              </h4>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="own" id="own" />
-              <Label htmlFor="own" className="text-xs flex-1 cursor-pointer leading-tight">
-                Ya dispongo de <strong>n8n</strong> <br />
-                <span className="text-muted-foreground">(En servidor propio)</span>
-              </Label>
+
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              Aquí definimos dónde se ejecutarán tus automatizaciones (la ‘casa’ donde viven).
+            </p>
+
+            <RadioGroup
+              value={n8nHosting}
+              onValueChange={(value) => onHostingChange?.(value as 'setup' | 'own')}
+              className="space-y-3"
+            >
+              <div className={cn(
+                "flex items-start space-x-3 p-2 rounded-lg transition-colors border border-transparent",
+                n8nHosting === 'setup' ? "bg-primary/5 border-primary/20" : "hover:bg-muted/50"
+              )}>
+                <RadioGroupItem value="setup" id="setup" className="mt-1" />
+                <Label htmlFor="setup" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-foreground text-[13px]">Alojado por Immoralia</span>
+                    <Badge variant="outline" className="text-[9px] h-4 px-1.5 bg-primary/10 text-primary border-primary/20 uppercase tracking-wider font-extrabold">Recomendado</Badge>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    Nosotros lo dejamos listo por ti. La opción más rápida y segura si no tienes equipo técnico.
+                  </p>
+                </Label>
+              </div>
+
+              <div className={cn(
+                "flex items-start space-x-3 p-2 rounded-lg transition-colors border border-transparent",
+                n8nHosting === 'own' ? "bg-muted/80 border-border" : "hover:bg-muted/50"
+              )}>
+                <RadioGroupItem value="own" id="own" className="mt-1" />
+                <Label htmlFor="own" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
+                  <span className="font-bold text-foreground text-[13px]">Tengo mi propio servidor</span>
+                  <p className="text-[10px] text-muted-foreground">
+                    Ya dispones de n8n o un VPS y solo conectamos la automatización.
+                  </p>
+                </Label>
+              </div>
+            </RadioGroup>
+
+            {/* Prominent Help CTA */}
+            <div className="pt-2 border-t border-primary/10">
+              <a
+                href="/info/setup-automatizacion"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-3 rounded-xl bg-background/50 border border-primary/20 hover:border-primary transition-all text-xs"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <HelpCircle className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-foreground group-hover:text-primary transition-colors">¿Dudas con la elección?</span>
+                    <span className="text-[10px] text-muted-foreground line-clamp-1">Pulsa aquí y sal de dudas en 1 minuto.</span>
+                  </div>
+                </div>
+                <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary" />
+              </a>
             </div>
-          </RadioGroup>
+
+            <p className="text-[9px] text-muted-foreground/60 italic leading-none pt-1">
+              * Por defecto hemos seleccionado el setup gestionado para garantizar el funcionamiento.
+            </p>
+          </div>
         </div>
       )}
 
