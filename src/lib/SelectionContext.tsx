@@ -12,7 +12,17 @@ interface SelectionContextType {
 const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
 
 export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>('setup');
+    const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>(() => {
+        try {
+            // Updated key to force reset to the new default 'setup' for all users
+            const saved = localStorage.getItem("immoralia_n8n_hosting_v2");
+            return (saved === 'setup' || saved === 'own') ? saved : 'setup';
+        } catch (error) {
+            console.error("Error recuperando hosting:", error);
+            return 'setup';
+        }
+    });
+
     const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(() => {
         try {
             const saved = localStorage.getItem("immoralia_selected_processes");
@@ -36,6 +46,10 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             JSON.stringify(Array.from(selectedProcessIds))
         );
     }, [selectedProcessIds]);
+
+    useEffect(() => {
+        localStorage.setItem("immoralia_n8n_hosting_v2", n8nHosting);
+    }, [n8nHosting]);
 
     const toggleProcess = (id: string) => {
         setSelectedProcessIds((prev) => {
