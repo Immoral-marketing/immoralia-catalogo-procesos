@@ -5,11 +5,11 @@ import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { useSelection } from "@/lib/SelectionContext";
+import { processes } from "@/data/processes";
 
 
 interface SelectionSummaryProps {
-  selectedProcesses: Process[];
-  onRemove: (id: string) => void;
   onContact: () => void;
   onOpenCalendly?: () => void;
   n8nHosting?: 'setup' | 'own';
@@ -17,13 +17,13 @@ interface SelectionSummaryProps {
 }
 
 export const SelectionSummary = ({
-  selectedProcesses,
-  onRemove,
   onContact,
   onOpenCalendly,
   n8nHosting = 'setup',
   onHostingChange,
 }: SelectionSummaryProps) => {
+  const { selectedProcessIds, toggleProcess } = useSelection();
+  const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
   const count = selectedProcesses.length;
 
 
@@ -58,7 +58,7 @@ export const SelectionSummary = ({
                 variant="ghost"
                 size="icon"
                 className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                onClick={() => onRemove(process.id)}
+                onClick={() => toggleProcess(process.id)}
               >
                 <X className="w-4 h-4" />
               </Button>

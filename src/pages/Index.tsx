@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { processes, categories, Process } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
-import { ProcessDetailModal } from "@/components/ProcessDetailModal";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
@@ -9,37 +8,25 @@ import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { Button } from "@/components/ui/button";
 import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
+import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const Index = () => {
-  const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem("immoralia_selected_processes");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          const validIds = parsed.filter((id) => processes.some((p) => p.id === id));
-          return new Set(validIds);
-        }
-      }
-    } catch (error) {
-      console.error("Error recuperando selección:", error);
-    }
-    return new Set();
-  });
+  const { selectedProcessIds, toggleProcess, clearSelection, n8nHosting, setN8nHosting } = useSelection();
 
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
     const answers = getOnboardingAnswers();
-    if (!answers) {
+    if (!answers && !isOnboardingCompleted()) {
       setOnboardingOpen(true);
-    } else {
+    } else if (answers) {
       setOnboardingAnswers(answers);
     }
   }, []);
 
+  const handleOnboardingOpen = () => setOnboardingOpen(true);
   const handleOnboardingClose = () => {
     setOnboardingOpen(false);
     setOnboardingAnswers(getOnboardingAnswers());
@@ -48,35 +35,16 @@ const Index = () => {
   const handleReset = () => {
     if (confirm("¿Estás seguro de que quieres restablecer todas tus respuestas y selección?")) {
       resetOnboarding();
-      setSelectedProcessIds(new Set());
+      clearSelection();
       setOnboardingAnswers(null);
       setOnboardingOpen(true);
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem(
-      "immoralia_selected_processes",
-      JSON.stringify(Array.from(selectedProcessIds))
-    );
-  }, [selectedProcessIds]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [detailProcess, setDetailProcess] = useState<Process | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
   const [showCalendlyModal, setShowCalendlyModal] = useState(false);
-
-  const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>('setup');
-
-  const toggleProcess = (id: string) => {
-    const newSet = new Set(selectedProcessIds);
-    if (newSet.has(id)) {
-      newSet.delete(id);
-    } else {
-      newSet.add(id);
-    }
-    setSelectedProcessIds(newSet);
-  };
 
   const recommendedProcesses = useMemo(() => {
     if (!onboardingAnswers) return [];
@@ -158,9 +126,6 @@ const Index = () => {
                   <ProcessCard
                     key={`rec-${process.id}`}
                     process={process}
-                    isSelected={selectedProcessIds.has(process.id)}
-                    onSelect={() => toggleProcess(process.id)}
-                    onViewDetails={() => setDetailProcess(process)}
                     isSpecialized={true}
                   />
                 ))}
@@ -238,9 +203,6 @@ const Index = () => {
                     <ProcessCard
                       key={process.id}
                       process={process}
-                      isSelected={selectedProcessIds.has(process.id)}
-                      onSelect={() => toggleProcess(process.id)}
-                      onViewDetails={() => setDetailProcess(process)}
                       isSpecialized={isSpecialized}
                     />
                   );
@@ -274,8 +236,6 @@ const Index = () => {
 
             <aside className="hidden lg:block">
               <SelectionSummary
-                selectedProcesses={selectedProcesses}
-                onRemove={id => toggleProcess(id)}
                 onContact={() => setShowContactForm(true)}
                 onOpenCalendly={() => setShowCalendlyModal(true)}
                 n8nHosting={n8nHosting}
@@ -292,22 +252,16 @@ const Index = () => {
         initialAnswers={onboardingAnswers}
       />
 
-      <ProcessDetailModal
-        process={detailProcess}
-        isOpen={!!detailProcess}
-        onClose={() => setDetailProcess(null)}
-        isSelected={detailProcess ? selectedProcessIds.has(detailProcess.id) : false}
-        onToggleSelect={() => {
-          if (detailProcess) toggleProcess(detailProcess.id);
-        }}
-        isSpecialized={detailProcess ? recommendedProcesses.some(rp => rp.id === detailProcess.id) : false}
-      />
 
       <ContactForm
         isOpen={showContactForm}
         onClose={() => setShowContactForm(false)}
         selectedProcesses={selectedProcesses}
         n8nHosting={n8nHosting}
+        onOpenOnboarding={() => {
+          setShowContactForm(false);
+          setOnboardingOpen(true);
+        }}
       />
 
       <CalendlyLeadModal

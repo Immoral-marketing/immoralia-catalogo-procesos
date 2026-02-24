@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Loader2, Server } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Loader2, Server, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -24,11 +24,24 @@ interface ContactFormProps {
   onClose: () => void;
   selectedProcesses: Process[];
   n8nHosting: 'setup' | 'own';
+  onOpenOnboarding?: () => void;
 }
 
-export const ContactForm = ({ isOpen, onClose, selectedProcesses, n8nHosting }: ContactFormProps) => {
+export const ContactForm = ({
+  isOpen,
+  onClose,
+  selectedProcesses,
+  n8nHosting,
+  onOpenOnboarding
+}: ContactFormProps) => {
   const { toast } = useToast();
-  const [onboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+  const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+
+  useEffect(() => {
+    if (isOpen) {
+      setOnboardingAnswers(getOnboardingAnswers());
+    }
+  }, [isOpen]);
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -193,137 +206,162 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses, n8nHosting }: 
         </DialogHeader>
 
         <ScrollArea className="max-h-[70vh] pr-4">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Selected Processes Summary */}
-            <div className="bg-muted p-4 rounded-lg space-y-4">
-              <div>
-                <h4 className="text-sm font-semibold text-foreground mb-2">
-                  Procesos seleccionados ({selectedProcesses.length})
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProcesses.map((process) => (
-                    <Badge
-                      key={process.id}
-                      variant="outline"
-                      className="text-xs border-primary/30 text-primary"
-                    >
-                      {process.nombre}
-                    </Badge>
-                  ))}
+          <div className="space-y-6">
+            {!onboardingAnswers && (
+              <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1 text-center md:text-left space-y-1">
+                  <h4 className="font-bold text-sm">¿Sabías que podemos ser más precisos?</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Si rellenas tu perfil de automatización (solo 1 min), podremos prepararte una propuesta mucho más ajustada a tu negocio y herramientas actuales.
+                  </p>
+                </div>
+                {onOpenOnboarding && (
+                  <Button
+                    variant="link"
+                    className="text-primary font-bold text-xs shrink-0"
+                    onClick={onOpenOnboarding}
+                  >
+                    Completar ahora →
+                  </Button>
+                )}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Selected Processes Summary */}
+              <div className="bg-muted p-4 rounded-lg space-y-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">
+                    Procesos seleccionados ({selectedProcesses.length})
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProcesses.map((process) => (
+                      <Badge
+                        key={process.id}
+                        variant="outline"
+                        className="text-xs border-primary/30 text-primary"
+                      >
+                        {process.nombre}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-border/50">
+                  <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                    <Server className="w-4 h-4 text-primary" />
+                    Configuración de n8n
+                  </h4>
+                  <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
+                    {n8nHosting === 'setup' ? (
+                      <>
+                        <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                        <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-2 h-2 rounded-full bg-secondary" />
+                        <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-2 italic">
+                    * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
+                  </p>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-border/50">
-                <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                  <Server className="w-4 h-4 text-primary" />
-                  Configuración de n8n
-                </h4>
-                <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
-                  {n8nHosting === 'setup' ? (
+              {/* Form Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
+                    Nombre *
+                  </Label>
+                  <Input
+                    id="nombre"
+                    value={formData.nombre}
+                    onChange={(e) => {
+                      setFormData({ ...formData, nombre: e.target.value });
+                      if (errors.nombre) setErrors({ ...errors, nombre: "" });
+                    }}
+                    className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  />
+                  {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
+                    Email *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (errors.email) setErrors({ ...errors, email: "" });
+                    }}
+                    className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  />
+                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
+                    Empresa *
+                  </Label>
+                  <Input
+                    id="empresa"
+                    value={formData.empresa}
+                    onChange={(e) => {
+                      setFormData({ ...formData, empresa: e.target.value });
+                      if (errors.empresa) setErrors({ ...errors, empresa: "" });
+                    }}
+                    className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  />
+                  {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
+                  Comentario adicional
+                </Label>
+                <Textarea
+                  id="comentario"
+                  rows={4}
+                  value={formData.comentario}
+                  onChange={(e) => {
+                    setFormData({ ...formData, comentario: e.target.value });
+                    if (errors.comentario) setErrors({ ...errors, comentario: "" });
+                  }}
+                  className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
+                />
+                {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-border">
+                <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+                  Cancelar
+                </Button>
+                <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
+                  {isSubmitting ? (
                     <>
-                      <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                      <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando tu solicitud...
                     </>
                   ) : (
-                    <>
-                      <div className="w-2 h-2 rounded-full bg-secondary" />
-                      <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
-                    </>
+                    "Enviar solicitud"
                   )}
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-2 italic">
-                  * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
-                </p>
+                </Button>
               </div>
-            </div>
-
-            {/* Form Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
-                  Nombre *
-                </Label>
-                <Input
-                  id="nombre"
-                  value={formData.nombre}
-                  onChange={(e) => {
-                    setFormData({ ...formData, nombre: e.target.value });
-                    if (errors.nombre) setErrors({ ...errors, nombre: "" });
-                  }}
-                  className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                />
-                {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
-                  Email *
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => {
-                    setFormData({ ...formData, email: e.target.value });
-                    if (errors.email) setErrors({ ...errors, email: "" });
-                  }}
-                  className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                />
-                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
-              </div>
-
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
-                  Empresa *
-                </Label>
-                <Input
-                  id="empresa"
-                  value={formData.empresa}
-                  onChange={(e) => {
-                    setFormData({ ...formData, empresa: e.target.value });
-                    if (errors.empresa) setErrors({ ...errors, empresa: "" });
-                  }}
-                  className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                />
-                {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
-                Comentario adicional
-              </Label>
-              <Textarea
-                id="comentario"
-                rows={4}
-                value={formData.comentario}
-                onChange={(e) => {
-                  setFormData({ ...formData, comentario: e.target.value });
-                  if (errors.comentario) setErrors({ ...errors, comentario: "" });
-                }}
-                className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
-              />
-              {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
-                Cancelar
-              </Button>
-              <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando tu solicitud...
-                  </>
-                ) : (
-                  "Enviar solicitud"
-                )}
-              </Button>
-            </div>
-          </form>
+            </form>
+          </div>
         </ScrollArea>
       </DialogContent>
     </Dialog>
