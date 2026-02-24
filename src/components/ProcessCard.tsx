@@ -1,18 +1,28 @@
+import { useNavigate } from "react-router-dom";
 import { Check, ChevronRight, Star, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useSelection } from "@/lib/SelectionContext";
 
 interface ProcessCardProps {
   process: Process;
-  isSelected: boolean;
-  onSelect: () => void;
-  onViewDetails: () => void;
   isSpecialized?: boolean;
 }
 
-export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSpecialized }: ProcessCardProps) => {
+export const ProcessCard = ({ process, isSpecialized }: ProcessCardProps) => {
+  const navigate = useNavigate();
+  const { selectedProcessIds, toggleProcess } = useSelection();
+  const isSelected = selectedProcessIds.has(process.id);
+
+  const handleViewDetails = () => {
+    navigate(`/catalogo/procesos/${process.slug}`);
+  };
+
+  const handleToggleSelect = () => {
+    toggleProcess(process.id);
+  };
   return (
     <div
       className={cn(
@@ -20,7 +30,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSp
         isSelected && "border-primary glow-primary",
         isSpecialized && "border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
       )}
-      onClick={onViewDetails}
+      onClick={handleViewDetails}
     >
       {/* Category Badge and Recommendation Badges */}
       <div className="flex items-start justify-between mb-3">
@@ -58,7 +68,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSp
           className="text-primary hover:text-primary hover:bg-primary/10 flex-1 min-w-[140px] justify-center"
           onClick={(e) => {
             e.stopPropagation();
-            onViewDetails();
+            handleViewDetails();
           }}
         >
           Más información
@@ -76,7 +86,7 @@ export const ProcessCard = ({ process, isSelected, onSelect, onViewDetails, isSp
           )}
           onClick={(e) => {
             e.stopPropagation();
-            onSelect();
+            handleToggleSelect();
           }}
         >
           {isSelected ? (
