@@ -69,26 +69,26 @@ export const processes: Process[] = [
       "Control total antes de emitir y enviar"
     ],
     recomendado: true,
-    descripcionDetallada: "Desde tu hoja de Servicios → Generamos todas tus facturas automáticamente (proformas o en estado borrador), listas para validar y emitir. Leemos fees por cliente, proyectos y periodos desde donde los tengas volcados. Creamos la factura borrador en Holded con líneas, cantidades y periodo, asignada a cada cliente. Enviamos notificación al responsable para finalizar.",
+    descripcionDetallada: "Desde tu hoja de Servicios → Generamos todas tus facturas automáticamente (proformas o en estado borrador), listas para validar y emitir. Leemos fees por cliente, proyectos y periodos desde donde los tengas volcados. Creamos la factura borrador en tu sistema de facturación/ERP con líneas, cantidades y periodo, asignada a cada cliente. Enviamos notificación al responsable para finalizar.",
     summary: {
-      what_it_is: "Sistema que conecta tus hojas de cálculo o CRM con tu ERP (Holded) para automatizar la creación de borradores de facturas.",
+      what_it_is: "Sistema que conecta tus hojas de cálculo o CRM con tu ERP/Software de gestión para automatizar la creación de borradores de facturas.",
       for_who: ["Agencias con fees variables", "Empresas de servicios", "Freelancers con volumen"],
-      requirements: ["ERP Holded", "Hoja de cálculo estructurada", "Zapier/Make"],
-      output: "Borradores de factura en Holded + Notificación en Slack/Email"
+      requirements: ["ERP/Software de gestión", "Hoja de cálculo estructurada", "Herramienta de automatización"],
+      output: "Borradores de factura en ERP + Notificación por el canal de comunicación que prefieras"
     },
     indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["Holded", "Google Sheets", "Slack"]
+      time_estimate: "2-3 semanas",
+      complexity: "Alta",
+      integrations: ["ERP", "Hoja de cálculo", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Recolección de datos", short: "Leemos fees y proyectos desde tu fuente de datos.", detail: "Conectamos con Google Sheets o Excel para extraer automáticamente los datos del periodo." },
-      { title: "Creación en ERP", short: "Generamos el borrador en Holded.", detail: "Creamos la proforma con todos los conceptos, impuestos y datos del cliente ya pre-rellenados." },
+      { title: "Recolección de datos", short: "Leemos fees y proyectos desde tu fuente de datos.", detail: "Conectamos con tus hojas de cálculo para extraer automáticamente los datos del periodo." },
+      { title: "Creación en ERP", short: "Generamos el borrador en tu sistema de gestión.", detail: "Creamos la proforma con todos los conceptos, impuestos y datos del cliente ya pre-rellenados." },
       { title: "Notificación y Revisión", short: "Te avisamos para que solo tengas que darle a 'Enviar'.", detail: "Recibes un aviso en el canal que elijas para validar que todo está correcto." }
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Canal de notificación", options: ["Email", "Slack", "Teams"] },
+        { type: "select", label: "Canal de notificación", options: ["Email", "Mensajería Corporativa", "Chat"] },
         { type: "radio", label: "Estado inicial", options: ["Borrador", "Emitida"] }
       ],
       free_text_placeholder: "¿Tienes algún fee especial o regla de redondeo?"
@@ -103,7 +103,7 @@ export const processes: Process[] = [
       ]
     },
     faqs: [
-      { q: "¿Es seguro conectar Holded?", a: "Sí, usamos APIs oficiales con encriptación de grado bancario." },
+      { q: "¿Es seguro conectar mi ERP?", a: "Sí, usamos APIs oficiales con encriptación de grado bancario." },
       { q: "¿Puedo revisar antes de enviar?", a: "Totalmente. Por defecto las facturas se crean como borradores." }
     ],
     use_cases: ["Agencias de marketing", "Consultoras", "SaaS B2B"],
@@ -111,12 +111,12 @@ export const processes: Process[] = [
     related_processes: ["informe-semanal-facturas-vencidas", "presupuestos-automaticos"],
     pasos: [
       "Leemos fees por cliente, proyectos y periodos desde donde los tengas volcados",
-      "Creamos la factura borrador en Holded con líneas, cantidades y periodo, asignada a cada cliente",
+      "Creamos la factura borrador en tu sistema de facturación/ERP con líneas, cantidades y periodo, asignada a cada cliente",
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
-    herramientas: ["Holded", "Google Sheets", "Excel"],
+    herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"]
   },
 
@@ -133,38 +133,38 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Informe automatizado que consolida la deuda pendiente de clientes para una gestión de cobros proactiva.",
       for_who: ["Departamentos financieros", "Dueños de agencias", "Project Managers"],
-      requirements: ["ERP Holded", "Slack o Email"],
-      output: "Dashboard semanal en Slack/Email con ranking de deuda por cliente."
+      requirements: ["ERP/Software de gestión", "canal de comunicación que prefieras"],
+      output: "Dashboard semanal por el canal elegido con ranking de deuda por cliente."
     },
     indicators: {
       time_estimate: "< 1 semana",
       complexity: "Baja",
-      integrations: ["Holded", "Slack", "Email"]
+      integrations: ["ERP", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Extracción de datos", short: "Leemos facturas vencidas desde Holded.", detail: "Cada semana, el sistema revisa automáticamente tu ERP buscando facturas con fecha de vencimiento superada." },
+      { title: "Extracción de datos", short: "Leemos facturas vencidas desde tu ERP.", detail: "Cada semana, el sistema revisa automáticamente tu software de gestión buscando facturas con fecha de vencimiento superada." },
       { title: "Consolidación", short: "Agrupamos deuda por cliente y antigüedad.", detail: "Calculamos cuánto debe cada cliente y cuántos días de retraso lleva acumulados." },
       { title: "Envío de reporte", short: "Recibes el resumen en tu canal favorito.", detail: "Generamos un informe limpio y directo para que sepas dónde poner el foco el lunes por la mañana." }
     ],
     customization: {
       options_blocks: [
         { type: "select", label: "Día de envío", options: ["Lunes", "Viernes"] },
-        { type: "radio", label: "Canal", options: ["Slack", "Email"] }
+        { type: "radio", label: "Canal", options: ["Mensajería", "Email"] }
       ],
       free_text_placeholder: "¿Necesitas algún filtro por importe mínimo?"
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Se puede filtrar por etiquetas en Holded?", a: "Sí, podemos segmentar el informe por etiquetas de cliente o de factura." }
+      { q: "¿Se puede filtrar por etiquetas en el ERP?", a: "Sí, podemos segmentar el informe por etiquetas de cliente o de factura que tengas definidas." }
     ],
     pasos: [
       "Revisamos todas las facturas con estado 'vencida'",
       "Calculamos antigüedad, importe total y asignamos cliente",
       "Generamos un informe automático"
     ],
-    personalizacion: "Decide cuándo recibes el informe y si es por email, Slack o Drive.",
+    personalizacion: "Decide cuándo recibes el informe y por qué canal (email, mensajería, etc.).",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
-    herramientas: ["Holded", "Slack", "Email"],
+    herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
   },
@@ -178,22 +178,22 @@ export const processes: Process[] = [
     nombre: "Presupuestos automáticos",
     tagline: "Vuela enviando presupuestos.",
     recomendado: false,
-    descripcionDetallada: "Desde un Sheets o cualquier fuente → Creamos presupuestos completos en Holded. Leemos tarifas, servicios y cantidades. Creamos el presupuesto con líneas y totales. Notificamos al responsable para envío o revisión.",
+    descripcionDetallada: "Desde una hoja de cálculo o cualquier fuente → Creamos presupuestos completos en tu sistema de facturación/ERP. Leemos tarifas, servicios y cantidades. Creamos el presupuesto con líneas y totales. Notificamos al responsable para envío o revisión.",
     summary: {
       what_it_is: "Automatización que transforma una configuración de servicios en un presupuesto oficial dentro de tu ERP de forma instantánea.",
       for_who: ["Equipos comerciales", "Agencias con servicios modulares", "Empresas con alta rotación de presupuestos"],
-      requirements: ["Holded", "Fuente de datos (Sheets, CRM)"],
-      output: "Presupuesto en estado borrador o enviado en Holded."
+      requirements: ["ERP/Software de gestión", "Fuente de datos (Hoja de cálculo, CRM)"],
+      output: "Presupuesto en estado borrador o enviado en tu sistema de gestión."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["Holded", "Google Sheets", "Pipedrive"]
+      integrations: ["ERP", "Hoja de cálculo", "CRM"]
     },
     how_it_works_steps: [
       { title: "Captura de servicios", short: "Leemos los servicios seleccionados.", detail: "Detectamos qué items y cantidades se han definido para el cliente." },
       { title: "Mapeo de tarifas", short: "Asignamos precios automáticamente.", detail: "Consultamos tu listado de precios o tarifas dinámicas para evitar errores manuales." },
-      { title: "Generación en ERP", short: "Creamos el presupuesto en Holded.", detail: "Se genera el documento completo con todos los impuestos y datos del cliente asociados." }
+      { title: "Generación en ERP", short: "Creamos el presupuesto en tu software de gestión.", detail: "Se genera el documento completo con todos los impuestos y datos del cliente asociados." }
     ],
     customization: {
       options_blocks: [
@@ -203,7 +203,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Puede usar plantillas de PDF de Holded?", a: "Sí, el presupuesto se genera usando la configuración visual que ya tengas en Holded." }
+      { q: "¿Puede usar mis plantillas de PDF?", a: "Sí, el presupuesto se genera usando la configuración visual que ya tengas en tu sistema de facturación." }
     ],
     pasos: [
       "Leemos tarifas, servicios y cantidades",
@@ -212,7 +212,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.",
     sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria"],
-    herramientas: ["Holded", "Google Sheets", "Excel"],
+    herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"]
   },
@@ -226,22 +226,22 @@ export const processes: Process[] = [
     nombre: "Seguimiento de presupuestos enviados",
     tagline: "Controla todos los presupuestos enviados.",
     recomendado: false,
-    descripcionDetallada: "Si pasan X días sin respuesta → Aviso a responsables por cualquier vía. Revisamos el estado del presupuesto en Holded. Detectamos inactividad. Disparamos alerta o email de seguimiento.",
+    descripcionDetallada: "Si pasan X días sin respuesta → Aviso a responsables por el canal que elijas. Revisamos el estado del presupuesto en tu ERP/CRM. Detectamos inactividad. Disparamos alerta o email de seguimiento.",
     summary: {
       what_it_is: "Flujo de control que asegura que ningún presupuesto se pierda por falta de seguimiento comercial.",
       for_who: ["Equipos de ventas", "Project Managers", "Gerencia"],
-      requirements: ["CRM o ERP (Holded)", "Sistema de notificaciones"],
-      output: "Recordatorios a ventas o emails directos al cliente de 'check-in'."
+      requirements: ["ERP/CRM", "Sistema de notificaciones"],
+      output: "Recordatorios a ventas o mensajes directos al cliente."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["Holded", "Slack", "Email"]
+      integrations: ["ERP/CRM", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Monitorización", short: "Vigilamos estados 'Enviado'.", detail: "El sistema revisa diariamente qué presupuestos siguen sin ser aceptados ni rechazados." },
       { title: "Cálculo de inactividad", short: "Contamos los días transcurridos.", detail: "Si se supera el umbral definido (ej. 3 días), se inicia la acción de seguimiento." },
-      { title: "Acción de rescate", short: "Disparamos recordatorio.", detail: "Avisamos al comercial o enviamos un email de seguimiento suave al cliente." }
+      { title: "Acción de rescate", short: "Disparamos recordatorio.", detail: "Avisamos al comercial o enviamos un mensaje de seguimiento suave al cliente." }
     ],
     customization: {
       options_blocks: [
@@ -254,13 +254,13 @@ export const processes: Process[] = [
       { q: "¿Diferencia presupuestos de facturas?", a: "Sí, este proceso se centra exclusivamente en la fase preventiva de venta." }
     ],
     pasos: [
-      "Revisamos el estado del presupuesto en Holded",
+      "Revisamos el estado del presupuesto en tu sistema de gestión",
       "Detectamos inactividad",
-      "Disparamos alerta o email de seguimiento"
+      "Disparamos alerta o mensaje de seguimiento"
     ],
     personalizacion: "Elige el canal del aviso y los días sin respuesta.",
     sectores: ["Agencia/marketing", "Inmobiliaria", "Retail", "Servicios profesionales"],
-    herramientas: ["Holded", "WhatsApp", "Email", "Pipedrive", "HubSpot"],
+    herramientas: ["ERP/CRM", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["presupuestos-automaticos", "recordatorios-pagos"]
   },
@@ -274,22 +274,22 @@ export const processes: Process[] = [
     nombre: "Envío de recordatorios de pagos a clientes",
     tagline: "Automatiza el ir detrás de quien no ha pagado.",
     recomendado: true,
-    descripcionDetallada: "Envía recordatorios de pago a los clientes que tienen facturas vencidas según hayan pasado 5/10/15 días. Identificación de facturas vencidas según días de atraso. Generación del mensaje con plantilla dinámica. Envío automático al correo del cliente.",
+    descripcionDetallada: "Envía recordatorios de pago a los clientes que tienen facturas vencidas según hayan pasado 5/10/15 días. Identificación de facturas vencidas según días de atraso. Generación del mensaje con plantilla dinámica. Envío automático al canal del cliente.",
     summary: {
       what_it_is: "Sistema automatizado de reclamación de deuda que mejora el flujo de caja sin esfuerzo manual.",
       for_who: ["Administración", "Finanzas", "Dueños de agencias"],
-      requirements: ["ERP Holded", "Email con dominio propio"],
-      output: "Emails de recordatorio automáticos segmentados por gravedad."
+      requirements: ["ERP/Software de gestión", "canal de comunicación que prefieras"],
+      output: "Mensajes de recordatorio automáticos segmentados por gravedad."
     },
     indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["Holded", "Email (Gmail/Outlook)"]
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["ERP", "Canal de comunicación"]
     },
     how_it_works_steps: [
       { title: "Detección de impago", short: "Analizamos facturas vencidas.", detail: "Cruzamos fechas de vencimiento con el estado de pago en tiempo real." },
       { title: "Segmentación", short: "Aplicamos lógica 5/10/15 días.", detail: "El mensaje se vuelve más firme a medida que el retraso aumenta." },
-      { title: "Comunicación directa", short: "Enviamos aviso personalizado.", detail: "El cliente recibe un correo con el detalle de la factura y enlace directo al pago." }
+      { title: "Comunicación directa", short: "Enviamos aviso personalizado.", detail: "El cliente recibe un aviso con el detalle de la factura y enlace directo al pago." }
     ],
     customization: {
       options_blocks: [
@@ -300,16 +300,16 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Puedo enviar avisos por WhatsApp?", a: "Sí, es posible integrar la API de WhatsApp para que el recordatorio sea más directo." }
+      { q: "¿Puedo enviar avisos por mensajería?", a: "Sí, es posible integrar APIs de mensajería para que el recordatorio sea más directo." }
     ],
     pasos: [
       "Identificación de facturas vencidas según días de atraso",
       "Generación del mensaje con plantilla dinámica",
-      "Envío automático al correo del cliente"
+      "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
     sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing"],
-    herramientas: ["Holded", "WhatsApp", "Email"],
+    herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"]
   },
@@ -326,13 +326,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Control inteligente de registros horarios para asegurar el cumplimiento legal y el bienestar del equipo.",
       for_who: ["Managers de equipo", "Recursos Humanos", "COO"],
-      requirements: ["Herramienta de tracking (Clockify/Factorial)", "Make/Zapier"],
-      output: "Informe detallado de anomalías y riesgos de burnout en Slack/PDF."
+      requirements: ["Herramienta de tracking", "Herramienta de automatización"],
+      output: "Informe detallado de anomalías y riesgos de burnout por el canal elegido."
     },
     indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["Clockify", "Factorial", "Slack"]
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Tracking", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Sincronización horaria", short: "Obtenemos registros diarios.", detail: "Nos conectamos a tu herramienta de fichaje para extraer la actividad de todos los empleados." },
@@ -356,7 +356,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
     sectores: ["Servicios profesionales", "Agencia/marketing", "Clínica", "Peluquería/estética"],
-    herramientas: ["Clockify", "Toggl", "ClickUp", "Factorial"],
+    herramientas: ["Software de tracking", "Gestor de tareas"],
     dolores: ["Quiero ordenar tareas y que se asignen solas", "Me escriben mucho y no doy abasto", "Necesito centralizar la información de clientes"],
     related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"]
   },
@@ -374,13 +374,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Dashboard de rentabilidad por proyecto basado en el cruce de planificación y ejecución real.",
       for_who: ["Project Managers", "Directores Financieros", "Gerencia"],
-      requirements: ["Gestor de tareas (ClickUp/Asana)", "Tracking de horas"],
+      requirements: ["Gestor de tareas", "Tracking de horas"],
       output: "Informe visual de rentabilidad (Horas Planificadas vs Reales)."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["ClickUp", "Asana", "Google Sheets"]
+      integrations: ["Gestor de tareas", "Hoja de cálculo"]
     },
     how_it_works_steps: [
       { title: "Extracción de Planning", short: "Leemos las estimaciones.", detail: "Consultamos cuántas horas se asignaron a cada tarea o proyecto en la fase de venta/planning." },
@@ -402,9 +402,9 @@ export const processes: Process[] = [
       "Calculamos desviaciones individuales y por proyecto",
       "Generamos un informe detallado"
     ],
-    personalizacion: "Elige formato del informe (PDF, Excel).",
+    personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
-    herramientas: ["ClickUp", "Asana", "Excel", "Monday"],
+    herramientas: ["Gestor de tareas", "hoja de cálculo"],
     dolores: ["Quiero ordenar tareas y que se asignen solas", "Necesito centralizar la información de clientes"],
     related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"]
   },
@@ -422,13 +422,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Sistema de alerta temprana para prevenir la pérdida de margen en proyectos activos.",
       for_who: ["Project Managers", "Account Directors", "C-Level"],
-      requirements: ["Gestor de tareas", "Comunicación interna (Slack/Teams)"],
+      requirements: ["Gestor de tareas", "canal de comunicación que prefieras"],
       output: "Alerta instantánea cuando un proyecto entra en 'zona roja'."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["ClickUp", "Notion", "Slack"]
+      integrations: ["Gestor de tareas", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Seguimiento en vivo", short: "Vigilamos el consumo de horas.", detail: "Cada vez que alguien imputa tiempo, el sistema recalcula el total acumulado del proyecto." },
@@ -443,7 +443,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Funciona con ClickUp 3.0?", a: "Totalmente compatible con la última versión de ClickUp y sus campos personalizados." }
+      { q: "¿Funciona con mi gestor de tareas?", a: "Totalmente compatible con las herramientas de gestión de proyectos líderes y sus campos personalizados." }
     ],
     pasos: [
       "Calculamos desviación entre horas estimadas vs. horas imputadas",
@@ -452,7 +452,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
-    herramientas: ["ClickUp", "Notion", "Slack", "Teams"],
+    herramientas: ["Gestor de tareas", "Canal de comunicación"],
     dolores: ["Me escriben mucho y no doy abasto", "Quiero ordenar tareas y que se asignen solas"],
     related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"]
   },
@@ -470,13 +470,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Gestión proactiva del flujo de caja de salida para evitar recargos y sorpresas bancarias.",
       for_who: ["Administración", "Departamentos financieros", "Gerentes de pymes"],
-      requirements: ["ERP Holded / Cuaderno de gastos", "Slack o Email"],
+      requirements: ["ERP/Sistema de gestión", "canal de comunicación que prefieras"],
       output: "Previsión de pagos semanal y avisos urgentes 48h antes de cada vencimiento."
     },
     indicators: {
       time_estimate: "< 1 semana",
       complexity: "Baja",
-      integrations: ["Holded", "Google Calendar", "Slack"]
+      integrations: ["ERP", "Calendario", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Escaneo de obligaciones", short: "Leemos facturas de proveedores.", detail: "Analizamos regularmente tu listado de compras pendientes de pago." },
@@ -491,7 +491,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Puede avisar a varios responsables?", a: "Sí, podemos configurar canales específicos de Slack o grupos de correo." }
+      { q: "¿Puede avisar a varios responsables?", a: "Sí, podemos configurar canales específicos de mensajería o grupos de correo." }
     ],
     pasos: [
       "Leemos facturas de proveedores, importes y fechas",
@@ -500,7 +500,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Decide días de anticipación y por dónde recibir el aviso.",
     sectores: ["Retail", "E-commerce", "Restauración"],
-    herramientas: ["Holded", "Email", "WhatsApp"],
+    herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
   },
@@ -518,13 +518,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Fotografía financiera automatizada del negocio para facilitar la toma de decisiones estratégicas.",
       for_who: ["Directores Generales", "CFOs", "Socios de agencias"],
-      requirements: ["Holded", "Sheets de costes fijos"],
-      output: "Informe PDF/Sheets con Margen Bruto, EBITDA y Punto de Equilibrio mensual."
+      requirements: ["ERP/Software de gestión", "Hoja de cálculo de costes fijos"],
+      output: "Informe PDF/hoja de cálculo con Margen Bruto, EBITDA y Punto de Equilibrio mensual."
     },
     indicators: {
       time_estimate: "2 semanas",
       complexity: "Alta",
-      integrations: ["Holded", "Google Sheets", "PDF Generator"]
+      integrations: ["ERP", "Hoja de cálculo", "Generador de PDF"]
     },
     how_it_works_steps: [
       { title: "Cierre de datos", short: "Recopilamos facturación y gastos.", detail: "Una vez cerrado el mes, el sistema extrae todos los movimientos reales del periodo." },
@@ -548,7 +548,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     sectores: ["E-commerce", "Retail", "Agencia/marketing"],
-    herramientas: ["Holded", "Excel", "Google Sheets"],
+    herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Necesito centralizar la información de clientes", "Quiero automatizar presupuestos y respuestas"],
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"]
   },
@@ -565,13 +565,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Algoritmo de previsión que estima tu rentabilidad futura basándose en datos históricos y pipeline actual.",
       for_who: ["Ventas", "Finanzas", "CEO"],
-      requirements: ["ERP (Holded)", "CRM con Pipeline (Pipedrive/HubSpot)"],
+      requirements: ["ERP/Software de gestión", "CRM con Pipeline"],
       output: "Gráfico de proyección a 3-6 meses con escenarios de probabilidad."
     },
     indicators: {
       time_estimate: "2 semanas",
       complexity: "Media",
-      integrations: ["Holded", "Pipedrive", "Predictive API"]
+      integrations: ["ERP", "CRM", "Predictive API"]
     },
     how_it_works_steps: [
       { title: "Análisis histórico", short: "Leemos tendencias pasadas.", detail: "Estudiamos la estacionalidad y el crecimiento medio de tus últimos 12-24 meses." },
@@ -595,7 +595,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
     sectores: ["E-commerce", "Retail", "Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["Excel", "Google Sheets", "Holded"],
+    herramientas: ["hoja de cálculo", "ERP/Software de gestión"],
     dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas"],
     related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"]
   },
@@ -613,13 +613,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Asistente de tesorería técnica que te ayuda a separar el dinero que 'no es tuyo' (IVA/Retenciones) al instante.",
       for_who: ["Administración", "Finanzas", "Freelancers"],
-      requirements: ["ERP Holded", "Acceso a banca (lectura)"],
+      requirements: ["ERP/Software de gestión", "Acceso a banca (lectura)"],
       output: "Ficha de traspaso bancario lista para ejecutar en tu app bancaria."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["Holded", "WhatsApp", "Email"]
+      integrations: ["ERP", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Filtrado de cuota", short: "Analizamos cada factura.", detail: "Cada vez que cobras una factura, extraemos la parte correspondiente al IVA." },
@@ -641,9 +641,9 @@ export const processes: Process[] = [
       "Generamos documento oficial de solicitud de traspaso",
       "Notificamos al responsable"
     ],
-    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, Slack o Drive).",
+    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, mensajería o nube).",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "E-commerce"],
-    herramientas: ["Holded", "Excel", "Drive", "OneDrive"],
+    herramientas: ["ERP/Software de gestión", "hoja de cálculo", "Gestor de archivos"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
   },
@@ -657,26 +657,26 @@ export const processes: Process[] = [
     nombre: "Registro automático de gastos",
     tagline: "Agiliza la gestión de facturas de gasto al máximo.",
     recomendado: true,
-    descripcionDetallada: "Vuelcas factura en carpeta de Drive → Generamos la factura de gasto en Holded. Detección automática de facturas de compra volcadas. Envío al Inbox de Holded que las escanea con tecnología OCR. Creación automática del borrador de la factura de compra. Asignación a proveedor. Notificación al responsable para su revisión (opcional).",
+    descripcionDetallada: "Vuelcas factura en tu gestor de archivos en la nube → Generamos la factura de gasto en tu ERP. Detección automática de facturas de compra volcadas. Envío al sistema de facturación para escaneo y creación automática del borrador. Asignación a proveedor. Notificación al responsable para su revisión (opcional).",
     summary: {
       what_it_is: "Digitalización integral de facturas de proveedores que elimina la entrada manual de datos en el ERP.",
       for_who: ["Administración", "Equipos con volumen de compras", "Gerencia"],
-      requirements: ["ERP Holded", "Carpeta de Drive/Dropbox"],
-      output: "Factura de gasto contabilizada en Holded con el PDF adjunto."
+      requirements: ["ERP/Software de gestión", "Gestor de archivos en la nube"],
+      output: "Factura de gasto contabilizada en tu sistema con el archivo adjunto."
     },
     indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["Holded", "Google Drive", "Holded OCR"]
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Nube", "OCR"]
     },
     how_it_works_steps: [
-      { title: "Volcado de archivos", short: "Sube tus PDFs a la nube.", detail: "Simplemente arrastra tus facturas de compra a una carpeta dedicada de Drive o OneDrive." },
+      { title: "Volcado de archivos", short: "Sube tus archivos a la nube.", detail: "Simplemente arrastra tus facturas de compra a una carpeta dedicada de tu gestor de archivos." },
       { title: "Procesamiento OCR", short: "Escaneamos los datos clave.", detail: "El sistema lee automáticamente CIF, importes, fechas e impuestos de cada factura." },
-      { title: "Integración ERP", short: "Creamos el asiento en Holded.", detail: "Se genera el registro de gasto completo y se asocia al proveedor correspondiente de forma automática." }
+      { title: "Integración ERP", short: "Creamos el asiento en tu sistema.", detail: "Se genera el registro de gasto completo y se asocia al proveedor correspondiente de forma automática." }
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Fuente", options: ["Google Drive", "Dropbox", "Email Forward"] }
+        { type: "select", label: "Fuente", options: ["Nube (Drive/Dropbox)", "Email Forward"] }
       ],
       free_text_placeholder: "¿Necesitas asignar proyectos o cuentas contables específicas?"
     },
@@ -686,14 +686,14 @@ export const processes: Process[] = [
     ],
     pasos: [
       "Detección automática de facturas de compra volcadas",
-      "Envío al Inbox de Holded que las escanea con tecnología OCR",
+      "Envío al sistema de facturación para escaneo automático",
       "Creación automática del borrador de la factura de compra",
       "Asignación a proveedor",
       "Notificación al responsable para su revisión (opcional)"
     ],
-    personalizacion: "Elige la carpeta de Drive.",
+    personalizacion: "Elige tu carpeta de archivos en la nube.",
     sectores: ["Agencia/marketing", "Retail", "E-commerce"],
-    herramientas: ["Holded", "Drive", "OneDrive"],
+    herramientas: ["ERP/Software de gestión", "Gestor de archivos"],
     dolores: ["Me escriben mucho y no doy abasto", "Pierdo solicitudes entre WhatsApp/Instagram/email"],
     related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"]
   },
@@ -714,7 +714,7 @@ export const processes: Process[] = [
       output: "Estructura de Metas (Goals) y objetivos (Targets) creada y asignada en ClickUp."
     },
     indicators: {
-      time_estimate: "1 semana",
+      time_estimate: "1-2 semanas",
       complexity: "Media",
       integrations: ["ClickUp", "Google Sheets"]
     },
@@ -758,13 +758,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Sistema de liquidación automática para colaboradores externos basado en esfuerzo real.",
       for_who: ["Agencias con freelancers", "Productoras", "Estructuras líquidas"],
-      requirements: ["Herramienta de horas (Toggl/Clockify)", "ERP Holded"],
+      requirements: ["Herramienta de tracking", "ERP/Software de gestión"],
       output: "Factura de gasto de proveedor (freelance) generada automáticamente."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["Holded", "Clockify", "Toggl"]
+      integrations: ["ERP", "Tracking"]
     },
     how_it_works_steps: [
       { title: "Auditoría de horas", short: "Validamos tiempo registrado.", detail: "El sistema extrae las horas aprobadas que cada colaborador ha imputado a sus proyectos." },
@@ -788,7 +788,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
-    herramientas: ["Holded", "Toggl", "Clockify", "Factorial"],
+    herramientas: ["ERP/Software de gestión", "Software de tracking"],
     dolores: ["Quiero automatizar presupuestos and respuestas", "Me escriben mucho y no doy abasto"],
     related_processes: ["gestion-automatica-retenciones-freelance", "analisis-incidencias-horarios"]
   },
@@ -806,17 +806,17 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Control de seguridad fiscal para que el dinero de tus pagos trimestrales esté siempre reservado.",
       for_who: ["Administración", "Departamentos financieros", "CEOs"],
-      requirements: ["ERP Holded", "Cuenta de ahorro fiscal"],
+      requirements: ["ERP/Software de gestión", "Cuenta de ahorro fiscal"],
       output: "Cálculo en tiempo real de retenciones acumuladas y avisos de reserva."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["Holded", "Slack", "Email"]
+      integrations: ["ERP", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Detección de IRPF", short: "Filtramos facturas de profesionales.", detail: "Identificamos facturas de gastos que conllevan retención (profesionales, alquileres)." },
-      { title: "Cálculo de hucha", short: "Sumamos retall de reserva.", detail: "El sistema acumula cuánto dinero deberás ingresar a Hacienda al final del trimestre." },
+      { title: "Cálculo de hucha", short: "Sumamos reserva.", detail: "El sistema acumula cuánto dinero deberás ingresar a Hacienda al final del trimestre." },
       { title: "Aviso de previsión", short: "Te informamos del saldo.", detail: "Recibes informes periódicos para que sepas exactamente cuánto dinero 'no es tuyo' en la cuenta corriente." }
     ],
     customization: {
@@ -827,16 +827,16 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Controla el modelo 111 y 115?", a: "Calcula los datos que irán en esos modelos para que casen perfectamente con tu contabilidad." }
+      { q: "¿Controla el impuesto de retenciones?", a: "Calcula los datos para que casen perfectamente con tu contabilidad oficial." }
     ],
     pasos: [
       "Detectamos facturas sujetas a retención",
       "Calculamos el % correspondiente",
-      "Creamos asiento contable y aviso de pago"
+      "Creamos asiento contable y aviso de reserva"
     ],
-    personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso de pago.",
+    personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
-    herramientas: ["Holded", "Excel", "Sheets"],
+    herramientas: ["ERP/Software de gestión", "hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos and respuestas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["facturacion-automatica-horas-freelance", "traspasos-automaticos-iva"]
   },
@@ -847,20 +847,20 @@ export const processes: Process[] = [
     slug: "atencion-automatica-whatsapp",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Atención automática por WhatsApp",
+    nombre: "Atención automática por mensajería",
     tagline: "Responde al instante a dudas frecuentes y deriva a una persona cuando haga falta.",
     recomendado: true,
-    descripcionDetallada: "Automatizamos la atención inicial por WhatsApp para responder consultas repetidas (horarios, precios, ubicación, servicios, disponibilidad, etc.). Cuando el cliente pregunta algo complejo o fuera de lo previsto, el sistema deriva la conversación a un responsable con el contexto necesario para continuar sin perder tiempo.",
+    descripcionDetallada: "Automatizamos la atención inicial por canales de mensajería para responder consultas repetidas (horarios, precios, ubicación, servicios, disponibilidad, etc.). Cuando el cliente pregunta algo complejo o fuera de lo previsto, el sistema deriva la conversación a un responsable con el contexto necesario para continuar sin perder tiempo.",
     summary: {
-      what_it_is: "Asistente inteligente 24/7 que filtra y resuelve dudas en WhatsApp, liberando a tu equipo para ventas reales.",
+      what_it_is: "Asistente inteligente 24/7 que filtra y resuelve dudas en tus canales de mensajería, liberando a tu equipo para ventas reales.",
       for_who: ["Atención al cliente", "Soportes técnicos", "Recepciones"],
-      requirements: ["WhatsApp Business API / Twilio", "Base de conocimientos (FAQs)"],
+      requirements: ["API de mensajería móvil", "Base de conocimientos (FAQs)"],
       output: "Conversaciones resueltas o filtradas con resumen para el humano."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["WhatsApp", "Make", "OpenAI / Claude"]
+      integrations: ["Mensajería", "IA", "Automatización"]
     },
     how_it_works_steps: [
       { title: "Recepción de mensaje", short: "Escuchamos 24/7.", detail: "Cada mensaje entrante es analizado para entender la intención del usuario al instante." },
@@ -876,7 +876,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Puede enviar PDFs o imágenes?", a: "Sí, puede enviar catálogos, mapas de ubicación o fotos de productos automáticamente." }
+      { q: "¿Puede enviar archivos o imágenes?", a: "Sí, puede enviar catálogos, mapas de ubicación o fotos de productos automáticamente." }
     ],
     pasos: [
       "Detectamos el tipo de consulta del cliente (por palabras clave y contexto)",
@@ -886,9 +886,9 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "Restauración"],
-    herramientas: ["WhatsApp", "Make", "Zapier"],
+    herramientas: ["Canal de mensajería móvil", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)"],
-    related_processes: ["atencion-automatica-instagram", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"]
   },
   {
     id: "E18",
@@ -903,18 +903,18 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Secretaria virtual que coordina tu agenda y asegura que tus citas lleguen a tiempo.",
       for_who: ["Clínicas", "Centros de estética", "Consultoras", "Restaurantes"],
-      requirements: ["Google Calendar / Booksy", "WhatsApp API"],
+      requirements: ["Sistema de calendario corporativo", "Canal de comunicación directa"],
       output: "Citas confirmadas en agenda + Reducción de 'No-Shows' hasta un 80%."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["Calendly", "Google Calendar", "WhatsApp"]
+      integrations: ["Agenda online", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Reserva guiada", short: "Elegir hueco sin llamadas.", detail: "El cliente selecciona su servicio y horario disponible de forma visual y rápida." },
-      { title: "Confirmación de plaza", short: "Bloqueo inmediato en agenda.", detail: "El sistema reserva el tiempo y envía un ticket de confirmación al móvil del cliente." },
-      { title: "Cerco a la ausencia", short: "Recordatorios dinámicos.", detail: "Enviamos avisos 24h y 1h antes para que el cliente no olvide la cita o la cambie con antelación." }
+      { title: "Confirmación de plaza", short: "Bloqueo inmediato en agenda.", detail: "El sistema reserva el tiempo y envía una confirmación al móvil del cliente." },
+      { title: "Cerco a la ausencia", short: "Recordatorios dinámicos.", detail: "Enviamos avisos según el tiempo definido antes para que el cliente no olvide la cita o la cambie con antelación." }
     ],
     customization: {
       options_blocks: [
@@ -934,7 +934,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
     sectores: ["Peluquería/estética", "Gimnasio/yoga", "Clínica", "Restauración", "Servicios profesionales"],
-    herramientas: ["Calendly", "Booksy", "WhatsApp", "Google Sheets"],
+    herramientas: ["Agenda online", "Canal de comunicación", "Hoja de cálculo"],
     dolores: ["Se olvidan de la cita / hay muchas ausencias", "Necesito más reservas / más clientes"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"]
   },
@@ -951,22 +951,22 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Buzón unificado que profesionaliza la entrada de nuevos contactos (leads) de tu negocio.",
       for_who: ["Equipos comerciales", "Equipos de marketing", "Atención al cliente"],
-      requirements: ["Canales digitales (Web/RRSS)", "Base de datos (ClickUp/Notion/CRM)"],
+      requirements: ["Canales digitales (Web/Redes)", "Base de datos (Gestor de tareas/CRM)"],
       output: "Tablón con todas las solicitudes clasificadas por canal y urgencia."
     },
     indicators: {
-      time_estimate: "1 semana",
+      time_estimate: "< 1 semana",
       complexity: "Baja",
-      integrations: ["ClickUp", "WhatsApp", "Instagram"]
+      integrations: ["Gestor de tareas", "Canal de comunicación", "Redes sociales"]
     },
     how_it_works_steps: [
-      { title: "Escucha multicanal", short: "Leemos todos tus mensajes.", detail: "Extraemos el contacto de quien te escribe por WhatsApp, Instagram o tu Web." },
-      { title: "Categorización automática", short: "Entendemos la demanda.", detail: "La sistema clasifica si es una pregunta de precio, una queja o una solicitud de presupuesto." },
-      { title: "Centralización", short: "Todo a tu zona de trabajo.", detail: "Creamos una tarjeta en tu gestor (ClickUp) para que nada dependa de una memoria dispersa." }
+      { title: "Escucha multicanal", short: "Leemos todos tus mensajes.", detail: "Extraemos el contacto de quien te escribe por tus canales digitales o web." },
+      { title: "Categorización automática", short: "Entendemos la demanda.", detail: "El sistema clasifica si es una pregunta de precio, una queja o una solicitud de presupuesto." },
+      { title: "Centralización", short: "Todo a tu zona de trabajo.", detail: "Creamos una tarjeta en tu gestor de tareas para que nada dependa de una memoria dispersa." }
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Destino", options: ["ClickUp", "Notion", "CRM"] }
+        { type: "select", label: "Destino", options: ["Gestor de tareas", "Software de gestión", "CRM"] }
       ],
       free_text_placeholder: "¿Cuántos canales quieres unificar hoy mismo?"
     },
@@ -975,14 +975,14 @@ export const processes: Process[] = [
       { q: "¿Avisa al jefe de equipo?", a: "Podemos configurar reglas para que las solicitudes 'VIP' notifiquen directamente a gerencia." }
     ],
     pasos: [
-      "Recibimos solicitudes desde los canales definidos (por ejemplo, formulario, WhatsApp o Instagram)",
+      "Recibimos solicitudes desde los canales definidos (por ejemplo, formulario, chat o redes)",
       "Extraemos la información clave (contacto, motivo, servicio y urgencia)",
       "Guardamos cada solicitud en un listado organizado para su seguimiento",
       "Notificamos al responsable para que actúe sin retrasos"
     ],
     personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
     sectores: ["Agencia/marketing", "Inmobiliaria", "Servicios profesionales"],
-    herramientas: ["Formulario web", "WhatsApp", "Instagram DM", "ClickUp", "Notion", "Google Sheets"],
+    herramientas: ["Formulario web", "Canal de comunicación", "Redes sociales", "Gestor de tareas", "Software de gestión", "Hoja de cálculo"],
     dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email", "Necesito centralizar la información de clientes"],
     related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"]
   },
@@ -999,16 +999,16 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Cierre de ventas incansable que 'persigue' suavemente a tus prospectos hasta obtener respuesta.",
       for_who: ["Comerciales", "Freelancers", "Agencias de marketing"],
-      requirements: ["CRM con estados de venta", "WhatsApp API / Email"],
+      requirements: ["CRM con estados de venta", "Canal de comunicación (Chat/Email)"],
       output: "Aumento de la tasa de conversión sin carga administrativa para el equipo."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["HubSpot", "Pipedrive", "WhatsApp"]
+      integrations: ["CRM", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Control de estancamiento", short: "Detectamos el silencio.", detail: "Si un cliente no responde a una propuesta en 48h, el proceso se activa solo." },
+      { title: "Control de estancamiento", short: "Detectamos el silencio.", detail: "Si un cliente no responde a una propuesta en el tiempo definido, el proceso se activa solo." },
       { title: "Mensaje de contexto", short: "Recordamos el valor.", detail: "Enviamos un mensaje personalizado tipo 'Hola, ¿pudiste ver la propuesta?' por la vía más efectiva." },
       { title: "Cierre o derivación", short: "Limpiamos el pipeline.", detail: "Si el seguimiento no prospera, el sistema archiva la oportunidad y te avisa del resultado." }
     ],
@@ -1030,7 +1030,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
     sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales"],
-    herramientas: ["WhatsApp", "Email", "Pipedrive", "HubSpot"],
+    herramientas: ["Canal de comunicación", "CRM/Software de ventas"],
     dolores: ["No hago seguimiento a las personas interesadas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"]
   },
@@ -1047,22 +1047,22 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Motor de reputación online que solicita feedback positivo en el momento de máxima satisfacción del cliente.",
       for_who: ["Restaurantes", "Clínicas", "E-commerce", "Servicios Locales"],
-      requirements: ["Google Business Profile", "CRM / Agenda"],
-      output: "Aumento constante de estrellas y comentarios reales en Google Maps/Trustpilot."
+      requirements: ["Perfil de negocio online", "CRM / Agenda"],
+      output: "Aumento constante de estrellas y comentarios reales en plataformas de reseñas."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["Google My Business", "WhatsApp", "Email"]
+      integrations: ["Plataforma de reseñas", "Comunicación"]
     },
     how_it_works_steps: [
       { title: "Trigger de finalización", short: "Detectamos el fin del servicio.", detail: "Cuando marcas una cita como completada o un pedido como entregado, se inicia el contador." },
-      { title: "Envío estratégico", short: "Pedimos la reseña vía móvil.", detail: "Enviamos un link directo a tu perfil de Google con un texto que invita a compartir la experiencia." },
+      { title: "Envío estratégico", short: "Pedimos la reseña vía móvil.", detail: "Enviamos un enlace directo a tu perfil con un texto que invita a compartir la experiencia." },
       { title: "Filtro de satisfacción", short: "Cuidamos tu nota.", detail: "Si el cliente no está contento, le invitamos a hablar con nosotros en privado antes de publicar la reseña." }
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Canal", options: ["WhatsApp (Recomendado)", "Email"] }
+        { type: "radio", label: "Canal", options: ["Chat (Recomendado)", "Email"] }
       ],
       free_text_placeholder: "¿Quieres ofrecer algún incentivo por la reseña (descuento, etc.)?"
     },
@@ -1078,7 +1078,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
     sectores: ["Restauración", "Peluquería/estética", "Retail", "Clínica"],
-    herramientas: ["WhatsApp", "Email", "Google Business Messages"],
+    herramientas: ["Canal de comunicación", "Plataforma de reseñas"],
     dolores: ["Quiero pedir reseñas de forma automática"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-whatsapp"]
   },
@@ -1088,46 +1088,46 @@ export const processes: Process[] = [
     slug: "atencion-automatica-instagram",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Atención automática por Instagram (mensajes y comentarios)",
-    tagline: "Responde dudas frecuentes en Instagram y deriva los casos complejos al equipo.",
+    nombre: "Atención automática por redes sociales",
+    tagline: "Responde dudas frecuentes en tus redes y deriva los casos complejos al equipo.",
     recomendado: false,
-    descripcionDetallada: "Automatizamos respuestas a mensajes de Instagram con consultas típicas y ayudamos a gestionar preguntas repetidas que aparecen en comentarios. El objetivo es responder más rápido, mantener un tono coherente y no perder solicitudes por falta de tiempo.",
+    descripcionDetallada: "Automatizamos respuestas a mensajes en redes sociales con consultas típicas y ayudamos a gestionar preguntas repetidas que aparecen en comentarios. El objetivo es responder más rápido, mantener un tono coherente y no perder solicitudes por falta de tiempo.",
     summary: {
-      what_it_is: "Asistente de redes sociales que convierte tus DMs y comentarios en oportunidades de venta reales.",
-      for_who: ["Marcas personales", "E-commerce", "Agencias Creativas"],
-      requirements: ["Cuenta de Instagram Profesional", "Make / ManyChat"],
-      output: "Inbox de Instagram limpio y clientes respondidos en segundos."
+      what_it_is: "Gestión inteligente de menciones y mensajes directos para que tu marca nunca deje de participar en la conversación.",
+      for_who: ["Community Managers", "Marcas Personales", "E-commerce"],
+      requirements: ["Cuentas profesionales en redes", "Herramienta de IA"],
+      output: "Interacción instantánea 24/7 y filtrado de leads calificados por el canal elegido."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["Instagram API", "OpenAI", "Zapier"]
+      integrations: ["Redes Sociales", "IA", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Detección de Interacción", short: "Leemos DMs y Comentarios.", detail: "El sistema monitoriza tanto tus mensajes privados como los comentarios en tus posts." },
-      { title: "Respuesta en hilo", short: "Interactuamos al instante.", detail: "Respondemos automáticamente o enviamos un DM privado a quien comenta con una palabra clave (ej. 'INFO')." },
-      { title: "Captura de Lead", short: "Llevamos al usuario al CRM.", detail: "Si el usuario muestra interés real, capturamos su email o teléfono directamente en la charla." }
+      { title: "Escucha social", short: "Detectamos el contacto.", detail: "El sistema monitoriza menciones en stories, comentarios y mensajes directos de tus redes." },
+      { title: "Respuesta nativa", short: "Interactuamos al momento.", detail: "La inteligencia artificial responde siguiendo el tono de tu marca, resolviendo dudas o agradeciendo menciones." },
+      { title: "Conversión a Lead", short: "Llevamos el tráfico al CRM.", detail: "Si el usuario muestra interés real, el sistema le guía para dejar sus datos o agendar una cita automáticamente." }
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Acción en comentarios", options: ["Responder público", "Enviar DM privado"] }
+        { type: "radio", label: "Alcance", options: ["Solo DMs", "DMs + Comentarios"] }
       ],
-      free_text_placeholder: "¿Qué palabras clave (keywords) activarán tus automatizaciones?"
+      free_text_placeholder: "¿Tienes alguna palabra prohibida que la IA deba ignorar?"
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Me pueden cerrar la cuenta?", a: "No, usamos la API Oficial de Meta para asegurar que tu cuenta cumple con todas las políticas de spam." }
+      { q: "¿Puede banear usuarios?", a: "Podemos configurar reglas de seguridad para que ignorar perfiles tóxicos o derivar quejas críticas a un humano." }
     ],
     pasos: [
-      "Detectamos el motivo del mensaje (precio, horario, ubicación, reservas, servicios)",
-      "Respondemos con mensajes automatizados personalizados según el caso",
-      "Si la consulta es compleja, derivamos a una persona responsable con el contexto",
-      "(Opcional) Marcamos la conversación como “pendiente”, “en curso” o “resuelta”"
+      "Monitorizamos interacciones en tus perfiles sociales",
+      "La IA responde o reacciona según el tipo de interacción",
+      "Si hay una intención de compra, iniciamos el flujo de captación",
+      "Notificamos al equipo sobre las interacciones más relevantes"
     ],
-    personalizacion: "Define preguntas frecuentes, tono, mensajes por tipo de consulta, reglas de derivación y palabras clave a detectar.",
-    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Restauración", "Inmobiliaria"],
-    herramientas: ["Instagram DM", "Make", "ManyChat", "Zapier"],
-    dolores: ["Me escriben mucho y no doy abasto", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)", "Tardamos en responder y perdemos clientes"],
+    personalizacion: "Define el tono de respuesta, qué tipo de interacciones priorizar y qué información enviar (enlaces, catálogos, etc.).",
+    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Servicios profesionales"],
+    herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
+    dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
     related_processes: ["atencion-automatica-whatsapp", "captura-organizacion-solicitudes"]
   },
   {
@@ -1143,13 +1143,13 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Protocolo de comunicación activa que asegura la asistencia de tus clientes y optimiza tu tiempo productivo.",
       for_who: ["Clínicas", "Consultoría", "Estética"],
-      requirements: ["Sistema de citas (Calendar/CRM)", "WhatsApp API"],
-      output: "Agenda llena con 'No-Shows' mínimos y reprogramaciones fáciles."
+      requirements: ["Sistema de citas (Calendario/CRM)", "API de mensajería"],
+      output: "Agenda llena con ausencias mínimas y reprogramaciones fáciles."
     },
     indicators: {
       time_estimate: "1 semana",
       complexity: "Baja",
-      integrations: ["Google Calendar", "WhatsApp", "SMS"]
+      integrations: ["Calendario", "Mensajería"]
     },
     how_it_works_steps: [
       { title: "Trigger de Cita", short: "Detectamos nuevas reservas.", detail: "En cuanto se crea un evento en tu calendario, el sistema planifica los recordatorios." },
@@ -1174,7 +1174,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
     sectores: ["Peluquería/estética", "Clínica", "Gimnasio/yoga", "Servicios profesionales"],
-    herramientas: ["WhatsApp", "Google Calendar", "Calendly"],
+    herramientas: ["Mensajería", "Calendario"],
     dolores: ["Se olvidan de la cita / hay muchas ausencias"],
     related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"]
   },
@@ -1189,42 +1189,43 @@ export const processes: Process[] = [
     recomendado: false,
     descripcionDetallada: "Cada vez que entra una consulta o una reserva, generamos una ficha con la información importante para tener historial y contexto: quién es, qué pidió, por qué canal llegó y qué se le respondió. Esto evita perder datos y facilita el seguimiento.",
     summary: {
-      what_it_is: "Automatización de entrada de datos (Data Entry) que mantiene tu CRM al día sin intervención humana.",
-      for_who: ["Administración", "Equipos de Ventas", "Account Managers"],
-      requirements: ["CRM (HubSpot/Pipedrive/Holded)", "Fuentes de Leads"],
-      output: "CRM siempre actualizado con fichas ricas en datos de contacto y contexto."
+      what_it_is: "Sistema de acogida que enamora al cliente desde el minuto uno, centralizando toda su información de forma impecable.",
+      for_who: ["Project Managers", "Account Managers", "Dueños de agencias"],
+      requirements: ["Formulario de onboarding", "Gestor de tareas", "Gestor de archivos", "Comunicación"],
+      output: "Carpeta de proyecto creada + Tablero de trabajo listo + Mensaje de bienvenida enviado."
     },
     indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["CRM", "Typeform", "WhatsApp"]
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Interceptación de Lead", short: "Detectamos el nuevo contacto.", detail: "Cuando alguien te contacta, el sistema busca si ya existe en tu base de datos." },
-      { title: "Creación Dinámica", short: "Rellenamos la ficha.", detail: "Si es nuevo, creamos el contacto, la empresa and la oportunidad de venta al instante." },
-      { title: "Contextualización", short: "Sumamos info del canal.", detail: "Anotamos si viene de un anuncio, de WhatsApp o de un referido para que sepas cómo hablarle." }
+      { title: "Captura de Datos", short: "Recibimos la información.", detail: "El cliente rellena su formulario de bienvenida con toda la información técnica y de contacto." },
+      { title: "Estructuración", short: "Creamos el ecosistema.", detail: "El sistema crea automáticamente la carpeta en la nube, el canal de comunicación y el tablero de trabajo." },
+      { title: "Kick-off automático", short: "Damos el pistoletazo de salida.", detail: "Se envía un mensaje de bienvenida con los enlaces a todas sus nuevas herramientas de trabajo." }
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "CRM Destino", options: ["Holded", "HubSpot", "Pipedrive", "ClickUp"] }
+        { type: "select", label: "Canal", options: ["Mensajería", "Email", "Ambos"] }
       ],
-      free_text_placeholder: "¿Qué campos personalizados son imprescindibles para tu sector?"
+      free_text_placeholder: "¿Qué documentos mínimos necesitas que el cliente suba en su onboarding?"
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Evita duplicados?", a: "Sí, el sistema comprueba email and teléfono antes de crear una ficha nueva para no manchar tu base de datos." }
+      { q: "¿Y si ya existe el cliente?", a: "El sistema detecta duplicados y en lugar de crear un cliente nuevo, añade un nuevo proyecto a su ficha existente." }
     ],
     pasos: [
-      "Capturamos datos básicos de la persona (contacto y motivo)",
-      "Creamos una ficha con historial y estado (pendiente/en curso/resuelta)",
-      "Guardamos un resumen automático de la consulta para tener contexto",
-      "Avisamos al responsable si requiere acción"
+      "Recibimos los datos del formulario de onboarding",
+      "Creamos la carpeta del cliente en el gestor de archivos",
+      "Generamos el nuevo proyecto en el gestor de tareas con sus etapas",
+      "Creamos el canal de comunicación compartido",
+      "Enviamos el mensaje de bienvenida con los acceso"
     ],
-    personalizacion: "Define qué datos guardar, estados, notas automáticas y cuándo avisar al equipo.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales", "Retail"],
-    herramientas: ["Holded", "HubSpot", "Pipedrive", "Notion", "ClickUp"],
-    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas", "Pierdo solicitudes entre WhatsApp/Instagram/email"],
-    related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"]
+    personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
+    herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
+    dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email", "No hago seguimiento a las personas interesadas"],
+    related_processes: ["atencion-automatica-whatsapp", "captura-organizacion-solicitudes"]
   },
   {
     id: "F25",
@@ -1243,7 +1244,7 @@ export const processes: Process[] = [
       output: "Documento Estratégico + Roadmap de Implementación + Análisis de ROI."
     },
     indicators: {
-      time_estimate: "1-2 semanas",
+      time_estimate: "2-3 semanas",
       complexity: "Alta",
       integrations: ["Custom Analysis", "Process Mapping"]
     },
