@@ -18,6 +18,7 @@ import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
 
 import { OnboardingAnswers, getOnboardingAnswers } from "@/lib/onboarding-utils";
+import { computeFinalComplexity } from "@/lib/complexity-utils";
 
 interface ContactFormProps {
   isOpen: boolean;
@@ -103,13 +104,18 @@ export const ContactForm = ({
           comentario: formData.comentario,
           onboardingAnswers,
           n8nHosting,
-          selectedProcesses: selectedProcesses.map(p => ({
-            id: p.id,
-            codigo: p.codigo,
-            nombre: p.nombre,
-            categoriaNombre: p.categoriaNombre,
-            tagline: p.tagline,
-          })),
+          selectedProcesses: selectedProcesses.map(p => {
+            const adjusted = computeFinalComplexity(p, onboardingAnswers);
+            return {
+              id: p.id,
+              codigo: p.codigo,
+              nombre: p.nombre,
+              categoriaNombre: p.categoriaNombre,
+              tagline: p.tagline,
+              adjustedComplexity: adjusted.complexity,
+              adjustedTimeEstimate: adjusted.timeEstimate
+            };
+          }),
         },
       });
 

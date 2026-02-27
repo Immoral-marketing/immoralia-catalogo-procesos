@@ -5,6 +5,8 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
+import { computeFinalComplexity } from "@/lib/complexity-utils";
+import { getOnboardingAnswers } from "@/lib/onboarding-utils";
 
 interface ProcessCardProps {
   process: Process;
@@ -15,6 +17,9 @@ export const ProcessCard = ({ process, isSpecialized }: ProcessCardProps) => {
   const navigate = useNavigate();
   const { selectedProcessIds, toggleProcess } = useSelection();
   const isSelected = selectedProcessIds.has(process.id);
+
+  const onboardingAnswers = getOnboardingAnswers();
+  const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
 
   const handleViewDetails = () => {
     navigate(`/catalogo/procesos/${process.slug}`);
@@ -57,6 +62,7 @@ export const ProcessCard = ({ process, isSpecialized }: ProcessCardProps) => {
       <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
         {process.nombre}
       </h3>
+
       <div className="flex-1" />
 
 
