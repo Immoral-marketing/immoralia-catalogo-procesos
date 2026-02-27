@@ -49,6 +49,7 @@ export interface Process {
   canales?: string[];
   madurez?: ("Básico" | "Intermedio" | "Avanzado")[];
   dolores?: string[];
+  integration_domains?: ("ERP" | "CRM" | "COMMS" | "DOCS" | "OTHER")[];
 }
 
 
@@ -117,7 +118,8 @@ export const processes: Process[] = [
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
-    dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"]
+    dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -166,7 +168,8 @@ export const processes: Process[] = [
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
-    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
+    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -186,8 +189,8 @@ export const processes: Process[] = [
       output: "Presupuesto en estado borrador o enviado en tu sistema de gestión."
     },
     indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
+      time_estimate: "2-3 semanas",
+      complexity: "Alta",
       integrations: ["ERP", "Hoja de cálculo", "CRM"]
     },
     how_it_works_steps: [
@@ -214,7 +217,8 @@ export const processes: Process[] = [
     sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"]
+    related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -262,7 +266,8 @@ export const processes: Process[] = [
     sectores: ["Agencia/marketing", "Inmobiliaria", "Retail", "Servicios profesionales"],
     herramientas: ["ERP/CRM", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["presupuestos-automaticos", "recordatorios-pagos"]
+    related_processes: ["presupuestos-automaticos", "recordatorios-pagos"],
+    integration_domains: ["ERP", "CRM"]
   },
 
   {
@@ -311,7 +316,8 @@ export const processes: Process[] = [
     sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"]
+    related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
+    integration_domains: ["ERP"]
   },
   {
     id: "B6",
@@ -355,10 +361,8 @@ export const processes: Process[] = [
       "Generamos alerta al manager"
     ],
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
-    sectores: ["Servicios profesionales", "Agencia/marketing", "Clínica", "Peluquería/estética"],
-    herramientas: ["Software de tracking", "Gestor de tareas"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas", "Me escriben mucho y no doy abasto", "Necesito centralizar la información de clientes"],
-    related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"]
+    related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"],
+    integration_domains: ["OTHER"]
   },
 
   {
@@ -403,10 +407,8 @@ export const processes: Process[] = [
       "Generamos un informe detallado"
     ],
     personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
-    herramientas: ["Gestor de tareas", "hoja de cálculo"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas", "Necesito centralizar la información de clientes"],
-    related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"]
+    related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"],
+    integration_domains: ["OTHER"]
   },
 
   {
@@ -451,10 +453,8 @@ export const processes: Process[] = [
       "Enviamos notificaciones automáticas"
     ],
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
-    herramientas: ["Gestor de tareas", "Canal de comunicación"],
-    dolores: ["Me escriben mucho y no doy abasto", "Quiero ordenar tareas y que se asignen solas"],
-    related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"]
+    related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"],
+    integration_domains: ["OTHER"]
   },
 
   {
@@ -499,10 +499,8 @@ export const processes: Process[] = [
       "Enviamos alertas individuales"
     ],
     personalizacion: "Decide días de anticipación y por dónde recibir el aviso.",
-    sectores: ["Retail", "E-commerce", "Restauración"],
-    herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
-    dolores: ["Tardamos en responder y perdemos clientes"],
-    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
+    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -547,10 +545,8 @@ export const processes: Process[] = [
       "Enviamos informe por correo"
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
-    sectores: ["E-commerce", "Retail", "Agencia/marketing"],
-    herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
-    dolores: ["Necesito centralizar la información de clientes", "Quiero automatizar presupuestos y respuestas"],
-    related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"]
+    related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
+    integration_domains: ["ERP"]
   },
   {
     id: "C11",
@@ -594,10 +590,8 @@ export const processes: Process[] = [
       "Generamos un forecast en gráfico + tabla"
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
-    sectores: ["E-commerce", "Retail", "Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["hoja de cálculo", "ERP/Software de gestión"],
-    dolores: ["Necesito centralizar la información de clientes", "Quiero ordenar tareas y que se asignen solas"],
-    related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"]
+    related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"],
+    integration_domains: ["ERP", "CRM"]
   },
 
   {
@@ -642,10 +636,8 @@ export const processes: Process[] = [
       "Notificamos al responsable"
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, mensajería o nube).",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "E-commerce"],
-    herramientas: ["ERP/Software de gestión", "hoja de cálculo", "Gestor de archivos"],
-    dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
-    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"]
+    related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -692,10 +684,8 @@ export const processes: Process[] = [
       "Notificación al responsable para su revisión (opcional)"
     ],
     personalizacion: "Elige tu carpeta de archivos en la nube.",
-    sectores: ["Agencia/marketing", "Retail", "E-commerce"],
-    herramientas: ["ERP/Software de gestión", "Gestor de archivos"],
-    dolores: ["Me escriben mucho y no doy abasto", "Pierdo solicitudes entre WhatsApp/Instagram/email"],
-    related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"]
+    related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"],
+    integration_domains: ["ERP"]
   },
   {
     id: "D14",
@@ -739,10 +729,8 @@ export const processes: Process[] = [
       "Configuramos seguimiento automático de KPIs"
     ],
     personalizacion: "Elige colores por cliente/equipo.",
-    sectores: ["Agencia/marketing", "Servicios profesionales"],
-    herramientas: ["ClickUp", "Notion"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    related_processes: ["informe-mensual-horas-estimadas", "alertas-exceso-horas"]
+    related_processes: ["informe-mensual-horas-estimadas", "alertas-exceso-horas"],
+    integration_domains: ["OTHER"]
   },
 
   {
@@ -787,10 +775,8 @@ export const processes: Process[] = [
       "Creamos factura de gasto y la asignamos al proyecto/cliente"
     ],
     personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
-    herramientas: ["ERP/Software de gestión", "Software de tracking"],
-    dolores: ["Quiero automatizar presupuestos and respuestas", "Me escriben mucho y no doy abasto"],
-    related_processes: ["gestion-automatica-retenciones-freelance", "analisis-incidencias-horarios"]
+    related_processes: ["gestion-automatica-retenciones-freelance", "analisis-incidencias-horarios"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -835,10 +821,8 @@ export const processes: Process[] = [
       "Creamos asiento contable y aviso de reserva"
     ],
     personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
-    herramientas: ["ERP/Software de gestión", "hoja de cálculo"],
-    dolores: ["Quiero automatizar presupuestos and respuestas", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["facturacion-automatica-horas-freelance", "traspasos-automaticos-iva"]
+    related_processes: ["facturacion-automatica-horas-freelance", "traspasos-automaticos-iva"],
+    integration_domains: ["ERP"]
   },
 
   {
@@ -885,10 +869,8 @@ export const processes: Process[] = [
       "Guardamos el contexto para retomar sin perder información"
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "Restauración"],
-    herramientas: ["Canal de mensajería móvil", "Herramienta de automatización"],
-    dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes", "Tengo muchas preguntas repetidas (horarios, precios, ubicación…)"],
-    related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
+    integration_domains: ["OTHER"]
   },
   {
     id: "E18",
@@ -933,10 +915,8 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Gimnasio/yoga", "Clínica", "Restauración", "Servicios profesionales"],
-    herramientas: ["Agenda online", "Canal de comunicación", "Hoja de cálculo"],
-    dolores: ["Se olvidan de la cita / hay muchas ausencias", "Necesito más reservas / más clientes"],
-    related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"]
+    related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
+    integration_domains: ["OTHER"]
   },
   {
     id: "E19",
@@ -981,10 +961,8 @@ export const processes: Process[] = [
       "Notificamos al responsable para que actúe sin retrasos"
     ],
     personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "Servicios profesionales"],
-    herramientas: ["Formulario web", "Canal de comunicación", "Redes sociales", "Gestor de tareas", "Software de gestión", "Hoja de cálculo"],
-    dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email", "Necesito centralizar la información de clientes"],
-    related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"]
+    related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"],
+    integration_domains: ["CRM"]
   },
   {
     id: "E20",
@@ -1029,10 +1007,8 @@ export const processes: Process[] = [
       "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
     ],
     personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "E-commerce", "Servicios profesionales"],
-    herramientas: ["Canal de comunicación", "CRM/Software de ventas"],
-    dolores: ["No hago seguimiento a las personas interesadas", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"]
+    related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
+    integration_domains: ["CRM"]
   },
   {
     id: "E21",
@@ -1077,10 +1053,8 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restauración", "Peluquería/estética", "Retail", "Clínica"],
-    herramientas: ["Canal de comunicación", "Plataforma de reseñas"],
-    dolores: ["Quiero pedir reseñas de forma automática"],
-    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-whatsapp"]
+    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-whatsapp"],
+    integration_domains: ["OTHER"]
   },
   {
     id: "E22",
@@ -1245,8 +1219,8 @@ export const processes: Process[] = [
     },
     indicators: {
       time_estimate: "2-3 semanas",
-      complexity: "Alta",
-      integrations: ["Custom Analysis", "Process Mapping"]
+      complexity: "N/A",
+      integrations: []
     },
     how_it_works_steps: [
       { title: "Diagnóstico In Situ", short: "Entendemos tu realidad.", detail: "Auditamos tus herramientas y procesos actuales para ver qué se puede delegar en la tecnología." },
@@ -1272,7 +1246,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínica", "Restauración"],
-    herramientas: ["IA", "Automatización", "Custom Scripts"],
+    herramientas: [],
     dolores: [
       "No sé por dónde empezar con la IA",
       "Quiero automatizar pero no tengo roadmap",

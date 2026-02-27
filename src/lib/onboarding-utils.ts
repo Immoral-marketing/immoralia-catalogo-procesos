@@ -19,6 +19,9 @@ export interface OnboardingAnswers {
     nombre?: string;
     email?: string;
     telefono?: string;
+    // Campos de plataforma para complejidad dinámica
+    selected_crm_platform_id?: string;
+    selected_erp_platform_id?: string;
     [key: string]: any;
 }
 

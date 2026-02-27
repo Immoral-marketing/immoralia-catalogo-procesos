@@ -46,12 +46,42 @@ const TOOLS_CATEGORIES = [
         tools: ["ClickUp", "Notion", "Asana", "Trello", "Monday"]
     },
     {
-        name: "CRM/Ventas",
-        tools: ["HubSpot", "Pipedrive", "Zoho", "Salesforce"]
+        id: "crm",
+        label: "CRM / Ventas",
+        tools: [
+            { id: "HubSpot", label: "HubSpot" },
+            { id: "Pipedrive", label: "Pipedrive" },
+            { id: "Zoho", label: "Zoho" },
+            { id: "Salesforce", label: "Salesforce" },
+            { id: "Microsoft Dynamics 365 Sales", label: "Microsoft Dynamics 365 Sales" },
+            { id: "Freshsales (Freshworks CRM)", label: "Freshsales (Freshworks CRM)" },
+            { id: "Monday Sales CRM", label: "Monday Sales CRM" },
+            { id: "SugarCRM", label: "SugarCRM" },
+            { id: "Zendesk Sell", label: "Zendesk Sell" },
+            { id: "Insightly", label: "Insightly" },
+            { id: "Close (Close.io)", label: "Close (Close.io)" },
+            { id: "Copper CRM", label: "Copper CRM" },
+            { id: "ActiveCampaign (Deals CRM)", label: "ActiveCampaign (Deals CRM)" }
+        ]
     },
     {
-        name: "ERP/Facturación",
-        tools: ["Holded", "Sage", "Odoo", "A3", "QuickBooks"]
+        id: "erp",
+        label: "ERP / Facturación",
+        tools: [
+            { id: "Holded", label: "Holded" },
+            { id: "Sage", label: "Sage" },
+            { id: "Odoo", label: "Odoo" },
+            { id: "A3", label: "A3" },
+            { id: "QuickBooks", label: "QuickBooks" },
+            { id: "Microsoft Dynamics 365 Business Central", label: "Microsoft Dynamics 365 Business Central" },
+            { id: "SAP Business One", label: "SAP Business One" },
+            { id: "Oracle NetSuite", label: "Oracle NetSuite" },
+            { id: "Cegid (Ekon/XRP)", label: "Cegid (Ekon/XRP)" },
+            { id: "Xero", label: "Xero" },
+            { id: "SAP S/4HANA", label: "SAP S/4HANA" },
+            { id: "Oracle ERP Cloud", label: "Oracle ERP Cloud" },
+            { id: "Workday", label: "Workday" }
+        ]
     },
     {
         name: "E-commerce",
@@ -71,7 +101,7 @@ const TOOLS_CATEGORIES = [
     }
 ];
 
-const CHANNELS_CLIENTS = ["WhatsApp", "Instagram DM", "Facebook", "Email", "Teléfono", "Web chat", "Formulario web", "Google Business Messages", "Telegram"];
+const CHANNELS_CLIENTS = ["WhatsApp", "Instagram DM", "Facebook", "Email", "Slack", "Teléfono", "Web chat", "Formulario web", "Google Business Messages", "Telegram"];
 const CHANNELS_INTERNAL = ["Slack", "Teams", "WhatsApp", "Email", "Notion", "ClickUp"];
 
 const MATURITY_LEVELS = [
@@ -227,38 +257,65 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                             <p className="text-muted-foreground italic">Selecciona todas las que formen parte de tu día a día</p>
                             <div className="space-y-6 pt-2">
                                 {TOOLS_CATEGORIES.map(cat => {
+                                    const isPlatformCategory = 'id' in cat;
+                                    const categoryName = isPlatformCategory ? (cat as any).label : (cat as any).name;
+                                    const toolsList = cat.tools;
+
                                     return (
-                                        <div key={cat.name} className="space-y-2">
-                                            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{cat.name}</h3>
+                                        <div key={categoryName} className="space-y-2">
+                                            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{categoryName}</h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {cat.tools.map(t => (
-                                                    <Button
-                                                        key={t}
-                                                        variant={answers.tools.includes(t) ? "default" : "outline"}
-                                                        size="sm"
-                                                        onClick={() => setAnswers({ ...answers, tools: toggleItem(answers.tools, t) })}
-                                                    >
-                                                        {t}
-                                                    </Button>
-                                                ))}
+                                                {toolsList.map((t: any) => {
+                                                    const toolId = typeof t === 'string' ? t : t.id;
+                                                    const toolLabel = typeof t === 'string' ? t : t.label;
+                                                    const isSelected = answers.tools.includes(toolId);
+
+                                                    return (
+                                                        <Button
+                                                            key={toolId}
+                                                            variant={isSelected ? "default" : "outline"}
+                                                            size="sm"
+                                                            onClick={() => {
+                                                                let newTools = toggleItem(answers.tools, toolId);
+                                                                let extra: any = {};
+
+                                                                if (isPlatformCategory) {
+                                                                    const platformKey = cat.id === 'crm' ? 'selected_crm_platform_id' : 'selected_erp_platform_id';
+                                                                    // Si seleccionamos uno, deseleccionamos el anterior de la misma categoría (radio-like behavior for complexity)
+                                                                    if (!isSelected) {
+                                                                        const otherToolsInCat = toolsList.filter((ot: any) => ot.id !== toolId).map((ot: any) => ot.id);
+                                                                        newTools = newTools.filter(nt => !otherToolsInCat.includes(nt));
+                                                                        extra[platformKey] = toolId;
+                                                                    } else {
+                                                                        extra[platformKey] = "";
+                                                                    }
+                                                                }
+
+                                                                setAnswers({ ...answers, tools: newTools, ...extra });
+                                                            }}
+                                                        >
+                                                            {toolLabel}
+                                                        </Button>
+                                                    );
+                                                })}
                                                 <Button
-                                                    variant={answers.tools.includes(`${cat.name}: Otro`) ? "default" : "outline"}
+                                                    variant={answers.tools.includes(`${categoryName}: Otro`) ? "default" : "outline"}
                                                     size="sm"
                                                     className={cn(
-                                                        !answers.tools.includes(`${cat.name}: Otro`) && "text-primary border-primary/50 hover:bg-primary/5"
+                                                        !answers.tools.includes(`${categoryName}: Otro`) && "text-primary border-primary/50 hover:bg-primary/5"
                                                     )}
-                                                    onClick={() => setAnswers({ ...answers, tools: toggleItem(answers.tools, `${cat.name}: Otro`) })}
+                                                    onClick={() => setAnswers({ ...answers, tools: toggleItem(answers.tools, `${categoryName}: Otro`) })}
                                                 >
                                                     Otro
                                                 </Button>
                                             </div>
-                                            {answers.tools.includes(`${cat.name}: Otro`) && (
+                                            {answers.tools.includes(`${categoryName}: Otro`) && (
                                                 <div className="pt-1 animate-in fade-in slide-in-from-top-1">
                                                     <Input
-                                                        placeholder={`¿Qué otro ${cat.name.toLowerCase()} usáis?`}
+                                                        placeholder={`¿Qué otro ${categoryName.toLowerCase()} usáis?`}
                                                         className="h-8 text-sm"
-                                                        value={answers[`other_${cat.name}`] || ""}
-                                                        onChange={(e) => setAnswers({ ...answers, [`other_${cat.name}`]: e.target.value })}
+                                                        value={answers[`other_${categoryName}`] || ""}
+                                                        onChange={(e) => setAnswers({ ...answers, [`other_${categoryName}`]: e.target.value })}
                                                     />
                                                 </div>
                                             )}

@@ -11,6 +11,7 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ProcessCard } from "@/components/ProcessCard";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
+import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const ProcessDetail = () => {
@@ -42,6 +43,8 @@ const ProcessDetail = () => {
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [activeSection, setActiveSection] = useState("resumen");
+
+    const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
 
     useEffect(() => {
         const sections = ["resumen", "funcionamiento", "personalizacion", "demo", "faqs", "relacionados"];
@@ -254,18 +257,22 @@ const ProcessDetail = () => {
                                     <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
                                         <Clock className="w-6 h-6 text-primary" />
                                         <span className="text-sm text-muted-foreground">Implementación</span>
-                                        <span className="font-semibold">{process.indicators?.time_estimate || "1-2 semanas"}</span>
+                                        <span className="font-semibold">{finalComplexity.timeEstimate}</span>
                                     </div>
-                                    <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
-                                        <Settings2 className="w-6 h-6 text-primary" />
-                                        <span className="text-sm text-muted-foreground">Complejidad</span>
-                                        <span className="font-semibold">{process.indicators?.complexity || "Media"}</span>
-                                    </div>
-                                    <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
-                                        <MessageSquare className="w-6 h-6 text-primary" />
-                                        <span className="text-sm text-muted-foreground">Integraciones</span>
-                                        <span className="font-semibold">{process.indicators?.integrations.length || 0} herramientas</span>
-                                    </div>
+                                    {(finalComplexity.complexity as any) !== "N/A" && (
+                                        <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
+                                            <Settings2 className="w-6 h-6 text-primary" />
+                                            <span className="text-sm text-muted-foreground">Complejidad</span>
+                                            <span className="font-semibold">{finalComplexity.complexity}</span>
+                                        </div>
+                                    )}
+                                    {(process.indicators?.integrations && process.indicators.integrations.length > 0 && process.id !== "F25") && (
+                                        <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
+                                            <MessageSquare className="w-6 h-6 text-primary" />
+                                            <span className="text-sm text-muted-foreground">Integraciones</span>
+                                            <span className="font-semibold">{process.indicators.integrations.length} herramientas</span>
+                                        </div>
+                                    )}
                                 </div>
                             </section>
 
