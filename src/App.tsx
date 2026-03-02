@@ -8,6 +8,7 @@ import ProcessDetail from "./pages/ProcessDetail";
 import SetupInfo from "./pages/SetupInfo";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
+import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Chatbot />
         </BrowserRouter>
       </SelectionProvider>
     </TooltipProvider>
