@@ -32,6 +32,15 @@ const Index = () => {
     setOnboardingAnswers(getOnboardingAnswers());
   };
 
+  useEffect(() => {
+    const handleShowContact = () => {
+      setShowContactForm(true);
+    };
+
+    window.addEventListener('immoralia:show-contact', handleShowContact);
+    return () => window.removeEventListener('immoralia:show-contact', handleShowContact);
+  }, []);
+
   const handleReset = () => {
     if (confirm("¿Estás seguro de que quieres restablecer todas tus respuestas y selección?")) {
       resetOnboarding();
