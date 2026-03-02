@@ -80,19 +80,26 @@ REGLAS CRÍTICAS:
 3. Sé profesional, cercano y directo. Usa Markdown para que las respuestas sean fáciles de leer (negritas, listas, etc.).
 4. Si el usuario pregunta por el "setup", "hosting" o dónde se alojan las automatizaciones, usa la información del contexto relativa al "Setup de Automatización (n8n)".
 5. Cuando recomiendes un proceso, menciona su nombre y código (ej: A1).
+6. FORMATO DE RESPUESTA: Debes responder SIEMPRE con un objeto JSON válido que contenga:
+   - "reply": Tu respuesta en texto (usando Markdown).
+   - "action": Establece este campo a "handover" si sugieres hablar con un humano o derivar la consulta. Si no, déjalo vacío "".
 
 CONTEXTO:
 ${contextText}`,
                     },
                     { role: 'user', content: message },
                 ],
+                response_format: { type: "json_object" }
             }),
         })
 
         const chatResult = await chatResponse.json()
-        const reply = chatResult.choices[0].message.content
+        if (chatResult.error) throw new Error(`OpenAI Chat Error: ${chatResult.error.message}`)
 
-        return new Response(JSON.stringify({ reply }), {
+        const content = JSON.parse(chatResult.choices[0].message.content)
+        const { reply, action } = content
+
+        return new Response(JSON.stringify({ reply, action }), {
             headers: {
                 ...corsHeaders,
                 'Content-Type': 'application/json',
@@ -102,7 +109,7 @@ ${contextText}`,
     } catch (error) {
         console.error('Error en Edge Function:', error)
         return new Response(JSON.stringify({ error: error.message, stack: error.stack }), {
-            status: 200, // Devolvemos 200 para que el cliente pueda leer el JSON del error
+            status: 200,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
     }

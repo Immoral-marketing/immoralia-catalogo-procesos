@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface Message {
     role: 'assistant' | 'user';
     content: string;
+    action?: string;
 }
 
 const Chatbot: React.FC = () => {
@@ -50,7 +51,11 @@ const Chatbot: React.FC = () => {
             if (data?.error) {
                 setMessages(prev => [...prev, { role: 'assistant', content: `Error de la IA: ${data.error}` }]);
             } else {
-                setMessages(prev => [...prev, { role: 'assistant', content: data.reply || 'Lo siento, hubo un error al recibir la respuesta.' }]);
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: data.reply || 'Lo siento, hubo un error al recibir la respuesta.',
+                    action: data.action
+                }]);
             }
         } catch (err) {
             console.error('Error in chatbot:', err);
@@ -123,13 +128,28 @@ const Chatbot: React.FC = () => {
                                     )}>
                                         {m.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                                     </div>
-                                    <div className={cn(
-                                        "p-3 rounded-2xl text-sm leading-relaxed",
-                                        m.role === 'user'
-                                            ? "bg-secondary text-secondary-foreground rounded-tr-none"
-                                            : "bg-muted border border-border rounded-tl-none"
-                                    )}>
-                                        {m.content}
+                                    <div className="flex flex-col gap-2">
+                                        <div className={cn(
+                                            "p-3 rounded-2xl text-sm leading-relaxed",
+                                            m.role === 'user'
+                                                ? "bg-secondary text-secondary-foreground rounded-tr-none"
+                                                : "bg-muted border border-border rounded-tl-none"
+                                        )}>
+                                            {m.content}
+                                        </div>
+                                        {m.action === 'handover' && (
+                                            <Button
+                                                size="sm"
+                                                variant="secondary"
+                                                className="w-full mt-1 border border-primary/20 gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                                onClick={() => {
+                                                    console.log("Dispatching handover event...");
+                                                    window.dispatchEvent(new CustomEvent('immoralia:show-contact'));
+                                                }}
+                                            >
+                                                <User className="w-4 h-4" /> Hablar con un humano
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                             ))}
