@@ -47,7 +47,11 @@ const Chatbot: React.FC = () => {
             // o usar fetch directamente para manejar el ReadableStream.
             // Por ahora manejamos la respuesta completa si no configuramos streaming en el cliente.
 
-            setMessages(prev => [...prev, { role: 'assistant', content: data.reply || 'Lo siento, hubo un error al procesar tu consulta.' }]);
+            if (data?.error) {
+                setMessages(prev => [...prev, { role: 'assistant', content: `Error de la IA: ${data.error}` }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'assistant', content: data.reply || 'Lo siento, hubo un error al recibir la respuesta.' }]);
+            }
         } catch (err) {
             console.error('Error in chatbot:', err);
             setMessages(prev => [...prev, { role: 'assistant', content: 'Lo siento, he tenido un problema técnico. Por favor, inténtalo de nuevo más tarde.' }]);

@@ -101,8 +101,8 @@ ${contextText}`,
 
     } catch (error) {
         console.error('Error en Edge Function:', error)
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 500,
+        return new Response(JSON.stringify({ error: error.message, stack: error.stack }), {
+            status: 200, // Devolvemos 200 para que el cliente pueda leer el JSON del error
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
     }
