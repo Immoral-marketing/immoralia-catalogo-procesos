@@ -1,0 +1,194 @@
+[
+  {
+    "content": "# Proceso: Registro automático de gastos (Código: D13)\n**Tagline**: Agiliza la gestión de facturas de gasto al máximo.\n**Categoría**: Internos Agencias\n\n## Descripción\nVuelcas factura en carpeta de Drive → Generamos la factura de gasto...\n\n## Pasos del proceso\n1. Detección automática\n2. Envío al Inbox\n3. Creación automática\n\n## Personalización\nElige la carpeta de Drive...\n\n## Sectores recomendados\nAgencia/marketing, Retail, E-commerce\n\n## Herramientas utilizadas\nHolded, Drive, OneDrive\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Pierdo solicitudes entre WhatsApp/Instagram/email",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D13",
+      "category": "Internos Agencias"
+    }
+  },
+  {
+    "content": "# Proceso: Creación de metas en ClickUp (Código: D14)\n**Tagline**: Saca todo el partido a las metas de ClickUp...\n**Categoría**: Internos Agencias\n\n## Descripción\nDesde un documento con objetivos mensuales → Creamos metas en ClickUp...\n\n## Pasos del proceso\n1. Leemos los objetivos\n2. Creamos metas dinámicas\n3. Configuramos seguimiento\n\n## Personalización\nElige colores por cliente/equipo.\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales\n\n## Herramientas utilizadas\nClickUp, Notion\n\n## Puntos de dolor que resuelve\nQuiero ordenar tareas y que se asignen solas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D14",
+      "category": "Internos Agencias"
+    }
+  },
+  {
+    "content": "# Proceso: Facturación automática basada en horas (freelance) (Código: D15)\n**Tagline**: ¿Trabajas con distintos freelance a distintos precios por hora?\n**Categoría**: Horarios y Proyectos\n\n## Descripción\nTe imputa sus horas un freelance → Se crea la factura de gasto...\n\n## Pasos del proceso\n1. Leemos horas\n2. Multiplicamos por tarifa\n3. Creamos factura\n\n## Personalización\nDefine tarifas por freelance...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nHolded, Toggl, Clockify, Factorial\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Me escriben mucho y no doy abasto",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D15",
+      "category": "Horarios y Proyectos"
+    }
+  },
+  {
+    "content": "# Proceso: Gestión automática de retenciones (freelance) (Código: D16)\n**Tagline**: Retira las retenciones a medida que llegan...\n**Categoría**: Horarios y Proyectos\n\n## Descripción\nCuando entra una factura de proveedor → Calculamos retención...\n\n## Pasos del proceso\n1. Detectamos facturas\n2. Calculamos el %\n3. Creamos asiento\n\n## Personalización\nElige periodicidad del cálculo...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail\n\n## Herramientas utilizadas\nHolded, Excel, Sheets\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D16",
+      "category": "Horarios y Proyectos"
+    }
+  },
+  {
+    "content": "# Proceso: Facturas automatizadas (Código: A1)\n**Tagline**: No pierdas más tiempo calculando fees fijos y variables sobre la inversión.\n**Categoría**: Facturas y Gastos\n\n## Descripción\nDesde tu hoja de Servicios → Generamos todas tus facturas automáticamente...\n\n## Pasos del proceso\n1. Leemos fees por cliente\n2. Creamos la factura borrador en Holded\n3. Enviamos notificación\n\n## Personalización\nElige la vía de comunicación...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nHolded, Google Sheets, Excel\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Necesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A1",
+      "category": "Facturas y Gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Informe semanal de facturas vencidas (Código: A2)\n**Tagline**: Controla cada semana cómo van los impagos.\n**Categoría**: Facturas y Gastos\n\n## Descripción\nCada lunes → recibes un informe con un desglose de las facturas vencidas...\n\n## Pasos del proceso\n1. Revisamos todas las facturas\n2. Calculamos antigüedad\n3. Generamos un informe\n\n## Personalización\nDecide cuándo recibes el informe...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail\n\n## Herramientas utilizadas\nHolded, Slack, Email\n\n## Puntos de dolor que resuelve\nNecesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A2",
+      "category": "Facturas y Gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Presupuestos automáticos (Código: A3)\n**Tagline**: Vuela enviando presupuestos.\n**Categoría**: Facturas y Gastos\n\n## Descripción\nDesde un Sheets o cualquier fuente → Creamos presupuestos completos en Holded.\n\n## Pasos del proceso\n1. Leemos tarifas\n2. Creamos el presupuesto\n3. Notificamos al responsable\n\n## Personalización\nDecide si el presupuesto se envía automáticamente...\n\n## Sectores recomendados\nServicios profesionales, Agencia/marketing, Inmobiliaria\n\n## Herramientas utilizadas\nHolded, Google Sheets, Excel\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A3",
+      "category": "Facturas y Gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Seguimiento de presupuestos enviados (Código: A4)\n**Tagline**: Controla todos los presupuestos enviados.\n**Categoría**: Facturas y Gastos\n\n## Descripción\nSi pasan X días sin respuesta → Aviso a responsables por cualquier vía.\n\n## Pasos del proceso\n1. Revisamos el estado\n2. Detectamos inactividad\n3. Disparamos alerta\n\n## Personalización\nElige el canal del aviso...\n\n## Sectores recomendados\nAgencia/marketing, Inmobiliaria, Retail, Servicios profesionales\n\n## Herramientas utilizadas\nHolded, WhatsApp, Email, Pipedrive, HubSpot\n\n## Puntos de dolor que resuelve\nTardamos en responder y perdemos clientes, No hago seguimiento a las personas interesadas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A4",
+      "category": "Facturas y Gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Envío de recordatorios de pagos a clientes (Código: A5)\n**Tagline**: Automatiza el ir detrás de quien no ha pagado.\n**Categoría**: Facturas y Gastos\n\n## Descripción\nEnvía recordatorios de pago a los clientes que tienen facturas vencidas...\n\n## Pasos del proceso\n1. Identificación de facturas\n2. Generación del mensaje\n3. Envío automático\n\n## Personalización\nElige tono del mensaje...\n\n## Sectores recomendados\nRetail, E-commerce, Servicios profesionales, Agencia/marketing\n\n## Herramientas utilizadas\nHolded, WhatsApp, Email\n\n## Puntos de dolor que resuelve\nTardamos en responder y perdemos clientes, No hago seguimiento a las personas interesadas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A5",
+      "category": "Facturas y Gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Informe de análisis e incidencias en horarios (Código: B6)\n**Tagline**: Ahorra tiempo analizando los datos para controlar a tus equipos.\n**Categoría**: Horarios y Proyectos\n\n## Descripción\nCada semana → Recibes un reporte con fichajes incompletos...\n\n## Pasos del proceso\n1. Leemos los registros\n2. Detectamos anomalías\n3. Generamos alerta\n\n## Personalización\nElige qué tipo de alertas...\n\n## Sectores recomendados\nServicios profesionales, Agencia/marketing, Clínica, Peluquería/estética\n\n## Herramientas utilizadas\nClockify, Toggl, ClickUp, Factorial\n\n## Puntos de dolor que resuelve\nQuiero ordenar tareas y que se asignen solas, Me escriben mucho y no doy abasto, Necesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "B6",
+      "category": "Horarios y Proyectos"
+    }
+  },
+  {
+    "content": "# Proceso: Informe mensual de horas vs estimadas por proyecto (Código: B7)\n**Tagline**: Controla los desvíos de horas de cada proyecto.\n**Categoría**: Horarios y Proyectos\n\n## Descripción\nRecibe un informe mensual el primer día de cada mes...\n\n## Pasos del proceso\n1. Cruzamos datos\n2. Calculamos desviaciones\n3. Generamos un informe\n\n## Personalización\nElige formato del informe...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Inmobiliaria\n\n## Herramientas utilizadas\nClickUp, Asana, Excel, Monday\n\n## Puntos de dolor que resuelve\nQuiero ordenar tareas y que se asignen solas, Necesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "B7",
+      "category": "Horarios y Proyectos"
+    }
+  },
+  {
+    "content": "# Proceso: Alertas por exceso de horas en proyectos (Código: B8)\n**Tagline**: Recibe avisos cuando algún proyecto se dispara en horas.\n**Categoría**: Horarios y Proyectos\n\n## Descripción\nSi un proyecto supera el umbral (ej. +15%) → Aviso automático...\n\n## Pasos del proceso\n1. Calculamos desviación\n2. Detectamos el umbral\n3. Enviamos notificaciones\n\n## Personalización\nDefine el porcentaje de exceso...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nClickUp, Notion, Slack, Teams\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Quiero ordenar tareas y que se asignen solas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "B8",
+      "category": "Horarios y Proyectos"
+    }
+  },
+  {
+    "content": "# Proceso: Alertas de facturas de compra próximas a vencer (Código: C9)\n**Tagline**: Entérate de cuándo van a ir llegando los gastos previstos.\n**Categoría**: Finanzas y Tesorería\n\n## Descripción\nDetectamos facturas a X días de vencimiento...\n\n## Pasos del proceso\n1. Leemos facturas\n2. Calculamos los días restantes\n3. Enviamos alertas\n\n## Personalización\nDecide días de anticipación...\n\n## Sectores recomendados\nRetail, E-commerce, Restauración\n\n## Herramientas utilizadas\nHolded, Email, WhatsApp\n\n## Puntos de dolor que resuelve\nTardamos en responder y perdemos clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "C9",
+      "category": "Finanzas y Tesorería"
+    }
+  },
+  {
+    "content": "# Proceso: Informes financieros para dirección (Código: C10)\n**Tagline**: Claridad financiera directa en tu inbox, cada mes.\n**Categoría**: Finanzas y Tesorería\n\n## Descripción\nCierre mensual → Informe con facturación, margen, costes.\n\n## Pasos del proceso\n1. Consolidamos datos\n2. Calculamos KPIs\n3. Enviamos informe\n\n## Personalización\nElige tu fecha de cierre...\n\n## Sectores recomendados\nE-commerce, Retail, Agencia/marketing\n\n## Herramientas utilizadas\nHolded, Excel, Google Sheets\n\n## Puntos de dolor que resuelve\nNecesito centralizar la información de clientes, Quiero automatizar presupuestos y respuestas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "C10",
+      "category": "Finanzas y Tesorería"
+    }
+  },
+  {
+    "content": "# Proceso: Proyección automática de ingresos (Código: C11)\n**Tagline**: Recibe una previsión de ingresos según tu histórico y visión.\n**Categoría**: Finanzas y Tesorería\n\n## Descripción\nCierre mensual → Informe forecast con proyección de ingresos...\n\n## Pasos del proceso\n1. Analizamos patrones\n2. Calculamos escenarios\n3. Generamos un forecast\n\n## Personalización\nElige entre visión moderada...\n\n## Sectores recomendados\nE-commerce, Retail, Agencia/marketing, Servicios profesionales\n\n## Herramientas utilizadas\nExcel, Google Sheets, Holded\n\n## Puntos de dolor que resuelve\nNecesito centralizar la información de clientes, Quiero ordenar tareas y que se asignen solas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "C11",
+      "category": "Finanzas y Tesorería"
+    }
+  },
+  {
+    "content": "# Proceso: Traspasos automáticos de IVA (Código: C12)\n**Tagline**: Retira los impuestos a medida que llegan...\n**Categoría**: Finanzas y Tesorería\n\n## Descripción\nCada factura recibida → Generamos desglose de IVA...\n\n## Pasos del proceso\n1. Calculamos base\n2. Generamos documento\n3. Notificamos\n\n## Personalización\nElige cuándo se notifica...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail, E-commerce\n\n## Herramientas utilizadas\nHolded, Excel, Drive, OneDrive\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Necesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "C12",
+      "category": "Finanzas y Tesorería"
+    }
+  },
+  {
+    "content": "# Proceso: Atención automática por WhatsApp (Código: E17)\n**Tagline**: Responde al instante a dudas frecuentes.\n**Categoría**: Atención y Captura\n\n## Descripción\nAutomatizamos la atención inicial por WhatsApp...\n\n## Pasos del proceso\n1. Detectamos el tipo de consulta\n2. Respondemos con mensajes\n3. Derivamos a un responsable\n\n## Personalización\nDefine el tono, las preguntas frecuentes...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail, Inmobiliaria, Restauración\n\n## Herramientas utilizadas\nWhatsApp, Make, Zapier\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Tardamos en responder y perdemos clientes, Tengo muchas preguntas repetidas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E17",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Asistente de reservas y recordatorios (Código: E18)\n**Tagline**: Gestiona reservas de forma ágil.\n**Categoría**: Atención y Captura\n\n## Descripción\nFacilitamos que los clientes reserven sin esperas...\n\n## Pasos del proceso\n1. Pedimos los datos\n2. Confirmamos la solicitud\n3. Enviamos recordatorios\n\n## Personalización\nDefine qué datos pedir...\n\n## Sectores recomendados\nPeluquería/estética, Gimnasio/yoga, Clínica, Restauración, Servicios profesionales\n\n## Herramientas utilizadas\nCalendly, Booksy, WhatsApp, Google Sheets\n\n## Puntos de dolor que resuelve\nSe olvidan de la cita, Necesito más reservas",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E18",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Captura y organización automática de solicitudes (Código: E19)\n**Tagline**: Recoge solicitudes desde distintos canales.\n**Categoría**: Atención y Captura\n\n## Descripción\nCuando llegan solicitudes desde formularios o mensajes...\n\n## Pasos del proceso\n1. Recibimos solicitudes\n2. Extraemos la información\n3. Guardamos en listado\n\n## Personalización\nDefine qué información quieres capturar...\n\n## Sectores recomendados\nAgencia/marketing, Inmobiliaria, Servicios profesionales\n\n## Herramientas utilizadas\nFormulario web, WhatsApp, Instagram DM, ClickUp\n\n## Puntos de dolor que resuelve\nPierdo solicitudes entre WhatsApp/Instagram/email, Necesito centralizar la información de clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E19",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Seguimiento automático de solicitudes (Código: E20)\n**Tagline**: Automatiza el seguimiento para que nadie se quede sin respuesta.\n**Categoría**: Atención y Captura\n\n## Descripción\nCreamos un flujo de seguimiento para retomar conversaciones...\n\n## Pasos del proceso\n1. Detectamos solicitudes sin respuesta\n2. Enviamos mensaje de seguimiento\n3. Actualizamos el estado\n\n## Personalización\nDefine estados, tiempos de espera...\n\n## Sectores recomendados\nAgencia/marketing, Inmobiliaria, E-commerce, Servicios profesionales\n\n## Herramientas utilizadas\nWhatsApp, Email, Pipedrive, HubSpot\n\n## Puntos de dolor que resuelve\nNo hago seguimiento a las personas interesadas, Tardamos en responder y perdemos clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E20",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Solicitud automática de reseñas (Código: E21)\n**Tagline**: Pide reseñas tras el servicio para aumentar valoraciones.\n**Categoría**: Atención y Captura\n\n## Descripción\nAutomatizamos el envío de mensajes para pedir una reseña...\n\n## Pasos del proceso\n1. Tras finalizar el servicio\n2. Enviamos mensaje\n3. Enviamos recordatorio\n\n## Personalización\nDefine cuándo se envía, el texto...\n\n## Sectores recomendados\nRestauración, Peluquería/estética, Retail, Clínica\n\n## Herramientas utilizadas\nWhatsApp, Email, Google Business Messages\n\n## Puntos de dolor que resuelve\nQuiero pedir reseñas de forma automática",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E21",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Atención automática por Instagram (Código: E22)\n**Tagline**: Responde dudas frecuentes en Instagram.\n**Categoría**: Atención y Captura\n\n## Descripción\nAutomatizamos respuestas a mensajes de Instagram...\n\n## Pasos del proceso\n1. Detectamos el motivo\n2. Respondemos con mensajes\n3. Derivamos a una persona\n\n## Personalización\nDefine preguntas frecuentes, tono...\n\n## Sectores recomendados\nAgencia/marketing, Retail, E-commerce, Restauración, Inmobiliaria\n\n## Herramientas utilizadas\nInstagram DM, Make, ManyChat, Zapier\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Tengo muchas preguntas repetidas (horarios, precios, ubicación…), Tardamos en responder y perdemos clientes",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E22",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Reducción de ausencias a citas (Código: E23)\n**Tagline**: Confirma citas y recuerda automáticamente.\n**Categoría**: Atención y Captura\n\n## Descripción\nCreamos un flujo de confirmación y recordatorios...\n\n## Pasos del proceso\n1. Enviamos mensaje de confirmación\n2. Enviamos recordatorios\n3. Guiamos para reprogramar\n\n## Personalización\nDefine cuándo enviar confirmaciones...\n\n## Sectores recomendados\nPeluquería/estética, Clínica, Gimnasio/yoga, Servicios profesionales\n\n## Herramientas utilizadas\nWhatsApp, Google Calendar, Calendly\n\n## Puntos de dolor que resuelve\nSe olvidan de la cita",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E23",
+      "category": "Atención y Captura"
+    }
+  },
+  {
+    "content": "# Proceso: Alta automática de clientes y solicitudes (Código: E24)\n**Tagline**: Crea una ficha con los datos clave sin hacerlo a mano.\n**Categoría**: Atención y Captura\n\n## Descripción\nCada vez que entra una consulta o una reserva...\n\n## Pasos del proceso\n1. Capturamos datos básicos\n2. Creamos una ficha\n3. Guardamos un resumen\n\n## Personalización\nDefine qué datos guardar, estados...\n\n## Sectores recomendados\nAgencia/marketing, Inmobiliaria, E-commerce, Servicios profesionales, Retail\n\n## Herramientas utilizadas\nHolded, HubSpot, Pipedrive, Notion, ClickUp\n\n## Puntos de dolor que resuelve\nNecesito centralizar la información de clientes, Quiero ordenar tareas y que se asignen solas, Pierdo solicitudes entre WhatsApp/Instagram/email",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "E24",
+      "category": "Atención y Captura"
+    }
+  }
+]
