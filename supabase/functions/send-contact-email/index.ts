@@ -58,11 +58,19 @@ const ContactRequestSchema = z.object({
     .default(""),
   selectedProcesses: z
     .array(ProcessSchema)
-    .min(1, "Selecciona al menos un proceso")
     .max(50, "Demasiados procesos seleccionados"),
   onboardingAnswers: z.any().optional(),
   chatbotContext: z.array(z.string()).optional(),
   n8nHosting: z.enum(["setup", "own"]).default("setup"),
+}).refine((data) => {
+  // If source is not chatbot, we require at least one process selected
+  if (data.source !== 'chatbot' && (!data.selectedProcesses || data.selectedProcesses.length === 0)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Selecciona al menos un proceso para solicitar una propuesta",
+  path: ["selectedProcesses"],
 });
 
 // HTML escape function to prevent injection
@@ -284,8 +292,17 @@ ${onboardingText}
 ${processesText}`;
 
         const createTask = async (withStatus = true) => {
+          let taskName = empresa;
+
+          if (isChatbot) {
+            // Pick the most descriptive name for chatbot leads: Prefer company name if provided and not generic, otherwise use user name
+            const isGenericEmpresa = !empresa || empresa.trim() === '' || empresa.toLowerCase() === 'particular' || empresa.toLowerCase() === 'n/a';
+            const identifier = isGenericEmpresa ? nombre : empresa;
+            taskName = `Chatbot Lead: ${identifier}`;
+          }
+
           const body: any = {
-            name: isChatbot ? `ChatbotLead: ${empresa}` : empresa,
+            name: taskName,
             description,
             priority: 3,
           };
