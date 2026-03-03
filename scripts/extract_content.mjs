@@ -50,7 +50,7 @@ async function extractProcesses() {
 
         // Formateamos cada proceso como un "documento" Markdown enriquecido básico
         let content = `
-# Proceso: ${processName} (Código: ${p.id})
+# Proceso: ${processName}
 **Tagline**: ${p.tagline}
 **Categoría**: ${p.categoria_nombre}
 **Público objetivo**: ${audience === 'Client' ? 'Gestión de Clientes' : 'Gestión Interna / Proveedores'}
