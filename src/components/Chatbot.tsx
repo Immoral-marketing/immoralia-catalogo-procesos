@@ -20,7 +20,33 @@ const Chatbot: React.FC = () => {
         { role: 'assistant', content: '¡Hola! Soy el asistente de Immoralia. ¿En qué puedo ayudarte hoy? Puedo resolver dudas sobre nuestros procesos de automatización o sobre el setup de n8n.' }
     ]);
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAnalyzed, setHasAnalyzed] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
+        if (messages.length <= 1 || hasAnalyzed) return;
+
+        console.log(`Analyzing conversation. Reason: ${reason}`);
+        setHasAnalyzed(true);
+
+        const transcript = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
+
+        try {
+            const { data, error } = await supabase.functions.invoke('analyze-chat-conversation', {
+                body: {
+                    transcript,
+                    ended_reason: reason,
+                    form_opened: reason === 'human'
+                },
+            });
+
+            if (error) throw error;
+
+            console.log('Conversation analyzed and logged:', data);
+        } catch (err) {
+            console.error('Failed to analyze conversation:', err);
+        }
+    };
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -105,7 +131,10 @@ const Chatbot: React.FC = () => {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 hover:bg-white/10"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                            analyzeConversation('abandoned');
+                            setIsOpen(false);
+                        }}
                     >
                         <X className="w-4 h-4" />
                     </Button>
@@ -154,6 +183,7 @@ const Chatbot: React.FC = () => {
                                                 className="w-full mt-1 border border-primary/20 gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
                                                 onClick={() => {
                                                     console.log("Dispatching handover event with context...");
+                                                    analyzeConversation('human');
                                                     window.dispatchEvent(new CustomEvent('immoralia:show-contact', {
                                                         detail: {
                                                             source: 'chatbot',
