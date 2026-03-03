@@ -130,12 +130,22 @@ const Chatbot: React.FC = () => {
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <div className={cn(
-                                            "p-3 rounded-2xl text-sm leading-relaxed",
+                                            "p-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
                                             m.role === 'user'
                                                 ? "bg-secondary text-secondary-foreground rounded-tr-none"
                                                 : "bg-muted border border-border rounded-tl-none"
                                         )}>
-                                            {m.content}
+                                            {m.role === 'assistant' ? (
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: m.content
+                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+                                                            .replace(/\n\n/g, '<div class="h-2"></div>')
+                                                    }}
+                                                />
+                                            ) : (
+                                                m.content
+                                            )}
                                         </div>
                                         {m.action === 'handover' && (
                                             <Button
@@ -143,8 +153,13 @@ const Chatbot: React.FC = () => {
                                                 variant="secondary"
                                                 className="w-full mt-1 border border-primary/20 gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
                                                 onClick={() => {
-                                                    console.log("Dispatching handover event...");
-                                                    window.dispatchEvent(new CustomEvent('immoralia:show-contact'));
+                                                    console.log("Dispatching handover event with context...");
+                                                    window.dispatchEvent(new CustomEvent('immoralia:show-contact', {
+                                                        detail: {
+                                                            source: 'chatbot',
+                                                            messages: messages.map(m => `${m.role.toUpperCase()}: ${m.content}`)
+                                                        }
+                                                    }));
                                                 }}
                                             >
                                                 <User className="w-4 h-4" /> Hablar con un humano

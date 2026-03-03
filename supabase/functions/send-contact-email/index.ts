@@ -61,6 +61,7 @@ const ContactRequestSchema = z.object({
     .min(1, "Selecciona al menos un proceso")
     .max(50, "Demasiados procesos seleccionados"),
   onboardingAnswers: z.any().optional(),
+  chatbotContext: z.array(z.string()).optional(),
   n8nHosting: z.enum(["setup", "own"]).default("setup"),
 });
 
@@ -107,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers, n8nHosting, telefono, utm, source } = validationResult.data;
+    const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers, n8nHosting, telefono, utm, source, chatbotContext } = validationResult.data;
 
     // --- SAVE TO DATABASE ---
     console.log("Iniciando inserción en base de datos para:", email);
@@ -216,9 +217,10 @@ const handler = async (req: Request): Promise<Response> => {
     // --- CLICKUP INTEGRATION ---
     let clickupTaskId = null;
     if (CLICKUP_TOKEN) {
-      console.log("Iniciando creación de tarea en ClickUp...");
+      console.log(`Iniciando creación de tarea en ClickUp (${source === 'chatbot' ? 'CHATBOT' : 'WEB'})...`);
       try {
         const isoDatetime = new Date().toISOString();
+        const isChatbot = source === 'chatbot';
 
         // Helper to format onboarding answers into a readable string
         const formatOnboarding = (answers: any) => {
@@ -256,8 +258,11 @@ const handler = async (req: Request): Promise<Response> => {
 
         const onboardingText = formatOnboarding(onboardingAnswers);
         const processesText = selectedProcesses.map(p => `- ${p.codigo}: ${p.nombre}`).join("\n");
+        const chatbotHistory = isChatbot && chatbotContext && chatbotContext.length > 0
+          ? `\n### Historial del Chatbot\n${chatbotContext.join('\n')}\n`
+          : "";
 
-        const description = `Lead desde Web
+        const description = `Lead desde ${isChatbot ? "Chatbot" : "Web"}
 
 ### Información de Contacto
 **Empresa:** ${empresa}
@@ -271,7 +276,7 @@ const handler = async (req: Request): Promise<Response> => {
 **Origen:** ${source || "Web"}
 **UTM:** ${utm || "Ninguna"}
 **Fecha:** ${isoDatetime}
-
+${chatbotHistory}
 ### Onboarding
 ${onboardingText}
 
@@ -280,7 +285,7 @@ ${processesText}`;
 
         const createTask = async (withStatus = true) => {
           const body: any = {
-            name: empresa,
+            name: isChatbot ? `ChatbotLead: ${empresa}` : empresa,
             description,
             priority: 3,
           };

@@ -32,8 +32,18 @@ const Index = () => {
     setOnboardingAnswers(getOnboardingAnswers());
   };
 
+  const [contactSource, setContactSource] = useState<'web' | 'chatbot'>('web');
+  const [chatbotContext, setChatbotContext] = useState<string[]>([]);
+
   useEffect(() => {
-    const handleShowContact = () => {
+    const handleShowContact = (e: any) => {
+      if (e.detail?.source === 'chatbot') {
+        setContactSource('chatbot');
+        setChatbotContext(e.detail.messages || []);
+      } else {
+        setContactSource('web');
+        setChatbotContext([]);
+      }
       setShowContactForm(true);
     };
 
@@ -264,9 +274,15 @@ const Index = () => {
 
       <ContactForm
         isOpen={showContactForm}
-        onClose={() => setShowContactForm(false)}
+        onClose={() => {
+          setShowContactForm(false);
+          setContactSource('web');
+          setChatbotContext([]);
+        }}
         selectedProcesses={selectedProcesses}
         n8nHosting={n8nHosting}
+        source={contactSource}
+        chatbotContext={chatbotContext}
         onOpenOnboarding={() => {
           setShowContactForm(false);
           setOnboardingOpen(true);
