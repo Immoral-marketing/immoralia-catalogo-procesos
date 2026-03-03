@@ -29,11 +29,32 @@ async function extractProcesses() {
     console.log(`Encontrados ${processes.length} procesos.`);
 
     const chunks = processes.map(p => {
-        // Formateamos cada proceso como un "documento" Markdown enriquecido
-        const content = `
-# Proceso: ${p.nombre} (Código: ${p.id})
+        // Mapeo de nombres más explícitos para el motor de búsqueda
+        const nameOverrides = {
+            'A1': 'Facturación automática de clientes',
+            'D15': 'Liquidación y facturación de freelance',
+            'D16': 'Gestión de retenciones de freelance'
+        };
+
+        const processName = nameOverrides[p.id] || p.nombre;
+
+        // Determinar audiencia y tipo de flujo para mejor diferenciación
+        let audience = 'Client';
+        let flowType = 'Revenue';
+
+        // Procesos internos o de pago a proveedores/colaboradores (Gastos)
+        if (p.id.startsWith('D') || p.id === 'C9') {
+            audience = 'Internal/Supplier';
+            flowType = 'Expense';
+        }
+
+        // Formateamos cada proceso como un "documento" Markdown enriquecido básico
+        let content = `
+# Proceso: ${processName} (Código: ${p.id})
 **Tagline**: ${p.tagline}
 **Categoría**: ${p.categoria_nombre}
+**Público objetivo**: ${audience === 'Client' ? 'Gestión de Clientes' : 'Gestión Interna / Proveedores'}
+**Tipo de flujo**: ${flowType === 'Revenue' ? 'Ingresos (Ventas)' : 'Egresos (Gastos)'}
 
 ## Descripción
 ${p.descripcion_detallada}
@@ -54,12 +75,22 @@ ${p.herramientas?.join(', ')}
 ${p.dolores?.join(', ')}
 `.trim();
 
+        // Intentamos cargar información "Deep Knowledge" del sistema de archivos
+        const deepKnowledgePath = `./scripts/knowledge/processes/${p.id}.md`;
+        if (fs.existsSync(deepKnowledgePath)) {
+            const deepContent = fs.readFileSync(deepKnowledgePath, 'utf8');
+            content += `\n\n--- INFORMACIÓN DETALLADA ---\n\n${deepContent}`;
+        }
+
         return {
             content,
             metadata: {
                 source: 'catalog_process',
                 process_id: p.id,
-                category: p.categoria_nombre
+                category: p.categoria_nombre,
+                audience,
+                flow_type: flowType,
+                process_name: processName
             }
         };
     });

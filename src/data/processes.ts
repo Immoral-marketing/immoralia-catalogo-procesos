@@ -60,8 +60,8 @@ export const processes: Process[] = [
     slug: "facturas-automatizadas",
     categoria: "A",
     categoriaNombre: "Facturas y Gastos",
-    nombre: "Facturas automatizadas",
-    tagline: "No pierdas más tiempo calculando fees fijos y variables sobre la inversión.",
+    nombre: "Facturación automática de clientes",
+    tagline: "Genera tus facturas de venta automáticamente basándote en fees e inversión.",
     one_liner: "Genera facturas proforma o borradores automáticamente desde tu hoja de servicios.",
     badges: ["Popular", "Recomendado"],
     benefits: [
@@ -89,7 +89,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Canal de notificación", options: ["Email", "Mensajería Corporativa", "Chat"] },
+        { type: "select", label: "Canal de notificación", options: ["tu vía de comunicación preferida", "Mensajería Corporativa", "Chat"] },
         { type: "radio", label: "Estado inicial", options: ["Borrador", "Emitida"] }
       ],
       free_text_placeholder: "¿Tienes algún fee especial o regla de redondeo?"
@@ -151,7 +151,7 @@ export const processes: Process[] = [
     customization: {
       options_blocks: [
         { type: "select", label: "Día de envío", options: ["Lunes", "Viernes"] },
-        { type: "radio", label: "Canal", options: ["Mensajería", "Email"] }
+        { type: "radio", label: "Canal", options: ["Mensajería", "tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Necesitas algún filtro por importe mínimo?"
     },
@@ -164,7 +164,7 @@ export const processes: Process[] = [
       "Calculamos antigüedad, importe total y asignamos cliente",
       "Generamos un informe automático"
     ],
-    personalizacion: "Decide cuándo recibes el informe y por qué canal (email, mensajería, etc.).",
+    personalizacion: "Decide cuándo recibes el informe y por qué canal (tu vía de comunicación preferida, mensajería, etc.).",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
@@ -230,7 +230,7 @@ export const processes: Process[] = [
     nombre: "Seguimiento de presupuestos enviados",
     tagline: "Controla todos los presupuestos enviados.",
     recomendado: false,
-    descripcionDetallada: "Si pasan X días sin respuesta → Aviso a responsables por el canal que elijas. Revisamos el estado del presupuesto en tu ERP/CRM. Detectamos inactividad. Disparamos alerta o email de seguimiento.",
+    descripcionDetallada: "Si pasan X días sin respuesta → Aviso a responsables por el canal que elijas. Revisamos el estado del presupuesto en tu ERP/CRM. Detectamos inactividad. Disparamos alerta o tu vía de comunicación preferida de seguimiento.",
     summary: {
       what_it_is: "Flujo de control que asegura que ningún presupuesto se pierda por falta de seguimiento comercial.",
       for_who: ["Equipos de ventas", "Project Managers", "Gerencia"],
@@ -491,7 +491,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Puede avisar a varios responsables?", a: "Sí, podemos configurar canales específicos de mensajería o grupos de correo." }
+      { q: "¿Puede avisar a varios responsables?", a: "Sí, podemos configurar canales específicos de mensajería o grupos de tu vía de comunicación preferida." }
     ],
     pasos: [
       "Leemos facturas de proveedores, importes y fechas",
@@ -512,7 +512,7 @@ export const processes: Process[] = [
     nombre: "Informes financieros para dirección",
     tagline: "Claridad financiera directa en tu inbox, cada mes.",
     recomendado: true,
-    descripcionDetallada: "Cierre mensual → Informe con facturación, margen, costes. Consolidamos datos de ingresos, gastos y estructura. Calculamos KPIs clave. Enviamos informe por correo.",
+    descripcionDetallada: "Cierre mensual → Informe con facturación, margen, costes. Consolidamos datos de ingresos, gastos y estructura. Calculamos KPIs clave. Enviamos informe por tu vía de comunicación preferida.",
     summary: {
       what_it_is: "Fotografía financiera automatizada del negocio para facilitar la toma de decisiones estratégicas.",
       for_who: ["Directores Generales", "CFOs", "Socios de agencias"],
@@ -542,7 +542,7 @@ export const processes: Process[] = [
     pasos: [
       "Consolidamos datos de ingresos, gastos y estructura",
       "Calculamos KPIs clave",
-      "Enviamos informe por correo"
+      "Enviamos informe por tu vía de comunicación preferida"
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
@@ -635,7 +635,7 @@ export const processes: Process[] = [
       "Generamos documento oficial de solicitud de traspaso",
       "Notificamos al responsable"
     ],
-    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (email, mensajería o nube).",
+    personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (tu vía de comunicación preferida, mensajería o nube).",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"]
   },
@@ -668,7 +668,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Fuente", options: ["Nube (Drive/Dropbox)", "Email Forward"] }
+        { type: "select", label: "Fuente", options: ["Nube (Drive/tu gestor de archivos en la nube)", "tu vía de comunicación preferida Forward"] }
       ],
       free_text_placeholder: "¿Necesitas asignar proyectos o cuentas contables específicas?"
     },
@@ -693,29 +693,29 @@ export const processes: Process[] = [
     slug: "creacion-metas-clickup",
     categoria: "D",
     categoriaNombre: "Internos Agencias",
-    nombre: "Creación de metas en ClickUp",
-    tagline: "Saca todo el partido a las metas de ClickUp sin perder tiempo en crearlas a mano.",
+    nombre: "Creación de metas en tu herramienta de gestión de tareas",
+    tagline: "Saca todo el partido a las metas de tu herramienta de gestión de tareas sin perder tiempo en crearlas a mano.",
     recomendado: true,
-    descripcionDetallada: "Desde un documento con objetivos mensuales → Creamos metas en ClickUp, asignadas por cliente y equipo. Leemos los objetivos del documento. Creamos metas dinámicas en ClickUp por usuario/equipo. Configuramos seguimiento automático de KPIs.",
+    descripcionDetallada: "Desde un documento con objetivos mensuales → Creamos metas en tu herramienta de gestión de tareas, asignadas por cliente y equipo. Leemos los objetivos del documento. Creamos metas dinámicas en tu herramienta de gestión de tareas por usuario/equipo. Configuramos seguimiento automático de KPIs.",
     summary: {
-      what_it_is: "Traducción automática de tu estrategia de negocio en objetivos accionables (Goals) dentro de ClickUp.",
+      what_it_is: "Traducción automática de tu estrategia de negocio en objetivos accionables (Goals) dentro de tu herramienta de gestión de tareas.",
       for_who: ["Directores de equipo", "CEOs", "Responsables de OKRs"],
-      requirements: ["ClickUp (Plan Unlimited/Business)", "Documento de objetivos (Sheets/Notion)"],
-      output: "Estructura de Metas (Goals) y objetivos (Targets) creada y asignada en ClickUp."
+      requirements: ["tu herramienta de gestión de tareas (Plan Unlimited/Business)", "Documento de objetivos (Sheets/tu herramienta de gestión de tareas)"],
+      output: "Estructura de Metas (Goals) y objetivos (Targets) creada y asignada en tu herramienta de gestión de tareas."
     },
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
-      integrations: ["ClickUp", "Google Sheets"]
+      integrations: ["tu herramienta de gestión de tareas", "Google Sheets"]
     },
     how_it_works_steps: [
       { title: "Definición de Targets", short: "Leemos tus objetivos.", detail: "Extraemos de tu hoja de planificación cuáles son los KPIs a medir este mes." },
-      { title: "Arquitectura ClickUp", short: "Creamos los Goals dinámicos.", detail: "Generamos la estructura de metas en ClickUp asignando pesos y porcentajes de éxito." },
+      { title: "Arquitectura tu herramienta de gestión de tareas", short: "Creamos los Goals dinámicos.", detail: "Generamos la estructura de metas en tu herramienta de gestión de tareas asignando pesos y porcentajes de éxito." },
       { title: "Asignación de equipo", short: "Conectamos con responsables.", detail: "Cada usuario implicado recibe su meta para que su progreso se actualice automáticamente." }
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Actualización", options: ["Automática vía API", "Manual en ClickUp"] }
+        { type: "radio", label: "Actualización", options: ["Automática vía API", "Manual en tu herramienta de gestión de tareas"] }
       ],
       free_text_placeholder: "¿Cómo mides el éxito de tus metas (monetario, numérico, booleano)?"
     },
@@ -725,7 +725,7 @@ export const processes: Process[] = [
     ],
     pasos: [
       "Leemos los objetivos del documento",
-      "Creamos metas dinámicas en ClickUp por usuario/equipo",
+      "Creamos metas dinámicas en tu herramienta de gestión de tareas por usuario/equipo",
       "Configuramos seguimiento automático de KPIs"
     ],
     personalizacion: "Elige colores por cliente/equipo.",
@@ -739,8 +739,8 @@ export const processes: Process[] = [
     slug: "facturacion-automatica-horas-freelance",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
-    nombre: "Facturación automática basada en horas (freelance)",
-    tagline: "¿Trabajas con distintos freelance a distintos precios por hora?",
+    nombre: "Liquidación y facturación de freelance",
+    tagline: "Automatiza el cálculo y gestión de pagos a tus colaboradores externos por horas.",
     recomendado: false,
     descripcionDetallada: "Te imputa sus horas un freelance → Se crea la factura de gasto y se asocia a proyecto. Leemos horas registradas por cada freelance. Multiplicamos por tarifa asociada. Creamos factura de gasto y la asignamos al proyecto/cliente.",
     summary: {
@@ -828,7 +828,7 @@ export const processes: Process[] = [
   {
     id: "E17",
     codigo: "E17",
-    slug: "atencion-automatica-whatsapp",
+    slug: "atencion-automatica-tu vía de comunicación preferida",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     nombre: "Atención automática por mensajería",
@@ -869,6 +869,7 @@ export const processes: Process[] = [
       "Guardamos el contexto para retomar sin perder información"
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
+    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética"],
     related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
     integration_domains: ["OTHER"]
   },
@@ -915,6 +916,7 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
+    sectores: ["Clínicas", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"]
   },
@@ -961,6 +963,7 @@ export const processes: Process[] = [
       "Notificamos al responsable para que actúe sin retrasos"
     ],
     personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
+    sectores: ["Servicios profesionales", "Peluquería/estética", "Retail", "E-commerce"],
     related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"],
     integration_domains: ["CRM"]
   },
@@ -977,7 +980,7 @@ export const processes: Process[] = [
     summary: {
       what_it_is: "Cierre de ventas incansable que 'persigue' suavemente a tus prospectos hasta obtener respuesta.",
       for_who: ["Comerciales", "Freelancers", "Agencias de marketing"],
-      requirements: ["CRM con estados de venta", "Canal de comunicación (Chat/Email)"],
+      requirements: ["CRM con estados de venta", "Canal de comunicación (Chat/tu vía de comunicación preferida)"],
       output: "Aumento de la tasa de conversión sin carga administrativa para el equipo."
     },
     indicators: {
@@ -1007,6 +1010,7 @@ export const processes: Process[] = [
       "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
     ],
     personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
+    sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética"],
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
     integration_domains: ["CRM"]
   },
@@ -1038,7 +1042,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Canal", options: ["Chat (Recomendado)", "Email"] }
+        { type: "radio", label: "Canal", options: ["Chat (Recomendado)", "tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Quieres ofrecer algún incentivo por la reseña (descuento, etc.)?"
     },
@@ -1053,13 +1057,14 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-whatsapp"],
+    sectores: ["Restaurantes", "Clínicas", "Peluquería/estética", "Retail"],
+    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"]
   },
   {
     id: "E22",
     codigo: "E22",
-    slug: "atencion-automatica-instagram",
+    slug: "atencion-automatica-tu vía de comunicación preferida",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     nombre: "Atención automática por redes sociales",
@@ -1102,7 +1107,7 @@ export const processes: Process[] = [
     sectores: ["Agencia/marketing", "Retail", "E-commerce", "Servicios profesionales"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["atencion-automatica-whatsapp", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
   },
   {
     id: "E23",
@@ -1180,7 +1185,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Canal", options: ["Mensajería", "Email", "Ambos"] }
+        { type: "select", label: "Canal", options: ["Mensajería", "tu vía de comunicación preferida", "Ambos"] }
       ],
       free_text_placeholder: "¿Qué documentos mínimos necesitas que el cliente suba en su onboarding?"
     },
@@ -1198,8 +1203,8 @@ export const processes: Process[] = [
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
-    dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["atencion-automatica-whatsapp", "captura-organizacion-solicitudes"]
+    dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
   },
   {
     id: "F25",
@@ -1252,7 +1257,7 @@ export const processes: Process[] = [
       "Quiero automatizar pero no tengo roadmap",
       "Mis equipos pierden tiempo en tareas manuales complejas"
     ],
-    related_processes: ["atencion-automatica-whatsapp", "registro-automatico-gastos"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"]
   },
 ];
 

@@ -77,11 +77,16 @@ serve(async (req) => {
 REGLAS CRÍTICAS:
 1. Usa EXCLUSIVAMENTE el CONTEXTO proporcionado para responder.
 2. Si la respuesta no está en el contexto, di educadamente que no tienes esa información y ofrece derivar la consulta a un humano.
-3. Sé profesional, cercano y directo. Usa Markdown para que las respuestas sean fáciles de leer (negritas, listas, etc.).
-4. Si el usuario pregunta por el "setup", "hosting" o dónde se alojan las automatizaciones, usa la información del contexto relativa al "Setup de Automatización (n8n)".
-5. Cuando recomiendes un proceso, menciona su nombre y código (ej: A1).
-6. FORMATO DE RESPUESTA: Debes responder SIEMPRE con un objeto JSON válido que contenga:
-   - "reply": Tu respuesta en texto (usando Markdown).
+3. Sé profesional, cercano y directo.
+4. ESTRUCTURA Y FORMATO:
+   - Usa **negritas** para destacar nombres de procesos, códigos y conceptos clave.
+   - Usa listas con viñetas para enumerar beneficios o pasos.
+   - IMPORTANTE: Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de una lista para asegurar la legibilidad. No amontones el texto.
+   - Evita el uso de símbolos extraños o caracteres técnicos fuera de Markdown estándar.
+5. Si el usuario pregunta por el "setup", "hosting" o dónde se alojan las automatizaciones, usa la información del contexto relativa al "Setup de Automatización (n8n)".
+6. Cuando recomiendes un proceso, menciona su nombre y código (ej: A1).
+7. FORMATO DE RESPUESTA: Debes responder SIEMPRE con un objeto JSON válido que contenga:
+   - "reply": Tu respuesta en texto (usando Markdown estructurado).
    - "action": Establece este campo a "handover" si sugieres hablar con un humano o derivar la consulta. Si no, déjalo vacío "".
 
 CONTEXTO:

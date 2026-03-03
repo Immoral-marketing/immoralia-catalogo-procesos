@@ -26,6 +26,8 @@ interface ContactFormProps {
   selectedProcesses: Process[];
   n8nHosting: 'setup' | 'own';
   onOpenOnboarding?: () => void;
+  source?: 'web' | 'chatbot';
+  chatbotContext?: string[];
 }
 
 export const ContactForm = ({
@@ -33,7 +35,9 @@ export const ContactForm = ({
   onClose,
   selectedProcesses,
   n8nHosting,
-  onOpenOnboarding
+  onOpenOnboarding,
+  source = 'web',
+  chatbotContext = []
 }: ContactFormProps) => {
   const { toast } = useToast();
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
@@ -104,6 +108,8 @@ export const ContactForm = ({
           comentario: formData.comentario,
           onboardingAnswers,
           n8nHosting,
+          source,
+          chatbotContext,
           selectedProcesses: selectedProcesses.map(p => {
             const adjusted = computeFinalComplexity(p, onboardingAnswers);
             return {
@@ -205,36 +211,19 @@ export const ContactForm = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-card border-border max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Solicitar propuesta</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            {source === 'chatbot' ? 'Hablar con un consultor' : 'Solicitar propuesta'}
+          </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Completa tus datos y nos pondremos en contacto contigo
+            {source === 'chatbot'
+              ? 'Déjanos tus datos y un consultor humano revisará tu consulta para ayudarte personalmente.'
+              : 'Completa tus datos y nos pondremos en contacto contigo'
+            }
           </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[70vh] pr-4">
           <div className="space-y-6">
-            {!onboardingAnswers && (
-              <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1 text-center md:text-left space-y-1">
-                  <h4 className="font-bold text-sm">¿Sabías que podemos ser más precisos?</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Si rellenas tu perfil de automatización (solo 1 min), podremos prepararte una propuesta mucho más ajustada a tu negocio y herramientas actuales.
-                  </p>
-                </div>
-                {onOpenOnboarding && (
-                  <Button
-                    variant="link"
-                    className="text-primary font-bold text-xs shrink-0"
-                    onClick={onOpenOnboarding}
-                  >
-                    Completar ahora →
-                  </Button>
-                )}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Selected Processes Summary */}
@@ -256,28 +245,31 @@ export const ContactForm = ({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-border/50">
-                  <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                    <Server className="w-4 h-4 text-primary" />
-                    Configuración de n8n
-                  </h4>
-                  <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
-                    {n8nHosting === 'setup' ? (
-                      <>
-                        <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                        <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
-                      </>
-                    ) : (
-                      <>
-                        <div className="w-2 h-2 rounded-full bg-secondary" />
-                        <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
-                      </>
-                    )}
+
+                {source !== 'chatbot' && (
+                  <div className="pt-3 border-t border-border/50">
+                    <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                      <Server className="w-4 h-4 text-primary" />
+                      Configuración de n8n
+                    </h4>
+                    <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
+                      {n8nHosting === 'setup' ? (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                          <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-secondary" />
+                          <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-2 italic">
+                      * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
+                    </p>
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-2 italic">
-                    * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
-                  </p>
-                </div>
+                )}
               </div>
 
               {/* Form Fields */}
