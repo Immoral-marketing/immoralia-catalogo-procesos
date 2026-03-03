@@ -27,17 +27,12 @@ async function generateEmbeddings() {
     const chunks = JSON.parse(fs.readFileSync(knowledgePath, 'utf8'));
     console.log(`Procesando ${chunks.length} fragmentos...`);
 
-    // Limpiar conocimiento previo de procesos para evitar duplicados
-    console.log('Limpiando conocimiento previo de procesos...');
-    const { error: deleteError } = await supabase
+    // Limpiar conocimiento previo para evitar duplicados
+    console.log('Limpiando conocimiento previo...');
+    await supabase
         .from('chatbot_knowledge')
         .delete()
-        .eq('metadata->>source', 'catalog_process');
-
-    if (deleteError) {
-        console.error('Error al limpiar conocimiento previo:', deleteError);
-        return;
-    }
+        .in('metadata->>source', ['catalog_process', 'general_knowledge']);
 
     for (const chunk of chunks) {
         console.log(`Generando embedding para: ${chunk.metadata.process_id || 'Info General'}...`);

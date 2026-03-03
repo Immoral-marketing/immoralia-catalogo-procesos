@@ -14,6 +14,27 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Función auxiliar para extraer métricas del archivo de frontend
+function getProcessMetrics() {
+    const processesPath = './src/data/processes.ts';
+    if (!fs.existsSync(processesPath)) return {};
+
+    const content = fs.readFileSync(processesPath, 'utf8');
+    const metrics = {};
+
+    // Regex para buscar id e indicadores
+    const processRegex = /id:\s*["']([^"']+)["'][\s\S]*?indicators:\s*{[\s\S]*?time_estimate:\s*["']([^"']+)["'][\s\S]*?complexity:\s*["']([^"']+)["']/g;
+
+    let match;
+    while ((match = processRegex.exec(content)) !== null) {
+        metrics[match[1]] = {
+            time_estimate: match[2],
+            complexity: match[3]
+        };
+    }
+    return metrics;
+}
+
 async function extractProcesses() {
     console.log('--- Extrayendo procesos de la base de datos ---');
 
@@ -27,6 +48,8 @@ async function extractProcesses() {
     }
 
     console.log(`Encontrados ${processes.length} procesos.`);
+
+    const processMetrics = getProcessMetrics();
 
     const chunks = processes.map(p => {
         // Mapeo de nombres más explícitos para el motor de búsqueda
@@ -55,6 +78,8 @@ async function extractProcesses() {
 **Categoría**: ${p.categoria_nombre}
 **Público objetivo**: ${audience === 'Client' ? 'Gestión de Clientes' : 'Gestión Interna / Proveedores'}
 **Tipo de flujo**: ${flowType === 'Revenue' ? 'Ingresos (Ventas)' : 'Egresos (Gastos)'}
+**Tiempo estimado**: ${processMetrics[p.id]?.time_estimate || 'Consultar'}
+**Complejidad**: ${processMetrics[p.id]?.complexity || 'Consultar'}
 
 ## Descripción
 ${p.descripcion_detallada}
@@ -94,6 +119,27 @@ ${p.dolores?.join(', ')}
             }
         };
     });
+
+    // 2. Extraer FAQs generales y otros documentos de conocimiento general
+    console.log('--- Extrayendo conocimiento general ---');
+    const generalFiles = [
+        { path: './scripts/knowledge/general_faqs.md', source: 'general_faqs', name: 'FAQs Generales' }
+    ];
+
+    for (const file of generalFiles) {
+        if (fs.existsSync(file.path)) {
+            console.log(`Procesando conocimiento general: ${file.name}`);
+            const content = fs.readFileSync(file.path, 'utf8');
+            chunks.push({
+                content,
+                metadata: {
+                    source: 'general_knowledge',
+                    type: file.source,
+                    name: file.name
+                }
+            });
+        }
+    }
 
     // Guardar en un archivo temporal para revisión
     fs.writeFileSync('./scripts/extracted_knowledge.json', JSON.stringify(chunks, null, 2));
