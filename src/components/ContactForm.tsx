@@ -127,7 +127,7 @@ export const ContactForm = ({
 
 
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timed out')), 15000);
+        setTimeout(() => reject(new Error('Request timed out')), 30000);
       });
 
       const { data, error } = await Promise.race([invokePromise, timeoutPromise]) as any;

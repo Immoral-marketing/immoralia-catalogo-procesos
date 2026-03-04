@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
+import { sendSlackNewLead } from "../_shared/slack.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -17,11 +18,9 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-// Rate limiting configuration
-const RATE_LIMIT_PERIOD_MS = 60 * 60 * 1000; // 1 hour
-const MAX_REQUESTS_PER_PERIOD = 3;
+const RATE_LIMIT_PERIOD_MS = 60 * 60 * 1000;
+const MAX_REQUESTS_PER_PERIOD = 50;
 
-// Zod validation schemas
 const ProcessSchema = z.object({
   id: z.string().max(50),
   codigo: z.string().max(20),
@@ -63,7 +62,6 @@ const ContactRequestSchema = z.object({
   chatbotContext: z.array(z.string()).optional(),
   n8nHosting: z.enum(["setup", "own"]).default("setup"),
 }).refine((data) => {
-  // If source is not chatbot, we require at least one process selected
   if (data.source !== 'chatbot' && (!data.selectedProcesses || data.selectedProcesses.length === 0)) {
     return false;
   }
@@ -73,7 +71,6 @@ const ContactRequestSchema = z.object({
   path: ["selectedProcesses"],
 });
 
-// HTML escape function to prevent injection
 function escapeHtml(text: string): string {
   if (!text) return "";
   return text
@@ -86,16 +83,13 @@ function escapeHtml(text: string): string {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Get client IP address
     const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
 
-    // Parse and validate input
     const rawData = await req.json();
     const validationResult = ContactRequestSchema.safeParse(rawData);
 
@@ -135,12 +129,9 @@ const handler = async (req: Request): Promise<Response> => {
     if (insertError) {
       console.error("ERROR en base de datos (contact_submissions):", insertError);
     }
-    // ------------------------
 
     // --- RATE LIMIT CHECK ---
     const oneHourAgo = new Date(Date.now() - RATE_LIMIT_PERIOD_MS).toISOString();
-
-    // Check by IP and Email combined
     const { count, error: countError } = await supabase
       .from("contact_requests_log")
       .select("*", { count: "exact", head: true })
@@ -152,14 +143,11 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Error checking rate limit:", countError);
     } else if (count !== null && count >= MAX_REQUESTS_PER_PERIOD) {
       console.warn(`Rate limit exceeded for IP: ${clientIP} or Email: ${email}`);
-
-      // Log the blocked attempt
       await supabase.from("contact_requests_log").insert({
         ip_address: clientIP,
         email: email,
         status: "blocked"
       });
-
       return new Response(
         JSON.stringify({
           error: "Has superada el límite de solicitudes por hoy (3 por hora). Por favor, inténtalo más tarde o contáctanos directamente.",
@@ -170,83 +158,28 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
-    // ------------------------
-
-    // --- SEND EMAILS ---
-    if (RESEND_API_KEY) {
-      console.log("Sending emails...");
-      // (Email sending logic from previous view_file goes here)
-      // I'll keep the email sending logic to ensure functionality remains
-
-      const safeNombre = escapeHtml(nombre);
-      const safeEmail = escapeHtml(email);
-      const safeEmpresa = escapeHtml(empresa);
-      const safeComentario = escapeHtml(comentario);
-
-      const processesListHTML = selectedProcesses
-        .map(p => `<li>${escapeHtml(p.codigo)} - ${escapeHtml(p.nombre)}</li>`)
-        .join("");
-
-      try {
-        // Business email
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: "Catálogo de Procesos <onboarding@resend.dev>",
-            to: ["david@immoral.es"],
-            subject: `Nueva solicitud de automatización - ${safeEmpresa}`,
-            html: `<h1>Nueva solicitud</h1><p>Nombre: ${safeNombre}</p><p>Email: ${safeEmail}</p><p>Empresa: ${safeEmpresa}</p><ul>${processesListHTML}</ul><p>Comentario: ${safeComentario}</p>`,
-          }),
-        });
-
-        // Client email
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: "Catálogo de Procesos <onboarding@resend.dev>",
-            to: [email],
-            subject: "Hemos recibido tu solicitud de automatización",
-            html: `<h1>¡Gracias, ${safeNombre}!</h1><p>Hemos recibido tu solicitud para ${safeEmpresa}.</p>`,
-          }),
-        });
-      } catch (err) {
-        console.error("Error sending emails:", err);
-      }
-    }
 
     // --- CLICKUP INTEGRATION ---
-    let clickupTaskId = null;
+    let clickupTaskId: string | null = null;
+    let clickupTaskUrl = "";
     if (CLICKUP_TOKEN) {
       console.log(`Iniciando creación de tarea en ClickUp (${source === 'chatbot' ? 'CHATBOT' : 'WEB'})...`);
       try {
         const isoDatetime = new Date().toISOString();
         const isChatbot = source === 'chatbot';
 
-        // Helper to format onboarding answers into a readable string
         const formatOnboarding = (answers: any) => {
           if (!answers) return "No se proporcionaron respuestas de onboarding.";
-
           let text = "";
           if (answers.sector) text += `Sector: ${answers.sector}${answers.otherSector ? ` (${answers.otherSector})` : ""}\n`;
           if (answers.maturity) text += `Madurez: ${answers.maturity}\n`;
-
           if (answers.tools && Array.isArray(answers.tools)) {
             text += `Herramientas: ${answers.tools.join(", ")}\n`;
           }
-
           if (answers.channels) {
             if (answers.channels.clients?.length) text += `Canales Clientes: ${answers.channels.clients.join(", ")}\n`;
             if (answers.channels.internal?.length) text += `Canales Internos: ${answers.channels.internal.join(", ")}\n`;
           }
-
           if (answers.usesAI !== undefined) {
             text += `Usa IA: ${answers.usesAI ? "Sí" : "No"}\n`;
             if (answers.usesAI) {
@@ -254,18 +187,16 @@ const handler = async (req: Request): Promise<Response> => {
               if (answers.aiUsagePurpose) text += `- Propósito IA: ${answers.aiUsagePurpose}\n`;
             }
           }
-
           if (answers.pains && Array.isArray(answers.pains) && answers.pains.length) {
             text += `Dolores/Necesidades:\n- ${answers.pains.join("\n- ")}\n`;
           }
           if (answers.otherPain) text += `Otros dolores: ${answers.otherPain}\n`;
           if (answers.biggestPain) text += `Mayor freno: ${answers.biggestPain}\n`;
-
           return text;
         };
 
         const onboardingText = formatOnboarding(onboardingAnswers);
-        const processesText = selectedProcesses.map(p => `- ${p.codigo}: ${p.nombre}`).join("\n");
+        const processesText = selectedProcesses.map((p: any) => `- ${p.codigo}: ${p.nombre}`).join("\n");
         const chatbotHistory = isChatbot && chatbotContext && chatbotContext.length > 0
           ? `\n### Historial del Chatbot\n${chatbotContext.join('\n')}\n`
           : "";
@@ -293,57 +224,94 @@ ${processesText}`;
 
         const createTask = async (withStatus = true) => {
           let taskName = empresa;
-
           if (isChatbot) {
-            // Pick the most descriptive name for chatbot leads: Prefer company name if provided and not generic, otherwise use user name
             const isGenericEmpresa = !empresa || empresa.trim() === '' || empresa.toLowerCase() === 'particular' || empresa.toLowerCase() === 'n/a';
             const identifier = isGenericEmpresa ? nombre : empresa;
             taskName = `Chatbot Lead: ${identifier}`;
           }
-
-          const body: any = {
-            name: taskName,
-            description,
-            priority: 3,
-          };
-          if (withStatus) {
-            body.status = "INTERESADO";
-          }
-
+          const body: any = { name: taskName, description, priority: 3 };
+          if (withStatus) { body.status = "INTERESADO"; }
           const response = await fetch(`https://api.clickup.com/api/v2/list/${CLICKUP_LIST_ID}/task`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: CLICKUP_TOKEN,
-            },
+            headers: { "Content-Type": "application/json", Authorization: CLICKUP_TOKEN },
             body: JSON.stringify(body),
           });
-
           if (!response.ok) {
             const errorData = await response.json();
             throw { status: response.status, data: errorData };
           }
-
           return await response.json();
         };
 
         try {
           const task = await createTask(true);
           clickupTaskId = task.id;
+          clickupTaskUrl = task.url || `https://app.clickup.com/t/${clickupTaskId}`;
           console.log("Tarea creada en ClickUp con éxito:", clickupTaskId);
         } catch (err: any) {
           console.error("Error al crear tarea en ClickUp (con status):", err);
           console.log("Reintentando sin status...");
           const task = await createTask(false);
           clickupTaskId = task.id;
+          clickupTaskUrl = task.url || `https://app.clickup.com/t/${clickupTaskId}`;
         }
       } catch (clickupError) {
         console.error("Fallo definitivo en la integración con ClickUp:", clickupError);
       }
     }
-    // ---------------------------
 
-    // Log the successful attempt
+    // --- SEND EMAILS (inline, always runs regardless of ClickUp) ---
+    if (RESEND_API_KEY) {
+      const safeNombre = escapeHtml(nombre);
+      const safeEmail = escapeHtml(email);
+      const safeEmpresa = escapeHtml(empresa);
+      const safeComentario = escapeHtml(comentario);
+      const processesListHTML = selectedProcesses
+        .map((p: any) => `<li>${escapeHtml(p.codigo)} - ${escapeHtml(p.nombre)}</li>`)
+        .join("");
+      const sourceLabel = source === 'chatbot' ? 'Chatbot (Handover)' : source === 'onboarding' ? 'Formulario Onboarding' : 'Solicitud de Propuesta';
+
+      try {
+        await Promise.all([
+          // Business email
+          fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+            body: JSON.stringify({
+              from: "Catálogo de Procesos <onboarding@resend.dev>",
+              to: ["david@immoral.es"],
+              subject: `🚀 Nuevo lead (${sourceLabel}) - ${safeEmpresa}`,
+              html: `<h1>Nuevo lead</h1><p><b>Origen:</b> ${sourceLabel}</p><p><b>Nombre:</b> ${safeNombre}</p><p><b>Email:</b> ${safeEmail}</p><p><b>Empresa:</b> ${safeEmpresa}</p><p><b>Tel:</b> ${telefono || "N/A"}</p><ul>${processesListHTML}</ul><p><b>Comentario:</b> ${safeComentario}</p>${clickupTaskUrl ? `<p><a href="${clickupTaskUrl}">Ver en ClickUp</a></p>` : ""}`,
+            }),
+          }).catch(err => console.error("Error sending business email:", err)),
+          // Client confirmation email
+          fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+            body: JSON.stringify({
+              from: "Catálogo de Procesos <onboarding@resend.dev>",
+              to: [email],
+              subject: "Hemos recibido tu solicitud de automatización",
+              html: `<h1>¡Gracias, ${safeNombre}!</h1><p>Hemos recibido tu solicitud para <b>${safeEmpresa}</b>. Nos pondremos en contacto en menos de 24 horas.</p>`,
+            }),
+          }).catch(err => console.error("Error sending client email:", err)),
+        ]);
+        console.log("Emails sent successfully");
+      } catch (err) {
+        console.error("Error sending emails:", err);
+      }
+    }
+
+    // --- SLACK NOTIFICATION (fire-and-forget, no await) ---
+    if (clickupTaskId) {
+      sendSlackNewLead({
+        lead: { nombre, email, empresa, telefono, comentario, utm },
+        clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
+        source: (source === 'chatbot' ? 'chatbot' : (source === 'onboarding' ? 'onboarding' : 'offer_request'))
+      }).catch(err => console.error("Slack notification error:", err));
+    }
+
+    // --- LOG SUCCESS ---
     await supabase.from("contact_requests_log").insert({
       ip_address: clientIP,
       email: email,
@@ -352,11 +320,9 @@ ${processesText}`;
 
     return new Response(JSON.stringify({ success: true, clickup_task_id: clickupTaskId }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders,
-      },
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
+
   } catch (error: unknown) {
     console.error("Error in function:", error);
     return new Response(
