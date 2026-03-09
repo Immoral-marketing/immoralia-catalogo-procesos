@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,12 @@ import { ProcessCard } from "@/components/ProcessCard";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { Input } from "@/components/ui/input";
 
 const ProcessDetail = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
-    const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
+    const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting, customizations, updateCustomization } = useSelection();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -44,7 +45,47 @@ const ProcessDetail = () => {
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [activeSection, setActiveSection] = useState("resumen");
 
+    // Customization State Handling
+    const processCustomization = customizations[process.id] || { selectedOptions: {}, customInputs: {} };
+    const [localOptions, setLocalOptions] = useState<Record<string, string>>(processCustomization.selectedOptions);
+    const [localInputs, setLocalInputs] = useState<Record<string, string>>(processCustomization.customInputs);
+    const [localNeedsInput, setLocalNeedsInput] = useState(processCustomization.customInputs["needs"] || "");
+
+    useEffect(() => {
+        // Only update context if we have changes and it's initialized
+        updateCustomization(process.id, localOptions, { ...localInputs, needs: localNeedsInput });
+    }, [localOptions, localInputs, localNeedsInput]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleOptionSelect = (blockLabel: string, option: string) => {
+        setLocalOptions(prev => ({
+            ...prev,
+            [blockLabel]: option
+        }));
+        // Reset the custom input for this block if they change selection and it's not needed anymore
+        if (!requiresCustomInput(option)) {
+            setLocalInputs(prev => {
+                const next = { ...prev };
+                delete next[blockLabel];
+                return next;
+            });
+        }
+    };
+
+    const requiresCustomInput = (option: string) => {
+        const lower = option.toLowerCase();
+        return lower.includes("tu vía") || lower.includes("herramienta") || lower.includes("tu gestor") || lower.includes("otra") || lower.includes("especificar") || lower.includes("otro");
+    };
+
     const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
+
+    const onboardingChannels = useMemo(() => {
+        if (!onboardingAnswers?.channels) return [];
+        const all = new Set([...onboardingAnswers.channels.clients, ...onboardingAnswers.channels.internal]);
+        all.delete("Otro");
+        if (onboardingAnswers.otherClientChannel) all.add(onboardingAnswers.otherClientChannel);
+        if (onboardingAnswers.otherInternalChannel) all.add(onboardingAnswers.otherInternalChannel);
+        return Array.from(all);
+    }, [onboardingAnswers]);
 
     useEffect(() => {
         const sections = ["resumen", "funcionamiento", "personalizacion", "demo", "faqs", "relacionados"];
@@ -192,7 +233,7 @@ const ProcessDetail = () => {
                                 </ul>
 
                                 <div className="flex flex-wrap gap-4 pt-4 md:hidden">
-                                    <Button onClick={toggleSelect} size="lg" className={`flex-1 ${isSelected ? 'bg-secondary hover:bg-secondary/90' : 'bg-primary hover:bg-primary/90'}`}>
+                                    <Button onClick={toggleSelect} size="lg" className={`flex - 1 ${isSelected ? 'bg-secondary hover:bg-secondary/90' : 'bg-primary hover:bg-primary/90'} `}>
                                         {isSelected ? <Check className="mr-2 h-5 w-5" /> : <Plus className="mr-2 h-5 w-5" />}
                                         {isSelected ? "Añadido" : "Añadir a mi selección"}
                                     </Button>
@@ -213,7 +254,7 @@ const ProcessDetail = () => {
                                         (tab.show !== false) && (
                                             <a
                                                 key={tab.id}
-                                                href={`#${tab.id}`}
+                                                href={`#${tab.id} `}
                                                 onClick={(e) => scrollToSection(e, tab.id)}
                                                 className={cn(
                                                     "py-4 border-b-2 transition-all duration-200",
@@ -300,24 +341,62 @@ const ProcessDetail = () => {
                                     <h3 className="text-3xl font-bold">Personalización</h3>
                                     <div className="bg-card border border-border rounded-2xl p-8 space-y-8">
                                         <div className="grid md:grid-cols-2 gap-12">
-                                            {process.customization.options_blocks.map((block, i) => (
-                                                <div key={i} className="space-y-4">
-                                                    <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{block.label}</label>
-                                                    <div className="grid gap-2">
-                                                        {block.options.map((opt: string) => (
-                                                            <div key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 cursor-pointer transition-colors bg-background/50">
-                                                                <div className="w-4 h-4 rounded-full border-2 border-primary" />
-                                                                <span className="text-sm font-medium">{opt}</span>
-                                                            </div>
-                                                        ))}
+                                            {process.customization.options_blocks.map((block, i) => {
+                                                const isCanalBlock = block.label.toLowerCase().includes("canal");
+                                                const optionsToRender = (isCanalBlock && onboardingChannels.length > 0)
+                                                    ? [...onboardingChannels, "Tu vía de comunicación preferida"]
+                                                    : block.options;
+
+                                                return (
+                                                    <div key={i} className="space-y-4">
+                                                        <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{block.label}</label>
+                                                        <div className="grid gap-2">
+                                                            {optionsToRender.map((opt: string) => {
+                                                                const isOptSelected = localOptions[block.label] === opt;
+                                                                return (
+                                                                    <div key={opt} className="space-y-2">
+                                                                        <div
+                                                                            onClick={() => handleOptionSelect(block.label, opt)}
+                                                                            className={cn(
+                                                                                "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                                                                                isOptSelected
+                                                                                    ? "border-primary bg-primary/5 shadow-[0_0_15px_-3px_rgba(var(--primary),0.2)]"
+                                                                                    : "border-border hover:border-primary/50 bg-background/50"
+                                                                            )}
+                                                                        >
+                                                                            <div className={cn(
+                                                                                "w-4 h-4 rounded-full border-2 flex items-center justify-center",
+                                                                                isOptSelected ? "border-primary bg-background" : "border-muted-foreground"
+                                                                            )}>
+                                                                                {isOptSelected && <div className="w-2 h-2 rounded-full bg-primary" />}
+                                                                            </div>
+                                                                            <span className={cn("text-sm transition-colors", isOptSelected ? "font-bold text-primary" : "font-medium text-foreground")}>{opt}</span>
+                                                                        </div>
+                                                                        {isOptSelected && requiresCustomInput(opt) && (
+                                                                            <div className="pl-8 anim-slide-down">
+                                                                                <Input
+                                                                                    placeholder="Especificar detalladamente..."
+                                                                                    value={localInputs[block.label] || ""}
+                                                                                    onChange={(e) => setLocalInputs(prev => ({ ...prev, [block.label]: e.target.value }))}
+                                                                                    className="border-primary/30 focus-visible:ring-primary/50"
+                                                                                    autoFocus
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
 
                                         <div className="space-y-4">
                                             <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Necesidades específicas</label>
                                             <textarea
+                                                value={localNeedsInput}
+                                                onChange={(e) => setLocalNeedsInput(e.target.value)}
                                                 placeholder={process.customization.free_text_placeholder || "Describe aquí cualquier particularidad de tu negocio..."}
                                                 className="w-full h-32 bg-background border border-border rounded-xl p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50"
                                             />

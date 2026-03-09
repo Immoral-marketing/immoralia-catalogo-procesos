@@ -1,12 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { processes } from '@/data/processes';
 
+interface CustomizationState {
+    selectedOptions: Record<string, string>;
+    customInputs: Record<string, string>;
+}
+
 interface SelectionContextType {
     selectedProcessIds: Set<string>;
     toggleProcess: (id: string) => void;
     clearSelection: () => void;
     n8nHosting: 'setup' | 'own';
     setN8nHosting: (value: 'setup' | 'own') => void;
+    customizations: Record<string, CustomizationState>;
+    updateCustomization: (processId: string, options: Record<string, string>, inputs: Record<string, string>) => void;
+    clearCustomizations: () => void;
 }
 
 const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
@@ -40,6 +48,18 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return new Set();
     });
 
+    const [customizations, setCustomizations] = useState<Record<string, CustomizationState>>(() => {
+        try {
+            const saved = localStorage.getItem("immoralia_process_customizations");
+            if (saved) {
+                return JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error("Error recuperando customizaciones:", error);
+        }
+        return {};
+    });
+
     useEffect(() => {
         localStorage.setItem(
             "immoralia_selected_processes",
@@ -50,6 +70,10 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     useEffect(() => {
         localStorage.setItem("immoralia_n8n_hosting_v2", n8nHosting);
     }, [n8nHosting]);
+
+    useEffect(() => {
+        localStorage.setItem("immoralia_process_customizations", JSON.stringify(customizations));
+    }, [customizations]);
 
     const toggleProcess = (id: string) => {
         setSelectedProcessIds((prev) => {
@@ -67,13 +91,30 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setSelectedProcessIds(new Set());
     };
 
+    const updateCustomization = (processId: string, options: Record<string, string>, inputs: Record<string, string>) => {
+        setCustomizations(prev => ({
+            ...prev,
+            [processId]: {
+                selectedOptions: options,
+                customInputs: inputs
+            }
+        }));
+    };
+
+    const clearCustomizations = () => {
+        setCustomizations({});
+    };
+
     return (
         <SelectionContext.Provider value={{
             selectedProcessIds,
             toggleProcess,
             clearSelection,
             n8nHosting,
-            setN8nHosting
+            setN8nHosting,
+            customizations,
+            updateCustomization,
+            clearCustomizations
         }}>
             {children}
         </SelectionContext.Provider>

@@ -16,6 +16,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
+import { useSelection } from "@/lib/SelectionContext";
 
 import { OnboardingAnswers, getOnboardingAnswers } from "@/lib/onboarding-utils";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
@@ -40,6 +41,7 @@ export const ContactForm = ({
   chatbotContext = []
 }: ContactFormProps) => {
   const { toast } = useToast();
+  const { customizations } = useSelection();
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
 
   useEffect(() => {
@@ -112,6 +114,7 @@ export const ContactForm = ({
           chatbotContext,
           selectedProcesses: selectedProcesses.map(p => {
             const adjusted = computeFinalComplexity(p, onboardingAnswers);
+            const processCustomizations = customizations[p.id];
             return {
               id: p.id,
               codigo: p.codigo,
@@ -119,7 +122,8 @@ export const ContactForm = ({
               categoriaNombre: p.categoriaNombre,
               tagline: p.tagline,
               adjustedComplexity: adjusted.complexity,
-              adjustedTimeEstimate: adjusted.timeEstimate
+              adjustedTimeEstimate: adjusted.timeEstimate,
+              customizations: processCustomizations
             };
           }),
         },
