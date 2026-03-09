@@ -89,7 +89,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Canal de notificación", options: ["tu vía de comunicación preferida", "Mensajería Corporativa", "Chat"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] },
         { type: "radio", label: "Estado inicial", options: ["Borrador", "Emitida"] }
       ],
       free_text_placeholder: "¿Tienes algún fee especial o regla de redondeo?"
@@ -151,7 +151,7 @@ export const processes: Process[] = [
     customization: {
       options_blocks: [
         { type: "select", label: "Día de envío", options: ["Lunes", "Viernes"] },
-        { type: "radio", label: "Canal", options: ["Mensajería", "tu vía de comunicación preferida"] }
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Necesitas algún filtro por importe mínimo?"
     },
@@ -299,7 +299,8 @@ export const processes: Process[] = [
     customization: {
       options_blocks: [
         { type: "radio", label: "Tono inicial", options: ["Amable", "Conciso"] },
-        { type: "select", label: "Frecuencia", options: ["Semanal", "Diaria"] }
+        { type: "select", label: "Frecuencia", options: ["Semanal", "Diaria"] },
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Quieres excluir a algún cliente VIP de este proceso?"
     },
@@ -347,7 +348,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Umbral de Burnout", options: ["+10h/semana", "+20h/semana"] }
+        { type: "select", label: "Umbral de Burnout", options: ["+10h/semana", "+20h/semana"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Alguna regla especial para horarios nocturnos?"
     },
@@ -393,7 +395,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Formato", options: ["Hoja de cálculo", "Dashboard visual"] }
+        { type: "radio", label: "Formato", options: ["Hoja de cálculo", "Dashboard visual"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Quieres incluir el coste/hora de cada perfil?"
     },
@@ -439,7 +442,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Umbral de aviso", options: ["80%", "100%", "+15% sobre total"] }
+        { type: "select", label: "Umbral de aviso", options: ["80%", "100%", "+15% sobre total"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Deseas notificar también al cliente automáticamente?"
     },
@@ -485,7 +489,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Anticipación", options: ["2 días", "5 días", "1 semana"] }
+        { type: "select", label: "Anticipación", options: ["2 días", "5 días", "1 semana"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Deseas agrupar todas las del mismo proveedor?"
     },
@@ -531,7 +536,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Periodicidad", options: ["Mensual", "Trimestral"] }
+        { type: "select", label: "Periodicidad", options: ["Mensual", "Trimestral"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Qué KPI específico es vital para tu negocio (LTV, CAC, etc.)?"
     },
@@ -576,7 +582,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Alcance", options: ["3 meses", "6 meses", "12 meses"] }
+        { type: "radio", label: "Alcance", options: ["3 meses", "6 meses", "12 meses"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Incluimos objetivos de ventas externos?"
     },
@@ -622,7 +629,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Aviso", options: ["Instantáneo", "Semanal", "Mensual"] }
+        { type: "select", label: "Aviso", options: ["Instantáneo", "Semanal", "Mensual"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Deseas separar también el % de Retención IRPF?"
     },
@@ -668,7 +676,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Fuente", options: ["Nube (Drive/tu gestor de archivos en la nube)", "tu vía de comunicación preferida Forward"] }
+        { type: "select", label: "Fuente", options: ["Google Drive", "Dropbox", "One Drive", "Otra herramienta / gestor de archivos en nube"] }
       ],
       free_text_placeholder: "¿Necesitas asignar proyectos o cuentas contables específicas?"
     },
@@ -807,7 +815,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Frecuencia aviso", options: ["Semanal", "Mensual"] }
+        { type: "select", label: "Frecuencia aviso", options: ["Semanal", "Mensual"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Manejas retenciones de alquileres además de las de freelance?"
     },
@@ -901,7 +910,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Exigir prepago", options: ["Sí, fianza de reserva", "No, pago en local"] }
+        { type: "radio", label: "Exigir prepago", options: ["Sí, fianza de reserva", "No, pago en local"] },
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Cuál es tu tiempo mínimo de antelación para reservar?"
     },
@@ -948,7 +958,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Destino", options: ["Gestor de tareas", "Software de gestión", "CRM"] }
+        { type: "select", label: "Destino", options: ["Gestor de tareas", "Software de gestión", "CRM"] },
+        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Cuántos canales quieres unificar hoy mismo?"
     },
@@ -995,7 +1006,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Número de toques", options: ["2 intentos", "3 intentos", "5 intentos"] }
+        { type: "select", label: "Número de toques", options: ["2 intentos", "3 intentos", "5 intentos"] },
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Quieres usar notas de voz autogeneradas para que sea más natural?"
     },
@@ -1042,7 +1054,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "radio", label: "Canal", options: ["Chat (Recomendado)", "tu vía de comunicación preferida"] }
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Quieres ofrecer algún incentivo por la reseña (descuento, etc.)?"
     },
@@ -1137,7 +1149,8 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Tiempo de antelación", options: ["24h antes", "48h antes"] }
+        { type: "select", label: "Tiempo de antelación", options: ["24h antes", "48h antes"] },
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿A quién avisamos internamente si un cliente cancela de golpe?"
     },
@@ -1185,7 +1198,7 @@ export const processes: Process[] = [
     ],
     customization: {
       options_blocks: [
-        { type: "select", label: "Canal", options: ["Mensajería", "tu vía de comunicación preferida", "Ambos"] }
+        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
       ],
       free_text_placeholder: "¿Qué documentos mínimos necesitas que el cliente suba en su onboarding?"
     },

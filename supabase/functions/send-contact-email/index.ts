@@ -27,6 +27,7 @@ const ProcessSchema = z.object({
   nombre: z.string().max(200),
   categoriaNombre: z.string().max(100),
   tagline: z.string().max(500),
+  customizations: z.any().optional(),
 });
 
 const ContactRequestSchema = z.object({
@@ -196,7 +197,29 @@ const handler = async (req: Request): Promise<Response> => {
         };
 
         const onboardingText = formatOnboarding(onboardingAnswers);
-        const processesText = selectedProcesses.map((p: any) => `- ${p.codigo}: ${p.nombre}`).join("\n");
+
+        const processesText = selectedProcesses.map((p: any) => {
+          let text = `- ${p.codigo}: ${p.nombre}`;
+          if (p.customizations) {
+            const opts = p.customizations.selectedOptions || {};
+            const inputs = p.customizations.customInputs || {};
+
+            const optKeys = Object.keys(opts);
+            if (optKeys.length > 0) {
+              text += `\n  Personalización:`;
+              optKeys.forEach(k => {
+                const val = opts[k];
+                const customInputStr = inputs[k] ? ` (Especificado: ${inputs[k]})` : '';
+                text += `\n    * ${k}: ${val}${customInputStr}`;
+              });
+            }
+            if (inputs.needs?.trim()) {
+              text += `\n  Necesidades específicas:\n    "${inputs.needs.trim()}"`;
+            }
+          }
+          return text;
+        }).join("\n\n");
+
         const chatbotHistory = isChatbot && chatbotContext && chatbotContext.length > 0
           ? `\n### Historial del Chatbot\n${chatbotContext.join('\n')}\n`
           : "";
