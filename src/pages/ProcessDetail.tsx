@@ -47,7 +47,7 @@ const ProcessDetail = () => {
 
     // Customization State Handling
     const processCustomization = customizations[process.id] || { selectedOptions: {}, customInputs: {} };
-    const [localOptions, setLocalOptions] = useState<Record<string, string>>(processCustomization.selectedOptions);
+    const [localOptions, setLocalOptions] = useState<Record<string, string[]>>(processCustomization.selectedOptions);
     const [localInputs, setLocalInputs] = useState<Record<string, string>>(processCustomization.customInputs);
     const [localNeedsInput, setLocalNeedsInput] = useState(processCustomization.customInputs["needs"] || "");
 
@@ -56,24 +56,35 @@ const ProcessDetail = () => {
         updateCustomization(process.id, localOptions, { ...localInputs, needs: localNeedsInput });
     }, [localOptions, localInputs, localNeedsInput]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleOptionSelect = (blockLabel: string, option: string) => {
-        setLocalOptions(prev => ({
-            ...prev,
-            [blockLabel]: option
-        }));
-        // Reset the custom input for this block if they change selection and it's not needed anymore
-        if (!requiresCustomInput(option)) {
-            setLocalInputs(prev => {
-                const next = { ...prev };
-                delete next[blockLabel];
-                return next;
-            });
-        }
-    };
-
     const requiresCustomInput = (option: string) => {
         const lower = option.toLowerCase();
         return lower.includes("tu vía") || lower.includes("herramienta") || lower.includes("tu gestor") || lower.includes("otra") || lower.includes("especificar") || lower.includes("otro");
+    };
+
+    const handleOptionSelect = (blockLabel: string, option: string) => {
+        setLocalOptions(prev => {
+            const currentSelected = prev[blockLabel] || [];
+            let newSelected;
+            if (currentSelected.includes(option)) {
+                newSelected = currentSelected.filter(o => o !== option);
+            } else {
+                newSelected = [...currentSelected, option];
+            }
+
+            // Reset the custom input for this block if none of the newly selected options require it
+            if (!newSelected.some(o => requiresCustomInput(o))) {
+                setLocalInputs(prevInputs => {
+                    const next = { ...prevInputs };
+                    delete next[blockLabel];
+                    return next;
+                });
+            }
+
+            return {
+                ...prev,
+                [blockLabel]: newSelected
+            };
+        });
     };
 
     const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
@@ -352,7 +363,7 @@ const ProcessDetail = () => {
                                                         <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{block.label}</label>
                                                         <div className="grid gap-2">
                                                             {optionsToRender.map((opt: string) => {
-                                                                const isOptSelected = localOptions[block.label] === opt;
+                                                                const isOptSelected = (localOptions[block.label] || []).includes(opt);
                                                                 return (
                                                                     <div key={opt} className="space-y-2">
                                                                         <div
@@ -365,10 +376,10 @@ const ProcessDetail = () => {
                                                                             )}
                                                                         >
                                                                             <div className={cn(
-                                                                                "w-4 h-4 rounded-full border-2 flex items-center justify-center",
-                                                                                isOptSelected ? "border-primary bg-background" : "border-muted-foreground"
+                                                                                "w-4 h-4 rounded-md border-2 flex items-center justify-center transition-colors",
+                                                                                isOptSelected ? "border-primary bg-primary" : "border-muted-foreground"
                                                                             )}>
-                                                                                {isOptSelected && <div className="w-2 h-2 rounded-full bg-primary" />}
+                                                                                {isOptSelected && <Check className="w-3 h-3 text-primary-foreground stroke-[3]" />}
                                                                             </div>
                                                                             <span className={cn("text-sm transition-colors", isOptSelected ? "font-bold text-primary" : "font-medium text-foreground")}>{opt}</span>
                                                                         </div>
