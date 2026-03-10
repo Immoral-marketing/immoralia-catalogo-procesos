@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { processes } from '@/data/processes';
 
 interface CustomizationState {
-    selectedOptions: Record<string, string>;
+    selectedOptions: Record<string, string[]>;
     customInputs: Record<string, string>;
 }
 
@@ -13,7 +13,7 @@ interface SelectionContextType {
     n8nHosting: 'setup' | 'own';
     setN8nHosting: (value: 'setup' | 'own') => void;
     customizations: Record<string, CustomizationState>;
-    updateCustomization: (processId: string, options: Record<string, string>, inputs: Record<string, string>) => void;
+    updateCustomization: (processId: string, options: Record<string, string[]>, inputs: Record<string, string>) => void;
     clearCustomizations: () => void;
 }
 
@@ -22,7 +22,6 @@ const SelectionContext = createContext<SelectionContextType | undefined>(undefin
 export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>(() => {
         try {
-            // Updated key to force reset to the new default 'setup' for all users
             const saved = localStorage.getItem("immoralia_n8n_hosting_v2");
             return (saved === 'setup' || saved === 'own') ? saved : 'setup';
         } catch (error) {
@@ -37,7 +36,6 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             if (saved) {
                 const parsed = JSON.parse(saved);
                 if (Array.isArray(parsed)) {
-                    // Verify IDs still exist in processes
                     const validIds = parsed.filter((id) => processes.some((p) => p.id === id));
                     return new Set(validIds);
                 }
@@ -52,7 +50,25 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         try {
             const saved = localStorage.getItem("immoralia_process_customizations");
             if (saved) {
-                return JSON.parse(saved);
+                const parsed = JSON.parse(saved);
+                // Migrate legacy string options to arrays
+                if (typeof parsed === 'object') {
+                    Object.keys(parsed).forEach(key => {
+                        const cust = parsed[key];
+                        if (cust?.selectedOptions) {
+                            Object.keys(cust.selectedOptions).forEach(optKey => {
+                                const val = cust.selectedOptions[optKey];
+                                if (typeof val === 'string') {
+                                    cust.selectedOptions[optKey] = [val];
+                                } else if (!Array.isArray(val)) {
+                                    // Fallback for weird data
+                                    cust.selectedOptions[optKey] = [];
+                                }
+                            });
+                        }
+                    });
+                }
+                return parsed;
             }
         } catch (error) {
             console.error("Error recuperando customizaciones:", error);
@@ -88,10 +104,10 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
 
     const clearSelection = () => {
-        setSelectedProcessIds(new Set());
+        setSelectedProcessIds(newSet => new Set());
     };
 
-    const updateCustomization = (processId: string, options: Record<string, string>, inputs: Record<string, string>) => {
+    const updateCustomization = (processId: string, options: Record<string, string[]>, inputs: Record<string, string>) => {
         setCustomizations(prev => ({
             ...prev,
             [processId]: {
