@@ -12,7 +12,7 @@ interface EmailPayload {
         telefono?: string;
         comentario?: string;
     };
-    source: "offer_request" | "onboarding" | "chatbot";
+    source: "offer_request" | "onboarding" | "chatbot" | "quick_form";
     extraContext?: string; // e.g. Selected processes or Chat history
 }
 
@@ -42,6 +42,7 @@ export async function sendEmailNewLead({ lead, source, extraContext }: EmailPayl
         offer_request: "Solicitud de Propuesta",
         onboarding: "Formulario de Onboarding",
         chatbot: "Conversación con Chatbot",
+        quick_form: "Quick Form Lead",
     }[source];
 
     try {

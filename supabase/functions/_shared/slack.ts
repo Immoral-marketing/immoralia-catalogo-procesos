@@ -15,7 +15,7 @@ interface SlackPayload {
         status?: string;
         priority?: number | string;
     };
-    source: "offer_request" | "onboarding" | "chatbot";
+    source: "offer_request" | "onboarding" | "chatbot" | "quick_form";
 }
 
 const SLACK_BOT_TOKEN = Deno.env.get("SLACK_BOT_TOKEN");
@@ -58,6 +58,7 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
         offer_request: "Solicitud de Oferta",
         onboarding: "Formulario Onboarding",
         chatbot: "Chatbot (Handover)",
+        quick_form: "Quick Form Lead (⚡)",
     }[source];
 
     const blocks = [

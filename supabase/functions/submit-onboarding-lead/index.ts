@@ -3,6 +3,7 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 import { sendSlackNewLead } from "../_shared/slack.ts";
+import { getProfessionalTemplate } from "../_shared/email_templates.ts";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -61,7 +62,7 @@ serve(async (req) => {
         const { nombre, email, telefono, answers, utm, source } = parseResult.data;
         const clientIP = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
 
-        console.log(`Processing onboarding lead: ${email}`);
+        console.log(`Processing Quick Form lead: ${email}`);
 
         // Save to Database
         const { error: dbError } = await supabase
@@ -72,9 +73,9 @@ serve(async (req) => {
             console.error("Database error saving lead:", dbError);
         }
 
-        // Format onboarding answers
+        // Format Quick Form answers
         const formatOnboarding = (ans: any): string => {
-            if (!ans) return "No se proporcionaron respuestas.";
+            if (!ans) return "No se proporcionó información adicional.";
             let text = "";
             if (ans.sector) text += `Sector: ${ans.sector}${ans.otherSector ? ` (${ans.otherSector})` : ""}\n`;
             if (ans.maturity) text += `Madurez: ${ans.maturity}\n`;
@@ -95,7 +96,8 @@ serve(async (req) => {
             }
             if (ans.otherPain) text += `Otros dolores: ${ans.otherPain}\n`;
             if (ans.biggestPain) text += `Mayor freno: ${ans.biggestPain}\n`;
-            return text;
+            
+            return text || "No se proporcionó información adicional.";
         };
 
         const onboardingText = formatOnboarding(answers);
@@ -104,17 +106,51 @@ serve(async (req) => {
         if (RESEND_API_KEY) {
             const safeNombre = escapeHtml(nombre);
             const safeEmail = escapeHtml(email);
+            const safeTelefono = escapeHtml(telefono || "No indicado");
+            const safeUtm = escapeHtml(utm || "Ninguna");
+
             try {
+                // Internal Email Content
+                const internalHtml = `
+                    <p class="field-label">Nombre del Lead</p>
+                    <div class="field-value">${safeNombre}</div>
+                    
+                    <p class="field-label">Email de Contacto</p>
+                    <div class="field-value">${safeEmail}</div>
+                    
+                    <p class="field-label">Teléfono</p>
+                    <div class="field-value">${safeTelefono}</div>
+                    
+                    <p class="field-label">UTM / Origen</p>
+                    <div class="field-value">${safeUtm}</div>
+                    
+                    <h2 class="section-title">Respuestas del Formulario</h2>
+                    <pre>${onboardingText}</pre>
+                `;
+
+                // Client Email Content
+                const clientHtml = `
+                    <h2 style="margin-top:0">¡Gracias por tu interés, ${safeNombre}!</h2>
+                    <p>Hemos recibido correctamente la información que nos has facilitado a través de nuestro catálogo de procesos.</p>
+                    <p>Nuestro equipo de consultores está revisando tu perfil para identificar las mejores oportunidades de automatización para tu caso específico.</p>
+                    <p><strong>Nos pondremos en contacto contigo en menos de 24 horas laborables para agendar una breve sesión de diagnóstico.</strong></p>
+                    <p>Mientras tanto, puedes seguir explorando nuestro catálogo para descubrir cómo la IA y la automatización pueden transformar tu negocio.</p>
+                `;
+
                 await Promise.all([
                     // Business notification
                     fetch("https://api.resend.com/emails", {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
                         body: JSON.stringify({
-                            from: "Catálogo de Procesos <onboarding@resend.dev>",
+                            from: "Immoralia Notificaciones <onboarding@resend.dev>",
                             to: ["david@immoral.es"],
-                            subject: `🚀 Nuevo lead (Onboarding) - ${safeNombre}`,
-                            html: `<h1>Nuevo lead de Onboarding</h1><p><b>Nombre:</b> ${safeNombre}</p><p><b>Email:</b> ${safeEmail}</p><p><b>Tel:</b> ${telefono || "N/A"}</p><p><b>UTM:</b> ${utm || "N/A"}</p><h3>Respuestas Onboarding:</h3><pre>${onboardingText}</pre>`,
+                            subject: `⚡ Quick Form Lead - ${safeNombre}`,
+                            html: getProfessionalTemplate({
+                                title: "Nuevo Quick Form Lead",
+                                preheader: `Nuevo lead de ${safeNombre}`,
+                                mainContent: internalHtml
+                            }),
                         }),
                     }),
                     // Client confirmation
@@ -122,16 +158,20 @@ serve(async (req) => {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
                         body: JSON.stringify({
-                            from: "Catálogo de Procesos <onboarding@resend.dev>",
+                            from: "Immoralia <onboarding@resend.dev>",
                             to: [email],
-                            subject: "Hemos recibido tu solicitud de automatización",
-                            html: `<h1>¡Gracias, ${safeNombre}!</h1><p>Hemos recibido tus respuestas del formulario. Nuestro equipo las revisará y se pondrá en contacto contigo en menos de 24 horas.</p>`,
+                            subject: "Confirmación de recepción - Immoralia",
+                            html: getProfessionalTemplate({
+                                title: "Confirmación recibida",
+                                preheader: "Hemos recibido tu información correctamente",
+                                mainContent: clientHtml
+                            }),
                         }),
                     }),
                 ]);
-                console.log("Onboarding emails sent successfully");
+                console.log("Quick Form emails sent successfully");
             } catch (emailErr) {
-                console.error("Error sending onboarding emails:", emailErr);
+                console.error("Error sending Quick Form emails:", emailErr);
             }
         }
 
@@ -139,26 +179,26 @@ serve(async (req) => {
         let clickupTaskId: string | null = null;
         let clickupTaskUrl = "";
         if (CLICKUP_TOKEN) {
-            console.log("Iniciando creación de tarea en ClickUp para lead de onboarding...");
+            console.log("Iniciando creación de tarea en ClickUp para Quick Form Lead...");
             try {
                 const isoDatetime = new Date().toISOString();
-                const description = `Lead Onboarding desde Web
-
-### Información de Contacto
-**Persona:** ${nombre}
-**Email:** ${email}
-**Tel:** ${telefono || "No proporcionado"}
-
-### Contexto
-**Origen:** ${source || "Web"}
-**UTM:** ${utm || "Ninguna"}
-**Fecha:** ${isoDatetime}
-
-### Onboarding
-${onboardingText}`;
-
-                const createTask = async (withStatus = true) => {
-                    const taskBody: any = { name: `Lead Onboarding: ${nombre}`, description, priority: 3 };
+                const description = `Quick Form Lead desde Web
+ 
+ ### Información de Contacto
+ **Persona:** ${nombre}
+ **Email:** ${email}
+ **Tel:** ${telefono || "No proporcionado"}
+ 
+ ### Contexto
+ **Origen:** ${source || "Web"}
+ **UTM:** ${utm || "Ninguna"}
+ **Fecha:** ${isoDatetime}
+ 
+ ### Respuestas
+ ${onboardingText}`;
+ 
+                 const createTask = async (withStatus = true) => {
+                     const taskBody: any = { name: `Quick Form Lead: ${nombre}`, description, priority: 3 };
                     if (withStatus) { taskBody.status = "CONOCIDO"; }
                     const response = await fetch(`https://api.clickup.com/api/v2/list/${CLICKUP_LIST_ID}/task`, {
                         method: "POST",
@@ -193,7 +233,7 @@ ${onboardingText}`;
             sendSlackNewLead({
                 lead: { nombre, email, telefono, utm },
                 clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
-                source: "onboarding"
+                source: "quick_form"
             }).catch(err => console.error("Slack notification error:", err));
         }
 
