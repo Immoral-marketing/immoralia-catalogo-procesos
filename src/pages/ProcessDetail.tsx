@@ -186,7 +186,7 @@ const ProcessDetail = () => {
                             <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-2 text-muted-foreground hover:text-foreground">
                                 <ChevronLeft className="w-4 h-4" /> Volver al catálogo
                             </Button>
-                            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
+                            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10 pl-2" />
                         </div>
 
                         <div className="flex md:hidden">

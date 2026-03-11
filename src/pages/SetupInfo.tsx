@@ -100,7 +100,7 @@ const SetupInfo = () => {
                             >
                                 <ChevronLeft className="w-4 h-4" /> Volver al catálogo
                             </Button>
-                            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
+                            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10 pl-2" />
                         </div>
                         <div className="text-sm font-medium text-muted-foreground hidden sm:block">
                             Ayuda / Setup de automatización
