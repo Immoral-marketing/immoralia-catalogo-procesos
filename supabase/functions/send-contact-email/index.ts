@@ -3,12 +3,14 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 import { sendSlackNewLead } from "../_shared/slack.ts";
+import { getProfessionalTemplate } from "../_shared/email_templates.ts";
+
+const CLICKUP_TOKEN = Deno.env.get("CLICKUP_TOKEN");
+const CLICKUP_LIST_ID = "901521069796";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const CLICKUP_TOKEN = Deno.env.get("CLICKUP_TOKEN");
-const CLICKUP_LIST_ID = "901521069796";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -163,11 +165,32 @@ const handler = async (req: Request): Promise<Response> => {
     // --- CLICKUP INTEGRATION ---
     let clickupTaskId: string | null = null;
     let clickupTaskUrl = "";
+
+    // Calculate Business Hours Logic for Chatbot
+    const isChatbot = source === 'chatbot';
+    const nowLocal = new Date(); // Edge functions might use UTC, but user specified 08:00-18:00 in "their" time.
+    // Assuming Madrid/Spain Time (CET/CEST) as per user's location +01:00 or current local time metadata
+    // We'll use a simple offset or better yet, Intl to get the hour in Europe/Madrid if possible, 
+    // but for Edge Functions we should be careful. 
+    // User metadata says current local time is 10:43+01:00.
+    
+    const getMadridHour = () => {
+        const d = new Date();
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+            hour: 'numeric',
+            hour12: false,
+            timeZone: 'Europe/Madrid'
+        });
+        return parseInt(formatter.format(d));
+    };
+
+    const currentHour = getMadridHour();
+    const isBusinessHours = currentHour >= 8 && currentHour < 18;
+
     if (CLICKUP_TOKEN) {
-      console.log(`Iniciando creación de tarea en ClickUp (${source === 'chatbot' ? 'CHATBOT' : 'WEB'})...`);
-      try {
-        const isoDatetime = new Date().toISOString();
-        const isChatbot = source === 'chatbot';
+        console.log(`Iniciando creación de tarea en ClickUp (${isChatbot ? 'CHATBOT' : 'WEB'})...`);
+        try {
+            const isoDatetime = nowLocal.toISOString();
 
         const formatOnboarding = (answers: any) => {
           if (!answers) return "No se proporcionaron respuestas de onboarding.";
@@ -250,10 +273,10 @@ ${processesText}`;
           if (isChatbot) {
             const isGenericEmpresa = !empresa || empresa.trim() === '' || empresa.toLowerCase() === 'particular' || empresa.toLowerCase() === 'n/a';
             const identifier = isGenericEmpresa ? nombre : empresa;
-            taskName = `Chatbot Lead: ${identifier}`;
+            taskName = isBusinessHours ? `🔴 [URGENTE] Chatbot Lead: ${identifier}` : `Chatbot Lead: ${identifier}`;
           }
           const body: any = { name: taskName, description, priority: 3 };
-          if (withStatus) { body.status = "INTERESADO"; }
+          if (withStatus) { body.status = isChatbot && isBusinessHours ? "CONTACTAR YA" : "INTERESADO"; }
           const response = await fetch(`https://api.clickup.com/api/v2/list/${CLICKUP_LIST_ID}/task`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: CLICKUP_TOKEN },
@@ -283,45 +306,141 @@ ${processesText}`;
       }
     }
 
-    // --- SEND EMAILS (inline, always runs regardless of ClickUp) ---
+    // --- SEND EMAILS ---
     if (RESEND_API_KEY) {
       const safeNombre = escapeHtml(nombre);
       const safeEmail = escapeHtml(email);
       const safeEmpresa = escapeHtml(empresa);
-      const safeComentario = escapeHtml(comentario);
-      const processesListHTML = selectedProcesses
-        .map((p: any) => `<li>${escapeHtml(p.codigo)} - ${escapeHtml(p.nombre)}</li>`)
-        .join("");
-      const sourceLabel = source === 'chatbot' ? 'Chatbot (Handover)' : source === 'onboarding' ? 'Formulario Onboarding' : 'Solicitud de Propuesta';
+      const safeComentario = escapeHtml(comentario || "No indicado");
+      const safeTelefono = escapeHtml(telefono || "No indicado");
+      
+      const processesListHTML = selectedProcesses.length > 0
+        ? `<ul>${selectedProcesses.map((p: any) => `<li><strong>${escapeHtml(p.codigo)}</strong> - ${escapeHtml(p.nombre)}</li>`).join("")}</ul>`
+        : "<p>Sin procesos seleccionados</p>";
+
+      const sourceLabel = isChatbot ? 'Derivación desde Chatbot' : 'Solicitud de Oferta';
 
       try {
-        await Promise.all([
-          // Business email
+        const emailsToBatch = [];
+
+        // Internal notification email
+        const internalMainContent = `
+          <p class="field-label">Origen de la solicitud</p>
+          <div class="field-value">${sourceLabel} ${isChatbot && isBusinessHours ? '<strong>(En horario laboral - Atención inmediata)</strong>' : ''}</div>
+          
+          <div style="display: flex; gap: 20px;">
+            <div style="flex: 1">
+              <p class="field-label">Persona</p>
+              <div class="field-value">${safeNombre}</div>
+            </div>
+            <div style="flex: 1">
+              <p class="field-label">Empresa</p>
+              <div class="field-value">${safeEmpresa}</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 20px;">
+            <div style="flex: 1">
+              <p class="field-label">Email</p>
+              <div class="field-value">${safeEmail}</div>
+            </div>
+            <div style="flex: 1">
+              <p class="field-label">Teléfono</p>
+              <div class="field-value">${safeTelefono}</div>
+            </div>
+          </div>
+
+          <h2 class="section-title">Detalles de la Solicitud</h2>
+          ${!isChatbot ? `<h3>Procesos Seleccionados:</h3>${processesListHTML}` : ""}
+          <p class="field-label">Comentario</p>
+          <div class="field-value">${safeComentario}</div>
+
+          ${isChatbot && chatbotContext && chatbotContext.length > 0 ? `
+            <h2 class="section-title">Historial del Chat</h2>
+            <pre>${chatbotContext.join('\n')}</pre>
+          ` : ""}
+          
+          ${clickupTaskUrl ? `<a href="${clickupTaskUrl}" class="cta-button">Ver en ClickUp</a>` : ""}
+        `;
+
+        emailsToBatch.push(
           fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
             body: JSON.stringify({
-              from: "Catálogo de Procesos <onboarding@resend.dev>",
+              from: "Immoralia Notificaciones <onboarding@resend.dev>",
               to: ["david@immoral.es"],
-              subject: `🚀 Nuevo lead (${sourceLabel}) - ${safeEmpresa}`,
-              html: `<h1>Nuevo lead</h1><p><b>Origen:</b> ${sourceLabel}</p><p><b>Nombre:</b> ${safeNombre}</p><p><b>Email:</b> ${safeEmail}</p><p><b>Empresa:</b> ${safeEmpresa}</p><p><b>Tel:</b> ${telefono || "N/A"}</p><ul>${processesListHTML}</ul><p><b>Comentario:</b> ${safeComentario}</p>${clickupTaskUrl ? `<p><a href="${clickupTaskUrl}">Ver en ClickUp</a></p>` : ""}`,
+              subject: `${isChatbot && isBusinessHours ? '⚡ [INMEDIATO] ' : '🚀 '}Lead: ${safeEmpresa} - ${safeNombre}`,
+              html: getProfessionalTemplate({
+                title: "Nueva Solicitud de Lead",
+                preheader: `Nueva solicitud de ${safeNombre} (${safeEmpresa})`,
+                mainContent: internalMainContent
+              }),
             }),
-          }).catch(err => console.error("Error sending business email:", err)),
-          // Client confirmation email
-          fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
-            body: JSON.stringify({
-              from: "Catálogo de Procesos <onboarding@resend.dev>",
-              to: [email],
-              subject: "Hemos recibido tu solicitud de automatización",
-              html: `<h1>¡Gracias, ${safeNombre}!</h1><p>Hemos recibido tu solicitud para <b>${safeEmpresa}</b>. Nos pondremos en contacto en menos de 24 horas.</p>`,
-            }),
-          }).catch(err => console.error("Error sending client email:", err)),
-        ]);
-        console.log("Emails sent successfully");
+          })
+        );
+
+        // User confirmation email logic
+        let shouldSendUserEmail = true;
+        let clientMainContent = "";
+        let clientSubject = "Hemos recibido tu solicitud - Immoralia";
+
+        if (isChatbot) {
+          if (isBusinessHours) {
+            // "NO debe enviarse email automático al usuario" -> But user said "no debe enviarse email automático si se deriva directamente".
+            // Since we don't have a real-time handover websocket here, we just create the task. 
+            // The prompt says: "Si la solicitud se produce entre las 08:00 y las 18:00: NO debe enviarse email automático al usuario"
+            shouldSendUserEmail = false;
+          } else {
+            clientSubject = "Recibido: Revisaremos tu consulta lo antes posible";
+            clientMainContent = `
+              <h2 style="margin-top:0">¡Hola, ${safeNombre}!</h2>
+              <p>Hemos recibido tu solicitud de contacto a través de nuestro asistente virtual.</p>
+              <p>Te escribimos para confirmarte que <strong>estamos fuera de nuestro horario de atención habitual (08:00 - 18:00)</strong>.</p>
+              <p>No te preocupes: un consultor humano revisará tu caso y el historial de la conversación con el chatbot en cuanto volvamos a estar operativos.</p>
+              <p><strong>Nos pondremos en contacto contigo lo antes posible para ayudarte con tus dudas.</strong></p>
+              <p>Gracias por tu paciencia y por confiar en Immoralia.</p>
+            `;
+          }
+        } else {
+          // Normal Offer Request
+          clientMainContent = `
+            <h2 style="margin-top:0">¡Gracias por tu solicitud, ${safeNombre}!</h2>
+            <p>Hemos recibido tu interés en automatizar procesos para <strong>${safeEmpresa}</strong>.</p>
+            <p>Nuestro equipo está analizando los procesos que has seleccionado para preparar una propuesta personalizada que se ajuste a tus necesidades.</p>
+            <p><strong>Un consultor se pondrá en contacto contigo en las próximas 24 horas laborables</strong> para profundizar en los detalles y resolver cualquier duda.</p>
+            <br>
+            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px;">
+              <h4 style="margin-top: 0">Resumen de procesos seleccionados:</h4>
+              ${processesListHTML}
+            </div>
+            <p>Estamos deseando ayudarte a escalar tu negocio a través de la automatización.</p>
+          `;
+        }
+
+        if (shouldSendUserEmail) {
+          emailsToBatch.push(
+            fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+              body: JSON.stringify({
+                from: "Immoralia <onboarding@resend.dev>",
+                to: [email],
+                subject: clientSubject,
+                html: getProfessionalTemplate({
+                  title: "Confirmación de solicitud",
+                  preheader: "Hemos recibido tu solicitud correctamente",
+                  mainContent: clientMainContent
+                }),
+              }),
+            })
+          );
+        }
+
+        await Promise.all(emailsToBatch);
+        console.log("Lead emails processed successfully");
       } catch (err) {
-        console.error("Error sending emails:", err);
+        console.error("Error processing emails:", err);
       }
     }
 

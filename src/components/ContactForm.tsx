@@ -143,7 +143,7 @@ export const ContactForm = ({
 
       toast({
         title: "¡Solicitud enviada!",
-        description: "¡Solicitud enviada! Revisa tu email: te hemos enviado una confirmación. Nos pondremos en contacto contigo en menos de 24 horas.",
+        description: "Revisa tu email: te hemos enviado una confirmación personalizada. Nos pondremos en contacto contigo en menos de 24 horas.",
       });
     } catch (error: any) {
       console.error("Error sending email:", error);

@@ -164,7 +164,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
     const handleFinish = async () => {
         setIsSubmitting(true);
         try {
-            console.log("Iniciando envío de lead de onboarding:", answers.email);
+            console.log("Iniciando envío de Quick Form Lead:", answers.email);
 
             const { data, error } = await supabase.functions.invoke("submit-onboarding-lead", {
                 body: {
@@ -177,9 +177,9 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
             if (error) throw error;
 
-            console.log("Lead de onboarding enviado con éxito:", data);
+            console.log("Lead de Quick Form enviado con éxito:", data);
             toast({
-                title: "¡Gracias por completar el onboarding!",
+                title: "¡Gracias por completar el formulario!",
                 description: "Hemos recibido tu información. Ahora puedes explorar los procesos recomendados.",
             });
 
