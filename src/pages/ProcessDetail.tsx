@@ -181,7 +181,7 @@ const ProcessDetail = () => {
             {/* Header */}
             <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
                 <div className="container mx-auto px-4 py-4 md:py-6">
-                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="max-w-[1440px] mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-2 text-muted-foreground hover:text-foreground">
                                 <ChevronLeft className="w-4 h-4" /> Volver al catálogo
@@ -199,7 +199,7 @@ const ProcessDetail = () => {
             </header>
 
             <main className="container mx-auto px-4 py-8 pb-[80vh]">
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-[1440px] mx-auto">
                     {/* Breadcrumb (Desktop) */}
                     <nav className="mb-8 hidden md:block">
                         <ol className="flex text-sm text-muted-foreground gap-2">

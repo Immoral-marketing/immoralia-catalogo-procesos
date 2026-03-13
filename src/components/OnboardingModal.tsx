@@ -10,7 +10,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { Progress } from "./ui/progress";
-import { Search, ChevronRight, ChevronLeft, X } from "lucide-react";
+import { Search, ChevronRight, ChevronLeft, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OnboardingAnswers, saveOnboardingData, skipOnboarding } from "@/lib/onboarding-utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -145,15 +145,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    const progress = (step / 6) * 100;
+    const progress = (step / 7) * 100;
 
     const nextStep = () => {
         if (step < 6) setStep(step + 1);
-        else handleFinish();
+        else if (step === 6) handleFinish();
     };
 
     const prevStep = () => {
-        if (step > 1) setStep(step - 1);
+        if (step > 1 && step < 7) setStep(step - 1);
     };
 
     const handleSkip = () => {
@@ -178,13 +178,9 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
             if (error) throw error;
 
             console.log("Lead de Quick Form enviado con éxito:", data);
-            toast({
-                title: "¡Gracias por completar el formulario!",
-                description: "Hemos recibido tu información. Ahora puedes explorar los procesos recomendados.",
-            });
-
+            
             saveOnboardingData(answers);
-            onClose();
+            setStep(7);
         } catch (error: any) {
             console.error("Error al enviar lead de onboarding:", error);
             toast({
@@ -194,7 +190,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
             });
             // A pesar del error, dejamos que siga para no bloquear al usuario
             saveOnboardingData(answers);
-            onClose();
+            setStep(7);
         } finally {
             setIsSubmitting(false);
         }
@@ -211,10 +207,14 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
             <DialogContent className="max-w-2xl bg-card border-border p-0 overflow-hidden flex flex-col max-h-[90vh]">
                 <div className="p-6 border-b border-border">
                     <div className="flex items-center justify-between mb-4 pr-8">
-                        <span className="text-sm font-medium text-muted-foreground">Paso {step} de 6</span>
-                        <Button variant="ghost" size="sm" onClick={handleSkip} className="text-muted-foreground hover:text-foreground" disabled={isSubmitting}>
-                            Omitir por ahora
-                        </Button>
+                        <span className="text-sm font-medium text-muted-foreground">
+                            {step < 7 ? `Paso ${step} de 6` : "¡Todo listo!"}
+                        </span>
+                        {step < 7 && (
+                            <Button variant="ghost" size="sm" onClick={handleSkip} className="text-muted-foreground hover:text-foreground" disabled={isSubmitting}>
+                                Omitir por ahora
+                            </Button>
+                        )}
                     </div>
                     <Progress value={progress} className="h-2" />
                 </div>
@@ -547,6 +547,38 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
                         </div>
                     )}
+
+                    {step === 7 && (
+                        <div className="flex flex-col items-center justify-center py-4 px-4 text-center space-y-6 animate-in fade-in zoom-in duration-500">
+                            <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-2">
+                                <Sparkles className="h-12 w-12 text-primary animate-pulse" />
+                            </div>
+                            <div className="space-y-3">
+                                <h2 className="text-3xl font-bold tracking-tight">
+                                    {answers.sector && answers.sector !== "Otro"
+                                        ? `Según tus respuestas para el sector de ${answers.sector.toLowerCase()}, esto es lo que hemos preparado:`
+                                        : "Según tus respuestas, esto es lo que hemos preparado:"}
+                                </h2>
+                                <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                                    Hemos analizado tus cuellos de botella y seleccionado los procesos que más impacto tendrán en tu eficiencia operativa.
+                                </p>
+                            </div>
+                            <div className="grid grid-cols-1 gap-3 w-full max-w-sm pt-4">
+                                <div className="flex items-center space-x-3 text-left p-4 bg-secondary/30 rounded-xl border border-border/50">
+                                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <p className="text-sm font-medium">Procesos filtrados por relevancia</p>
+                                </div>
+                                <div className="flex items-center space-x-3 text-left p-4 bg-secondary/30 rounded-xl border border-border/50">
+                                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <p className="text-sm font-medium">Soluciones adaptadas a tu tecnología</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
 
@@ -554,19 +586,20 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                     <Button
                         variant="ghost"
                         onClick={prevStep}
-                        disabled={step === 1 || isSubmitting}
-                        className={step === 1 ? "invisible" : ""}
+                        disabled={step === 1 || step === 7 || isSubmitting}
+                        className={step === 1 || step === 7 ? "invisible" : ""}
                     >
                         <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
                     </Button>
                     <Button
-                        onClick={nextStep}
+                        onClick={step === 7 ? onClose : nextStep}
                         disabled={
                             isSubmitting ||
                             (step === 1 && !answers.sector) ||
                             (step === 2 && answers.tools.length === 0 && !answers.otherTool) ||
                             (step === 6 && (!answers.nombre || !answers.email || !answers.email.includes("@")))
                         }
+                        className={cn(step === 7 && "w-full sm:w-auto px-8 py-6 text-lg")}
                     >
                         {isSubmitting ? (
                             <>
@@ -575,7 +608,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                             </>
                         ) : (
                             <>
-                                {step === 6 ? "Finalizar" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
+                                {step === 6 ? "Finalizar" : step === 7 ? "Ver mis recomendaciones" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
                             </>
                         )}
                     </Button>
