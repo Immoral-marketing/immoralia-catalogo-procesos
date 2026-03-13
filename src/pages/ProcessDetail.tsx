@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,24 @@ const ProcessDetail = () => {
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [activeSection, setActiveSection] = useState("resumen");
+
+    const tabsContainerRef = useRef<HTMLDivElement>(null);
+    const [showLeftScroll, setShowLeftScroll] = useState(false);
+    const [showRightScroll, setShowRightScroll] = useState(false);
+
+    const checkScroll = () => {
+        if (tabsContainerRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+            setShowLeftScroll(scrollLeft > 0);
+            setShowRightScroll(Math.ceil(scrollLeft) < scrollWidth - clientWidth - 2);
+        }
+    };
+
+    useEffect(() => {
+        setTimeout(checkScroll, 100);
+        window.addEventListener("resize", checkScroll);
+        return () => window.removeEventListener("resize", checkScroll);
+    }, [process]);
 
     // Customization State Handling
     const processCustomization = customizations[process.id] || { selectedOptions: {}, customInputs: {} };
@@ -252,8 +270,24 @@ const ProcessDetail = () => {
                             </section>
 
                             {/* TABS NAVIGATION (Sticky) */}
-                            <div className="sticky top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-4 px-4 overflow-x-auto">
-                                <div className="flex gap-8 whitespace-nowrap min-w-min">
+                            <div className="sticky top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-4 relative">
+                                <div 
+                                    className={cn(
+                                        "absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10 transition-opacity duration-300 md:hidden",
+                                        showLeftScroll ? "opacity-100" : "opacity-0"
+                                    )}
+                                />
+                                <div 
+                                    className={cn(
+                                        "absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10 transition-opacity duration-300 md:hidden",
+                                        showRightScroll ? "opacity-100" : "opacity-0"
+                                    )}
+                                />
+                                <div 
+                                    ref={tabsContainerRef}
+                                    onScroll={checkScroll}
+                                    className="flex gap-8 whitespace-nowrap overflow-x-auto px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                                >
                                     {[
                                         { id: "resumen", label: "Resumen" },
                                         { id: "funcionamiento", label: "Cómo funciona" },
