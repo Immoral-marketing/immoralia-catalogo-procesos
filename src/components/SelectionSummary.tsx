@@ -7,6 +7,7 @@ import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { useSelection } from "@/lib/SelectionContext";
 import { processes } from "@/data/processes";
+import { getCategoryColorClass } from "@/lib/category-colors";
 
 import { cn } from "@/lib/utils";
 
@@ -51,7 +52,7 @@ export const SelectionSummary = ({
                 </p>
                 <Badge
                   variant="outline"
-                  className="text-xs text-secondary border-secondary/30 mt-1"
+                  className={cn("text-xs mt-1", getCategoryColorClass(process.categoriaNombre))}
                 >
                   {process.categoriaNombre}
                 </Badge>

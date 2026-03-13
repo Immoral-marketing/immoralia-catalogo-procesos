@@ -4,6 +4,7 @@ import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { getCategoryColorClass } from "@/lib/category-colors";
 import { useSelection } from "@/lib/SelectionContext";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
 import { getOnboardingAnswers } from "@/lib/onboarding-utils";
@@ -40,7 +41,7 @@ export const ProcessCard = ({ process, isSpecialized }: ProcessCardProps) => {
       {/* Category Badge and Recommendation Badges */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="outline" className="text-xs font-medium text-secondary border-secondary/30">
+          <Badge variant="outline" className={cn("text-xs font-medium", getCategoryColorClass(process.categoriaNombre))}>
             {process.categoriaNombre}
           </Badge>
 

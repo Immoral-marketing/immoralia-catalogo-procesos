@@ -14,6 +14,7 @@ import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils"
 import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { Input } from "@/components/ui/input";
+import { getCategoryColorClass } from "@/lib/category-colors";
 
 const ProcessDetail = () => {
     const { slug } = useParams();
@@ -235,7 +236,7 @@ const ProcessDetail = () => {
                             {/* HERO SECTION */}
                             <section className="space-y-6">
                                 <div className="flex flex-wrap gap-2">
-                                    <span className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-semibold border border-secondary/20">
+                                    <span className={cn("px-3 py-1 rounded-full text-xs font-semibold border", getCategoryColorClass(process.categoriaNombre))}>
                                         {process.categoriaNombre}
                                     </span>
                                     {process.badges?.map(badge => (
