@@ -497,7 +497,7 @@ export const processes: Process[] = [
       "Calculamos los días restantes",
       "Enviamos alertas individuales"
     ],
-    personalizacion: "Decide días de anticipación y por dónde recibir el aviso.",
+    personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"]
   },
@@ -1198,7 +1198,7 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
-      { q: "¿Y si ya existe el cliente?", a: "El sistema detecta duplicados y en lugar de crear un cliente nuevo, añade un nuevo proyecto a su ficha existente." }
+      { q: "¿Evita duplicados?", a: "Sí, comprueba email y teléfono." }
     ],
     pasos: [
       "Recibimos los datos del formulario de onboarding",
