@@ -239,7 +239,7 @@ const Index = () => {
                     </p>
                   </div>
                   <Button variant="outline" className="mt-2 border-primary/30 group-hover:border-primary group-hover:bg-primary/5">
-                    Contar mi caso
+                    Cuéntanos tu caso
                   </Button>
                 </div>
               </div>

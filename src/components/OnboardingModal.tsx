@@ -253,7 +253,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
                     {step === 2 && (
                         <div className="space-y-4">
-                            <h2 className="text-2xl font-bold">¿Con qué herramientas trabajáis hoy?</h2>
+                            <h2 className="text-2xl font-bold">¿Con qué herramientas trabajas hoy?</h2>
                             <p className="text-muted-foreground italic">Selecciona todas las que formen parte de tu día a día</p>
                             <div className="space-y-6 pt-2">
                                 {TOOLS_CATEGORIES.map(cat => {
@@ -312,7 +312,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                             {answers.tools.includes(`${categoryName}: Otro`) && (
                                                 <div className="pt-1 animate-in fade-in slide-in-from-top-1">
                                                     <Input
-                                                        placeholder={`¿Qué otro ${categoryName.toLowerCase()} usáis?`}
+                                                        placeholder={`¿Qué otro ${categoryName.toLowerCase()} usas?`}
                                                         className="h-8 text-sm"
                                                         value={answers[`other_${categoryName}`] || ""}
                                                         onChange={(e) => setAnswers({ ...answers, [`other_${categoryName}`]: e.target.value })}
@@ -329,7 +329,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                     {step === 3 && (
                         <div className="space-y-8">
                             <div className="space-y-4">
-                                <h2 className="text-2xl font-bold">¿Cómo gestionáis las comunicaciones?</h2>
+                                <h2 className="text-2xl font-bold">¿Cómo gestionas las comunicaciones?</h2>
                                 <div className="space-y-4">
                                     <Label className="text-base font-semibold text-foreground">Canales de contacto con clientes</Label>
                                     <div className="flex flex-wrap gap-2">
@@ -418,7 +418,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
                     {step === 4 && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold">Madurez tecnológica y uso de IA</h2>
+                            <h2 className="text-2xl font-bold">¿Qué tan avanzada está tu empresa en el uso de tecnología e IA?</h2>
                             <div className="space-y-3">
                                 {MATURITY_LEVELS.map(level => (
                                     <button
@@ -441,15 +441,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                         checked={answers.usesAI}
                                         onCheckedChange={(checked) => setAnswers({ ...answers, usesAI: checked as boolean })}
                                     />
-                                    <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">Ya usamos alguna IA en nuestro día a día</Label>
+                                    <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">¿Tu empresa ya utiliza IA?</Label>
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-4">
-                                    Cuéntanos para qué la usáis (ej: escribir emails, generar imágenes, análisis de datos...) y qué herramienta utilizáis.
+                                    Cuéntanos para qué la usas (ej: escribir emails, generar imágenes, análisis de datos...) y qué herramienta utilizas.
                                 </p>
                                 {answers.usesAI && (
                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
                                         <div className="space-y-1">
-                                            <Label className="text-xs">¿Qué herramientas usáis?</Label>
+                                            <Label className="text-xs">¿Qué herramientas usas?</Label>
                                             <Input
                                                 placeholder="ChatGPT, Midjourney, Claude..."
                                                 value={answers.aiTools || ""}
@@ -457,7 +457,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                             />
                                         </div>
                                         <div className="space-y-1">
-                                            <Label className="text-xs">¿Para qué tareas las utilizáis?</Label>
+                                            <Label className="text-xs">¿Para qué tareas las utilizas?</Label>
                                             <Input
                                                 placeholder="Ej: Atención al cliente, soporte, redacción..."
                                                 value={answers.aiUsagePurpose || ""}
@@ -472,7 +472,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
 
                     {step === 5 && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold">¿Dónde sientes que perdéis más tiempo?</h2>
+                            <h2 className="text-2xl font-bold">¿Dónde sientes que pierdes más tiempo?</h2>
                             <p className="text-muted-foreground italic">Selecciona los mayores cuellos de botella hoy mismo</p>
                             <div className="grid gap-2 pt-2">
                                 {PAINS.map(p => (
@@ -496,7 +496,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <Label className="text-foreground font-semibold">¿Cuál es vuestro mayor freno operativo hoy? (opcional)</Label>
+                                    <Label className="text-foreground font-semibold">¿Cuál es tu mayor freno operativo hoy? (opcional)</Label>
                                     <Input
                                         placeholder="Lo que más nos frena es..."
                                         value={answers.biggestPain || ""}
