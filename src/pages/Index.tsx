@@ -265,6 +265,24 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Mobile Sticky Selection Bar */}
+      {selectedProcesses.length > 0 && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-full duration-300">
+          <div className="bg-card/80 backdrop-blur-lg border border-primary/20 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Tu selección</span>
+              <span className="text-lg font-bold text-primary">{selectedProcesses.length} procesos</span>
+            </div>
+            <Button 
+              onClick={() => setShowContactForm(true)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 shadow-lg shadow-primary/20"
+            >
+              Solicitar Oferta
+            </Button>
+          </div>
+        </div>
+      )}
+
       <OnboardingModal
         isOpen={onboardingOpen}
         onClose={handleOnboardingClose}
