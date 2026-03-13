@@ -102,7 +102,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 py-6">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
             <div className="flex flex-col pl-2">
               <div className="flex items-center gap-3">
                 <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
@@ -130,7 +130,7 @@ const Index = () => {
       </header >
 
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1440px] mx-auto">
           {/* Onboarding Summary / Recommendations */}
           {recommendedProcesses.length > 0 && (
             <section className="mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -215,7 +215,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2 min-[1440px]:grid-cols-3">
                 {filteredProcesses.map(process => {
                   const isSpecialized = recommendedProcesses.some(rp => rp.id === process.id);
                   return (
