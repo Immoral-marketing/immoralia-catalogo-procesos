@@ -95,13 +95,7 @@ export const processes: Process[] = [
       free_text_placeholder: "¿Tienes algún fee especial o regla de redondeo?"
     },
     demo: {
-      video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      duration: "1:45",
-      chapters: [
-        { time: "0:00", title: "Introducción" },
-        { time: "0:45", title: "Configuración inicial" },
-        { time: "1:20", title: "Resultado final" }
-      ]
+      video_url: "PENDING"
     },
     faqs: [
       { q: "¿Es seguro conectar mi ERP?", a: "Sí, usamos APIs oficiales con encriptación de grado bancario." },
