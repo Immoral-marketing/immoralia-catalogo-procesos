@@ -553,15 +553,25 @@ const ProcessDetail = () => {
                 onClose={() => setShowCalendlyModal(false)}
             />
 
-            {/* Sticky Mobile Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border p-4 z-50 md:hidden flex gap-4 items-center">
-                <div className="flex-1">
-                    <p className="text-xs text-muted-foreground uppercase font-semibold">Estado</p>
-                    <p className="font-bold">{isSelected ? "Añadido" : "No añadido"}</p>
+            {/* Sticky Mobile Floating CTA */}
+            <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 md:hidden w-auto min-w-[280px]">
+                <div className="bg-background/90 backdrop-blur-lg border border-border/50 rounded-full p-2 px-3 shadow-2xl flex gap-3 items-center">
+                    <div className="flex-1 pl-3 text-left">
+                        <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider leading-none">Estado</p>
+                        <p className="text-xs font-bold whitespace-nowrap">{isSelected ? "Añadido" : "No añadido"}</p>
+                    </div>
+                    <Button 
+                        onClick={toggleSelect} 
+                        className={cn(
+                            "rounded-full font-bold px-6 h-9 text-xs transition-all duration-300 shadow-lg",
+                            isSelected 
+                                ? "bg-secondary hover:bg-secondary/90 text-white shadow-secondary/20" 
+                                : "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
+                        )}
+                    >
+                        {isSelected ? "Quitar" : "Añadir"}
+                    </Button>
                 </div>
-                <Button onClick={toggleSelect} className={`${isSelected ? 'bg-secondary' : 'bg-primary'} font-bold px-8`}>
-                    {isSelected ? "Quitar" : "Añadir"}
-                </Button>
             </div>
         </div>
     );
