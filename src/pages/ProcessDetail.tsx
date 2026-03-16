@@ -199,7 +199,7 @@ const ProcessDetail = () => {
         <div className="min-h-screen bg-background text-foreground pb-20 md:pb-0">
             {/* Header */}
             <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-                <div className="container mx-auto px-4 py-4 md:py-6">
+                <div className="container mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-6">
                     <div className="max-w-[1440px] mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-2 text-muted-foreground hover:text-foreground">
@@ -217,7 +217,7 @@ const ProcessDetail = () => {
                 </div>
             </header>
 
-            <main className="container mx-auto px-4 py-8 pb-[80vh]">
+            <main className="container mx-auto px-6 md:px-8 lg:px-12 py-8 pb-[80vh]">
                 <div className="max-w-[1440px] mx-auto">
                     {/* Breadcrumb (Desktop) */}
                     <nav className="mb-8 hidden md:block">
@@ -271,7 +271,7 @@ const ProcessDetail = () => {
                             </section>
 
                             {/* TABS NAVIGATION (Sticky) */}
-                            <div className="sticky top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-4 relative">
+                            <div className="sticky top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-6 md:-mx-8 lg:-mx-4 relative">
                                 <div 
                                     className={cn(
                                         "absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10 transition-opacity duration-300 md:hidden",
@@ -287,7 +287,7 @@ const ProcessDetail = () => {
                                 <div 
                                     ref={tabsContainerRef}
                                     onScroll={checkScroll}
-                                    className="flex gap-8 whitespace-nowrap overflow-x-auto px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                                    className="flex gap-8 whitespace-nowrap overflow-x-auto px-6 md:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                                 >
                                     {[
                                         { id: "resumen", label: "Resumen" },
