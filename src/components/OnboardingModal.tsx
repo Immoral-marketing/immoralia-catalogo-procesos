@@ -603,7 +603,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                 </div>
 
 
-                <div className="p-6 border-t border-border flex justify-between bg-card/80 backdrop-blur-sm">
+                <div className="p-4 md:p-6 border-t border-border flex justify-between bg-card/90 backdrop-blur-lg sticky bottom-0 z-20 mt-auto">
                     <Button
                         variant="ghost"
                         onClick={prevStep}
