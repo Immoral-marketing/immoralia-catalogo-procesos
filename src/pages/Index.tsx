@@ -5,6 +5,7 @@ import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
+import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
@@ -64,6 +65,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
   const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const recommendedProcesses = useMemo(() => {
     if (!onboardingAnswers) return [];
@@ -259,6 +261,7 @@ const Index = () => {
                 onOpenCalendly={() => setShowCalendlyModal(true)}
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
+                onShare={() => setShowShareModal(true)}
               />
             </aside>
           </div>
@@ -273,12 +276,21 @@ const Index = () => {
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Tu selección</span>
               <span className="text-lg font-bold text-primary">{selectedProcesses.length} procesos</span>
             </div>
-            <Button 
-              onClick={() => setShowContactForm(true)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 shadow-lg shadow-primary/20"
-            >
-              Solicitar Oferta
-            </Button>
+            <div className="flex flex-col gap-2 shrink-0">
+              <Button 
+                onClick={() => setShowContactForm(true)}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 shadow-lg shadow-primary/20 w-full"
+              >
+                Solicitar Oferta
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowShareModal(true)}
+                className="border-primary/20 text-foreground hover:bg-primary/5 hover:text-primary w-full h-8 px-4 py-1 text-xs"
+              >
+                Compartir
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -312,6 +324,12 @@ const Index = () => {
         onClose={() => setShowCalendlyModal(false)}
         activeCategory={selectedCategory}
         selectedProcessIds={Array.from(selectedProcessIds)}
+      />
+
+      <ShareSelectionModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        selectedProcesses={selectedProcesses}
       />
     </div >
   );

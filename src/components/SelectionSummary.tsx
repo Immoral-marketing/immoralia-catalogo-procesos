@@ -1,4 +1,4 @@
-import { X, Server, Database, Info, HelpCircle, ExternalLink } from "lucide-react";
+import { X, Server, Database, Info, HelpCircle, ExternalLink, Share2 } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -17,6 +17,7 @@ interface SelectionSummaryProps {
   onOpenCalendly?: () => void;
   n8nHosting?: 'setup' | 'own';
   onHostingChange?: (value: 'setup' | 'own') => void;
+  onShare?: () => void;
 }
 
 export const SelectionSummary = ({
@@ -24,6 +25,7 @@ export const SelectionSummary = ({
   onOpenCalendly,
   n8nHosting = 'setup',
   onHostingChange,
+  onShare,
 }: SelectionSummaryProps) => {
   const { selectedProcessIds, toggleProcess } = useSelection();
   const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
@@ -174,14 +176,25 @@ export const SelectionSummary = ({
         </div>
       </div>
 
-      {/* CTA Button */}
-      <Button
-        onClick={onContact}
-        disabled={count === 0}
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-primary"
-      >
-        Solicitar Oferta
-      </Button>
+      {/* CTA Buttons */}
+      <div className="flex flex-col gap-2">
+        <Button
+          onClick={onContact}
+          disabled={count === 0}
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-primary h-11"
+        >
+          Solicitar Oferta
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onShare}
+          disabled={count === 0}
+          className="w-full h-11 border-primary/20 text-foreground hover:bg-primary/5 hover:text-primary gap-2"
+        >
+          <Share2 className="w-4 h-4" />
+          Compartir selección
+        </Button>
+      </div>
 
       {/* Calendly CTA */}
       <div className="mt-8 pt-8 border-t border-border space-y-4">

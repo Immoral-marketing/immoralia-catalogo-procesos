@@ -172,3 +172,35 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
         }
     }
 }
+
+/**
+ * Sends a generic text notification to Slack.
+ */
+export async function sendSlackNotification(text: string) {
+    if (!SLACK_BOT_TOKEN) {
+        console.error("SLACK_BOT_TOKEN is not defined. Skipping Slack notification.");
+        return;
+    }
+
+    try {
+        const response = await fetch("https://slack.com/api/chat.postMessage", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+            },
+            body: JSON.stringify({
+                channel: SLACK_CHANNEL_ID,
+                text,
+            }),
+        });
+
+        const result = await response.json();
+        if (!result.ok) {
+            console.error("Error sending generic slack notification:", result.error);
+        }
+    } catch (err: any) {
+        console.error("Failed to send generic slack notification:", err.message);
+    }
+}
+
