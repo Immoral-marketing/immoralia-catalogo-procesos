@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { useSelection } from "@/lib/SelectionContext";
+import { GuidanceMessage } from "@/components/GuidanceMessage";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const Index = () => {
@@ -210,6 +211,19 @@ const Index = () => {
             </aside>
 
             <main>
+              {/* Guidance Message for Main Catalog View */}
+              {!onboardingOpen && isOnboardingCompleted() && (
+                <GuidanceMessage 
+                  id="catalogo_principal"
+                  className="mb-6"
+                  message={
+                    <span>
+                      <strong>Explora el catálogo</strong> y añade los procesos que te interesen a tu selección. Cuando termines, podrás compartirla o solicitar una oferta.
+                    </span>
+                  }
+                />
+              )}
+
               <div className="mb-4 flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
                   {filteredProcesses.length} proceso{filteredProcesses.length !== 1 ? "s" : ""}{" "}
