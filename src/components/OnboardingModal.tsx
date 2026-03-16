@@ -16,6 +16,7 @@ import { OnboardingAnswers, saveOnboardingData, skipOnboarding } from "@/lib/onb
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { GuidanceMessage } from "./GuidanceMessage";
 
 interface OnboardingModalProps {
     isOpen: boolean;
@@ -222,6 +223,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                 <div className="flex-1 p-6 overflow-y-auto min-h-0 custom-scrollbar">
                     {step === 1 && (
                         <div className="space-y-4">
+                            <GuidanceMessage 
+                                id="inicio_quiz" 
+                                className="mb-6"
+                                message={
+                                    <span>
+                                        <strong>¡Hola! Queremos conocerte un poco.</strong> Responde estas breves preguntas para que podamos recomendarte exactamente lo que tu negocio necesita.
+                                    </span>
+                                } 
+                            />
                             <h2 className="text-2xl font-bold">¿En qué sector se mueve tu negocio?</h2>
                             <div className="grid grid-cols-2 gap-2 pt-2">
                                 {filteredSectors.map(s => (
@@ -576,6 +586,17 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
                                     </div>
                                     <p className="text-sm font-medium">Soluciones adaptadas a tu tecnología</p>
                                 </div>
+                            </div>
+                            
+                            <div className="w-full max-w-sm mt-8">
+                                <GuidanceMessage 
+                                    id="post_quiz"
+                                    message={
+                                        <span>
+                                            <strong>¡Todo listo!</strong> Hemos preparado una selección de procesos especialmente pensada para ahorrarte tiempo. Cierra esta ventana para descubrirlos.
+                                        </span>
+                                    } 
+                                />
                             </div>
                         </div>
                     )}
