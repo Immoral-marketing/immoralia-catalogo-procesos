@@ -113,7 +113,7 @@ const Index = () => {
             </div>
 
             {onboardingAnswers ? (
-              <div className="hidden md:flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2">
                   <Settings2 className="w-4 h-4" /> Editar respuestas
                 </Button>
@@ -122,7 +122,7 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <div className="hidden md:flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-primary/50 text-primary hover:bg-primary/5">
                   <Sparkles className="w-4 h-4" /> Personalizar catálogo
                 </Button>
@@ -192,7 +192,7 @@ const Index = () => {
                 </div>
 
                 {onboardingAnswers ? (
-                  <div className="md:hidden pt-4 border-t border-border flex flex-col gap-2">
+                  <div className="pt-4 border-t border-border flex flex-col gap-2">
                     <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2">
                       <Settings2 className="w-4 h-4" /> Editar respuestas
                     </Button>
@@ -201,7 +201,7 @@ const Index = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="md:hidden pt-4 border-t border-border flex flex-col gap-2">
+                  <div className="pt-4 border-t border-border flex flex-col gap-2">
                     <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2 border-primary/50 text-primary">
                       <Sparkles className="w-4 h-4" /> Personalizar catálogo
                     </Button>

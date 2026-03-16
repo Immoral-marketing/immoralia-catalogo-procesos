@@ -56,4 +56,11 @@ export const skipOnboarding = () => {
 export const resetOnboarding = () => {
     localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
     localStorage.removeItem(ONBOARDING_ANSWERS_KEY);
+    // Clear guidance messages state
+    localStorage.removeItem("immoralia_guidance_dismissed_inicio_quiz");
+    localStorage.removeItem("immoralia_guidance_dismissed_post_quiz");
+    localStorage.removeItem("immoralia_guidance_dismissed_catalogo_principal");
+    
+    // Notify components to update their visibility
+    window.dispatchEvent(new Event('immoralia_guidance_reset'));
 };
