@@ -89,7 +89,7 @@ const SetupInfo = () => {
         <div className="min-h-screen bg-background text-foreground pb-20">
             {/* Header */}
             <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-                <div className="container mx-auto px-4 py-4 md:py-6">
+                <div className="container mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-6">
                     <div className="max-w-[1440px] mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Button
@@ -109,7 +109,7 @@ const SetupInfo = () => {
                 </div>
             </header>
 
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-6 md:px-8 lg:px-12 py-8">
                 <div className="max-w-5xl mx-auto">
                     {/* Breadcrumb (Desktop) */}
                     <nav className="mb-8 hidden md:block">
@@ -179,7 +179,7 @@ const SetupInfo = () => {
                     </section>
 
                     {/* TABS NAVIGATION (Sticky) */}
-                    <div className="sticky top-20 md:top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-4 px-4 mb-12 overflow-x-auto">
+                    <div className="sticky top-20 md:top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-6 px-6 md:-mx-8 md:px-8 lg:-mx-0 lg:px-0 mb-12 overflow-x-auto">
                         <div className="flex gap-8 whitespace-nowrap min-w-min mx-auto justify-center">
                             {sections.map((section) => (
                                 <a

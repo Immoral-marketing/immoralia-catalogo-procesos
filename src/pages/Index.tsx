@@ -104,7 +104,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 py-6">
           <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
             <div className="flex flex-col pl-2">
               <div className="flex items-center gap-3">
@@ -132,7 +132,7 @@ const Index = () => {
         </div>
       </header >
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-8">
         <div className="max-w-[1440px] mx-auto">
           {/* Onboarding Summary / Recommendations */}
           {recommendedProcesses.length > 0 && (
@@ -284,7 +284,7 @@ const Index = () => {
 
       {/* Mobile Sticky Selection Bar */}
       {selectedProcesses.length > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-full duration-300">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-4 animate-in slide-in-from-bottom-full duration-300">
           <div className="bg-card/80 backdrop-blur-lg border border-primary/20 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-4">
             <div className="flex flex-col">
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Tu selección</span>
