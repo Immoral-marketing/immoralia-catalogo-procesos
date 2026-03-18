@@ -55,7 +55,7 @@ export async function sendEmailNewLead({ lead, source, extraContext }: EmailPayl
             },
             body: JSON.stringify({
                 from: "Catálogo de Procesos <onboarding@resend.dev>",
-                to: ["david@immoral.es"],
+                to: ["team@immoralia.es"],
                 subject: `🚀 Nuevo lead (${sourceLabel}) - ${safeEmpresa}`,
                 html: `
                     <h1>Nueva solicitud de lead</h1>
