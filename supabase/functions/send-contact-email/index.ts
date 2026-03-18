@@ -369,7 +369,7 @@ ${processesText}`;
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
             body: JSON.stringify({
               from: "Immoralia Notificaciones <onboarding@resend.dev>",
-              to: ["david@immoral.es"],
+              to: ["team@immoralia.es"],
               subject: `${isChatbot && isBusinessHours ? '⚡ [INMEDIATO] ' : '🚀 '}Lead: ${safeEmpresa} - ${safeNombre}`,
               html: getProfessionalTemplate({
                 title: "Nueva Solicitud de Lead",
