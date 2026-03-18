@@ -14,25 +14,26 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Función auxiliar para extraer métricas del archivo de frontend
-function getProcessMetrics() {
+// Función auxiliar para extraer métricas y slugs del archivo de frontend
+function getProcessData() {
     const processesPath = './src/data/processes.ts';
     if (!fs.existsSync(processesPath)) return {};
 
     const content = fs.readFileSync(processesPath, 'utf8');
-    const metrics = {};
+    const data = {};
 
-    // Regex para buscar id e indicadores
-    const processRegex = /id:\s*["']([^"']+)["'][\s\S]*?indicators:\s*{[\s\S]*?time_estimate:\s*["']([^"']+)["'][\s\S]*?complexity:\s*["']([^"']+)["']/g;
+    // Regex para buscar id, slug e indicadores
+    const processRegex = /id:\s*["']([^"']+)["'][\s\S]*?slug:\s*["']([^"']+)["'][\s\S]*?indicators:\s*{[\s\S]*?time_estimate:\s*["']([^"']+)["'][\s\S]*?complexity:\s*["']([^"']+)["']/g;
 
     let match;
     while ((match = processRegex.exec(content)) !== null) {
-        metrics[match[1]] = {
-            time_estimate: match[2],
-            complexity: match[3]
+        data[match[1]] = {
+            slug: match[2],
+            time_estimate: match[3],
+            complexity: match[4]
         };
     }
-    return metrics;
+    return data;
 }
 
 async function extractProcesses() {
@@ -49,7 +50,7 @@ async function extractProcesses() {
 
     console.log(`Encontrados ${processes.length} procesos.`);
 
-    const processMetrics = getProcessMetrics();
+    const processData = getProcessData();
 
     const chunks = processes.map(p => {
         // Mapeo de nombres más explícitos para el motor de búsqueda
@@ -60,6 +61,7 @@ async function extractProcesses() {
         };
 
         const processName = nameOverrides[p.id] || p.nombre;
+        const pData = processData[p.id] || {};
 
         // Determinar audiencia y tipo de flujo para mejor diferenciación
         let audience = 'Client';
@@ -78,8 +80,8 @@ async function extractProcesses() {
 **Categoría**: ${p.categoria_nombre}
 **Público objetivo**: ${audience === 'Client' ? 'Gestión de Clientes' : 'Gestión Interna / Proveedores'}
 **Tipo de flujo**: ${flowType === 'Revenue' ? 'Ingresos (Ventas)' : 'Egresos (Gastos)'}
-**Tiempo estimado**: ${processMetrics[p.id]?.time_estimate || 'Consultar'}
-**Complejidad**: ${processMetrics[p.id]?.complexity || 'Consultar'}
+**Tiempo estimado**: ${pData.time_estimate || 'Consultar'}
+**Complejidad**: ${pData.complexity || 'Consultar'}
 
 ## Descripción
 ${p.descripcion_detallada}
@@ -112,6 +114,7 @@ ${p.dolores?.join(', ')}
             metadata: {
                 source: 'catalog_process',
                 process_id: p.id,
+                slug: pData.slug || '',
                 category: p.categoria_nombre,
                 audience,
                 flow_type: flowType,
