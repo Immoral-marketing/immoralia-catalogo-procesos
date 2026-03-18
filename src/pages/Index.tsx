@@ -38,7 +38,7 @@ const Index = () => {
   const [chatbotContext, setChatbotContext] = useState<string[]>([]);
 
   useEffect(() => {
-    const handleShowContact = (e: any) => {
+    const handleShowContact = (e: CustomEvent) => {
       if (e.detail?.source === 'chatbot') {
         setContactSource('chatbot');
         setChatbotContext(e.detail.messages || []);
