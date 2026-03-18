@@ -76,7 +76,7 @@ export const SelectionSummary = ({
 
         {/* Hosting Configuration */}
         {count > 0 && (
-          <div className="mb-6 p-5 bg-primary/10 border-2 border-primary/30 rounded-xl animate-in fade-in slide-in-from-top-2 shadow-sm relative overflow-hidden shrink-0">
+          <div className="mb-6 p-4 bg-primary/10 border-2 border-primary/30 rounded-xl animate-in fade-in slide-in-from-top-2 shadow-sm relative overflow-hidden shrink-0">
             <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none">
               <Server className="w-12 h-12" />
             </div>
@@ -85,12 +85,12 @@ export const SelectionSummary = ({
               <div className="flex items-center gap-2">
                 <Server className="w-4 h-4 text-primary" />
                 <h4 className="text-sm font-bold text-foreground">
-                  Configuración de n8n
+                  Ubicación de la automatización
                 </h4>
               </div>
 
               <p className="text-[11px] text-muted-foreground leading-snug">
-                Aquí definimos dónde se ejecutarán tus automatizaciones (la ‘casa’ donde viven).
+                Donde vivirá el motor de tus procesos.
               </p>
 
               <RadioGroup
@@ -105,11 +105,11 @@ export const SelectionSummary = ({
                   <RadioGroupItem value="setup" id="setup" className="mt-1" />
                   <Label htmlFor="setup" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-foreground text-[13px]">Alojado por Immoralia</span>
+                      <span className="font-bold text-foreground text-[13px]">Gestionado por Immoralia</span>
                       <Badge variant="outline" className="text-[9px] h-4 px-1.5 bg-primary/10 text-primary border-primary/20 uppercase tracking-wider font-extrabold">Recomendado</Badge>
                     </div>
                     <p className="text-[10px] text-muted-foreground">
-                      Nosotros lo dejamos listo por ti. La opción más rápida y segura si no tienes equipo técnico.
+                      Nosotros nos encargamos de todo. Ideal si no tienes equipo técnico.
                     </p>
                   </Label>
                 </div>
@@ -122,7 +122,7 @@ export const SelectionSummary = ({
                   <Label htmlFor="own" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
                     <span className="font-bold text-foreground text-[13px]">Tengo mi propio servidor</span>
                     <p className="text-[10px] text-muted-foreground">
-                      Ya dispones de n8n o un VPS y solo conectamos la automatización.
+                      Ya dispones de n8n o un servidor (VPS) propio.
                     </p>
                   </Label>
                 </div>
@@ -142,7 +142,7 @@ export const SelectionSummary = ({
                     </div>
                     <div className="flex flex-col">
                       <span className="font-bold text-foreground group-hover:text-primary transition-colors">¿Dudas con la elección?</span>
-                      <span className="text-[10px] text-muted-foreground line-clamp-1">Pulsa aquí y sal de dudas en 1 minuto.</span>
+                      <span className="text-[10px] text-muted-foreground line-clamp-1">Haz clic aquí para ver los detalles.</span>
                     </div>
                   </div>
                   <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary" />
@@ -150,7 +150,7 @@ export const SelectionSummary = ({
               </div>
 
               <p className="text-[9px] text-muted-foreground/60 italic leading-none pt-1">
-                * Por defecto hemos seleccionado el setup gestionado para garantizar el funcionamiento.
+                * Recomendado para asegurar el funcionamiento.
               </p>
             </div>
           </div>
