@@ -39,18 +39,16 @@ async function testRetrieval(query) {
     } else {
         console.log(`Encontrados ${documents.length} documentos:`);
         documents.forEach((doc, i) => {
-            console.log(`${i + 1}. [SCORE: ${doc.similarity}] ${doc.content.substring(0, 150)}...`);
+            console.log(`${i + 1}. [SCORE: ${doc.similarity}] [SLUG: ${doc.metadata?.slug || 'NONE'}] ${doc.content.substring(0, 100)}...`);
         });
     }
 }
 
 async function runTests() {
-    console.log("--- TEST 1: peluqeria (typo) ---");
-    await testRetrieval("peluqeria");
-    console.log("\n--- TEST 2: peluquería (correct) ---");
-    await testRetrieval("peluquería");
-    console.log("\n--- TEST 3: User Full Query ---");
-    await testRetrieval("Para una peluqeria que procesos me recomiendas?");
+    console.log("--- TEST: gestoria ---");
+    await testRetrieval("gestoria");
+    console.log("\n--- TEST: que procesos me recomiendas para una gestoria? ---");
+    await testRetrieval("que procesos me recomiendas para una gestoria?");
 }
 
 runTests();

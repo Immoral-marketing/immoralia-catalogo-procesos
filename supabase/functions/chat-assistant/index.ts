@@ -49,15 +49,30 @@ serve(async (req) => {
         // 2. Buscar fragmentos relevantes en Supabase
         const { data: documents, error: matchError } = await supabase.rpc('match_chatbot_knowledge', {
             query_embedding: queryEmbedding,
-            match_threshold: 0.5, // Ajustable
+            match_threshold: 0.3, // Bajamos el umbral para ser más flexibles
             match_count: 5,
         })
 
         if (matchError) throw matchError
 
-        // 3. Construir el contexto
+        console.log(`Query: "${message}"`)
+        console.log(`Found ${documents?.length || 0} documents`)
+        if (documents) {
+            documents.forEach((doc: any, i: number) => {
+                console.log(`Doc ${i + 1} (Score: ${doc.similarity}): ${doc.content.substring(0, 100)}...`)
+            })
+        }
+
+        // 3. Construir el contexto (incluyendo metadatos si son procesos)
         const contextText = documents
-            ?.map((doc: any) => doc.content)
+            ?.map((doc: any) => {
+                const metadata = doc.metadata || {}
+                let header = ''
+                if (metadata.source === 'catalog_process' && metadata.slug) {
+                    header = `[PROCESO: ${metadata.process_name || 'N/A'} | SLUG: ${metadata.slug}]\n`
+                }
+                return `${header}${doc.content}`
+            })
             .join('\n\n---\n\n') || 'No se encontró información relevante.'
 
         // 4. Llamar a OpenAI para la respuesta final (con el contexto inyectado)
@@ -75,17 +90,19 @@ serve(async (req) => {
                         content: `Eres el Asistente Inteligente de Immoralia. Tu objetivo es ayudar a los usuarios del catálogo de procesos a entender cómo podemos automatizar su negocio.
             
 REGLAS CRÍTICAS:
-1. Usa EXCLUSIVAMENTE el CONTEXTO proporcionado para responder.
-2. Si la respuesta no está en el contexto, di educadamente que no tienes esa información y ofrece derivar la consulta a un humano.
-3. Sé profesional, cercano y directo.
-4. ESTRUCTURA Y FORMATO:
-   - Usa **negritas** para destacar nombres de procesos, códigos y conceptos clave.
+1. Usa el CONTEXTO para identificar procesos que se adapten a las necesidades del usuario (considera sectores relacionados, herramientas o puntos de dolor).
+2. Sé profesional, cercano y directo.
+3. ESTRUCTURA Y FORMATO:
+   - Usa **negritas** para destacar nombres de procesos y conceptos clave.
    - Usa listas con viñetas para enumerar beneficios o pasos.
-   - IMPORTANTE: Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de una lista para asegurar la legibilidad. No amontones el texto.
-   - Evita el uso de símbolos extraños o caracteres técnicos fuera de Markdown estándar.
-5. Si el usuario pregunta por el "setup", "hosting" o dónde se alojan las automatizaciones, usa la información del contexto relativa al "Setup de Automatización (n8n)".
-6. Cuando recomiendes un proceso, menciona EXCLUSIVAMENTE su nombre. NO incluyas códigos alfanuméricos (ej: evita decir A1, D15, etc.) ya que el usuario no los identifica.
-7. FORMATO DE RESPUESTA: Debes responder SIEMPRE con un objeto JSON válido que contenga:
+   - IMPORTANTE: Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de una lista.
+4. RECOMENDACIONES Y ENLACES (MUY IMPORTANTE):
+   - Cuando recomiendes un proceso, usa el SLUG proporcionado en el contexto para crear un enlace.
+   - Formato de enlace: [Nombre del Proceso](/catalogo/procesos/slug).
+   - Ejemplo: "**Facturación automática** ([ver proceso](/catalogo/procesos/facturas-automatizadas))".
+   - NO uses códigos alfanuméricos (A1, D15, etc.).
+5. Si no encuentras una respuesta específica en el contexto, sugiere hablar con un experto humano de nuestro equipo.
+6. FORMATO DE RESPUESTA: Debes responder SIEMPRE con un objeto JSON válido que contenga:
    - "reply": Tu respuesta en texto (usando Markdown estructurado).
    - "action": Establece este campo a "handover" si sugieres hablar con un humano o derivar la consulta. Si no, déjalo vacío "".
 

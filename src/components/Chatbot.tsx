@@ -166,10 +166,14 @@ const Chatbot: React.FC = () => {
                                         )}>
                                             {m.role === 'assistant' ? (
                                                 <div
+                                                    className="markdown-content"
                                                     dangerouslySetInnerHTML={{
                                                         __html: m.content
-                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
-                                                            .replace(/\n\n/g, '<div class="h-2"></div>')
+                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
+                                                            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold underline underline-offset-2 hover:opacity-80 transition-all">$1</a>')
+                                                            .replace(/^\s*-\s+(.*?)$/gm, '<li class="ml-4 mb-1">$1</li>')
+                                                            .replace(/\n\n/g, '<div class="h-3"></div>')
+                                                            .replace(/\n/g, '<br />')
                                                     }}
                                                 />
                                             ) : (

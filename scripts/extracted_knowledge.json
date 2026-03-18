@@ -1,53 +1,10 @@
 [
   {
-    "content": "# Proceso: Registro automático de gastos\n**Tagline**: Agiliza la gestión de facturas de gasto al máximo.\n**Categoría**: Internos Agencias\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nVuelcas factura en carpeta de Drive → Generamos la factura de gasto...\n\n## Pasos del proceso\n1. Detección automática\n2. Envío al Inbox\n3. Creación automática\n\n## Personalización\nElige la carpeta de Drive...\n\n## Sectores recomendados\nAgencia/marketing, Retail, E-commerce\n\n## Herramientas utilizadas\nHolded, Drive, OneDrive\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Pierdo solicitudes entre WhatsApp/Instagram/email\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Registro automático de gastos\r\n\r\n## Contexto\r\nEste proceso está diseñado para la **digitalización de facturas de proveedores y acreedores (Egresos)**. Su objetivo es automatizar la entrada de gastos en el ERP. **Es el proceso inverso a la facturación a clientes.**\r\n\r\n## Lógica Técnica\r\nDigitalización y procesamiento de facturas de proveedores mediante OCR e IA.\r\n1.  **Captura**: n8n monitoriza una carpeta de tu gestor de archivos en la nube, tu gestor de archivos en la nube o una cuenta de tu canal de comunicación preferido (ej. facturas@empresa.com).\r\n2.  **Extracción (OCR + LLM)**: Se utiliza IA para leer el documento, extraer el CIF del emisor, la base imponible, el IVA, el total y la categoría del gasto.\r\n3.  **Registro en ERP**: Crea automáticamente la factura de gasto en tu ERP/software de gestión/Odoo, adjuntando el archivo original.\r\n4.  **Flujo de Aprobación**: Si el gasto supera un importe o no se reconoce al proveedor, se envía una alerta a dirección para validación manual.\r\n\r\n## Beneficios y ROI\r\n-   **Eliminación de Tareas Manuales**: El equipo administrativo deja de picar facturas a mano.\r\n-   **Información en Tiempo Real**: Los gastos aparecen en el ERP el mismo día que se reciben, no a final de mes.\r\n-   **Archivo Digital**: Cumplimiento legal y facilidad de búsqueda de facturas antiguas.\r\n\r\n## Casos de Uso\r\n-   **Agencias con muchos proveedores**: Freelance, herramientas SaaS, suministros.\r\n-   **Retail**: Procesamiento de albaranes y facturas de proveedores de mercancía.\r\n\r\n## Requisitos Previos\r\n-   Definición de canales de entrada (Carpeta o tu canal de comunicación preferido).\r\n-   ERP con API de compras activa.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Qué pasa si la IA se equivoca?** El sistema permite un margen de confianza. Si la IA no está segura de un dato, marca la factura para revisión manual.\r\n-   **¿Detecta facturas duplicadas?** Sí, cruza el número de factura y el emisor para evitar registros dobles.\r\n",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "D13",
-      "category": "Internos Agencias",
-      "audience": "Internal/Supplier",
-      "flow_type": "Expense",
-      "process_name": "Registro automático de gastos"
-    }
-  },
-  {
-    "content": "# Proceso: Creación de metas en ClickUp\n**Tagline**: Saca todo el partido a las metas de ClickUp...\n**Categoría**: Internos Agencias\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nDesde un documento con objetivos mensuales → Creamos metas en ClickUp...\n\n## Pasos del proceso\n1. Leemos los objetivos\n2. Creamos metas dinámicas\n3. Configuramos seguimiento\n\n## Personalización\nElige colores por cliente/equipo.\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales\n\n## Herramientas utilizadas\nClickUp, Notion\n\n## Puntos de dolor que resuelve\nQuiero ordenar tareas y que se asignen solas\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Creación de metas en tu herramienta de gestión de tareas y tiempos\r\n\r\n## Lógica Técnica\r\nSincronización de objetivos estratégicos entre herramientas de datos y gestión de proyectos.\r\n1.  **Fuente de Verdad**: n8n lee los objetivos del mes desde un Google Sheets o tu herramienta de gestión de tareas y tiempos donde dirección define los KPIs.\r\n2.  **Mapeo de tu herramienta de gestión de tareas y tiempos**: Conecta con la API de tu herramienta de gestión de tareas y tiempos para localizar el \"Space\" y los \"Goals\" correspondientes al departamento o cliente.\r\n3.  **Actualización Dinámica**: Crea nuevas \"Targets\" dentro de las metas si se añaden objetivos, o actualiza el progreso si se detecta que las tareas vinculadas han cambiado.\r\n4.  **Feedback Visual**: Notifica al equipo por tu canal de comunicación preferido cuando se alcanza un hito (ej. \"¡Hemos alcanzado el 50% de la meta de facturación!\").\r\n\r\n## Beneficios y ROI\r\n-   **Alineamiento del Equipo**: Todo el equipo sabe cuáles son sus prioridades sin salir de su herramienta de trabajo diario.\r\n-   **Transparencia**: Visibilidad en tiempo real del progreso hacia los objetivos de la empresa.\r\n-   **Motivación**: La actualización automática de metas genera un sentido de avance constante.\r\n\r\n## Casos de Uso\r\n-   **Equipos de Ventas**: Seguimiento de objetivos de captación.\r\n-   **Agencias de Marketing**: Control de hitos de entrega o KPIs de rendimiento de campañas (ROAS, CPL).\r\n\r\n## Requisitos Previos\r\n-   Uso de tu herramienta de gestión de tareas y tiempos (Planes Business o superiores para acceso a Goals API).\r\n-   Estructura clara de objetivos en la fuente de datos.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Se pueden vincular a tareas?** Sí, tu herramienta de gestión de tareas y tiempos permite vincular metas a tareas, y n8n puede forzar la actualización de esas metas según el estado de las tareas.\r\n-   **¿Qué pasa si cambiamos el objetivo a mitad de mes?** El sistema detecta el cambio en la fuente y actualiza la meta en tu herramienta de gestión de tareas y tiempos automáticamente.\r\n",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "D14",
-      "category": "Internos Agencias",
-      "audience": "Internal/Supplier",
-      "flow_type": "Expense",
-      "process_name": "Creación de metas en ClickUp"
-    }
-  },
-  {
-    "content": "# Proceso: Liquidación y facturación de freelance\n**Tagline**: ¿Trabajas con distintos freelance a distintos precios por hora?\n**Categoría**: Horarios y Proyectos\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nTe imputa sus horas un freelance → Se crea la factura de gasto...\n\n## Pasos del proceso\n1. Leemos horas\n2. Multiplicamos por tarifa\n3. Creamos factura\n\n## Personalización\nDefine tarifas por freelance...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nHolded, Toggl, Clockify, Factorial\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Me escriben mucho y no doy abasto\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Liquidación y facturación de freelance\r\n\r\n## Contexto\r\nEste proceso está diseñado exclusivamente para la **gestión de pagos y facturación de colaboradores externos, freelance o proveedores de servicios**. Se trata de un flujo de **egresos (gastos) y liquidaciones internas**, no de facturación a clientes finales.\r\n\r\n## Lógica Técnica\r\nGestión de liquidaciones para colaboradores externos mediante el cruce de registros de tiempo y tarifas.\r\n1.  **Captura de Tiempos**: n8n extrae las horas imputadas por cada freelance en herramientas como tu herramienta de gestión de tareas y tiempos, tu herramienta de gestión de tareas y tiempos o tu herramienta de gestión de tareas y tiempos.\r\n2.  **Mapeo de Tarifas**: Cruza el ID del colaborador con una base de datos (Goole Sheets o Airtable) donde se definen los precios por hora acordados.\r\n3.  **Cálculo e Impuestos**: Calcula el importe bruto y aplica las retenciones de IRPF correspondientes según el perfil del colaborador.\r\n4.  **Generación de Factura/Gasto**: Crea automáticamente la factura de gasto en el ERP para que el freelance solo tenga que validarla o genera un aviso de \"liquidación pendiente\".\r\n\r\n## Beneficios y ROI\r\n-   **Transparencia**: Elimina disputas sobre el número de horas trabajadas.\r\n-   **Ahorro Administrativo**: Ahorra horas de gestión manual cruzando Excels y mensajes para saber cuánto pagar a cada colaborador.\r\n-   **Puntualidad en Pagos**: Los freelance cobran antes ya que el proceso de validación es mucho más rápido.\r\n\r\n## Casos de Uso\r\n-   **Agencias de Marketing**: Gestión de copywriters, diseñadores o desarrolladores externos.\r\n-   **Empresas de Eventos**: Control de personal contratado por horas.\r\n\r\n## Requisitos Previos\r\n-   Uso de una herramienta de tracking por parte de los freelance.\r\n-   Base de datos de tarifas actualizada.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Qué pasa si el freelance factura por proyecto?** El sistema puede configurarse para detectar hitos finalizados en lugar de horas.\r\n-   **¿Detecta si las horas no están aprobadas?** Sí, se puede añadir un filtro para que solo facture las horas que han sido marcadas como \"Aprobadas\" por un PM.\r\n",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "D15",
-      "category": "Horarios y Proyectos",
-      "audience": "Internal/Supplier",
-      "flow_type": "Expense",
-      "process_name": "Liquidación y facturación de freelance"
-    }
-  },
-  {
-    "content": "# Proceso: Gestión de retenciones de freelance\n**Tagline**: Retira las retenciones a medida que llegan...\n**Categoría**: Horarios y Proyectos\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1 semana\n**Complejidad**: Baja\n\n## Descripción\nCuando entra una factura de proveedor → Calculamos retención...\n\n## Pasos del proceso\n1. Detectamos facturas\n2. Calculamos el %\n3. Creamos asiento\n\n## Personalización\nElige periodicidad del cálculo...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail\n\n## Herramientas utilizadas\nHolded, Excel, Sheets\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Gestión automática de retenciones (freelance)\r\n\r\n## Contexto\r\nEste proceso es parte de la **gestión de gastos y liquidaciones de colaboradores externos**. Se encarga de la parte impositiva (IRPF) de los pagos que la empresa realiza a terceros. **No tiene relación con el IVA de ventas o ingresos directos de clientes.**\r\n\r\n## Lógica Técnica\r\nControl preventivo de obligaciones impositivas vinculadas a colaboradores externos.\r\n1.  **Detección de Gastos**: n8n monitoriza el ERP buscando nuevas facturas de gastos asociadas a proveedores marcados como \"Profesionales/Freelance\".\r\n2.  **Cálculo de Retención**: Identifica el tipo de retención aplicado (ej. 7% o 15% IRPF) y extrae el importe correspondiente de la factura.\r\n3.  **Provisión**: Registra en un sistema de control interno (Excel o subcuenta) el importe que debe reservarse para el pago trimestral de impuestos.\r\n4.  **Reporting**: Genera un informe periódico (mensual o semanal) con el total acumulado de retenciones para que el departamento financiero sepa cuánto capital \"no le pertenece\".\r\n\r\n## Beneficios y ROI\r\n-   **Tranquilidad Fiscal**: Evita la falta de liquidez en el momento de liquidar impuestos trimestrales.\r\n-   **Exactitud**: Reduce errores en la contabilización de retenciones que podrían derivar en problemas con la administración tributaria.\r\n-   **Visibilidad de Coste Real**: Permite ver el coste de los colaboradores incluyendo todas las partidas impositivas.\r\n\r\n## Casos de Uso\r\n-   **Empresas que colaboran con freelance**: Donde las retenciones de IRPF son una constante en el flujo de gastos.\r\n-   **PYMES**: Que gestionan internamente su previsión de impuestos sin esperar a la gestoría.\r\n\r\n## Requisitos Previos\r\n-   Uso de un ERP que permita desglosar retenciones en las facturas de gasto.\r\n-   Etiquetado correcto de los proveedores en el sistema.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Hace el pago a Hacienda?** No, este proceso es de provisión y control interno. El pago debe seguir realizándose por los canales oficiales.\r\n-   **¿Funciona con retenciones internacionales?** Sí, se puede configurar para manejar distintos porcentajes y tipos de impuestos según el país del proveedor.\r\n",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "D16",
-      "category": "Horarios y Proyectos",
-      "audience": "Internal/Supplier",
-      "flow_type": "Expense",
-      "process_name": "Gestión de retenciones de freelance"
-    }
-  },
-  {
     "content": "# Proceso: Facturación automática de clientes\n**Tagline**: No pierdas más tiempo calculando fees fijos y variables sobre la inversión.\n**Categoría**: Facturas y Gastos\n**Público objetivo**: Gestión de Clientes\n**Tipo de flujo**: Ingresos (Ventas)\n**Tiempo estimado**: 2-3 semanas\n**Complejidad**: Alta\n\n## Descripción\nDesde tu hoja de Servicios → Generamos todas tus facturas automáticamente...\n\n## Pasos del proceso\n1. Leemos fees por cliente\n2. Creamos la factura borrador en Holded\n3. Enviamos notificación\n\n## Personalización\nElige la vía de comunicación...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nHolded, Google Sheets, Excel\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Necesito centralizar la información de clientes\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Facturación automática de clientes\r\n\r\n## Contexto\r\nEste proceso está diseñado para la **facturación general de la empresa a sus clientes finales**. Se trata de automatizar el flujo de ingresos (Revenue) y ventas por los servicios o productos prestados. **No tiene relación con pagos a colaboradores o freelance.**\r\n\r\n## Lógica Técnica\r\nEste proceso utiliza n8n para conectar una base de datos de servicios (generalmente Google Sheets) con un software de facturación como tu ERP/software de gestión.\r\n1.  **Trigger**: Cambio de estado en una fila de Sheets (ej. \"Listo para facturar\") o una ejecución periódica mensual.\r\n2.  **Procesamiento**: Un nodo de n8n calcula los importes finales basados en parámetros fijos y variables (inversión, porcentaje de fee).\r\n3.  **Acción**: Crea automáticamente una factura en estado \"Borrador\" en tu ERP/software de gestión para revisión humana.\r\n4.  **Notificación**: Envía un mensaje por tu canal de comunicación preferido o tu canal de comunicación preferido al responsable de facturación.\r\n\r\n## Beneficios y ROI\r\n-   **Ahorro de tiempo**: Reduce el tiempo de facturación mensual de días a minutos.\r\n-   **Precisión**: Elimina errores de cálculo manual en fees variables.\r\n-   **Escalabilidad**: Factura a 100 clientes con el mismo esfuerzo que a 1.\r\n\r\n## Casos de Uso\r\n-   **Agencias de Marketing**: Cálculo de fees basado en la inversión publicitaria gestionada.\r\n-   **Consultoras**: Facturación por hitos o entregables variables.\r\n\r\n## Requisitos Previos\r\n-   Cuenta en tu ERP/software de gestión o software compatible.\r\n-   Hoja de servicios estructurada (Template proporcionado por Immoralia).\r\n-   API Key de las herramientas.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Se envían solas al cliente?** No por defecto. Se crean en borrador para asegurar una última revisión humana.\r\n-   **¿Qué pasa si hay un error en los datos?** El sistema detecta inconsistencias y envía una alerta en lugar de crear la factura.\r\n",
     "metadata": {
       "source": "catalog_process",
       "process_id": "A1",
+      "slug": "facturas-automatizadas",
       "category": "Facturas y Gastos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -59,6 +16,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "A2",
+      "slug": "informe-semanal-facturas-vencidas",
       "category": "Facturas y Gastos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -70,6 +28,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "A3",
+      "slug": "presupuestos-automaticos",
       "category": "Facturas y Gastos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -81,6 +40,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "A4",
+      "slug": "seguimiento-presupuestos",
       "category": "Facturas y Gastos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -92,6 +52,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "A5",
+      "slug": "recordatorios-pagos",
       "category": "Facturas y Gastos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -103,6 +64,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "B6",
+      "slug": "analisis-incidencias-horarios",
       "category": "Horarios y Proyectos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -114,6 +76,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "B7",
+      "slug": "informe-mensual-horas-estimadas",
       "category": "Horarios y Proyectos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -125,6 +88,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "B8",
+      "slug": "alertas-exceso-horas",
       "category": "Horarios y Proyectos",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -136,6 +100,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "C9",
+      "slug": "alertas-vencimiento-facturas-compra",
       "category": "Finanzas y Tesorería",
       "audience": "Internal/Supplier",
       "flow_type": "Expense",
@@ -147,6 +112,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "C10",
+      "slug": "informes-financieros-direccion",
       "category": "Finanzas y Tesorería",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -158,6 +124,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "C11",
+      "slug": "proyeccion-automatica-ingresos",
       "category": "Finanzas y Tesorería",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -169,6 +136,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "C12",
+      "slug": "traspasos-automaticos-iva",
       "category": "Finanzas y Tesorería",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -176,10 +144,59 @@
     }
   },
   {
+    "content": "# Proceso: Registro automático de gastos\n**Tagline**: Agiliza la gestión de facturas de gasto al máximo.\n**Categoría**: Internos Agencias\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nVuelcas factura en carpeta de Drive → Generamos la factura de gasto...\n\n## Pasos del proceso\n1. Detección automática\n2. Envío al Inbox\n3. Creación automática\n\n## Personalización\nElige la carpeta de Drive...\n\n## Sectores recomendados\nAgencia/marketing, Retail, E-commerce\n\n## Herramientas utilizadas\nHolded, Drive, OneDrive\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Pierdo solicitudes entre WhatsApp/Instagram/email\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Registro automático de gastos\r\n\r\n## Contexto\r\nEste proceso está diseñado para la **digitalización de facturas de proveedores y acreedores (Egresos)**. Su objetivo es automatizar la entrada de gastos en el ERP. **Es el proceso inverso a la facturación a clientes.**\r\n\r\n## Lógica Técnica\r\nDigitalización y procesamiento de facturas de proveedores mediante OCR e IA.\r\n1.  **Captura**: n8n monitoriza una carpeta de tu gestor de archivos en la nube, tu gestor de archivos en la nube o una cuenta de tu canal de comunicación preferido (ej. facturas@empresa.com).\r\n2.  **Extracción (OCR + LLM)**: Se utiliza IA para leer el documento, extraer el CIF del emisor, la base imponible, el IVA, el total y la categoría del gasto.\r\n3.  **Registro en ERP**: Crea automáticamente la factura de gasto en tu ERP/software de gestión/Odoo, adjuntando el archivo original.\r\n4.  **Flujo de Aprobación**: Si el gasto supera un importe o no se reconoce al proveedor, se envía una alerta a dirección para validación manual.\r\n\r\n## Beneficios y ROI\r\n-   **Eliminación de Tareas Manuales**: El equipo administrativo deja de picar facturas a mano.\r\n-   **Información en Tiempo Real**: Los gastos aparecen en el ERP el mismo día que se reciben, no a final de mes.\r\n-   **Archivo Digital**: Cumplimiento legal y facilidad de búsqueda de facturas antiguas.\r\n\r\n## Casos de Uso\r\n-   **Agencias con muchos proveedores**: Freelance, herramientas SaaS, suministros.\r\n-   **Retail**: Procesamiento de albaranes y facturas de proveedores de mercancía.\r\n\r\n## Requisitos Previos\r\n-   Definición de canales de entrada (Carpeta o tu canal de comunicación preferido).\r\n-   ERP con API de compras activa.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Qué pasa si la IA se equivoca?** El sistema permite un margen de confianza. Si la IA no está segura de un dato, marca la factura para revisión manual.\r\n-   **¿Detecta facturas duplicadas?** Sí, cruza el número de factura y el emisor para evitar registros dobles.\r\n",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D13",
+      "slug": "registro-automatico-gastos",
+      "category": "Internos Agencias",
+      "audience": "Internal/Supplier",
+      "flow_type": "Expense",
+      "process_name": "Registro automático de gastos"
+    }
+  },
+  {
+    "content": "# Proceso: Creación de metas en ClickUp\n**Tagline**: Saca todo el partido a las metas de ClickUp...\n**Categoría**: Internos Agencias\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nDesde un documento con objetivos mensuales → Creamos metas en ClickUp...\n\n## Pasos del proceso\n1. Leemos los objetivos\n2. Creamos metas dinámicas\n3. Configuramos seguimiento\n\n## Personalización\nElige colores por cliente/equipo.\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales\n\n## Herramientas utilizadas\nClickUp, Notion\n\n## Puntos de dolor que resuelve\nQuiero ordenar tareas y que se asignen solas\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Creación de metas en tu herramienta de gestión de tareas y tiempos\r\n\r\n## Lógica Técnica\r\nSincronización de objetivos estratégicos entre herramientas de datos y gestión de proyectos.\r\n1.  **Fuente de Verdad**: n8n lee los objetivos del mes desde un Google Sheets o tu herramienta de gestión de tareas y tiempos donde dirección define los KPIs.\r\n2.  **Mapeo de tu herramienta de gestión de tareas y tiempos**: Conecta con la API de tu herramienta de gestión de tareas y tiempos para localizar el \"Space\" y los \"Goals\" correspondientes al departamento o cliente.\r\n3.  **Actualización Dinámica**: Crea nuevas \"Targets\" dentro de las metas si se añaden objetivos, o actualiza el progreso si se detecta que las tareas vinculadas han cambiado.\r\n4.  **Feedback Visual**: Notifica al equipo por tu canal de comunicación preferido cuando se alcanza un hito (ej. \"¡Hemos alcanzado el 50% de la meta de facturación!\").\r\n\r\n## Beneficios y ROI\r\n-   **Alineamiento del Equipo**: Todo el equipo sabe cuáles son sus prioridades sin salir de su herramienta de trabajo diario.\r\n-   **Transparencia**: Visibilidad en tiempo real del progreso hacia los objetivos de la empresa.\r\n-   **Motivación**: La actualización automática de metas genera un sentido de avance constante.\r\n\r\n## Casos de Uso\r\n-   **Equipos de Ventas**: Seguimiento de objetivos de captación.\r\n-   **Agencias de Marketing**: Control de hitos de entrega o KPIs de rendimiento de campañas (ROAS, CPL).\r\n\r\n## Requisitos Previos\r\n-   Uso de tu herramienta de gestión de tareas y tiempos (Planes Business o superiores para acceso a Goals API).\r\n-   Estructura clara de objetivos en la fuente de datos.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Se pueden vincular a tareas?** Sí, tu herramienta de gestión de tareas y tiempos permite vincular metas a tareas, y n8n puede forzar la actualización de esas metas según el estado de las tareas.\r\n-   **¿Qué pasa si cambiamos el objetivo a mitad de mes?** El sistema detecta el cambio en la fuente y actualiza la meta en tu herramienta de gestión de tareas y tiempos automáticamente.\r\n",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D14",
+      "slug": "creacion-metas-clickup",
+      "category": "Internos Agencias",
+      "audience": "Internal/Supplier",
+      "flow_type": "Expense",
+      "process_name": "Creación de metas en ClickUp"
+    }
+  },
+  {
+    "content": "# Proceso: Liquidación y facturación de freelance\n**Tagline**: ¿Trabajas con distintos freelance a distintos precios por hora?\n**Categoría**: Horarios y Proyectos\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nTe imputa sus horas un freelance → Se crea la factura de gasto...\n\n## Pasos del proceso\n1. Leemos horas\n2. Multiplicamos por tarifa\n3. Creamos factura\n\n## Personalización\nDefine tarifas por freelance...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, E-commerce\n\n## Herramientas utilizadas\nHolded, Toggl, Clockify, Factorial\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Me escriben mucho y no doy abasto\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Liquidación y facturación de freelance\r\n\r\n## Contexto\r\nEste proceso está diseñado exclusivamente para la **gestión de pagos y facturación de colaboradores externos, freelance o proveedores de servicios**. Se trata de un flujo de **egresos (gastos) y liquidaciones internas**, no de facturación a clientes finales.\r\n\r\n## Lógica Técnica\r\nGestión de liquidaciones para colaboradores externos mediante el cruce de registros de tiempo y tarifas.\r\n1.  **Captura de Tiempos**: n8n extrae las horas imputadas por cada freelance en herramientas como tu herramienta de gestión de tareas y tiempos, tu herramienta de gestión de tareas y tiempos o tu herramienta de gestión de tareas y tiempos.\r\n2.  **Mapeo de Tarifas**: Cruza el ID del colaborador con una base de datos (Goole Sheets o Airtable) donde se definen los precios por hora acordados.\r\n3.  **Cálculo e Impuestos**: Calcula el importe bruto y aplica las retenciones de IRPF correspondientes según el perfil del colaborador.\r\n4.  **Generación de Factura/Gasto**: Crea automáticamente la factura de gasto en el ERP para que el freelance solo tenga que validarla o genera un aviso de \"liquidación pendiente\".\r\n\r\n## Beneficios y ROI\r\n-   **Transparencia**: Elimina disputas sobre el número de horas trabajadas.\r\n-   **Ahorro Administrativo**: Ahorra horas de gestión manual cruzando Excels y mensajes para saber cuánto pagar a cada colaborador.\r\n-   **Puntualidad en Pagos**: Los freelance cobran antes ya que el proceso de validación es mucho más rápido.\r\n\r\n## Casos de Uso\r\n-   **Agencias de Marketing**: Gestión de copywriters, diseñadores o desarrolladores externos.\r\n-   **Empresas de Eventos**: Control de personal contratado por horas.\r\n\r\n## Requisitos Previos\r\n-   Uso de una herramienta de tracking por parte de los freelance.\r\n-   Base de datos de tarifas actualizada.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Qué pasa si el freelance factura por proyecto?** El sistema puede configurarse para detectar hitos finalizados en lugar de horas.\r\n-   **¿Detecta si las horas no están aprobadas?** Sí, se puede añadir un filtro para que solo facture las horas que han sido marcadas como \"Aprobadas\" por un PM.\r\n",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D15",
+      "slug": "facturacion-automatica-horas-freelance",
+      "category": "Horarios y Proyectos",
+      "audience": "Internal/Supplier",
+      "flow_type": "Expense",
+      "process_name": "Liquidación y facturación de freelance"
+    }
+  },
+  {
+    "content": "# Proceso: Gestión de retenciones de freelance\n**Tagline**: Retira las retenciones a medida que llegan...\n**Categoría**: Horarios y Proyectos\n**Público objetivo**: Gestión Interna / Proveedores\n**Tipo de flujo**: Egresos (Gastos)\n**Tiempo estimado**: 1 semana\n**Complejidad**: Baja\n\n## Descripción\nCuando entra una factura de proveedor → Calculamos retención...\n\n## Pasos del proceso\n1. Detectamos facturas\n2. Calculamos el %\n3. Creamos asiento\n\n## Personalización\nElige periodicidad del cálculo...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail\n\n## Herramientas utilizadas\nHolded, Excel, Sheets\n\n## Puntos de dolor que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Gestión automática de retenciones (freelance)\r\n\r\n## Contexto\r\nEste proceso es parte de la **gestión de gastos y liquidaciones de colaboradores externos**. Se encarga de la parte impositiva (IRPF) de los pagos que la empresa realiza a terceros. **No tiene relación con el IVA de ventas o ingresos directos de clientes.**\r\n\r\n## Lógica Técnica\r\nControl preventivo de obligaciones impositivas vinculadas a colaboradores externos.\r\n1.  **Detección de Gastos**: n8n monitoriza el ERP buscando nuevas facturas de gastos asociadas a proveedores marcados como \"Profesionales/Freelance\".\r\n2.  **Cálculo de Retención**: Identifica el tipo de retención aplicado (ej. 7% o 15% IRPF) y extrae el importe correspondiente de la factura.\r\n3.  **Provisión**: Registra en un sistema de control interno (Excel o subcuenta) el importe que debe reservarse para el pago trimestral de impuestos.\r\n4.  **Reporting**: Genera un informe periódico (mensual o semanal) con el total acumulado de retenciones para que el departamento financiero sepa cuánto capital \"no le pertenece\".\r\n\r\n## Beneficios y ROI\r\n-   **Tranquilidad Fiscal**: Evita la falta de liquidez en el momento de liquidar impuestos trimestrales.\r\n-   **Exactitud**: Reduce errores en la contabilización de retenciones que podrían derivar en problemas con la administración tributaria.\r\n-   **Visibilidad de Coste Real**: Permite ver el coste de los colaboradores incluyendo todas las partidas impositivas.\r\n\r\n## Casos de Uso\r\n-   **Empresas que colaboran con freelance**: Donde las retenciones de IRPF son una constante en el flujo de gastos.\r\n-   **PYMES**: Que gestionan internamente su previsión de impuestos sin esperar a la gestoría.\r\n\r\n## Requisitos Previos\r\n-   Uso de un ERP que permita desglosar retenciones en las facturas de gasto.\r\n-   Etiquetado correcto de los proveedores en el sistema.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Hace el pago a Hacienda?** No, este proceso es de provisión y control interno. El pago debe seguir realizándose por los canales oficiales.\r\n-   **¿Funciona con retenciones internacionales?** Sí, se puede configurar para manejar distintos porcentajes y tipos de impuestos según el país del proveedor.\r\n",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "D16",
+      "slug": "gestion-automatica-retenciones-freelance",
+      "category": "Horarios y Proyectos",
+      "audience": "Internal/Supplier",
+      "flow_type": "Expense",
+      "process_name": "Gestión de retenciones de freelance"
+    }
+  },
+  {
     "content": "# Proceso: Atención automática por WhatsApp\n**Tagline**: Responde al instante a dudas frecuentes.\n**Categoría**: Atención y Captura\n**Público objetivo**: Gestión de Clientes\n**Tipo de flujo**: Ingresos (Ventas)\n**Tiempo estimado**: 1-2 semanas\n**Complejidad**: Media\n\n## Descripción\nAutomatizamos la atención inicial por WhatsApp...\n\n## Pasos del proceso\n1. Detectamos el tipo de consulta\n2. Respondemos con mensajes\n3. Derivamos a un responsable\n\n## Personalización\nDefine el tono, las preguntas frecuentes...\n\n## Sectores recomendados\nAgencia/marketing, Servicios profesionales, Retail, Inmobiliaria, Restauración\n\n## Herramientas utilizadas\nWhatsApp, Make, Zapier\n\n## Puntos de dolor que resuelve\nMe escriben mucho y no doy abasto, Tardamos en responder y perdemos clientes, Tengo muchas preguntas repetidas\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Atención automática por tu canal de comunicación preferido\r\n\r\n## Lógica Técnica\r\nImplementación de un asistente virtual inteligente para la primera capa de atención al cliente.\r\n1.  **Entrada de Mensajes**: n8n recibe los mensajes de tu canal de comunicación preferido vía API (Twilio, Meta Cloud API o herramientas tipo WATI).\r\n2.  **Procesamiento (IA)**: Se utiliza IA (OpenAI GPT-4) para entender la intención del usuario, extrayendo si es una duda, una queja o una solicitud de presupuesto.\r\n3.  **Respuesta Automática**: Si la respuesta está en la base de conocimiento, la IA responde al instante con el tono de marca definido.\r\n4.  **Escalado Humano**: Si el tema es complejo o el usuario pide hablar con una persona, se genera un ticket en el CRM y se notifica al equipo humano.\r\n\r\n## Beneficios y ROI\r\n-   **Atención 24/7**: Responde dudas a las 3 AM sin necesidad de equipo de guardia.\r\n-   **Reducción de Carga**: Filtra hasta un 80% de las preguntas repetitivas (horarios, ubicación, servicios básicos).\r\n-   **Mejora de Conversión**: Los leads que reciben respuesta inmediata tienen una probabilidad mucho mayor de cerrar la venta.\r\n\r\n## Casos de Uso\r\n-   **Agencias de Marketing**: Resolución de dudas frecuentes sobre servicios.\r\n-   **Retail/E-commerce**: Consultas sobre estado de pedidos o envíos.\r\n-   **Servicios Profesionales**: Captación inicial de requisitos del cliente.\r\n\r\n## Requisitos Previos\r\n-   Cuenta en un proveedor de API de tu canal de comunicación preferido.\r\n-   Documento de preguntas frecuentes (FAQ) actualizado.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Se nota que es un bot?** Se puede configurar para que sea transparente (\"Soy el asistente virtual\") o para que use un tono muy natural, aunque siempre recomendamos honestidad.\r\n-   **¿Puede enviar archivos?** Sí, puede enviar PDFs de catálogos, imágenes de productos o enlaces de interés.\r\n",
     "metadata": {
       "source": "catalog_process",
       "process_id": "E17",
+      "slug": "atencion-automatica-tu vía de comunicación preferida",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -191,6 +208,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E18",
+      "slug": "asistente-reservas-recordatorios",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -202,6 +220,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E19",
+      "slug": "captura-organizacion-solicitudes",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -213,6 +232,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E20",
+      "slug": "seguimiento-automatico-solicitudes",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -224,6 +244,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E21",
+      "slug": "solicitud-automatica-resenas",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -235,6 +256,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E22",
+      "slug": "atencion-automatica-tu vía de comunicación preferida",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -246,6 +268,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E23",
+      "slug": "reduccion-ausencias-citas",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
@@ -257,6 +280,7 @@
     "metadata": {
       "source": "catalog_process",
       "process_id": "E24",
+      "slug": "alta-automatica-clientes-solicitudes",
       "category": "Atención y Captura",
       "audience": "Client",
       "flow_type": "Revenue",
