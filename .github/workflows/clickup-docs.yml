@@ -13,44 +13,83 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract PR info
-        id: pr_info
-        run: |
-          echo "branch=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
-          echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
-          echo "author=${{ github.event.pull_request.user.login }}" >> $GITHUB_OUTPUT
-          echo "pr_url=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
-          echo "merged_at=${{ github.event.pull_request.merged_at }}" >> $GITHUB_OUTPUT
-
       - name: Create ClickUp Doc page
         env:
           CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
-          AUTHOR="${{ github.event.pull_request.user.login }}"
-          PR_URL="${{ github.event.pull_request.html_url }}"
-          MERGED_AT="${{ github.event.pull_request.merged_at }}"
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          python3 - <<'PYEOF'
+import os
+import json
+import urllib.request
+from datetime import datetime
 
-          # Escapar la descripción del PR para JSON
-          DESCRIPTION=$(cat << 'ENDDESC'
-          ${{ github.event.pull_request.body }}
-          ENDDESC
-          )
+token = os.environ["CLICKUP_TOKEN"]
+branch = os.environ["BRANCH"]
+author = os.environ["AUTHOR"]
+pr_url = os.environ["PR_URL"]
+merged_at = os.environ["MERGED_AT"]
+pr_number = os.environ["PR_NUMBER"]
+pr_title = os.environ["PR_TITLE"]
+pr_body = os.environ.get("PR_BODY", "") or ""
 
-          # Formatear fecha legible
-          FECHA=$(date -d "$MERGED_AT" '+%d/%m/%Y %H:%M' 2>/dev/null || echo "$MERGED_AT")
+# Formatear fecha
+try:
+    dt = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
+    fecha = dt.strftime("%d/%m/%Y %H:%M")
+except:
+    fecha = merged_at
 
-          # Construir contenido de la página
-          CONTENT="## 📋 Información del despliegue\n\n**🌿 Rama:** \`$BRANCH\`\n**👤 Autor:** $AUTHOR\n**📅 Fecha de merge:** $FECHA\n**🔗 Pull Request:** [#$PR_NUMBER - $PR_TITLE]($PR_URL)\n\n---\n\n## 📝 Descripción del PR\n\n$DESCRIPTION\n\n---\n\n## ✅ Subido a Staging"
+# Construir contenido markdown
+content = f"""## 📋 Información del despliegue
 
-          # Crear subpágina en el Doc de ClickUp
-          curl -s -X POST "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages" \
-            -H "Authorization: $CLICKUP_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"name\": \"$BRANCH\",
-              \"content\": \"$CONTENT\",
-              \"content_format\": \"text/md\"
-            }"
+**🌿 Rama:** `{branch}`
+**👤 Autor:** {author}
+**📅 Fecha de merge:** {fecha}
+**🔗 Pull Request:** [#{pr_number} - {pr_title}]({pr_url})
+
+---
+
+## 📝 Descripción del PR
+
+{pr_body.strip() if pr_body.strip() else "_Sin descripción_"}
+
+---
+
+## ✅ Subido a Staging
+"""
+
+# Construir y enviar payload JSON de forma segura
+payload = {
+    "name": branch,
+    "content": content,
+    "content_format": "text/md"
+}
+
+data = json.dumps(payload).encode("utf-8")
+
+req = urllib.request.Request(
+    "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages",
+    data=data,
+    headers={
+        "Authorization": token,
+        "Content-Type": "application/json"
+    },
+    method="POST"
+)
+
+try:
+    with urllib.request.urlopen(req) as response:
+        result = response.read().decode("utf-8")
+        print("Página creada en ClickUp correctamente")
+except urllib.error.HTTPError as e:
+    print(f"Error HTTP {e.code}: {e.read().decode('utf-8')}")
+    exit(1)
+
+PYEOF
