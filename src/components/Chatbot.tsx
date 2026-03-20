@@ -12,6 +12,14 @@ interface Message {
     action?: string;
 }
 
+type CollectionStep = 'chat' | 'asking_name' | 'asking_email' | 'asking_phone' | 'submitting' | 'completed';
+
+interface LeadData {
+    nombre: string;
+    email: string;
+    telefono: string;
+}
+
 const Chatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
@@ -21,6 +29,8 @@ const Chatbot: React.FC = () => {
     ]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasAnalyzed, setHasAnalyzed] = useState(false);
+    const [collectionStep, setCollectionStep] = useState<CollectionStep>('chat');
+    const [leadData, setLeadData] = useState<LeadData>({ nombre: '', email: '', telefono: '' });
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
@@ -54,40 +64,89 @@ const Chatbot: React.FC = () => {
         }
     }, [messages]);
 
+    const submitLead = async (finalData: LeadData) => {
+        setIsLoading(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('send-contact-email', {
+                body: {
+                    nombre: finalData.nombre,
+                    email: finalData.email,
+                    telefono: finalData.telefono,
+                    empresa: 'Chatbot Lead', // Default for chatbot
+                    source: 'chatbot',
+                    chatbotContext: messages.map(m => `${m.role.toUpperCase()}: ${m.content}`),
+                    selectedProcesses: [], // Chatbot leads might not have processes selected yet
+                    n8nHosting: 'setup'
+                },
+            });
+
+            if (error) throw error;
+
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: '¡Recibido! He pasado tus datos a un consultor humano. Te contactaremos en menos de 24 horas o lo antes posible para ayudarte con tu consulta. ¡Que tengas un gran día!'
+            }]);
+            setCollectionStep('completed');
+        } catch (err) {
+            console.error('Error submitting lead:', err);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: 'Lo siento, ha habido un error al guardar tus datos. Por favor, inténtalo de nuevo más tarde o escríbenos a team@immoralia.es'
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
 
         const userMessage = input.trim();
         setInput('');
         setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-        setIsLoading(true);
 
-        try {
-            // Llamada a la Edge Function de Supabase
-            const { data, error } = await supabase.functions.invoke('chat-assistant', {
-                body: { message: userMessage },
-            });
+        if (collectionStep === 'chat') {
+            setIsLoading(true);
+            try {
+                const { data, error } = await supabase.functions.invoke('chat-assistant', {
+                    body: { message: userMessage },
+                });
 
-            if (error) throw error;
+                if (error) throw error;
 
-            // Nota: Si usas streaming, la invocación estándar de supabase-js puede necesitar ajustes 
-            // o usar fetch directamente para manejar el ReadableStream.
-            // Por ahora manejamos la respuesta completa si no configuramos streaming en el cliente.
-
-            if (data?.error) {
-                setMessages(prev => [...prev, { role: 'assistant', content: `Error de la IA: ${data.error}` }]);
-            } else {
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    content: data.reply || 'Lo siento, hubo un error al recibir la respuesta.',
-                    action: data.action
-                }]);
+                if (data?.error) {
+                    setMessages(prev => [...prev, { role: 'assistant', content: `Error de la IA: ${data.error}` }]);
+                } else {
+                    setMessages(prev => [...prev, {
+                        role: 'assistant',
+                        content: data.reply || 'Lo siento, hubo un error al recibir la respuesta.',
+                        action: data.action
+                    }]);
+                }
+            } catch (err) {
+                console.error('Error in chatbot:', err);
+                setMessages(prev => [...prev, { role: 'assistant', content: 'Lo siento, he tenido un problema técnico. Por favor, inténtalo de nuevo más tarde.' }]);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (err) {
-            console.error('Error in chatbot:', err);
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Lo siento, he tenido un problema técnico. Por favor, inténtalo de nuevo más tarde.' }]);
-        } finally {
-            setIsLoading(false);
+        } else if (collectionStep === 'asking_name') {
+            setLeadData(prev => ({ ...prev, nombre: userMessage }));
+            setMessages(prev => [...prev, { role: 'assistant', content: `Gracias ${userMessage}. ¿Podrías decirme tu correo electrónico para enviarte la información?` }]);
+            setCollectionStep('asking_email');
+        } else if (collectionStep === 'asking_email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(userMessage)) {
+                setMessages(prev => [...prev, { role: 'assistant', content: 'Ese correo no parece válido. Por favor, introduce un email correcto.' }]);
+                return;
+            }
+            setLeadData(prev => ({ ...prev, email: userMessage }));
+            setMessages(prev => [...prev, { role: 'assistant', content: 'Perfecto. Por último, ¿un teléfono de contacto? (Es opcional, pero nos ayuda a agilizar la gestión)' }]);
+            setCollectionStep('asking_phone');
+        } else if (collectionStep === 'asking_phone') {
+            const finalData = { ...leadData, telefono: userMessage };
+            setLeadData(finalData);
+            setCollectionStep('submitting');
+            await submitLead(finalData);
         }
     };
 
@@ -180,20 +239,18 @@ const Chatbot: React.FC = () => {
                                                 m.content
                                             )}
                                         </div>
-                                        {m.action === 'handover' && (
+                                        {m.action === 'handover' && collectionStep === 'chat' && (
                                             <Button
                                                 size="sm"
                                                 variant="secondary"
                                                 className="w-full mt-1 border border-primary/20 gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
                                                 onClick={() => {
-                                                    console.log("Dispatching handover event with context...");
                                                     analyzeConversation('human');
-                                                    window.dispatchEvent(new CustomEvent('immoralia:show-contact', {
-                                                        detail: {
-                                                            source: 'chatbot',
-                                                            messages: messages.map(m => `${m.role.toUpperCase()}: ${m.content}`)
-                                                        }
-                                                    }));
+                                                    setMessages(prev => [...prev, { 
+                                                        role: 'assistant', 
+                                                        content: 'Claro, me parece perfecto. Para que un consultor humano pueda revisar tu caso y ayudarte mejor, ¿podrías decirme tu nombre?' 
+                                                    }]);
+                                                    setCollectionStep('asking_name');
                                                 }}
                                             >
                                                 <User className="w-4 h-4" /> Hablar con un humano
@@ -222,11 +279,12 @@ const Chatbot: React.FC = () => {
                         <div className="relative flex items-center gap-2">
                             <input
                                 type="text"
-                                placeholder="Pregunta algo..."
+                                placeholder={collectionStep === 'chat' ? "Pregunta algo..." : "Escribe aquí..."}
                                 className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 pr-12"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                disabled={collectionStep === 'completed' || collectionStep === 'submitting'}
                             />
                             <Button
                                 size="icon"

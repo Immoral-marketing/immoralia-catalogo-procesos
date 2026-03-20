@@ -46,11 +46,10 @@ const ContactRequestSchema = z.object({
     .email("Este email no parece válido. Revisa que esté bien escrito")
     .max(255),
   empresa: z
-    .string({ required_error: "Indícanos el nombre de tu agencia o empresa" })
+    .string()
     .trim()
-    .min(1, "Indícanos el nombre de tu agencia o empresa")
-    .min(2, "Empresa muy corta")
-    .max(200, "Empresa muy larga"),
+    .optional()
+    .or(z.literal("")),
   telefono: z.string().optional(),
   utm: z.string().optional(),
   source: z.string().optional(),
