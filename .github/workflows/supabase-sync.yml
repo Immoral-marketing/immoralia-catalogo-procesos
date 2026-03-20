@@ -1,0 +1,125 @@
+name: Sync Supabase to Production
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  sync-supabase:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'staging'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Run migrations on production
+        id: migrations
+        run: |
+          supabase db push \
+            --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
+            --password "" \
+            2>&1 | tee /tmp/migrations_output.txt
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/migrations_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy Edge Functions to production
+        id: functions
+        run: |
+          FUNCTIONS_OUTPUT=""
+          if [ -d "supabase/functions" ]; then
+            for func_dir in supabase/functions/*/; do
+              func_name=$(basename "$func_dir")
+              if [ "$func_name" != "_shared" ]; then
+                echo "Deploying function: $func_name"
+                result=$(supabase functions deploy "$func_name" \
+                  --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
+                  2>&1)
+                echo "$result"
+                FUNCTIONS_OUTPUT="$FUNCTIONS_OUTPUT\n- $func_name: $result"
+              fi
+            done
+          else
+            FUNCTIONS_OUTPUT="No edge functions found"
+          fi
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$FUNCTIONS_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Create ClickUp documentation page
+        env:
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+          MIGRATIONS_OUTPUT: ${{ steps.migrations.outputs.output }}
+          FUNCTIONS_OUTPUT: ${{ steps.functions.outputs.output }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request
+          from datetime import datetime
+
+          token = os.environ["CLICKUP_TOKEN"]
+          migrations = os.environ.get("MIGRATIONS_OUTPUT", "Sin cambios")
+          functions = os.environ.get("FUNCTIONS_OUTPUT", "Sin cambios")
+          pr_number = os.environ["PR_NUMBER"]
+          pr_title = os.environ["PR_TITLE"]
+          pr_url = os.environ["PR_URL"]
+          author = os.environ["AUTHOR"]
+          merged_at = os.environ["MERGED_AT"]
+
+          try:
+              dt = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
+              fecha = dt.strftime("%d/%m/%Y %H:%M")
+          except:
+              fecha = merged_at
+
+          content = "## Informacion del despliegue a Produccion\n\n"
+          content += "**Fecha:** " + fecha + "\n"
+          content += "**Autor:** " + author + "\n"
+          content += "**Pull Request:** [#" + pr_number + " - " + pr_title + "](" + pr_url + ")\n\n"
+          content += "---\n\n"
+          content += "## Migraciones SQL aplicadas\n\n"
+          content += "```\n" + migrations.strip() + "\n```\n\n"
+          content += "---\n\n"
+          content += "## Edge Functions desplegadas\n\n"
+          content += "```\n" + functions.strip() + "\n```\n\n"
+          content += "---\n\n"
+          content += "## Estado: Produccion sincronizada con Staging\n"
+
+          payload = json.dumps({
+              "name": "Deploy " + fecha + " - " + pr_title,
+              "content": content,
+              "content_format": "text/md",
+              "parent_page_id": "knvz4-205635"
+          }).encode("utf-8")
+
+          req = urllib.request.Request(
+              "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-72275/pages",
+              data=payload,
+              headers={"Authorization": token, "Content-Type": "application/json"},
+              method="POST"
+          )
+
+          try:
+              with urllib.request.urlopen(req) as r:
+                  print("Pagina creada en ClickUp:", r.read().decode("utf-8"))
+          except urllib.error.HTTPError as e:
+              print("Error ClickUp:", e.code, e.read().decode("utf-8"))
+              exit(1)
+          PYEOF
