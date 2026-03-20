@@ -1,0 +1,56 @@
+name: Document PR in ClickUp
+
+on:
+  pull_request:
+    branches:
+      - staging
+    types:
+      - closed
+
+jobs:
+  create-clickup-page:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract PR info
+        id: pr_info
+        run: |
+          echo "branch=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
+          echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+          echo "author=${{ github.event.pull_request.user.login }}" >> $GITHUB_OUTPUT
+          echo "pr_url=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+          echo "merged_at=${{ github.event.pull_request.merged_at }}" >> $GITHUB_OUTPUT
+
+      - name: Create ClickUp Doc page
+        env:
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          MERGED_AT="${{ github.event.pull_request.merged_at }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+
+          # Escapar la descripción del PR para JSON
+          DESCRIPTION=$(cat << 'ENDDESC'
+          ${{ github.event.pull_request.body }}
+          ENDDESC
+          )
+
+          # Formatear fecha legible
+          FECHA=$(date -d "$MERGED_AT" '+%d/%m/%Y %H:%M' 2>/dev/null || echo "$MERGED_AT")
+
+          # Construir contenido de la página
+          CONTENT="## 📋 Información del despliegue\n\n**🌿 Rama:** \`$BRANCH\`\n**👤 Autor:** $AUTHOR\n**📅 Fecha de merge:** $FECHA\n**🔗 Pull Request:** [#$PR_NUMBER - $PR_TITLE]($PR_URL)\n\n---\n\n## 📝 Descripción del PR\n\n$DESCRIPTION\n\n---\n\n## ✅ Subido a Staging"
+
+          # Crear subpágina en el Doc de ClickUp
+          curl -s -X POST "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages" \
+            -H "Authorization: $CLICKUP_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"$BRANCH\",
+              \"content\": \"$CONTENT\",
+              \"content_format\": \"text/md\"
+            }"
