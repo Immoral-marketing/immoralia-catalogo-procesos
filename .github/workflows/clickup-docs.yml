@@ -1,17 +1,17 @@
 name: Document PR in ClickUp
-
+ 
 on:
   pull_request:
     branches:
       - staging
     types:
       - closed
-
+ 
 jobs:
   create-clickup-page:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
+ 
     steps:
       - name: Create ClickUp Doc page
         env:
@@ -27,7 +27,7 @@ jobs:
           python3 << 'PYEOF'
           import os, json, urllib.request
           from datetime import datetime
-
+ 
           token = os.environ["CLICKUP_TOKEN"]
           branch = os.environ["BRANCH"]
           author = os.environ["AUTHOR"]
@@ -36,15 +36,15 @@ jobs:
           pr_number = os.environ["PR_NUMBER"]
           pr_title = os.environ["PR_TITLE"]
           pr_body = os.environ.get("PR_BODY", "") or ""
-
+ 
           try:
               dt = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
               fecha = dt.strftime("%d/%m/%Y %H:%M")
           except:
               fecha = merged_at
-
+ 
           descripcion = pr_body.strip() if pr_body.strip() else "_Sin descripcion_"
-
+ 
           content = "## Informacion del despliegue\n\n"
           content += "**Rama:** `" + branch + "`\n"
           content += "**Autor:** " + author + "\n"
@@ -55,24 +55,28 @@ jobs:
           content += descripcion + "\n\n"
           content += "---\n\n"
           content += "## Subido a Staging\n"
-
+ 
+          # Primero intentamos con knvz4-72275 (Doc raiz)
+          # y como pagina padre usamos knvz4-205455
           payload = json.dumps({
               "name": branch,
               "content": content,
-              "content_format": "text/md"
+              "content_format": "text/md",
+              "parent_page_id": "knvz4-205455"
           }).encode("utf-8")
-
+ 
           req = urllib.request.Request(
-              "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages",
+              "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-72275/pages",
               data=payload,
               headers={"Authorization": token, "Content-Type": "application/json"},
               method="POST"
           )
-
+ 
           try:
               with urllib.request.urlopen(req) as r:
                   print("Pagina creada en ClickUp:", r.read().decode("utf-8"))
           except urllib.error.HTTPError as e:
-              print("Error:", e.code, e.read().decode("utf-8"))
+              error_body = e.read().decode("utf-8")
+              print("Error:", e.code, error_body)
               exit(1)
           PYEOF
