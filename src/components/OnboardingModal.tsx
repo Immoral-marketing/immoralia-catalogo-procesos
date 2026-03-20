@@ -27,7 +27,7 @@ interface OnboardingModalProps {
 const SECTORS = [
     "Peluquería/estética", "Gimnasio/yoga", "Clínica", "Restauración", "Retail",
     "Inmobiliaria", "E-commerce", "Servicios profesionales", "Agencia/marketing", 
-    "Gestorías", "Centros Deportivos", "Otro"
+    "Gestoría", "Centros Deportivos", "Otro"
 ];
 
 const TOOLS_CATEGORIES = [
