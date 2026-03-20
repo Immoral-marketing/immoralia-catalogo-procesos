@@ -24,72 +24,55 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          python3 - <<'PYEOF'
-import os
-import json
-import urllib.request
-from datetime import datetime
+          python3 << 'PYEOF'
+          import os, json, urllib.request
+          from datetime import datetime
 
-token = os.environ["CLICKUP_TOKEN"]
-branch = os.environ["BRANCH"]
-author = os.environ["AUTHOR"]
-pr_url = os.environ["PR_URL"]
-merged_at = os.environ["MERGED_AT"]
-pr_number = os.environ["PR_NUMBER"]
-pr_title = os.environ["PR_TITLE"]
-pr_body = os.environ.get("PR_BODY", "") or ""
+          token = os.environ["CLICKUP_TOKEN"]
+          branch = os.environ["BRANCH"]
+          author = os.environ["AUTHOR"]
+          pr_url = os.environ["PR_URL"]
+          merged_at = os.environ["MERGED_AT"]
+          pr_number = os.environ["PR_NUMBER"]
+          pr_title = os.environ["PR_TITLE"]
+          pr_body = os.environ.get("PR_BODY", "") or ""
 
-# Formatear fecha
-try:
-    dt = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
-    fecha = dt.strftime("%d/%m/%Y %H:%M")
-except:
-    fecha = merged_at
+          try:
+              dt = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
+              fecha = dt.strftime("%d/%m/%Y %H:%M")
+          except:
+              fecha = merged_at
 
-# Construir contenido markdown
-content = f"""## 📋 Información del despliegue
+          descripcion = pr_body.strip() if pr_body.strip() else "_Sin descripcion_"
 
-**🌿 Rama:** `{branch}`
-**👤 Autor:** {author}
-**📅 Fecha de merge:** {fecha}
-**🔗 Pull Request:** [#{pr_number} - {pr_title}]({pr_url})
+          content = "## Informacion del despliegue\n\n"
+          content += "**Rama:** `" + branch + "`\n"
+          content += "**Autor:** " + author + "\n"
+          content += "**Fecha de merge:** " + fecha + "\n"
+          content += "**Pull Request:** [#" + pr_number + " - " + pr_title + "](" + pr_url + ")\n\n"
+          content += "---\n\n"
+          content += "## Descripcion del PR\n\n"
+          content += descripcion + "\n\n"
+          content += "---\n\n"
+          content += "## Subido a Staging\n"
 
----
+          payload = json.dumps({
+              "name": branch,
+              "content": content,
+              "content_format": "text/md"
+          }).encode("utf-8")
 
-## 📝 Descripción del PR
+          req = urllib.request.Request(
+              "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages",
+              data=payload,
+              headers={"Authorization": token, "Content-Type": "application/json"},
+              method="POST"
+          )
 
-{pr_body.strip() if pr_body.strip() else "_Sin descripción_"}
-
----
-
-## ✅ Subido a Staging
-"""
-
-# Construir y enviar payload JSON de forma segura
-payload = {
-    "name": branch,
-    "content": content,
-    "content_format": "text/md"
-}
-
-data = json.dumps(payload).encode("utf-8")
-
-req = urllib.request.Request(
-    "https://api.clickup.com/api/v3/workspaces/20639716/docs/knvz4-205455/pages",
-    data=data,
-    headers={
-        "Authorization": token,
-        "Content-Type": "application/json"
-    },
-    method="POST"
-)
-
-try:
-    with urllib.request.urlopen(req) as response:
-        result = response.read().decode("utf-8")
-        print("Página creada en ClickUp correctamente")
-except urllib.error.HTTPError as e:
-    print(f"Error HTTP {e.code}: {e.read().decode('utf-8')}")
-    exit(1)
-
-PYEOF
+          try:
+              with urllib.request.urlopen(req) as r:
+                  print("Pagina creada en ClickUp:", r.read().decode("utf-8"))
+          except urllib.error.HTTPError as e:
+              print("Error:", e.code, e.read().decode("utf-8"))
+              exit(1)
+          PYEOF
