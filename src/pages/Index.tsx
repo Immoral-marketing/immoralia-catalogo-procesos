@@ -191,19 +191,13 @@ const Index = () => {
                   })}
                 </div>
 
-                {onboardingAnswers ? (
+                {onboardingAnswers && (
                   <div className="pt-4 border-t border-border flex flex-col gap-2">
                     <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2">
                       <Settings2 className="w-4 h-4" /> Editar respuestas
                     </Button>
                     <Button variant="ghost" size="sm" onClick={handleReset} className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
                       <RotateCcw className="w-4 h-4" /> Restablecer
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="pt-4 border-t border-border flex flex-col gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2 border-primary/50 text-primary">
-                      <Sparkles className="w-4 h-4" /> Personalizar catálogo
                     </Button>
                   </div>
                 )}
