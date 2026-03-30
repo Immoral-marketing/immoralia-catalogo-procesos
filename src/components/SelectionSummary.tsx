@@ -156,25 +156,6 @@ export const SelectionSummary = ({
           </div>
         )}
 
-        {/* Spacer to push Calendly CTA down if needed, or just let it flow */}
-        <div className="mt-auto pt-2 pb-4">
-          {/* Calendly CTA moved inside scrollable area to save space for primary buttons */}
-          <div className="pt-4 border-t border-border space-y-4">
-            <div className="space-y-2">
-              <h4 className="font-bold text-foreground">¿No encuentras tu proceso?</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Agenda una llamada de 15–30 min y cuéntanos tu caso. Si encaja, te propondremos una auditoría para definir el alcance y automatizarlo.
-              </p>
-            </div>
-            <Button
-              variant="secondary"
-              className="w-full border-secondary text-secondary-foreground hover:bg-secondary/10"
-              onClick={() => onOpenCalendly?.()}
-            >
-              Agendar llamada
-            </Button>
-          </div>
-        </div>
       </div>
 
       {/* Floating Bottom Section (Always Visible) */}

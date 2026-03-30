@@ -7,7 +7,13 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
+import { Filter, Sparkles, Settings2, RotateCcw, HelpCircle } from "lucide-react";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { useSelection } from "@/lib/SelectionContext";
 import { GuidanceMessage } from "@/components/GuidanceMessage";
@@ -189,6 +195,26 @@ const Index = () => {
                       </Button>
                     );
                   })}
+
+                  <div className="pt-2 border-t border-border mt-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start h-[42px] px-4 gap-[11px] font-bold text-[14px] hover:bg-secondary/10 text-secondary"
+                          onClick={() => setShowCalendlyModal(true)}
+                        >
+                          <HelpCircle className="w-5 h-5 shrink-0" />
+                          <span className="truncate">Agendar llamada</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" sideOffset={10} className="max-w-[280px] p-4">
+                        <p className="text-sm leading-relaxed">
+                          Agenda una llamada de 15–30 min y cuéntanos tu caso. Si encaja, te propondremos una auditoría para definir el alcance y automatizarlo.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </div>
 
                 {onboardingAnswers && (
