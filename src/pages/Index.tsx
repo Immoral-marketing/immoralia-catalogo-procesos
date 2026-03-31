@@ -122,7 +122,13 @@ const Index = () => {
             <div className="flex items-center gap-2">
               <Link to="/landing/centros-deportivos">
                 <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
-                  <Sparkles className="w-4 h-4 text-cyan-400" /> Landing Centros Deportivos
+                  <Sparkles className="w-4 h-4 text-cyan-400" /> Centros Deportivos
+                </Button>
+              </Link>
+              
+              <Link to="/landing/gestorias">
+                <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
+                  <Sparkles className="w-4 h-4 text-cyan-400" /> Gestorías
                 </Button>
               </Link>
               
