@@ -92,9 +92,9 @@ const SportsLanding = () => {
             <Zap className="w-3 h-3 text-cyan-400" /> ESPECIAL CENTROS DEPORTIVOS
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-            Escala tu Centro sin <br className="hidden md:block" />
+            De gestionar tu Centro Deportivo <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-              Morir en la Gestión
+              a liderar tu negocio.
             </span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
