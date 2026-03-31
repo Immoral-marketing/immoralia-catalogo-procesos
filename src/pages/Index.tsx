@@ -114,9 +114,9 @@ const Index = () => {
         <div className="container mx-auto px-6 md:px-8 lg:px-12 py-6">
           <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
             <div className="flex flex-col pl-2">
-              <div className="flex items-center gap-3">
+              <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
                 <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
-              </div>
+              </Link>
             </div>
 
             <div className="flex items-center gap-2">

@@ -106,7 +106,9 @@ async function syncProcesses() {
       sectores: getArray('sectores'),
       herramientas: getArray('herramientas'),
       dolores: getArray('dolores'),
-      canales: getArray('canales') || []
+      canales: getArray('canales') || [],
+      landing_slug: getValue('landing_slug'),
+      integration_domains: getArray('integration_domains')
     };
 
     // Validación básica para evitar errores de base de datos
