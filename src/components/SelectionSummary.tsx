@@ -18,6 +18,8 @@ interface SelectionSummaryProps {
   n8nHosting?: 'setup' | 'own';
   onHostingChange?: (value: 'setup' | 'own') => void;
   onShare?: () => void;
+  variant?: 'card' | 'drawer';
+  className?: string;
 }
 
 export const SelectionSummary = ({
@@ -26,14 +28,16 @@ export const SelectionSummary = ({
   n8nHosting = 'setup',
   onHostingChange,
   onShare,
+  variant = 'card',
+  className,
 }: SelectionSummaryProps) => {
   const { selectedProcessIds, toggleProcess } = useSelection();
   const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
   const count = selectedProcesses.length;
 
 
-  return (
-    <Card className="bg-card border-border p-6 sticky top-24 flex flex-col max-h-[calc(100vh-7rem)] shadow-lg">
+  const content = (
+    <>
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-0 flex flex-col">
         <h3 className="text-xl font-bold text-foreground mb-4 shrink-0">Tu selección</h3>
@@ -156,25 +160,6 @@ export const SelectionSummary = ({
           </div>
         )}
 
-        {/* Spacer to push Calendly CTA down if needed, or just let it flow */}
-        <div className="mt-auto pt-2 pb-4">
-          {/* Calendly CTA moved inside scrollable area to save space for primary buttons */}
-          <div className="pt-4 border-t border-border space-y-4">
-            <div className="space-y-2">
-              <h4 className="font-bold text-foreground">¿No encuentras tu proceso?</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Agenda una llamada de 15–30 min y cuéntanos tu caso. Si encaja, te propondremos una auditoría para definir el alcance y automatizarlo.
-              </p>
-            </div>
-            <Button
-              variant="secondary"
-              className="w-full border-secondary text-secondary-foreground hover:bg-secondary/10"
-              onClick={() => onOpenCalendly?.()}
-            >
-              Agendar llamada
-            </Button>
-          </div>
-        </div>
       </div>
 
       {/* Floating Bottom Section (Always Visible) */}
@@ -221,6 +206,20 @@ export const SelectionSummary = ({
           </Button>
         </div>
       </div>
+    </>
+  );
+
+  if (variant === 'drawer') {
+    return (
+      <div className={cn("flex flex-col h-full", className)}>
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Card className={cn("bg-card border-border p-6 sticky top-24 flex flex-col max-h-[calc(100vh-7rem)] shadow-lg", className)}>
+      {content}
     </Card>
   );
 };

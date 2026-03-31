@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { processes, categories, Process } from "@/data/processes";
+import { Link } from "react-router-dom";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
@@ -7,7 +8,13 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Filter, Sparkles, Settings2, RotateCcw } from "lucide-react";
+import { Filter, Sparkles, Settings2, RotateCcw, HelpCircle } from "lucide-react";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { useSelection } from "@/lib/SelectionContext";
 import { GuidanceMessage } from "@/components/GuidanceMessage";
@@ -112,22 +119,36 @@ const Index = () => {
               </div>
             </div>
 
-            {onboardingAnswers ? (
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2">
-                  <Settings2 className="w-4 h-4" /> Editar respuestas
+            <div className="flex items-center gap-2">
+              <Link to="/landing/centros-deportivos">
+                <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
+                  <Sparkles className="w-4 h-4 text-cyan-400" /> Centros Deportivos
                 </Button>
-                <Button variant="ghost" size="sm" onClick={handleReset} className="text-muted-foreground hover:text-destructive">
-                  <RotateCcw className="w-4 h-4" /> Restablecer
+              </Link>
+              
+              <Link to="/landing/gestorias">
+                <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
+                  <Sparkles className="w-4 h-4 text-cyan-400" /> Gestorías
                 </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-primary/50 text-primary hover:bg-primary/5">
-                  <Sparkles className="w-4 h-4" /> Personalizar catálogo
-                </Button>
-              </div>
-            )}
+              </Link>
+              
+              {onboardingAnswers ? (
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2">
+                    <Settings2 className="w-4 h-4" /> Editar respuestas
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleReset} className="text-muted-foreground hover:text-destructive">
+                    <RotateCcw className="w-4 h-4" /> Restablecer
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-primary/50 text-primary hover:bg-primary/5">
+                    <Sparkles className="w-4 h-4" /> Personalizar catálogo
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header >
@@ -189,21 +210,35 @@ const Index = () => {
                       </Button>
                     );
                   })}
+
+                  <div className="pt-2 border-t border-border mt-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start h-[42px] px-4 gap-[11px] font-bold text-[14px] hover:bg-secondary/10 text-secondary"
+                          onClick={() => setShowCalendlyModal(true)}
+                        >
+                          <HelpCircle className="w-5 h-5 shrink-0" />
+                          <span className="truncate">Agendar llamada</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" sideOffset={10} className="max-w-[280px] p-4">
+                        <p className="text-sm leading-relaxed">
+                          Agenda una llamada de 15–30 min y cuéntanos tu caso. Si encaja, te propondremos una auditoría para definir el alcance y automatizarlo.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </div>
 
-                {onboardingAnswers ? (
+                {onboardingAnswers && (
                   <div className="pt-4 border-t border-border flex flex-col gap-2">
                     <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2">
                       <Settings2 className="w-4 h-4" /> Editar respuestas
                     </Button>
                     <Button variant="ghost" size="sm" onClick={handleReset} className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
                       <RotateCcw className="w-4 h-4" /> Restablecer
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="pt-4 border-t border-border flex flex-col gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2 border-primary/50 text-primary">
-                      <Sparkles className="w-4 h-4" /> Personalizar catálogo
                     </Button>
                   </div>
                 )}

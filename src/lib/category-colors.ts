@@ -1,7 +1,5 @@
 export const getCategoryColorClass = (categoriaNombre: string): string => {
   switch (categoriaNombre) {
-    case "Atención y Captura":
-      return "bg-purple-500/10 text-purple-400 border-purple-500/30";
     case "Atención y Ventas":
       return "bg-pink-500/10 text-pink-400 border-pink-500/30";
     case "Auditoría tecnológica":
