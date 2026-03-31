@@ -3,8 +3,7 @@ name: Auto PR con descripcion
 on:
   push:
     branches:
-      - 'fix/**'
-      - 'feat/**'
+      - '**'
 
 jobs:
   create-pr:
@@ -18,22 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Leer descripcion de antigravity
-        id: pr_body
-        run: |
-          if [ -f ".github/PR_DESCRIPTION.md" ]; then
-            echo "body<<EOF" >> $GITHUB_OUTPUT
-            cat .github/PR_DESCRIPTION.md >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          else
-            echo "body=PR creado automaticamente desde antigravity." >> $GITHUB_OUTPUT
-          fi
-
       - name: Crear PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: staging
-          title: "[${{ github.ref_name }}] ${{ github.event.head_commit.message }}"
-          body: ${{ steps.pr_body.outputs.body }}
+          title: "Test PR automatico desde ${{ github.ref_name }}"
+          body: "PR de prueba"
           draft: false
