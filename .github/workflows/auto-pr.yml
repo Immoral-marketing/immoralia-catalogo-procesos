@@ -1,4 +1,4 @@
-name: 🤖 Auto PR con descripción
+name: Auto PR con descripcion
 
 on:
   push:
@@ -8,17 +8,17 @@ on:
 
 jobs:
   create-pr:
-    name: Crear PR automático
+    name: Crear PR automatico
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Leer descripción generada por antigravity
+      - name: Leer descripcion de antigravity
         id: pr_body
         run: |
           if [ -f ".github/PR_DESCRIPTION.md" ]; then
@@ -26,10 +26,10 @@ jobs:
             cat .github/PR_DESCRIPTION.md >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
           else
-            echo "body=🤖 PR creado automáticamente desde antigravity." >> $GITHUB_OUTPUT
+            echo "body=PR creado automaticamente desde antigravity." >> $GITHUB_OUTPUT
           fi
 
-      - name: Crear PR si no existe
+      - name: Crear PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,26 +37,3 @@ jobs:
           title: "[${{ github.ref_name }}] ${{ github.event.head_commit.message }}"
           body: ${{ steps.pr_body.outputs.body }}
           draft: false
-
-      - name: Esperar preview de Vercel
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
-        id: waitForVercel
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 180
-          check_interval: 10
-
-      - name: Comentar URL en el PR
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: vercel-preview
-          message: |
-            ## 🚀 Preview listo
-
-            | | |
-            |---|---|
-            | **🔗 URL** | ${{ steps.waitForVercel.outputs.url }} |
-            | **🌿 Rama** | `${{ github.ref_name }}` |
-            | **📦 Commit** | `${{ github.sha }}` |
-
-            > Revisa visualmente y haz merge cuando estés listo ✅
