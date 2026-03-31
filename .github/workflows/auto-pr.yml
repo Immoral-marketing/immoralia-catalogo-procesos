@@ -1,27 +1,38 @@
-name: Auto PR con descripcion
+name: Preview URL en PR
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches:
-      - '**'
+      - staging
 
 jobs:
-  create-pr:
-    name: Crear PR automatico
+  comment-preview-url:
+    name: Comentar Preview de Vercel
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      contents: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Crear PR
-        uses: peter-evans/create-pull-request@v6
+      - name: Esperar preview de Vercel
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: waitForVercel
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: staging
-          title: "Test PR automatico desde ${{ github.ref_name }}"
-          body: "PR de prueba"
-          draft: false
+          max_timeout: 180
+          check_interval: 10
+
+      - name: Comentar URL en el PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vercel-preview
+          message: |
+            ## Preview listo
+
+            | | |
+            |---|---|
+            | **URL** | ${{ steps.waitForVercel.outputs.url }} |
+            | **Rama** | `${{ github.ref_name }}` |
+            | **Commit** | `${{ github.sha }}` |
+
+            > Revisa y haz merge cuando estes listo
