@@ -1,19 +1,43 @@
-name: 🤖 Preview URL en PR
+name: 🤖 Auto PR con descripción
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
     branches:
-      - staging
+      - 'fix/**'
+      - 'feat/**'
 
 jobs:
-  comment-preview-url:
-    name: Comentar Preview de Vercel
+  create-pr:
+    name: Crear PR automático
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: read
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Leer descripción generada por antigravity
+        id: pr_body
+        run: |
+          if [ -f ".github/PR_DESCRIPTION.md" ]; then
+            echo "body<<EOF" >> $GITHUB_OUTPUT
+            cat .github/PR_DESCRIPTION.md >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "body=🤖 PR creado automáticamente desde antigravity." >> $GITHUB_OUTPUT
+          fi
+
+      - name: Crear PR si no existe
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: staging
+          title: "[${{ github.ref_name }}] ${{ github.event.head_commit.message }}"
+          body: ${{ steps.pr_body.outputs.body }}
+          draft: false
+
       - name: Esperar preview de Vercel
         uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
         id: waitForVercel
