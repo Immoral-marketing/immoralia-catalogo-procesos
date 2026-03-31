@@ -8,6 +8,7 @@ import ProcessDetail from "./pages/ProcessDetail";
 import SetupInfo from "./pages/SetupInfo";
 import SportsLanding from "./pages/SportsLanding";
 import GestoriasLanding from "./pages/GestoriasLanding";
+import SectorSelector from "./pages/SectorSelector";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
@@ -22,7 +23,8 @@ const App = () => (
       <SelectionProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<SectorSelector />} />
+            <Route path="/catalogo/completo" element={<Index />} />
             <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
             <Route path="/info/setup-automatizacion" element={<SetupInfo />} />
             <Route path="/landing/centros-deportivos" element={<SportsLanding />} />

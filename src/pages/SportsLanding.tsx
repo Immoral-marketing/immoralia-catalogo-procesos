@@ -74,7 +74,7 @@ const SportsLanding = () => {
             <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">
+            <Link to="/catalogo/completo" className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">
               Ver Catálogo Completo
             </Link>
             <Button onClick={scrollToProcesses} className="bg-cyan-600 hover:bg-cyan-500 text-white border-none">
