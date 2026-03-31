@@ -1,9 +1,9 @@
 name: 🤖 Auto PR con descripción
 
 on:
-  push:
-    branches-ignore:
-      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
       - staging
 
 jobs:
