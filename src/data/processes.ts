@@ -111,7 +111,7 @@ export const processes: Process[] = [
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce", "Gestoria"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     integration_domains: ["ERP"]
@@ -160,7 +160,7 @@ export const processes: Process[] = [
       "Generamos un informe automático"
     ],
     personalizacion: "Decide cuándo recibes el informe y por qué canal (tu vía de comunicación preferida, mensajería, etc.).",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Gestoria"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
@@ -309,7 +309,7 @@ export const processes: Process[] = [
       "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing"],
+    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
@@ -873,7 +873,7 @@ export const processes: Process[] = [
       "Guardamos el contexto para retomar sin perder información"
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética"],
+    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria"],
     related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
     integration_domains: ["OTHER"]
   },
@@ -921,7 +921,7 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Clínicas", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales"],
+    sectores: ["Clínicas", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"]
   },
@@ -1017,7 +1017,7 @@ export const processes: Process[] = [
       "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
     ],
     personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
-    sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética"],
+    sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética", "Gestoria"],
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
     integration_domains: ["CRM"]
   },
@@ -1064,7 +1064,7 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restaurantes", "Clínicas", "Peluquería/estética", "Retail"],
+    sectores: ["Restaurantes", "Clínicas", "Peluquería/estética", "Retail", "Gestoria"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"]
   },
@@ -1209,7 +1209,7 @@ export const processes: Process[] = [
       "Enviamos el mensaje de bienvenida con los acceso"
     ],
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria", "Gestoria"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
@@ -1614,7 +1614,7 @@ export const processes: Process[] = [
     descripcionDetallada: "2 horas después de la clase, el asistente recibe una encuesta de 1-2 preguntas. Las valoraciones bajas generan una alerta inmediata al responsable.",
     pasos: ["Trigger post-asistencia","Envío de micro-encuesta","Alertas por malas valoraciones"],
     personalizacion: "Elige las preguntas y el tiempo de espera post-clase.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Gestoria"],
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos"
@@ -1759,10 +1759,11 @@ export const processes: Process[] = [
     id: "GS1",
     codigo: "GS1",
     slug: "recopilacion-mensual-documentos",
-    categoria: "A",
-    categoriaNombre: "Facturas y Gastos",
+    categoria: "F",
+    categoriaNombre: "Auditoría tecnológica",
     nombre: "Recopilación automática de documentos",
     tagline: "Solicita y centraliza la documentación de tus clientes cada mes sin perseguir a nadie.",
+    landing_slug: "gestorias",
     benefits: [
       "Ahorro de 5+ horas mensuales en gestión documental",
       "Reducción drástica de retrasos en cierres contables",
@@ -1798,6 +1799,7 @@ export const processes: Process[] = [
     slug: "alertas-vencimientos-fiscales",
     categoria: "C",
     categoriaNombre: "Finanzas y Tesorería",
+    landing_slug: "gestorias",
     nombre: "Alertas de vencimientos fiscales y laborales",
     tagline: "Evita sanciones y recargos con un calendario de impuestos automatizado.",
     benefits: [
@@ -1835,6 +1837,7 @@ export const processes: Process[] = [
     slug: "seguimiento-expedientes",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
+    landing_slug: "gestorias",
     nombre: "Seguimiento del estado de cada expediente",
     tagline: "Tu cliente sabe en qué punto está su gestión sin tener que llamarte.",
     benefits: [
@@ -1870,8 +1873,9 @@ export const processes: Process[] = [
     id: "GS4",
     codigo: "GS4",
     slug: "informes-mensuales-clientes",
-    categoria: "D",
-    categoriaNombre: "Internos Agencias",
+    categoria: "C",
+    categoriaNombre: "Finanzas y Tesorería",
+    landing_slug: "gestorias",
     nombre: "Informes mensuales automáticos para el cliente",
     tagline: "Entrega valor cada mes con un resumen automático de la situación de tu cliente.",
     benefits: [
@@ -1909,6 +1913,7 @@ export const processes: Process[] = [
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Finanzas y Tesorería",
+    landing_slug: "gestorias",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -1946,6 +1951,7 @@ export const processes: Process[] = [
     slug: "gestion-altas-empleados",
     categoria: "D",
     categoriaNombre: "Internos Agencias",
+    landing_slug: "gestorias",
     nombre: "Alta de nuevos empleados de clientes",
     tagline: "Recopila datos y genera el checklist de contratación al instante.",
     benefits: [
@@ -1983,6 +1989,7 @@ export const processes: Process[] = [
     slug: "vencimientos-contratos-laborales",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
+    landing_slug: "gestorias",
     nombre: "Control de vencimientos de contratos temporales",
     tagline: "Controla renovaciones y extinciones antes de que se pase el plazo legal.",
     benefits: [
@@ -2020,6 +2027,7 @@ export const processes: Process[] = [
     slug: "envio-automatico-nominas",
     categoria: "D",
     categoriaNombre: "Internos Agencias",
+    landing_slug: "gestorias",
     nombre: "Envío automático de nóminas a empleados",
     tagline: "Distribuye todos los recibos de salarios en un clic sin envíos manuales.",
     benefits: [
@@ -2057,6 +2065,7 @@ export const processes: Process[] = [
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Internos Agencias",
+    landing_slug: "gestorias",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2094,6 +2103,7 @@ export const processes: Process[] = [
     slug: "comunicaciones-calendario-fiscal",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
+    landing_slug: "gestorias",
     nombre: "Comunicaciones estacionales por calendario fiscal",
     tagline: "Mantén a tus clientes informados y tranquilos con avisos automáticos útiles.",
     benefits: [
@@ -2129,8 +2139,9 @@ export const processes: Process[] = [
     id: "GS11",
     codigo: "GS11",
     slug: "alertas-caducidad-documentos",
-    categoria: "C",
-    categoriaNombre: "Finanzas y Tesorería",
+    categoria: "F",
+    categoriaNombre: "Auditoría tecnológica",
+    landing_slug: "gestorias",
     nombre: "Alertas de documentos próximos a caducar",
     tagline: "No permitas que un certificado o poder caducado frene una gestión vital.",
     benefits: [
@@ -2240,8 +2251,9 @@ export const processes: Process[] = [
     id: "GS14",
     codigo: "GS14",
     slug: "clasificacion-automatica-documentos",
-    categoria: "D",
-    categoriaNombre: "Internos Agencias",
+    categoria: "F",
+    categoriaNombre: "Auditoría tecnológica",
+    landing_slug: "gestorias",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -2279,6 +2291,7 @@ export const processes: Process[] = [
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
+    landing_slug: "gestorias",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
@@ -2308,6 +2321,44 @@ export const processes: Process[] = [
     sectores: ["Gestoria", "Servicios profesionales"],
     herramientas: ["ActiveCampaign/Brevo", "Make", "CRM"],
     dolores: ["Solo hablo con mis clientes cuando hay problemas o toca pagar", "Se me olvidan clientes que solían traerme trámites y ya no vienen"],
+    integration_domains: ["CRM", "OTHER"]
+  },
+  {
+    id: "GS16",
+    codigo: "GS16",
+    slug: "alta-automatizada-nuevos-clientes-gestoria",
+    categoria: "D",
+    categoriaNombre: "Internos Agencias",
+    nombre: "Alta automatizada de nuevos clientes (Gestoría)",
+    tagline: "Recopila datos, documentos y genera el contrato de servicios al instante.",
+    benefits: [
+      "Onboarding impecable que enamora al cliente desde el primer día",
+      "Eliminación de la entrada manual de datos en el ERP",
+      "Seguridad total con firma digital de mandatos y contratos"
+    ],
+    recomendado: true,
+    descripcionDetallada: "Cada vez que entra un nuevo cliente, se activa una secuencia automática: solicita sus datos fiscales, escanea su DNI/CIF, genera el mandato SEPA y el contrato de servicios para firma digital. Una vez firmado, crea automáticamente la ficha en tu software de gestión y archiva la documentación en su carpeta correspondiente.",
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Firma Digital", "Formularios", "ERP"]
+    },
+    how_it_works_steps: [
+      { title: "Captura de onboarding", short: "El cliente rellena su ficha.", detail: "Enviamos un link seguro donde el cliente aporta sus datos y documentos iniciales." },
+      { title: "Firma y contrato", short: "Generamos el papeleo legal.", detail: "Se envía automáticamente el contrato de servicios para su firma biométrica o con certificado." },
+      { title: "Sincronización ERP", short: "Creamos la ficha de cliente.", detail: "Los datos validados se vuelcan directamente en tu sistema de gestión sin errores." }
+    ],
+    pasos: [
+      "Activamos el formulario de bienvenida de marca blanca",
+      "Configuramos la generación dinámica de contratos en PDF",
+      "Integramos la pasarela de firma digital",
+      "Sincronizamos los datos con tu software contable/laboral"
+    ],
+    personalizacion: "Define el contenido de tu kit de bienvenida y los documentos legales necesarios para tu actividad.",
+    sectores: ["Gestoria", "Servicios profesionales"],
+    herramientas: ["SignNow/Docusign", "Make", "Formularios Cloud"],
+    dolores: ["El proceso de alta de un cliente me quita demasiado tiempo", "A veces empezamos a trabajar sin tener el contrato firmado"],
+    landing_slug: "gestorias",
     integration_domains: ["CRM", "OTHER"]
   },
 ];

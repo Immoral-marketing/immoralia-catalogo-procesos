@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import ProcessDetail from "./pages/ProcessDetail";
 import SetupInfo from "./pages/SetupInfo";
 import SportsLanding from "./pages/SportsLanding";
+import GestoriasLanding from "./pages/GestoriasLanding";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
             <Route path="/info/setup-automatizacion" element={<SetupInfo />} />
             <Route path="/landing/centros-deportivos" element={<SportsLanding />} />
+            <Route path="/landing/gestorias" element={<GestoriasLanding />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
