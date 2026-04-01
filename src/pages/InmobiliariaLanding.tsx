@@ -47,6 +47,7 @@ const InmobiliariaLanding = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
@@ -125,7 +126,7 @@ const InmobiliariaLanding = () => {
             <Button size="lg" onClick={scrollToProcesses} className="bg-emerald-600 hover:bg-emerald-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-emerald-900/20 transition-all hover:scale-105">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('https://cal.com/antigravity/discovery', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
+            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
               Agendar Videollamada
             </Button>
           </div>
@@ -302,10 +303,10 @@ const InmobiliariaLanding = () => {
             Deja de perder leads por falta de tiempo y empieza a cerrar más operaciones con automatización inteligente. Solicitar oferta ahora personalizada.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-emerald-600 hover:bg-emerald-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(5,150,105,0.3)] transition-all hover:scale-105">
+            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-emerald-600 hover:bg-emerald-500 h-16 px-10 text-xl shadow-lg shadow-emerald-900/40 transition-all hover:scale-105">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5" onClick={() => window.open('https://cal.com/antigravity/discovery', '_blank')}>
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
               Agendar Llamada
             </Button>
           </div>
@@ -371,6 +372,7 @@ const InmobiliariaLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Inmobiliaria"
+        accentColor="#10b981"
       />
     </div>
   );
