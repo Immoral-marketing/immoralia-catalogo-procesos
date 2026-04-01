@@ -921,7 +921,7 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Clínicas", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria"],
+    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"]
   },
@@ -1064,7 +1064,7 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restaurantes", "Clínicas", "Peluquería/estética", "Retail", "Gestoria"],
+    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"]
   },
@@ -1160,7 +1160,7 @@ export const processes: Process[] = [
       "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
     ],
     personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Clínica", "Gimnasio/yoga", "Servicios profesionales"],
+    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales"],
     herramientas: ["Mensajería", "Calendario"],
     dolores: ["Se olvidan de la cita / hay muchas ausencias"],
     related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"]
@@ -1258,7 +1258,7 @@ export const processes: Process[] = [
       "Roadmap por fases + backlog priorizado"
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínica", "Restauración"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínicas / Salud / Dental / Veterinaria", "Restauración", "Construcción & Reformas", "Academias / Formación"],
     herramientas: [],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"]
   },
@@ -1332,7 +1332,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtro de ex-socios (baja > 3 meses)","Envío de oferta vía Email/WhatsApp","Seguimiento de respuesta"],
     personalizacion: "Define el tiempo de inactividad y las fechas de lanzamiento.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
     landing_slug: "centros-deportivos"
@@ -1382,7 +1382,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de 'Prueba sin Alta'","Secuencia 15/30/60 días","Aviso a equipo si hay respuesta"],
     personalizacion: "Define los incentivos y el número de recordatorios.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
     landing_slug: "centros-deportivos"
@@ -1407,7 +1407,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger a los 30 días del alta","Envío de link único de referido","Atribución automática de premio"],
     personalizacion: "Elige el premio (mes gratis, descuento, etc.).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
     landing_slug: "centros-deportivos"
@@ -1432,7 +1432,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Análisis de frecuencia de asistencia","Detección de 'riesgo de abandono'","Mensaje preventivo personalizado"],
     personalizacion: "Ajusta los días de inactividad según la intensidad del centro.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos"
@@ -1457,7 +1457,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por antigüedad o cambio de nivel","Envío de oferta de material","Link a tienda online"],
     personalizacion: "Elige qué material recomendar por cada nivel/antigüedad.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","ActiveCampaign","Shopify"],
     dolores: ["Quiero automatizar presupuestos y respuestas"],
     landing_slug: "centros-deportivos"
@@ -1482,7 +1482,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Conteo automático de sesiones consumidas","Aviso de 'bono pronto a agotar'","Link de renovación inmediata"],
     personalizacion: "Configura el número de clases para el aviso de renovación.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
     landing_slug: "centros-deportivos"
@@ -1632,7 +1632,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtrado de alumnos elegibles","Envío masivo de invitaciones","Consolidación de confirmaciones"],
     personalizacion: "Ajusta los requisitos por cada nivel o cinturón.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Google Sheets","Gmail","WhatsApp Business API"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos"
@@ -1657,7 +1657,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Reporte de lesión","Alerta automática a instructores","Programación de check-up de salud"],
     personalizacion: "Define los tipos de lesiones y el protocolo de seguimiento.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos"
@@ -1707,7 +1707,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Segmentación Alumno vs Tutor","Alertas de asistencia en tiempo real","Recordatorios de eventos infantiles"],
     personalizacion: "Elige qué avisos enviar a los padres y por qué canal.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","WhatsApp Business API","ActiveCampaign"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos"
@@ -1732,7 +1732,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Agregación de actividad mensual","Generación de reporte visual","Envío personalizado automatizado"],
     personalizacion: "Define qué hitos celebrar (ej. '10 clases este mes').",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos"
@@ -1882,7 +1882,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lanzamiento de workflow por nuevo contrato","Distribución de kit de bienvenida digital","Seguimiento de tareas de onboarding"],
     personalizacion: "Adapta el checklist por rol (staff, instructor, alumno).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Notion","Gmail"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos"

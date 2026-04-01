@@ -9,7 +9,9 @@ import {
   Users, 
   ChevronRight,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  HardHat,
+  GraduationCap
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,12 +39,30 @@ const sectors = [
   },
   {
     id: "health",
-    title: "Clínicas / Salud",
-    description: "Centros de fisioterapia, estética y consultas médicas.",
+    title: "Clínicas / Salud / Dental / Veterinaria",
+    description: "Centros de fisioterapia, estética, consultas médicas, clínicas dentales y centros veterinarios.",
     icon: Stethoscope,
     path: "/catalogo/completo",
     status: "soon",
     accent: "from-purple-500/10 to-pink-500/10"
+  },
+  {
+    id: "construction",
+    title: "Construcción & Reformas",
+    description: "Constructoras, estudios de arquitectura, empresas de reformas y mantenimiento.",
+    icon: HardHat,
+    path: "/catalogo/completo",
+    status: "soon",
+    accent: "from-orange-500/10 to-amber-500/10"
+  },
+  {
+    id: "academias",
+    title: "Academias / Formación",
+    description: "Academias de idiomas, centros de formación, autoescuelas y formación profesional.",
+    icon: GraduationCap,
+    path: "/catalogo/completo",
+    status: "soon",
+    accent: "from-indigo-500/10 to-purple-500/10"
   },
   {
     id: "food",
