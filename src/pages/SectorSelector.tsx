@@ -42,63 +42,63 @@ const sectors = [
     title: "Clínicas / Salud / Dental / Veterinaria",
     description: "Centros de fisioterapia, estética, consultas médicas, clínicas dentales y centros veterinarios.",
     icon: Stethoscope,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-purple-500/10 to-pink-500/10"
+    path: "/landing/salud",
+    status: "active",
+    accent: "from-cyan-500/20 to-indigo-500/20"
   },
   {
     id: "construction",
     title: "Construcción & Reformas",
     description: "Constructoras, estudios de arquitectura, empresas de reformas y mantenimiento.",
     icon: HardHat,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-orange-500/10 to-amber-500/10"
+    path: "/landing/construccion",
+    status: "active",
+    accent: "from-orange-500/10 to-amber-500/20"
   },
   {
     id: "academias",
     title: "Academias / Formación",
     description: "Academias de idiomas, centros de formación, autoescuelas y formación profesional.",
     icon: GraduationCap,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-indigo-500/10 to-purple-500/10"
+    path: "/landing/academias",
+    status: "active",
+    accent: "from-indigo-500/20 to-purple-500/20"
   },
   {
     id: "food",
     title: "Restauración",
     description: "Restaurantes, cafeterías y grupos de hostelería.",
     icon: Utensils,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-orange-500/10 to-red-500/10"
+    path: "/landing/restauracion",
+    status: "active",
+    accent: "from-orange-500/20 to-red-500/20"
   },
   {
     id: "ecommerce",
     title: "E-commerce / Retail",
     description: "Tiendas online, moda y comercio minorista.",
     icon: ShoppingBag,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-blue-500/10 to-indigo-500/10"
+    path: "/landing/ecommerce",
+    status: "active",
+    accent: "from-blue-500/20 to-cyan-500/20"
   },
   {
     id: "realestate",
     title: "Inmobiliarias",
     description: "Agencias inmobiliarias y gestión de propiedades.",
     icon: Home,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-emerald-500/10 to-teal-500/10"
+    path: "/landing/inmobiliaria",
+    status: "active",
+    accent: "from-emerald-500/20 to-teal-500/20"
   },
   {
     id: "consultancy",
     title: "Consultoría / Agencias",
     description: "Agencias de marketing, consultoras y servicios B2B.",
     icon: Users,
-    path: "/catalogo/completo",
-    status: "soon",
-    accent: "from-yellow-500/10 to-amber-500/10"
+    path: "/landing/agencias",
+    status: "active",
+    accent: "from-rose-500/20 to-pink-500/20"
   }
 ];
 
