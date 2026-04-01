@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { processes, categories } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronRight, 
@@ -16,7 +17,8 @@ import {
   TrendingDown,
   Clock,
   CheckCircle2,
-  LayoutGrid
+  LayoutGrid,
+  Sparkles
 } from "lucide-react";
 import { 
   Sheet, 
@@ -32,11 +34,23 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
+import { isOnboardingCompleted, getOnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const SportsLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    // Popup after 15 seconds if onboarding not completed
+    const timer = setTimeout(() => {
+      if (!isOnboardingCompleted()) {
+        setShowOnboarding(true);
+      }
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filtrar procesos para Centros Deportivos
   const sportsProcesses = useMemo(() => 
@@ -74,6 +88,13 @@ const SportsLanding = () => {
             <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowOnboarding(true)} 
+              className="text-sm text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/5 hidden md:flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" /> Personalizar Catálogo
+            </Button>
             <Link to="/catalogo/completo" className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">
               Ver Catálogo Completo
             </Link>
@@ -88,10 +109,7 @@ const SportsLanding = () => {
       <section className="relative pt-20 pb-32 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-cyan-900/10 blur-[120px] rounded-full -z-10" />
         <div className="container mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Zap className="w-3 h-3 text-cyan-400" /> ESPECIAL CENTROS DEPORTIVOS
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
             De gestionar tu centro deportivo, <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
               a liderar tu negocio
@@ -346,6 +364,12 @@ const SportsLanding = () => {
           n8nHosting={n8nHosting}
         />
       )}
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        prefilledSector="Centros Deportivos"
+      />
     </div>
   );
 };

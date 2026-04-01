@@ -28,9 +28,7 @@ const Index = () => {
 
   useEffect(() => {
     const answers = getOnboardingAnswers();
-    if (!answers && !isOnboardingCompleted()) {
-      setOnboardingOpen(true);
-    } else if (answers) {
+    if (answers) {
       setOnboardingAnswers(answers);
     }
   }, []);
