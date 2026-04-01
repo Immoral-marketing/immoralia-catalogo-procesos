@@ -35,16 +35,16 @@ const sectors = [
     icon: Briefcase,
     path: "/landing/gestorias",
     status: "active",
-    accent: "from-cyan-500/20 to-emerald-500/20"
+    accent: "from-teal-500/20 to-cyan-600/20"
   },
   {
     id: "health",
-    title: "Clínicas / Salud / Dental / Veterinaria",
+    title: "Centros de Salud",
     description: "Centros de fisioterapia, estética, consultas médicas, clínicas dentales y centros veterinarios.",
     icon: Stethoscope,
     path: "/landing/salud",
     status: "active",
-    accent: "from-cyan-500/20 to-indigo-500/20"
+    accent: "from-blue-500/20 to-indigo-500/20"
   },
   {
     id: "construction",
@@ -62,7 +62,7 @@ const sectors = [
     icon: GraduationCap,
     path: "/landing/academias",
     status: "active",
-    accent: "from-indigo-500/20 to-purple-500/20"
+    accent: "from-violet-500/20 to-purple-500/20"
   },
   {
     id: "food",
@@ -89,7 +89,7 @@ const sectors = [
     icon: Home,
     path: "/landing/inmobiliaria",
     status: "active",
-    accent: "from-emerald-500/20 to-teal-500/20"
+    accent: "from-emerald-500/20 to-green-600/20"
   },
   {
     id: "consultancy",
@@ -119,9 +119,6 @@ const SectorSelector = () => {
         />
         
         <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-            <Sparkles className="w-3 h-3" /> CATÁLOGO DE PROCESOS
-          </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
             Potencia tu negocio con <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">

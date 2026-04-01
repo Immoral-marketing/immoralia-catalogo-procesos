@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronRight, 
@@ -18,9 +19,10 @@ import {
   LayoutGrid,
   Utensils,
   GlassWater,
-  AlertCircle,
   Calendar,
-  Star
+  Star,
+  Sparkles,
+  Search
 } from "lucide-react";
 import { 
   Sheet, 
@@ -36,11 +38,22 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
+import { isOnboardingCompleted } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const RestauracionLanding = () => {
   const { selectedProcessIds, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isOnboardingCompleted()) {
+        setShowOnboarding(true);
+      }
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filtrar procesos para Restauración
   const restauracionProcesses = useMemo(() => 
@@ -78,10 +91,17 @@ const RestauracionLanding = () => {
             <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowOnboarding(true)} 
+              className="text-sm text-orange-400 hover:text-orange-300 hover:bg-orange-500/5 hidden md:flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" /> Personalizar Catálogo
+            </Button>
             <Link to="/catalogo/completo" className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block">
               Ver Catálogo Completo
             </Link>
-            <Button onClick={scrollToProcesses} className="bg-orange-600 hover:bg-orange-500 text-white border-none font-bold">
+            <Button onClick={scrollToProcesses} className="bg-orange-600 hover:bg-orange-500 text-white border-none font-bold shadow-[0_0_20px_rgba(234,88,12,0.2)]">
               Ver Soluciones
             </Button>
           </div>
@@ -92,10 +112,7 @@ const RestauracionLanding = () => {
       <section className="relative pt-20 pb-32 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-orange-900/10 blur-[120px] rounded-full -z-10" />
         <div className="container mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Utensils className="w-3 h-3 text-orange-400" /> ESPECIAL RESTAURACIÓN & HOSTELERÍA
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
             De apagar fuegos en sala, <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
               a liderar un negocio escalable
@@ -105,7 +122,7 @@ const RestauracionLanding = () => {
             Automatizamos tus reservas, la gestión de facturas y tu reputación online para que tú te centres en la gastronomía.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            <Button size="lg" onClick={scrollToProcesses} className="bg-orange-600 hover:bg-orange-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-orange-900/20">
+            <Button size="lg" onClick={scrollToProcesses} className="bg-orange-600 hover:bg-orange-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-orange-900/20 transition-all hover:scale-105">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
             <Button size="lg" variant="outline" onClick={() => window.open('https://cal.com/antigravity/discovery', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
@@ -119,7 +136,7 @@ const RestauracionLanding = () => {
       <section className="py-24 bg-white/5">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-12 text-center">¿Te Resulta Familiar?</h2>
+            <h2 className="text-3xl font-bold mb-12 text-center underline decoration-orange-500/30 underline-offset-8 transition-all hover:decoration-orange-500/60">¿Te Resulta Familiar?</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {[
                 "Llamadas constantes para reservas que interrumpen el servicio.",
@@ -129,9 +146,9 @@ const RestauracionLanding = () => {
                 "No saber exactamente el margen real de cada plato por falta de datos.",
                 "Responder las mismas dudas por WhatsApp mil veces al día."
               ].map((pain, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-2xl bg-black/40 border border-white/5 hover:border-orange-500/20 transition-colors group">
+                <div key={i} className="flex gap-4 p-6 rounded-2xl bg-black/40 border border-white/5 hover:border-orange-500/20 transition-all hover:translate-y-[-2px] group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <AlertCircle className="w-5 h-5 text-red-500" />
+                    <TrendingDown className="w-5 h-5 text-red-500" />
                   </div>
                   <p className="text-gray-300">{pain}</p>
                 </div>
@@ -166,8 +183,8 @@ const RestauracionLanding = () => {
                 desc: "Digitalizamos cada factura de proveedor al instante, dándote visibilidad real sobre tus márgenes."
               }
             ].map((prop, i) => (
-              <div key={i} className="text-center space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+              <div key={i} className="text-center space-y-4 group">
+                <div className="mx-auto w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20 group-hover:bg-orange-500/20 group-hover:border-orange-400/30 transition-all duration-300">
                   {prop.icon}
                 </div>
                 <h3 className="text-xl font-bold">{prop.title}</h3>
@@ -186,7 +203,7 @@ const RestauracionLanding = () => {
               <div className="max-w-2xl">
                 <div className="flex items-center gap-2 mb-4">
                   <LayoutGrid className="w-5 h-5 text-orange-400" />
-                  <span className="text-orange-400 font-medium">CATÁLOGO ESPECIALIZADO</span>
+                  <span className="text-orange-400 font-medium tracking-widest uppercase text-xs">CATÁLOGO ESPECIALIZADO</span>
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold mb-4">Selecciona tus Soluciones</h2>
                 <p className="text-gray-400">Elige los procesos que quieres automatizar en tu restaurante. Añade tantos como necesites a tu selección.</p>
@@ -199,7 +216,7 @@ const RestauracionLanding = () => {
                 <Button 
                   onClick={() => setShowContactForm(true)}
                   disabled={selectedProcessIds.size === 0}
-                  className="bg-orange-600 hover:bg-orange-500 disabled:bg-gray-800 h-12 px-6 font-bold"
+                  className="bg-orange-600 hover:bg-orange-500 disabled:bg-gray-800 h-12 px-6 font-bold shadow-lg shadow-orange-900/20 transition-all active:scale-95"
                 >
                   Continuar selección <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -243,7 +260,9 @@ const RestauracionLanding = () => {
       {/* FAQ Section */}
       <section className="py-24 border-t border-white/5">
         <div className="container mx-auto px-6 max-w-3xl">
-          <h2 className="text-3xl font-bold mb-12 text-center text-orange-400">Preguntas Frecuentes</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center text-orange-400 flex items-center justify-center gap-3">
+            <Search className="w-8 h-8" /> Preguntas Frecuentes
+          </h2>
           <div className="space-y-6">
             {[
               {
@@ -259,7 +278,7 @@ const RestauracionLanding = () => {
                 a: "Por supuesto. El tono y el momento del envío se ajustan 100% a la personalidad de tu establecimiento."
               }
             ].map((faq, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
+              <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-orange-500/10 transition-all hover:bg-white/[0.07] group">
                 <h3 className="text-lg font-bold mb-2 flex gap-3">
                   <CheckCircle2 className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                   {faq.q}
@@ -272,8 +291,9 @@ const RestauracionLanding = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-orange-600/10 -z-10" />
+      <section className="py-32 relative overflow-hidden text-center">
+        <div className="absolute inset-0 bg-orange-600/5 -z-10" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
             ¿Listo para escalar <br /> tu restaurante?
@@ -282,10 +302,10 @@ const RestauracionLanding = () => {
             Deja de perder tiempo en administración y empieza a construir un negocio de vanguardia. Solicita tu oferta ahora personalizada.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-orange-600 hover:bg-orange-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,88,12,0.3)]">
+            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-orange-600 hover:bg-orange-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,88,12,0.3)] transition-all hover:scale-105">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10" onClick={() => window.open('https://cal.com/antigravity/discovery', '_blank')}>
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5" onClick={() => window.open('https://cal.com/antigravity/discovery', '_blank')}>
               Agendar Llamada
             </Button>
           </div>
@@ -346,6 +366,12 @@ const RestauracionLanding = () => {
           n8nHosting={n8nHosting}
         />
       )}
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        prefilledSector="Restauración"
+      />
     </div>
   );
 };

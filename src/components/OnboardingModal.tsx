@@ -22,6 +22,7 @@ interface OnboardingModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialAnswers?: OnboardingAnswers | null;
+    prefilledSector?: string;
 }
 
 const SECTORS = [
@@ -126,10 +127,10 @@ const PAINS = [
     "Quiero automatizar presupuestos y respuestas"
 ];
 
-export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingModalProps) => {
-    const [step, setStep] = useState(1);
+export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSector }: OnboardingModalProps) => {
+    const [step, setStep] = useState(prefilledSector ? 2 : 1);
     const [answers, setAnswers] = useState<OnboardingAnswers>(() => ({
-        sector: initialAnswers?.sector || "",
+        sector: prefilledSector || initialAnswers?.sector || "",
         tools: Array.isArray(initialAnswers?.tools) ? initialAnswers.tools : [],
         channels: initialAnswers?.channels || { clients: [], internal: [] },
         maturity: initialAnswers?.maturity || "Básico",
@@ -155,7 +156,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers }: OnboardingM
     };
 
     const prevStep = () => {
-        if (step > 1 && step < 7) setStep(step - 1);
+        if (step > (prefilledSector ? 2 : 1) && step < 7) setStep(step - 1);
     };
 
     const handleSkip = () => {
