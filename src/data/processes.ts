@@ -111,10 +111,11 @@ export const processes: Process[] = [
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce", "Gestoria"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce", "Gestoria", "Construcción & Reformas", "Academias / Formación"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "salud"
   },
 
   {
@@ -209,11 +210,12 @@ export const processes: Process[] = [
       "Notificamos al responsable para envío o revisión"
     ],
     personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.",
-    sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria"],
+    sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria", "Construcción & Reformas"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "construccion"
   },
 
   {
@@ -309,11 +311,12 @@ export const processes: Process[] = [
       "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria"],
+    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria", "Academias / Formación", "Restauración"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "salud"
   },
   {
     id: "B6",
@@ -500,7 +503,9 @@ export const processes: Process[] = [
     ],
     personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "salud",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Construcción & Reformas"]
   },
 
   {
@@ -640,7 +645,8 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (tu vía de comunicación preferida, mensajería o nube).",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "salud"
   },
 
   {
@@ -688,7 +694,9 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige tu carpeta de archivos en la nube.",
     related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
+    landing_slug: "salud",
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Construcción & Reformas"]
   },
   {
     id: "D14",
@@ -873,9 +881,10 @@ export const processes: Process[] = [
       "Guardamos el contexto para retomar sin perder información"
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria"],
+    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Academias / Formación", "Restauración"],
     related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    landing_slug: "salud"
   },
   {
     id: "E18",
@@ -921,9 +930,10 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria"],
+    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria", "Academias / Formación", "Restauración"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    landing_slug: "academias"
   },
   {
     id: "E19",
@@ -969,9 +979,10 @@ export const processes: Process[] = [
       "Notificamos al responsable para que actúe sin retrasos"
     ],
     personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
-    sectores: ["Servicios profesionales", "Peluquería/estética", "Retail", "E-commerce"],
+    sectores: ["Servicios profesionales", "Peluquería/estética", "Retail", "E-commerce", "Construcción & Reformas", "Academias / Formación"],
     related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"],
-    integration_domains: ["CRM"]
+    integration_domains: ["CRM"],
+    landing_slug: "salud"
   },
   {
     id: "E20",
@@ -1019,7 +1030,8 @@ export const processes: Process[] = [
     personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
     sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética", "Gestoria"],
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
-    integration_domains: ["CRM"]
+    integration_domains: ["CRM"],
+    landing_slug: "salud"
   },
   {
     id: "E21",
@@ -1064,9 +1076,10 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria"],
+    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria", "Academias / Formación", "Restauración"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    landing_slug: "restauracion"
   },
   {
     id: "E22",
@@ -1160,10 +1173,11 @@ export const processes: Process[] = [
       "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
     ],
     personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales"],
+    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales", "Academias / Formación", "Restauración"],
     herramientas: ["Mensajería", "Calendario"],
     dolores: ["Se olvidan de la cita / hay muchas ausencias"],
-    related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"]
+    related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"],
+    landing_slug: "salud"
   },
   {
     id: "E24",
@@ -1209,10 +1223,11 @@ export const processes: Process[] = [
       "Enviamos el mensaje de bienvenida con los acceso"
     ],
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria", "Gestoria"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria", "Gestoria", "Construcción & Reformas"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
+    landing_slug: "salud"
   },
   {
     id: "F25",
@@ -1260,7 +1275,8 @@ export const processes: Process[] = [
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
     sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínicas / Salud / Dental / Veterinaria", "Restauración", "Construcción & Reformas", "Academias / Formación"],
     herramientas: [],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
+    landing_slug: "salud"
   },
   {
     id: "CM1",
