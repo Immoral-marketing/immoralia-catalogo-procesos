@@ -1272,6 +1272,14 @@ export const processes: Process[] = [
     tagline: "Los leads entran solos en tu CRM y arrancan su secuencia.",
     recomendado: true,
     descripcionDetallada: "Cuando alguien rellena un formulario de 'prueba gratuita' o 'más información' en la web o Instagram, el contacto entra automáticamente en el CRM/email marketing con etiqueta de origen y arranca una secuencia de nurturing.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Captura de lead desde formulario/RRSS","Sincronización con CRM","Activación de secuencia de email/notificación"],
     personalizacion: "Define los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).",
     sectores: ["Centros Deportivos"],
@@ -1289,6 +1297,14 @@ export const processes: Process[] = [
     tagline: "No dejes que ningún lead se olvide de ti.",
     recomendado: true,
     descripcionDetallada: "Tras capturar un lead que no convierte de inmediato, se activa una secuencia de 3-5 emails o WhatsApp con testimonios, beneficios y oferta de primera clase gratuita. Se detiene automáticamente si convierte.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Trigger por nuevo lead","Envío de secuencia temporizada","Detección de conversión para parada automática"],
     personalizacion: "Elige el canal (Email/WhatsApp) y el número de impactos.",
     sectores: ["Centros Deportivos"],
@@ -1306,6 +1322,14 @@ export const processes: Process[] = [
     tagline: "Recupera antiguos alumnos con ofertas personalizadas.",
     recomendado: true,
     descripcionDetallada: "Segmenta automáticamente los socios que causaron baja hace más de 3 meses y les envía una oferta de reincorporación personalizada por email o WhatsApp. Se activa mensualmente o en fechas clave.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Filtro de ex-socios (baja > 3 meses)","Envío de oferta vía Email/WhatsApp","Seguimiento de respuesta"],
     personalizacion: "Define el tiempo de inactividad y las fechas de lanzamiento.",
     sectores: ["Centros Deportivos"],
@@ -1323,6 +1347,14 @@ export const processes: Process[] = [
     tagline: "Renovaciones automáticas sin fricción.",
     recomendado: true,
     descripcionDetallada: "7 y 2 días antes de que venza la membresía, el socio recibe un aviso automático por email y/o WhatsApp con enlace de pago o renovación. Si no renueva, entra en flujo de retención.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Monitorización de fechas de vencimiento","Avisos automáticos T-7 y T-2","Link de pago directo"],
     personalizacion: "Elige los días de antelación y el tono del mensaje.",
     sectores: ["Centros Deportivos"],
@@ -1340,6 +1372,14 @@ export const processes: Process[] = [
     tagline: "Vuelve a por los alumnos que probaron y no volvieron.",
     recomendado: false,
     descripcionDetallada: "Leads que asistieron a la clase de prueba pero no se dieron de alta entran en una secuencia de reactivación automática a los 15, 30 y 60 días: email con testimonio, oferta limitada y enlace de reserva.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Detección de 'Prueba sin Alta'","Secuencia 15/30/60 días","Aviso a equipo si hay respuesta"],
     personalizacion: "Define los incentivos y el número de recordatorios.",
     sectores: ["Centros Deportivos"],
@@ -1357,6 +1397,14 @@ export const processes: Process[] = [
     tagline: "Tus alumnos son tus mejores comerciales.",
     recomendado: false,
     descripcionDetallada: "A los 30 días del alta, el alumno recibe un incentivo para referir a un amigo. Si el referido se da de alta, el sistema detecta el origen y aplica el beneficio automáticamente.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Trigger a los 30 días del alta","Envío de link único de referido","Atribución automática de premio"],
     personalizacion: "Elige el premio (mes gratis, descuento, etc.).",
     sectores: ["Centros Deportivos"],
@@ -1374,6 +1422,14 @@ export const processes: Process[] = [
     tagline: "Detecta el abandono antes de que ocurra.",
     recomendado: true,
     descripcionDetallada: "Si un alumno no asiste en 10 días (o su frecuencia cae un 50%), el sistema genera una alerta interna y dispara un mensaje personalizado del instructor preguntando cómo está.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Análisis de frecuencia de asistencia","Detección de 'riesgo de abandono'","Mensaje preventivo personalizado"],
     personalizacion: "Ajusta los días de inactividad según la intensidad del centro.",
     sectores: ["Centros Deportivos"],
@@ -1391,6 +1447,14 @@ export const processes: Process[] = [
     tagline: "Vende más a tus alumnos actuales.",
     recomendado: false,
     descripcionDetallada: "Cuando un alumno lleva 2 meses o sube de nivel, recibe automáticamente una recomendación de equipamiento con enlace a tienda propia o afiliado. Se activa tras exámenes de grado.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Trigger por antigüedad o cambio de nivel","Envío de oferta de material","Link a tienda online"],
     personalizacion: "Elige qué material recomendar por cada nivel/antigüedad.",
     sectores: ["Centros Deportivos"],
@@ -1408,6 +1472,14 @@ export const processes: Process[] = [
     tagline: "Control de sesiones sin errores ni Excel manuales.",
     recomendado: false,
     descripcionDetallada: "Cuando un alumno compra un bono, el sistema lleva el control. Al llegar a 2 clases restantes, envía aviso automático con enlace de renovación. Si expira, entra en flujo de recuperación.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Conteo automático de sesiones consumidas","Aviso de 'bono pronto a agotar'","Link de renovación inmediata"],
     personalizacion: "Configura el número de clases para el aviso de renovación.",
     sectores: ["Centros Deportivos"],
@@ -1425,6 +1497,14 @@ export const processes: Process[] = [
     tagline: "Onboarding inmediato y sin papeleo.",
     recomendado: true,
     descripcionDetallada: "Cuando se registra un nuevo socio, se crea automáticamente su ficha, se activa su acceso al torniquete o app, y se le envía email de bienvenida con normas y horarios.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Recepción de alta desde web/recepción","Creación de perfil en software de gestión","Activación de credenciales de acceso"],
     personalizacion: "Define el contenido del kit de bienvenida.",
     sectores: ["Centros Deportivos"],
@@ -1442,6 +1522,14 @@ export const processes: Process[] = [
     tagline: "Tus clases llenas y el aforo bajo control.",
     recomendado: true,
     descripcionDetallada: "Los socios reservan clase desde app o web. Si cancela con poco tiempo, el sistema libera la plaza, notifica al primero en lista de espera y registra la incidencia.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Gestión de booking online","Control de política de cancelación","Notificación a lista de espera automática"],
     personalizacion: "Personaliza el tiempo límite de cancelación.",
     sectores: ["Centros Deportivos"],
@@ -1459,6 +1547,14 @@ export const processes: Process[] = [
     tagline: "Evita salas masificadas y gestiona la demanda.",
     recomendado: false,
     descripcionDetallada: "Monitoriza en tiempo real el aforo. Si una clase está al 80%, activa aviso en canal interno. Si se llena, cierra la reserva y activa lista de espera automáticamente.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Chequeo de ocupación vs aforo máximo","Alertas internas por alta demanda","Cierre dinámico de reservas"],
     personalizacion: "Define los umbrales de alerta (80%, 90%).",
     sectores: ["Centros Deportivos"],
@@ -1476,6 +1572,14 @@ export const processes: Process[] = [
     tagline: "La salud de tu centro, cada lunes en tu móvil.",
     recomendado: false,
     descripcionDetallada: "Cada lunes a las 8h se genera y envía automáticamente al director un informe con altas, bajas, asistencia por clase, ocupación media y cobros pendientes.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Consolidación de datos de la semana","Generación de dashboard resumido","Envío vía Slack/WhatsApp/Email"],
     personalizacion: "Elige las métricas clave para tu tipo de centro.",
     sectores: ["Centros Deportivos"],
@@ -1493,6 +1597,14 @@ export const processes: Process[] = [
     tagline: "Tus máquinas siempre a punto, sin olvidos.",
     recomendado: false,
     descripcionDetallada: "Reporte de averías mediante formulario o mensaje. Se crea automáticamente un ticket, se notifica al responsable de mantenimiento y se hace seguimiento hasta resolución.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Entrada de incidencia desde staff","Alta en gestor de mantenimiento","Aviso y tracking de reparación"],
     personalizacion: "Elige la herramienta de tickets (ClickUp, Notion, Slack).",
     sectores: ["Centros Deportivos"],
@@ -1510,6 +1622,14 @@ export const processes: Process[] = [
     tagline: "Organiza tus pasos de grado sin caos administrativo.",
     recomendado: true,
     descripcionDetallada: "Identifica automáticamente a los alumnos que cumplen requisitos para examen, les envía invitación con fecha y formulario de confirmación. El instructor recibe el listado 48h antes.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Filtrado de alumnos elegibles","Envío masivo de invitaciones","Consolidación de confirmaciones"],
     personalizacion: "Ajusta los requisitos por cada nivel o cinturón.",
     sectores: ["Centros Deportivos"],
@@ -1527,6 +1647,14 @@ export const processes: Process[] = [
     tagline: "Cuida a tus alumnos y evita bajas por lesiones.",
     recomendado: false,
     descripcionDetallada: "Cuando un alumno reporta una lesión, se crea un registro y se genera alerta al instructor. Se adapta su ficha de reservas y se programa seguimiento a los 7 días.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Reporte de lesión","Alerta automática a instructores","Programación de check-up de salud"],
     personalizacion: "Define los tipos de lesiones y el protocolo de seguimiento.",
     sectores: ["Centros Deportivos"],
@@ -1544,6 +1672,14 @@ export const processes: Process[] = [
     tagline: "Cero papeles. Cero archivos físicos.",
     recomendado: true,
     descripcionDetallada: "Envío automático de contratos de membresía, consentimiento informado y normas del centro para firma digital. El documento queda archivado automáticamente.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Generación de contrato dinámico","Envío para firma digital","Archivo automático en la nube"],
     personalizacion: "Incluye tus propias plantillas de contrato.",
     sectores: ["Centros Deportivos"],
@@ -1561,6 +1697,14 @@ export const processes: Process[] = [
     tagline: "Tranquilidad total para los padres, ahorro de tiempo para ti.",
     recomendado: true,
     descripcionDetallada: "Confirmación de asistencia tras cada clase, aviso si el alumno no aparece a una clase reservada y recordatorios de pagos en un canal separado del alumno.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Segmentación Alumno vs Tutor","Alertas de asistencia en tiempo real","Recordatorios de eventos infantiles"],
     personalizacion: "Elige qué avisos enviar a los padres y por qué canal.",
     sectores: ["Centros Deportivos"],
@@ -1578,6 +1722,14 @@ export const processes: Process[] = [
     tagline: "Gamifica la experiencia y mejora la retención.",
     recomendado: true,
     descripcionDetallada: "Resumen de actividad mensual: clases asistidas, racha, próximo examen estimado y mensaje personalizado del instructor para aumentar el compromiso.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Agregación de actividad mensual","Generación de reporte visual","Envío personalizado automatizado"],
     personalizacion: "Define qué hitos celebrar (ej. '10 clases este mes').",
     sectores: ["Centros Deportivos"],
@@ -1595,6 +1747,14 @@ export const processes: Process[] = [
     tagline: "Tu recepción abierta 24/7 sin contratar a nadie.",
     recomendado: true,
     descripcionDetallada: "Un bot de WhatsApp responde automáticamente a preguntas sobre horarios, precios o cómo darse de alta. Escala a recepción si la duda requiere intervención humana.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Detección de intención (NLP)","Respuesta desde base de conocimiento","Escalado inteligente con contexto"],
     personalizacion: "Entrena al bot con tus horarios y tarifas específicas.",
     sectores: ["Centros Deportivos"],
@@ -1612,6 +1772,14 @@ export const processes: Process[] = [
     tagline: "Escucha a tus alumnos en caliente.",
     recomendado: false,
     descripcionDetallada: "2 horas después de la clase, el asistente recibe una encuesta de 1-2 preguntas. Las valoraciones bajas generan una alerta inmediata al responsable.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Trigger post-asistencia","Envío de micro-encuesta","Alertas por malas valoraciones"],
     personalizacion: "Elige las preguntas y el tiempo de espera post-clase.",
     sectores: ["Centros Deportivos", "Gestoria"],
@@ -1629,6 +1797,14 @@ export const processes: Process[] = [
     tagline: "Atiende los problemas antes de que se conviertan en bajas.",
     recomendado: false,
     descripcionDetallada: "Al enviar una queja, se crea automáticamente un ticket, se confirma recepción y se asigna con SLA de respuesta definido (ej: 24h).",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Captura de queja vía formulario","Creación de ticket prioritario","Notificación y seguimiento de SLA"],
     personalizacion: "Define tus tiempos de respuesta por tipo de queja.",
     sectores: ["Centros Deportivos"],
@@ -1646,6 +1822,14 @@ export const processes: Process[] = [
     tagline: "Fideliza a través de los pequeños detalles.",
     recomendado: false,
     descripcionDetallada: "El día de su cumpleaños el socio recibe un mensaje personalizado por WhatsApp o email con una oferta especial (ej. sesión de entrenamiento gratis).",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Trigger por fecha de natalicio","Envío de mensaje festivo","Inclusión de cupón/oferta"],
     personalizacion: "Elige qué regalo hacer a cada tipo de socio.",
     sectores: ["Centros Deportivos"],
@@ -1663,6 +1847,14 @@ export const processes: Process[] = [
     tagline: "Reactiva a los alumnos ausentes antes de perderlos.",
     recomendado: true,
     descripcionDetallada: "Si un socio no asiste en 14 días, entra en flujo de reactivación: mensaje de ¿todo bien?, oferta de sesión de reenganche y alerta al equipo.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Chequeo diario de inactividad","Multicanalidad de contacto (Email/WA)","Oferta de rescate personalizada"],
     personalizacion: "Define el umbral de 'riesgo' (14, 20 o 30 días).",
     sectores: ["Centros Deportivos"],
@@ -1680,6 +1872,14 @@ export const processes: Process[] = [
     tagline: "Experiencia premium desde el minuto 1.",
     recomendado: false,
     descripcionDetallada: "Checklist automático de onboarding: envío de documentación, acceso a herramientas, asignación de mentor y recordatorios de pasos pendientes.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Lanzamiento de workflow por nuevo contrato","Distribución de kit de bienvenida digital","Seguimiento de tareas de onboarding"],
     personalizacion: "Adapta el checklist por rol (staff, instructor, alumno).",
     sectores: ["Centros Deportivos"],
@@ -1697,6 +1897,14 @@ export const processes: Process[] = [
     tagline: "Horarios sin conflictos y sin llamadas constantes.",
     recomendado: false,
     descripcionDetallada: "Los instructores informan disponibilidad vía formulario. El sistema cruza con la programación, detecta conflictos y notifica huecos sin cubrir.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Recogida de disponibilidad semanal","Cruce automático con calendario de clases","Notificación de incidencias de cobertura"],
     personalizacion: "Define los plazos para informar la disponibilidad.",
     sectores: ["Centros Deportivos"],
@@ -1714,6 +1922,14 @@ export const processes: Process[] = [
     tagline: "Asegura tus ingresos sin perseguir recibos.",
     recomendado: true,
     descripcionDetallada: "Procesamiento automático de cobros. Si falla, el sistema reintenta a los 3 días, notifica al socio con link de pago y alerta a administración.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Ejecución de remesa/cobro tarjeta","Lógica de reintentos automática","Comunicación de deuda instantánea"],
     personalizacion: "Define el número de reintentos y los plazos de aviso.",
     sectores: ["Centros Deportivos"],
@@ -1731,6 +1947,14 @@ export const processes: Process[] = [
     tagline: "Control de gastos bajo control.",
     recomendado: false,
     descripcionDetallada: "Revisión semanal de facturas de proveedores (mantenimiento, suministros) y alerta al responsable con los vencimientos próximos.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Lectura de fechas de vencimiento de compra","Consolidación semanal de pagos","Avisos internos de tesorería"],
     personalizacion: "Elige el día de la semana para el resumen de pagos.",
     sectores: ["Centros Deportivos"],
@@ -1748,6 +1972,14 @@ export const processes: Process[] = [
     tagline: "Avisa de imprevistos al instante y sin caos.",
     recomendado: true,
     descripcionDetallada: "Si se modifica o cancela una clase, el sistema notifica automáticamente a los socios con reserva, ofrece alternativas y actualiza el calendario público.",
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: ["Actualización de horario en sistema","Identificación de socios afectados","Aviso masivo multicanal"],
     personalizacion: "Define el margen de tiempo para avisar de cancelaciones.",
     sectores: ["Centros Deportivos"],
@@ -1781,6 +2013,14 @@ export const processes: Process[] = [
       { title: "Solicitud inteligente", short: "Enviamos aviso personalizado.", detail: "Tu cliente recibe un enlace directo para subir sus documentos sin necesidad de login complejo." },
       { title: "Seguimiento y archivo", short: "Recordamos y organizamos.", detail: "Si falta algo, el sistema insiste por ti. Al recibirlo, lo clasifica en la carpeta del periodo." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Configuramos el calendario de cierre por cliente",
       "Lanzamos solicitudes automáticas multicanal",
@@ -1819,6 +2059,14 @@ export const processes: Process[] = [
       { title: "Avisos preventivos", short: "Notificamos con antelación.", detail: "El sistema lanza alertas escalonadas (T-15, T-5, T-1) para asegurar la recopilación de info." },
       { title: "Confirmación de envío", short: "Validamos la presentación.", detail: "Una vez presentado el trámite, el cliente recibe una confirmación automática con el justificante." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Definimos el perfil tributario de cada cliente",
       "Programamos la secuencia de alertas automáticas",
@@ -1857,6 +2105,15 @@ export const processes: Process[] = [
       { title: "Actualización de hitos", short: "Informamos del progreso.", detail: "Cada vez que superas una fase (ej. 'Presentado en registro'), el estado se actualiza solo." },
       { title: "Cierre y aviso", short: "Notificamos la resolución.", detail: "Cuando termina la gestión, el cliente recibe el resultado y el documento final al instante." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Tono Inicial", options: ["Amable", "Conciso"] },
+        { type: "select", label: "Frecuencia", options: ["Semanal", "Diaria"] },
+        { type: "select", label: "Canal Comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
+      ],
+      free_text_placeholder: "¿Quieres excluir a algún cliente VIP de este proceso?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Estandarizamos las fases de cada tipo de trámite",
       "Conectamos tu gestor de tareas con el portal del cliente",
@@ -1895,6 +2152,14 @@ export const processes: Process[] = [
       { title: "Generación de PDF", short: "Diseñamos el reporte visual.", detail: "Convertimos los números en gráficas e indicadores clave de rendimiento (KPIs)." },
       { title: "Envío programado", short: "Entregamos el valor al cliente.", detail: "Se envía automáticamente por email o se deposita en la zona privada del cliente." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Definimos la estructura del informe ideal para tus clientes",
       "Mapeamos los campos de tu ERP con la plantilla del reporte",
@@ -1933,6 +2198,14 @@ export const processes: Process[] = [
       { title: "Matching inteligente", short: "Cruzamos con la facturación.", detail: "Algoritmos de búsqueda vinculan el ingreso con el cliente o el pago con el proveedor." },
       { title: "Alertas de desvío", short: "Avisamos de lo que no cuadra.", detail: "Si un pago llega sin factura asociada, el sistema pregunta al cliente automáticamente." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Configuramos la pasarela de lectura bancaria (Open Banking)",
       "Definimos las reglas de conciliación automática por conceptos",
@@ -1971,6 +2244,14 @@ export const processes: Process[] = [
       { title: "Validación de info", short: "Revisamos que esté todo OK.", detail: "El sistema comprueba que no falten campos obligatorios antes de avisar al gestor." },
       { title: "Expediente listo", short: "Todo en su sitio para el alta.", detail: "Se crea una carpeta con toda la documentación organizada por tipo y nombre de empleado." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Diseñamos el formulario de recogida de datos laborales",
       "Configuramos la automatización de creación de carpetas",
@@ -2009,6 +2290,14 @@ export const processes: Process[] = [
       { title: "Alerta de decisión", short: "Preguntamos al cliente.", detail: "Enviamos un mensaje al cliente para que confirme si quiere renovar o finalizar el contrato." },
       { title: "Tarea de gestión", short: "Ejecutamos el trámite.", detail: "Si se confirma la baja, se genera automáticamente la tarea para preparar el finiquito." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Sincronizamos tu base de datos de contratos con el sistema de alertas",
       "Definimos los umbrales de aviso para cada tipo de contrato",
@@ -2047,6 +2336,14 @@ export const processes: Process[] = [
       { title: "Fragmentación", short: "Separamos cada nómina.", detail: "La herramienta identifica dónde empieza y acaba cada recibo de forma inteligente." },
       { title: "Entrega segura", short: "Enviamos a cada buzón.", detail: "Cada empleado recibe solo lo suyo, cumpliendo estrictamente con la RGPD." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Configuramos el sistema de reconocimiento de campos en el PDF",
       "Vinculamos los DNI con las bases de datos de emails",
@@ -2085,6 +2382,14 @@ export const processes: Process[] = [
       { title: "Clasificación auto", short: "Ordenamos la entrada.", detail: "El sistema crea una tarea en tu departamento laboral con la prioridad adecuada." },
       { title: "Cierre de variable", short: "Confirmamos la gestión.", detail: "Al procesar la nómina, el sistema avisa al cliente de que la incidencia ha sido aplicada." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Creamos el catálogo de incidencias estándar (Baja IT, Paternidad, Bonus...)",
       "Implementos el formulario de entrada de datos para el cliente",
@@ -2123,6 +2428,14 @@ export const processes: Process[] = [
       { title: "Envío didáctico", short: "Educamos al cliente.", detail: "Enviamos una guía o checklist automático sobre qué debe preparar este mes." },
       { title: "Llamada a la acción", short: "Convertimos dudas en trámites.", detail: "Ofrecemos un link para agendar consulta o subir los documentos específicos." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Redactamos las plantillas de comunicación para cada hito del año",
       "Segmentamos tu base de datos (Autónomos vs Sociedades)",
@@ -2161,6 +2474,14 @@ export const processes: Process[] = [
       { title: "Cuenta atrás", short: "Vigilamos el calendario.", detail: "El sistema comprueba diariamente qué documentos están en zona de renovación (ej. 60 días)." },
       { title: "Aviso de renovación", short: "Iniciamos el trámite.", detail: "Notificamos al cliente la necesidad de renovar y los pasos a seguir." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Catalogamos los documentos críticos sujetos a caducidad por cliente",
       "Configuramos los campos de fecha en tu gestor documental o base de datos",
@@ -2198,6 +2519,14 @@ export const processes: Process[] = [
       { title: "Aviso de recepción", short: "Te avisamos al instante.", detail: "Recibes una notificación en tu canal de trabajo indicando qué cliente ha subido qué." },
       { title: "Orden automático", short: "El archivo va a su sitio.", detail: "Se mueve a la carpeta del cliente y periodo correspondiente para que lo proceses." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Desplegamos la estructura de carpetas en tu nube configurada por cliente",
       "Enviamos los enlaces de acceso únicos y seguros a tus clientes",
@@ -2235,6 +2564,14 @@ export const processes: Process[] = [
       { title: "Procesamiento de docs", short: "Renombramos y organizamos.", detail: "El sistema revisa todos los archivos, quita duplicados y aplica el estándar de nombre." },
       { title: "Traslado seguro", short: "Movemos al histórico.", detail: "Los archivos pasan a la zona de lectura de largo plazo, liberando tu área de trabajo diaria." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Definimos tu estándar de nomenclatura para el archivo histórico",
       "Configuramos el disparador de cierre en tu herramienta de gestión de tareas",
@@ -2273,6 +2610,14 @@ export const processes: Process[] = [
       { title: "Análisis por IA", short: "Entendemos qué es.", detail: "La inteligencia artificial lee el contenido y asocia el doc a un cliente por CIF o nombre." },
       { title: "Guardado directo", short: "Archivamos en su sitio.", detail: "Se deposita en la subcarpeta correspondiente (ej. /Laboral/Altas) automáticamente." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Entrenamos a la IA con tus tipos de documentos más habituales",
       "Conectamos tus bandejas de entrada con el motor de clasificación",
@@ -2311,6 +2656,14 @@ export const processes: Process[] = [
       { title: "Mensaje de valor", short: "Contactamos con sentido.", detail: "Enviamos una propuesta útil personalizada según el perfil del cliente." },
       { title: "Alerta comercial", short: "Avisamos para seguimiento.", detail: "Si el cliente responde o muestra interés, se genera una tarea para el gestor." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Segmentamos tus clientes por volumen e historial",
       "Definimos los umbrales de inactividad que activan el proceso",
@@ -2348,6 +2701,14 @@ export const processes: Process[] = [
       { title: "Firma y contrato", short: "Generamos el papeleo legal.", detail: "Se envía automáticamente el contrato de servicios para su firma biométrica o con certificado." },
       { title: "Sincronización ERP", short: "Creamos la ficha de cliente.", detail: "Los datos validados se vuelcan directamente en tu sistema de gestión sin errores." }
     ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
+        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
+      ],
+      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
+    },
+    demo: { video_url: "PENDING" },
     pasos: [
       "Activamos el formulario de bienvenida de marca blanca",
       "Configuramos la generación dinámica de contratos en PDF",
