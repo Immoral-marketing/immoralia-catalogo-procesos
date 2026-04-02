@@ -339,7 +339,7 @@ const GestoriasLanding = () => {
                     {selectedProcessIds.size}
                   </span>
                 </div>
-                <span className="font-bold text-white tracking-wide uppercase text-sm">Tu Configuración</span>
+                <span className="font-bold text-white tracking-wide uppercase text-sm">Mi Selección</span>
               </div>
             </Button>
           </SheetTrigger>
@@ -348,7 +348,7 @@ const GestoriasLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-teal-400" />
-                  Procesos Seleccionados
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -369,6 +369,7 @@ const GestoriasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#0ea5e9"
         />
       )}
 
@@ -376,7 +377,7 @@ const GestoriasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Gestoría"
-        accentColor="#14b8a6"
+        accentColor="#0ea5e9"
       />
     </div>
   );

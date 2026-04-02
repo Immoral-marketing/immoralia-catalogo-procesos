@@ -343,7 +343,7 @@ const ConstruccionLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-amber-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -364,6 +364,7 @@ const ConstruccionLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#f59e0b"
         />
       )}
 
@@ -371,7 +372,7 @@ const ConstruccionLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Construcción & Reformas"
-        accentColor="#d97706"
+        accentColor="#f59e0b"
       />
     </div>
   );

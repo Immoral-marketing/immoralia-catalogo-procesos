@@ -343,7 +343,7 @@ const AcademiasLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-violet-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -364,6 +364,7 @@ const AcademiasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#818cf8"
         />
       )}
 
@@ -371,7 +372,7 @@ const AcademiasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Academias / Formación"
-        accentColor="#8b5cf6"
+        accentColor="#818cf8"
       />
     </div>
   );

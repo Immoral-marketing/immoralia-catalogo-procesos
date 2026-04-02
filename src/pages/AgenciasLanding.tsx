@@ -345,7 +345,7 @@ const AgenciasLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-rose-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -366,6 +366,7 @@ const AgenciasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#8b5cf6"
         />
       )}
 
@@ -373,7 +374,7 @@ const AgenciasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Agencia / Marketing / Consultoría"
-        accentColor="#e11d48"
+        accentColor="#8b5cf6"
       />
     </div>
   );

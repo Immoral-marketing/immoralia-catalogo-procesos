@@ -19,6 +19,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { useSelection } from "@/lib/SelectionContext";
 
 import { OnboardingAnswers, getOnboardingAnswers } from "@/lib/onboarding-utils";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
 
 interface ContactFormProps {
@@ -29,6 +30,7 @@ interface ContactFormProps {
   onOpenOnboarding?: () => void;
   source?: 'web' | 'chatbot';
   chatbotContext?: string[];
+  accentColor?: string;
 }
 
 export const ContactForm = ({
@@ -38,7 +40,8 @@ export const ContactForm = ({
   n8nHosting,
   onOpenOnboarding,
   source = 'web',
-  chatbotContext = []
+  chatbotContext = [],
+  accentColor = "#8b5cf6"
 }: ContactFormProps) => {
   const { toast } = useToast();
   const { customizations } = useSelection();
@@ -49,6 +52,7 @@ export const ContactForm = ({
       setOnboardingAnswers(getOnboardingAnswers());
     }
   }, [isOpen]);
+
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -59,6 +63,7 @@ export const ContactForm = ({
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showUpsell, setShowUpsell] = useState(false);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -99,7 +104,12 @@ export const ContactForm = ({
       return;
     }
 
+    setShowUpsell(true);
+  };
+
+  const handleFinalSubmit = async (answersFromUpsell: OnboardingAnswers) => {
     setIsSubmitting(true);
+    setShowUpsell(false);
 
     try {
       const invokePromise = supabase.functions.invoke('send-contact-email', {
@@ -108,12 +118,12 @@ export const ContactForm = ({
           email: formData.email,
           empresa: formData.empresa,
           comentario: formData.comentario,
-          onboardingAnswers,
+          onboardingAnswers: answersFromUpsell,
           n8nHosting,
           source,
           chatbotContext,
           selectedProcesses: selectedProcesses.map(p => {
-            const adjusted = computeFinalComplexity(p, onboardingAnswers);
+            const adjusted = computeFinalComplexity(p, answersFromUpsell);
             const processCustomizations = customizations[p.id];
             return {
               id: p.id,
@@ -128,7 +138,6 @@ export const ContactForm = ({
           }),
         },
       });
-
 
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Request timed out')), 30000);
@@ -149,7 +158,6 @@ export const ContactForm = ({
       console.error("Error sending email:", error);
       let description = "No hemos podido enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo. Si el problema persiste, escríbenos a team@immoral.com";
 
-      // Check for server error (500)
       if (error?.status === 500 || error?.code === 500 || error?.message?.includes('500')) {
         description = "Algo ha fallado por nuestra parte. Estamos trabajando en solucionarlo. Puedes intentarlo en unos minutos o contactarnos directamente";
       } else if (error?.message === 'Request timed out') {
@@ -180,7 +188,7 @@ export const ContactForm = ({
 
   if (submitted) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      <Dialog open={isOpen && !showUpsell && !submitted} onOpenChange={handleClose}>
         <DialogContent className="bg-card border-border max-w-md">
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -212,160 +220,170 @@ export const ContactForm = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-card border-border max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            {source === 'chatbot' ? 'Hablar con un consultor' : 'Solicitar propuesta'}
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            {source === 'chatbot'
-              ? 'Déjanos tus datos y un consultor humano revisará tu consulta para ayudarte personalmente.'
-              : 'Completa tus datos y nos pondremos en contacto contigo'
-            }
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen && !showUpsell && !submitted} onOpenChange={handleClose}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">
+              {source === 'chatbot' ? 'Hablar con un consultor' : 'Solicitar propuesta'}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {source === 'chatbot'
+                ? 'Déjanos tus datos y un consultor humano revisará tu consulta para ayudarte personalmente.'
+                : 'Completa tus datos y nos pondremos en contacto contigo'
+              }
+            </DialogDescription>
+          </DialogHeader>
 
-        <ScrollArea className="max-h-[70vh] pr-4">
-          <div className="space-y-6">
+          <ScrollArea className="max-h-[70vh] pr-4">
+            <div className="space-y-6">
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Selected Processes Summary */}
-              <div className="bg-muted p-4 rounded-lg space-y-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-2">
-                    Procesos seleccionados ({selectedProcesses.length})
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProcesses.map((process) => (
-                      <Badge
-                        key={process.id}
-                        variant="outline"
-                        className="text-xs border-primary/30 text-primary"
-                      >
-                        {process.nombre}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-
-                {source !== 'chatbot' && (
-                  <div className="pt-3 border-t border-border/50">
-                    <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                      <Server className="w-4 h-4 text-primary" />
-                      Configuración de n8n
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="bg-muted p-4 rounded-lg space-y-4">
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground mb-2">
+                      Procesos seleccionados ({selectedProcesses.length})
                     </h4>
-                    <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
-                      {n8nHosting === 'setup' ? (
-                        <>
-                          <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                          <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
-                        </>
-                      ) : (
-                        <>
-                          <div className="w-2 h-2 rounded-full bg-secondary" />
-                          <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
-                        </>
-                      )}
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProcesses.map((process) => (
+                        <Badge
+                          key={process.id}
+                          variant="outline"
+                          className="text-xs border-primary/30 text-primary"
+                        >
+                          {process.nombre}
+                        </Badge>
+                      ))}
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-2 italic">
-                      * Puedes cambiar esta opción en el panel lateral antes de abrir este formulario.
-                    </p>
                   </div>
-                )}
-              </div>
 
-              {/* Form Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
-                    Nombre *
-                  </Label>
-                  <Input
-                    id="nombre"
-                    value={formData.nombre}
-                    onChange={(e) => {
-                      setFormData({ ...formData, nombre: e.target.value });
-                      if (errors.nombre) setErrors({ ...errors, nombre: "" });
-                    }}
-                    className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  />
-                  {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
-                    Email *
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => {
-                      setFormData({ ...formData, email: e.target.value });
-                      if (errors.email) setErrors({ ...errors, email: "" });
-                    }}
-                    className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  />
-                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
-                    Empresa *
-                  </Label>
-                  <Input
-                    id="empresa"
-                    value={formData.empresa}
-                    onChange={(e) => {
-                      setFormData({ ...formData, empresa: e.target.value });
-                      if (errors.empresa) setErrors({ ...errors, empresa: "" });
-                    }}
-                    className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  />
-                  {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
-                  Comentario adicional
-                </Label>
-                <Textarea
-                  id="comentario"
-                  rows={4}
-                  value={formData.comentario}
-                  onChange={(e) => {
-                    setFormData({ ...formData, comentario: e.target.value });
-                    if (errors.comentario) setErrors({ ...errors, comentario: "" });
-                  }}
-                  className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
-                />
-                {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-border">
-                <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
-                  Cancelar
-                </Button>
-                <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Enviando tu solicitud...
-                    </>
-                  ) : (
-                    "Enviar solicitud"
+                  {source !== 'chatbot' && (
+                    <div className="pt-3 border-t border-border/50">
+                      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                        <Server className="w-4 h-4 text-primary" />
+                        Configuración de n8n
+                      </h4>
+                      <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
+                        {n8nHosting === 'setup' ? (
+                          <>
+                            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                            <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-2 h-2 rounded-full bg-secondary" />
+                            <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   )}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
+                      Nombre *
+                    </Label>
+                    <Input
+                      id="nombre"
+                      value={formData.nombre}
+                      onChange={(e) => {
+                        setFormData({ ...formData, nombre: e.target.value });
+                        if (errors.nombre) setErrors({ ...errors, nombre: "" });
+                      }}
+                      className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    />
+                    {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
+                      Email *
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
+                      className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    />
+                    {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                  </div>
+
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
+                      Empresa *
+                    </Label>
+                    <Input
+                      id="empresa"
+                      value={formData.empresa}
+                      onChange={(e) => {
+                        setFormData({ ...formData, empresa: e.target.value });
+                        if (errors.empresa) setErrors({ ...errors, empresa: "" });
+                      }}
+                      className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    />
+                    {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
+                    Comentario adicional
+                  </Label>
+                  <Textarea
+                    id="comentario"
+                    rows={4}
+                    value={formData.comentario}
+                    onChange={(e) => {
+                      setFormData({ ...formData, comentario: e.target.value });
+                      if (errors.comentario) setErrors({ ...errors, comentario: "" });
+                    }}
+                    className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
+                  />
+                  {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t border-border">
+                  <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Enviando tu solicitud...
+                      </>
+                    ) : (
+                      "Enviar solicitud"
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+      {showUpsell && (
+        <OnboardingModal
+          isOpen={showUpsell}
+          onClose={() => setShowUpsell(false)}
+          initialAnswers={{
+            ...getOnboardingAnswers(),
+            nombre: formData.nombre,
+            email: formData.email
+          }}
+          prefilledSector={selectedProcesses.length > 0 ? selectedProcesses[0].categoriaNombre : undefined}
+          accentColor={accentColor}
+          upsellMode={true}
+          onFinishUpsell={handleFinalSubmit}
+        />
+      )}
+    </>
   );
 };

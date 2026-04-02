@@ -24,6 +24,8 @@ interface OnboardingModalProps {
     initialAnswers?: OnboardingAnswers | null;
     prefilledSector?: string;
     accentColor?: string;
+    upsellMode?: boolean;
+    onFinishUpsell?: (answers: OnboardingAnswers) => void;
 }
 
 const SECTORS = [
@@ -128,7 +130,7 @@ const PAINS = [
     "Quiero automatizar presupuestos y respuestas"
 ];
 
-export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSector, accentColor = "#8b5cf6" }: OnboardingModalProps) => {
+export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSector, accentColor = "#8b5cf6", upsellMode = false, onFinishUpsell }: OnboardingModalProps) => {
     // step 0: Intro
     const [step, setStep] = useState(0); 
     const [answers, setAnswers] = useState<OnboardingAnswers>(() => ({
@@ -165,6 +167,8 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
     const nextStep = () => {
         if (step === 0) {
             setStep(isSectorStepSkipped ? 2 : 1);
+        } else if (step === 5 && upsellMode) {
+            handleFinish();
         } else if (step < 6) {
             setStep(step + 1);
         } else if (step === 6) {
@@ -180,10 +184,20 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
 
     const handleSkip = () => {
         skipOnboarding();
-        onClose();
+        if (upsellMode && onFinishUpsell) {
+            onFinishUpsell(answers);
+        } else {
+            onClose();
+        }
     };
 
     const handleFinish = async () => {
+        if (upsellMode && onFinishUpsell) {
+            setIsSubmitting(true);
+            await onFinishUpsell(answers); // Podría ser una promesa si hace peticiones de red
+            setIsSubmitting(false);
+            return;
+        }
         setIsSubmitting(true);
         try {
             console.log("Iniciando envío de Quick Form Lead:", answers.email);
@@ -264,12 +278,21 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                             <div className="h-20 w-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-2 rotate-3 hover:rotate-0 transition-transform duration-300" style={{ backgroundColor: `${accentColor}15` }}>
                                 <Sparkles className="h-10 w-10 text-primary" style={{ color: accentColor }} />
                             </div>
-                            <div className="space-y-3">
-                                <h2 className="text-3xl font-bold tracking-tight">Personaliza tu Catálogo</h2>
-                                <p className="text-lg text-muted-foreground max-w-md mx-auto">
-                                    Responde {totalQuestions} breves preguntas (menos de 2 min) para que podamos identificar qué procesos son automatizables en tu negocio y mostrarte una selección totalmente personalizada.
-                                </p>
-                            </div>
+                            {upsellMode ? (
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-bold tracking-tight">Ayúdanos a afinar tu propuesta</h2>
+                                    <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                                        Responde estas {totalQuestions} breves preguntas sobre cómo trabajáis hoy (menos de 2 min) para que podamos calcular tiempos y costes técnicos con absoluta precisión.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-bold tracking-tight">Personaliza tu Catálogo</h2>
+                                    <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                                        Responde {totalQuestions} breves preguntas (menos de 2 min) para que podamos identificar qué procesos son automatizables en tu negocio y mostrarte una selección totalmente personalizada.
+                                    </p>
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 gap-3 w-full max-w-sm pt-4">
                                 <div className="flex items-center space-x-3 text-left p-4 bg-secondary/30 rounded-xl border border-border/50">
                                     <div className="h-8 w-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${accentColor}20` }}>
@@ -293,9 +316,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                 id="inicio_quiz" 
                                 className="mb-6"
                                 message={
-                                    <span>
-                                        <strong>¡Hola! Queremos conocerte un poco.</strong> Responde estas breves preguntas para que podamos recomendarte exactamente lo que tu negocio necesita.
-                                    </span>
+                                    upsellMode ? (
+                                        <span>
+                                            <strong>¡Gracias por tus datos!</strong> Esta información extra nos permite ser mucho más precisos a la hora de estructurar tu automatización.
+                                        </span>
+                                    ) : (
+                                        <span>
+                                            <strong>¡Hola! Queremos conocerte un poco.</strong> Responde estas breves preguntas para que podamos recomendarte exactamente lo que tu negocio necesita.
+                                        </span>
+                                    )
                                 } 
                             />
                             <h2 className="text-2xl font-bold">¿En qué sector se mueve tu negocio?</h2>
@@ -615,7 +644,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                         </div>
                     )}
 
-                    {step === 6 && (
+                    {step === 6 && !upsellMode && (
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold">Por último, ¿cómo podemos contactarte?</h2>
                             <p className="text-muted-foreground">
@@ -718,7 +747,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                 </>
                             ) : (
                                 <>
-                                    {step === 0 ? "Empezar" : step === 6 ? "Finalizar" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
+                                    {step === 0 ? "Empezar" : (step === 6 || (step === 5 && upsellMode)) ? "Finalizar" : "Siguiente"} <ChevronRight className="ml-2 h-4 w-4" />
                                 </>
                             )}
                         </Button>
