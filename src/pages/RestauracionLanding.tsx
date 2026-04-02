@@ -344,7 +344,7 @@ const RestauracionLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-orange-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -365,6 +365,7 @@ const RestauracionLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#f97316"
         />
       )}
 
@@ -372,7 +373,7 @@ const RestauracionLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Restauración"
-        accentColor="#ea580c"
+        accentColor="#f97316"
       />
     </div>
   );

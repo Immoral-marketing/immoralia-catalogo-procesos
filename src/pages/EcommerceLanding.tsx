@@ -344,7 +344,7 @@ const EcommerceLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-blue-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -365,6 +365,7 @@ const EcommerceLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#f43f5e"
         />
       )}
 
@@ -372,7 +373,7 @@ const EcommerceLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="E-commerce"
-        accentColor="#2563eb"
+        accentColor="#f43f5e"
       />
     </div>
   );

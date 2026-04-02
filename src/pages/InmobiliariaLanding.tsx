@@ -344,7 +344,7 @@ const InmobiliariaLanding = () => {
               <SheetHeader className="mb-2 text-left">
                 <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                   <LayoutGrid className="w-6 h-6 text-emerald-400" />
-                  Tu Selección
+                  Mi Selección
                 </SheetTitle>
               </SheetHeader>
               <SelectionSummary 
@@ -365,6 +365,7 @@ const InmobiliariaLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
+          accentColor="#10b981"
         />
       )}
 
