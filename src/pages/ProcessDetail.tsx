@@ -27,18 +27,7 @@ const ProcessDetail = () => {
 
 
     const process = processes.find((p) => p.slug === slug);
-
-    if (!process) {
-        return (
-            <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-                <h1 className="text-4xl font-bold mb-4">Proceso no encontrado</h1>
-                <p className="text-muted-foreground mb-8">El proceso que buscas no existe o ha sido movido.</p>
-                <Button onClick={() => navigate("/")}>Volver al catálogo</Button>
-            </div>
-        );
-    }
-
-    const isSelected = selectedProcessIds.has(process.id);
+    const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
     const [showContactForm, setShowContactForm] = useState(false);
     const [showCalendlyModal, setShowCalendlyModal] = useState(false);
@@ -65,14 +54,16 @@ const ProcessDetail = () => {
     }, [process]);
 
     // Customization State Handling
-    const processCustomization = customizations[process.id] || { selectedOptions: {}, customInputs: {} };
-    const [localOptions, setLocalOptions] = useState<Record<string, string[]>>(processCustomization.selectedOptions);
-    const [localInputs, setLocalInputs] = useState<Record<string, string>>(processCustomization.customInputs);
-    const [localNeedsInput, setLocalNeedsInput] = useState(processCustomization.customInputs["needs"] || "");
+    const processCustomization = process && customizations[process.id] ? customizations[process.id] : { selectedOptions: {}, customInputs: {} };
+    const [localOptions, setLocalOptions] = useState<Record<string, string[]>>(processCustomization.selectedOptions || {});
+    const [localInputs, setLocalInputs] = useState<Record<string, string>>(processCustomization.customInputs || {});
+    const [localNeedsInput, setLocalNeedsInput] = useState((processCustomization.customInputs && processCustomization.customInputs["needs"]) || "");
 
     useEffect(() => {
         // Only update context if we have changes and it's initialized
-        updateCustomization(process.id, localOptions, { ...localInputs, needs: localNeedsInput });
+        if (process) {
+            updateCustomization(process.id, localOptions, { ...localInputs, needs: localNeedsInput });
+        }
     }, [localOptions, localInputs, localNeedsInput]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const requiresCustomInput = (option: string) => {
@@ -106,7 +97,7 @@ const ProcessDetail = () => {
         });
     };
 
-    const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
+    const finalComplexity = process ? computeFinalComplexity(process, onboardingAnswers) : { timeEstimate: "N/A", complexity: "N/A" };
 
     const onboardingChannels = useMemo(() => {
         if (!onboardingAnswers?.channels) return [];
@@ -118,6 +109,7 @@ const ProcessDetail = () => {
     }, [onboardingAnswers]);
 
     useEffect(() => {
+        if (!process) return;
         const sections = ["resumen", "funcionamiento", "personalizacion", "demo", "faqs", "relacionados"];
         const observers = sections.map(id => {
             const element = document.getElementById(id);
@@ -188,12 +180,24 @@ const ProcessDetail = () => {
     };
 
     const toggleSelect = () => {
-        toggleProcess(process.id);
+        if (process) {
+            toggleProcess(process.id);
+        }
     };
 
-    const relatedProcesses = (process.related_processes || [])
+    const relatedProcesses = (process?.related_processes || [])
         .map(slug => processes.find(p => p.slug === slug))
         .filter((p): p is typeof processes[0] => !!p);
+
+    if (!process) {
+        return (
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+                <h1 className="text-4xl font-bold mb-4">Proceso no encontrado</h1>
+                <p className="text-muted-foreground mb-8">El proceso que buscas no existe o ha sido movido.</p>
+                <Button onClick={() => navigate("/")}>Volver al catálogo</Button>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20 md:pb-0">

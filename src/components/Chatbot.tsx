@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Bot, User, Loader2, Minimize2, Maximize2 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
@@ -32,6 +33,25 @@ const Chatbot: React.FC = () => {
     const [collectionStep, setCollectionStep] = useState<CollectionStep>('chat');
     const [leadData, setLeadData] = useState<LeadData>({ nombre: '', email: '', telefono: '' });
     const scrollRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+
+    // Determinar el color de acento según la ruta
+    const getAccentColor = () => {
+        const path = location.pathname;
+        if (path.includes('gestorias')) return '#14b8a6'; // Teal
+        if (path.includes('inmobiliaria')) return '#10b981'; // Emerald
+        if (path.includes('salud')) return '#2563eb'; // Blue
+        if (path.includes('centros-deportivos')) return '#06b6d4'; // Cyan
+        if (path.includes('construccion')) return '#d97706'; // Amber
+        if (path.includes('academias')) return '#8b5cf6'; // Violet
+        if (path.includes('restauracion')) return '#ea580c'; // Orange
+        if (path.includes('ecommerce')) return '#2563eb'; // Blue
+        if (path.includes('agencias')) return '#e11d48'; // Rose
+        return '#000000'; // Default black or primary
+    };
+
+    const accentColor = getAccentColor();
+    const isLanding = accentColor !== '#000000';
 
     const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
         if (messages.length <= 1 || hasAnalyzed) return;
@@ -154,9 +174,10 @@ const Chatbot: React.FC = () => {
         return (
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl z-50 p-0 overflow-hidden group transition-all hover:scale-110 bg-primary"
+                className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl z-50 p-0 overflow-hidden group transition-all hover:scale-110"
+                style={isLanding ? { backgroundColor: accentColor } : {}}
             >
-                <MessageSquare className="w-6 h-6 text-primary-foreground transition-transform group-hover:rotate-12" />
+                <MessageSquare className="w-6 h-6 text-white transition-transform group-hover:rotate-12" />
             </Button>
         );
     }
@@ -167,10 +188,13 @@ const Chatbot: React.FC = () => {
             isMinimized ? "bottom-6 w-72 h-14" : "bottom-6 w-96 max-h-[600px] h-[80vh]"
         )}>
             {/* Header */}
-            <div className="p-4 bg-primary text-primary-foreground flex items-center justify-between border-b border-primary/20">
+            <div 
+                className="p-4 text-white flex items-center justify-between border-b border-white/10"
+                style={isLanding ? { backgroundColor: accentColor } : { backgroundColor: 'hsl(var(--primary))' }}
+            >
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                        <Bot className="w-5 h-5" />
+                        <Bot className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <p className="text-sm font-bold">Asistente Immoralia</p>
@@ -212,8 +236,12 @@ const Chatbot: React.FC = () => {
                                 )}>
                                     <div className={cn(
                                         "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-                                        m.role === 'user' ? "bg-secondary text-secondary-foreground" : "bg-primary/10 text-primary border border-primary/20"
-                                    )}>
+                                        m.role === 'user' 
+                                            ? "bg-secondary text-secondary-foreground" 
+                                            : "bg-muted border border-border"
+                                    )}
+                                    style={m.role === 'assistant' && isLanding ? { borderColor: `${accentColor}40`, color: accentColor } : {}}
+                                    >
                                         {m.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -228,8 +256,8 @@ const Chatbot: React.FC = () => {
                                                     className="markdown-content"
                                                     dangerouslySetInnerHTML={{
                                                         __html: m.content
-                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
-                                                            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold underline underline-offset-2 hover:opacity-80 transition-all">$1</a>')
+                                                            .replace(/\*\*(.*?)\*\*/g, `<strong class="font-bold" style="color: ${isLanding ? accentColor : 'hsl(var(--primary))'}">$1</strong>`)
+                                                            .replace(/\[(.*?)\]\((.*?)\)/g, `<a href="$2" target="_blank" rel="noopener noreferrer" class="font-semibold underline underline-offset-2 hover:opacity-80 transition-all" style="color: ${isLanding ? accentColor : 'hsl(var(--primary))'}">$1</a>`)
                                                             .replace(/^\s*-\s+(.*?)$/gm, '<li class="ml-4 mb-1">$1</li>')
                                                             .replace(/\n\n/g, '<div class="h-3"></div>')
                                                             .replace(/\n/g, '<br />')
@@ -243,7 +271,8 @@ const Chatbot: React.FC = () => {
                                             <Button
                                                 size="sm"
                                                 variant="secondary"
-                                                className="w-full mt-1 border border-primary/20 gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                                className="w-full mt-1 border gap-2 font-bold animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                                style={isLanding ? { borderColor: `${accentColor}40`, color: accentColor } : {}}
                                                 onClick={() => {
                                                     analyzeConversation('human');
                                                     setMessages(prev => [...prev, { 
@@ -261,13 +290,25 @@ const Chatbot: React.FC = () => {
                             ))}
                             {isLoading && (
                                 <div className="flex gap-3 max-w-[85%] mr-auto">
-                                    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
+                                    <div 
+                                        className="w-8 h-8 rounded-full bg-muted border border-border flex items-center justify-center"
+                                        style={isLanding ? { borderColor: `${accentColor}40`, color: accentColor } : {}}
+                                    >
                                         <Loader2 className="w-4 h-4 animate-spin" />
                                     </div>
                                     <div className="p-3 rounded-2xl bg-muted border border-border rounded-tl-none flex gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" />
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-100" />
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-200" />
+                                        <span 
+                                            className="w-1.5 h-1.5 rounded-full animate-bounce" 
+                                            style={isLanding ? { backgroundColor: accentColor, opacity: 0.4 } : { backgroundColor: 'hsl(var(--primary))', opacity: 0.4 }}
+                                        />
+                                        <span 
+                                            className="w-1.5 h-1.5 rounded-full animate-bounce delay-100" 
+                                            style={isLanding ? { backgroundColor: accentColor, opacity: 0.4 } : { backgroundColor: 'hsl(var(--primary))', opacity: 0.4 }}
+                                        />
+                                        <span 
+                                            className="w-1.5 h-1.5 rounded-full animate-bounce delay-200" 
+                                            style={isLanding ? { backgroundColor: accentColor, opacity: 0.4 } : { backgroundColor: 'hsl(var(--primary))', opacity: 0.4 }}
+                                        />
                                     </div>
                                 </div>
                             )}
@@ -280,7 +321,8 @@ const Chatbot: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder={collectionStep === 'chat' ? "Pregunta algo..." : "Escribe aquí..."}
-                                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 pr-12"
+                                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 pr-12 transition-all"
+                                style={isLanding ? { '--tw-ring-color': `${accentColor}50` } as React.CSSProperties : {}}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
@@ -288,11 +330,12 @@ const Chatbot: React.FC = () => {
                             />
                             <Button
                                 size="icon"
-                                className="absolute right-1 rounded-lg h-9 w-9 bg-primary"
+                                className="absolute right-1 rounded-lg h-9 w-9"
+                                style={isLanding ? { backgroundColor: accentColor } : {}}
                                 disabled={isLoading || !input.trim()}
                                 onClick={handleSend}
                             >
-                                <Send className="w-4 h-4" />
+                                <Send className="w-4 h-4 text-white" />
                             </Button>
                         </div>
                         <p className="text-[9px] text-center text-muted-foreground mt-3 uppercase tracking-widest opacity-50">
