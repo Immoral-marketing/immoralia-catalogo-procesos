@@ -245,6 +245,7 @@ const SportsLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#0891b2"
                         />
                       ))}
                   </div>
@@ -363,7 +364,7 @@ const SportsLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#06b6d4"
+          accentColor="#0891b2"
         />
       )}
 
@@ -371,7 +372,7 @@ const SportsLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Centros Deportivos"
-        accentColor="#06b6d4"
+        accentColor="#0891b2"
       />
     </div>
   );

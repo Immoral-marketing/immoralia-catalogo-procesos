@@ -41,11 +41,13 @@ export const ContactForm = ({
   onOpenOnboarding,
   source = 'web',
   chatbotContext = [],
-  accentColor = "#8b5cf6"
+  accentColor = "#0ea5e9"
 }: ContactFormProps) => {
   const { toast } = useToast();
   const { customizations } = useSelection();
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+
+  const [isSubmitHovered, setIsSubmitHovered] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -249,7 +251,8 @@ export const ContactForm = ({
                         <Badge
                           key={process.id}
                           variant="outline"
-                          className="text-xs border-primary/30 text-primary"
+                          className="text-xs border-primary/30"
+                          style={{ borderColor: `${accentColor}4d`, color: accentColor }}
                         >
                           {process.nombre}
                         </Badge>
@@ -260,7 +263,7 @@ export const ContactForm = ({
                   {source !== 'chatbot' && (
                     <div className="pt-3 border-t border-border/50">
                       <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                        <Server className="w-4 h-4 text-primary" />
+                        <Server className="w-4 h-4" style={{ color: accentColor }} />
                         Configuración de n8n
                       </h4>
                       <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
@@ -353,7 +356,19 @@ export const ContactForm = ({
                   <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
                     Cancelar
                   </Button>
-                  <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    onMouseEnter={() => setIsSubmitHovered(true)}
+                    onMouseLeave={() => setIsSubmitHovered(false)}
+                    style={{ 
+                      backgroundColor: isSubmitHovered ? `${accentColor}e6` : accentColor,
+                      borderColor: accentColor,
+                      color: 'white',
+                      boxShadow: isSubmitHovered ? `0 0 20px ${accentColor}4d` : 'none'
+                    }}
+                    className="transition-all duration-300"
+                  >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

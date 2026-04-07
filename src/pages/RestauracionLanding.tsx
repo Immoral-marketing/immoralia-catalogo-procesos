@@ -248,6 +248,7 @@ const RestauracionLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#ea580c"
                         />
                       ))}
                   </div>
@@ -365,7 +366,7 @@ const RestauracionLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#f97316"
+          accentColor="#ea580c"
         />
       )}
 
@@ -373,7 +374,7 @@ const RestauracionLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Restauración"
-        accentColor="#f97316"
+        accentColor="#ea580c"
       />
     </div>
   );

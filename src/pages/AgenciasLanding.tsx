@@ -249,6 +249,7 @@ const AgenciasLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#e11d48"
                         />
                       ))}
                   </div>
@@ -366,7 +367,7 @@ const AgenciasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#8b5cf6"
+          accentColor="#e11d48"
         />
       )}
 
@@ -374,7 +375,7 @@ const AgenciasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Agencia / Marketing / Consultoría"
-        accentColor="#8b5cf6"
+        accentColor="#e11d48"
       />
     </div>
   );

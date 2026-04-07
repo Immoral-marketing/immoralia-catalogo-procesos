@@ -248,6 +248,7 @@ const InmobiliariaLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#059669"
                         />
                       ))}
                   </div>
@@ -365,7 +366,7 @@ const InmobiliariaLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#10b981"
+          accentColor="#059669"
         />
       )}
 
@@ -373,7 +374,7 @@ const InmobiliariaLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Inmobiliaria"
-        accentColor="#10b981"
+        accentColor="#059669"
       />
     </div>
   );

@@ -246,6 +246,7 @@ const SaludLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#2563eb"
                         />
                       ))}
                   </div>
@@ -363,7 +364,7 @@ const SaludLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#ec4899"
+          accentColor="#2563eb"
         />
       )}
 
@@ -371,7 +372,7 @@ const SaludLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Clínicas / Salud"
-        accentColor="#ec4899"
+        accentColor="#2563eb"
       />
     </div>
   );
