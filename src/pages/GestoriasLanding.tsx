@@ -249,6 +249,7 @@ const GestoriasLanding = () => {
                       <ProcessCard
                         key={process.id}
                         process={process}
+                        accentColor="#14b8a6"
                       />
                     ))}
                 </div>
@@ -369,7 +370,7 @@ const GestoriasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#0ea5e9"
+          accentColor="#14b8a6"
         />
       )}
 
@@ -377,7 +378,7 @@ const GestoriasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Gestoría"
-        accentColor="#0ea5e9"
+        accentColor="#14b8a6"
       />
     </div>
   );

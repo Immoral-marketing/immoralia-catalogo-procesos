@@ -247,6 +247,7 @@ const AcademiasLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#7c3aed"
                         />
                       ))}
                   </div>
@@ -364,7 +365,7 @@ const AcademiasLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#818cf8"
+          accentColor="#7c3aed"
         />
       )}
 
@@ -372,7 +373,7 @@ const AcademiasLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Academias / Formación"
-        accentColor="#818cf8"
+        accentColor="#7c3aed"
       />
     </div>
   );

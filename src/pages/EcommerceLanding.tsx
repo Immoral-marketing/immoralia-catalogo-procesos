@@ -248,6 +248,7 @@ const EcommerceLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#2563eb"
                         />
                       ))}
                   </div>
@@ -365,7 +366,7 @@ const EcommerceLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#f43f5e"
+          accentColor="#2563eb"
         />
       )}
 
@@ -373,7 +374,7 @@ const EcommerceLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="E-commerce"
-        accentColor="#f43f5e"
+        accentColor="#2563eb"
       />
     </div>
   );

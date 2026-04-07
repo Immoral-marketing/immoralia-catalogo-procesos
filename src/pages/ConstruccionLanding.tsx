@@ -247,6 +247,7 @@ const ConstruccionLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#d97706"
                         />
                       ))}
                   </div>
@@ -364,7 +365,7 @@ const ConstruccionLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#f59e0b"
+          accentColor="#d97706"
         />
       )}
 
@@ -372,7 +373,7 @@ const ConstruccionLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Construcción & Reformas"
-        accentColor="#f59e0b"
+        accentColor="#d97706"
       />
     </div>
   );
