@@ -409,7 +409,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                                             onMouseLeave={() => setHoveredToolId(null)}
                                                             onClick={() => {
                                                                 let newTools = toggleItem(answers.tools, toolId);
-                                                                let extra: any = {};
+                                                                const extra: any = {};
 
                                                                 if (isPlatformCategory) {
                                                                     const platformKey = cat.id === 'crm' ? 'selected_crm_platform_id' : 'selected_erp_platform_id';

@@ -61,19 +61,49 @@ async function syncProcesses() {
     }
   }
 
+  // Mejoramos la extracción de bloques usando un balanceador de llaves simple
   const parsedProcesses = [];
-
-  // Mejora de la división de bloques
-  const cleanBlocks = processesString.split(/},\s*(?:\n\s*)?{/).map(b => b.trim());
-
-  for (let block of cleanBlocks) {
-    if (!block.trim() || !block.includes('id:')) continue;
+  let currentPos = 0;
+  const arrayContent = processesString;
+  
+  while (currentPos < arrayContent.length) {
+    const startIdx = arrayContent.indexOf('{', currentPos);
+    if (startIdx === -1) break;
     
+    let endIdx = startIdx;
+    let balance = 0;
+    let inString = false;
+    let quoteChar = '';
+    
+    for (let i = startIdx; i < arrayContent.length; i++) {
+      const char = arrayContent[i];
+      if ((char === '"' || char === "'" || char === '`') && arrayContent[i-1] !== '\\') {
+        if (!inString) {
+          inString = true;
+          quoteChar = char;
+        } else if (char === quoteChar) {
+          inString = false;
+        }
+      }
+      
+      if (!inString) {
+        if (char === '{') balance++;
+        if (char === '}') balance--;
+        if (balance === 0) {
+          endIdx = i;
+          break;
+        }
+      }
+    }
+    
+    const block = arrayContent.substring(startIdx, endIdx + 1);
+    currentPos = endIdx + 1;
+
     // Función robusta para extraer valores
     const getValue = (key) => {
-      // Intenta capturar lo que hay entre comillas después de la key:
-      const match = block.match(new RegExp(`${key}:\\s*["']([^"']*)["']`));
-      if (match) return match[1];
+      // Intenta capturar lo que hay entre comillas o backticks
+      const match = block.match(new RegExp(`${key}:\\s*["'\`]([\\s\\S]*?)["'\`](?:,|\\s*})`));
+      if (match) return match[1].trim();
       return null;
     };
 
@@ -82,7 +112,7 @@ async function syncProcesses() {
       if (!match) return [];
       return match[1]
         .split(',')
-        .map(s => s.trim().replace(/^["']|["']$/g, ''))
+        .map(s => s.trim().replace(/^["'`]|["'`]$/g, ''))
         .filter(s => s !== '' && !s.startsWith('//'));
     };
 
@@ -100,7 +130,7 @@ async function syncProcesses() {
       nombre: getValue('nombre'),
       tagline: getValue('tagline'),
       recomendado: recomendado,
-      descripcion_detallada: getValue('descripcionDetallada'),
+      descripcion_detallada: getValue('descripcionDetallada') || getValue('tagline'), // Fallback
       pasos: getArray('pasos'),
       personalizacion: getValue('personalizacion'),
       sectores: getArray('sectores'),
@@ -113,7 +143,7 @@ async function syncProcesses() {
 
     // Validación básica para evitar errores de base de datos
     if (!processObj.categoria_nombre) {
-      console.warn(`⚠️ Aviso: El proceso ${id} no tiene categoriaNombre.`);
+      console.warn(`⚠️ Aviso: El proceso ${processObj.id} no tiene categoriaNombre.`);
       // Intento de fallback si es uno de los conocidos
       const catMap = {};
       parsedCategories.forEach(c => catMap[c.id] = c.name);
@@ -140,19 +170,30 @@ async function syncProcesses() {
 
   console.log(`📦 Preparados ${parsedProcesses.length} procesos para sincronizar.`);
 
-  // Sincronización masiva (UPSERT)
-  const { data, error } = await supabase
-    .from('processes')
-    .upsert(parsedProcesses, { onConflict: 'id' });
+  // Sincronización uno a uno para detectar errores específicos
+  console.log('📤 Enviando a Supabase (uno a uno para depuración)...');
+  let successCount = 0;
+  let errorCount = 0;
 
-  if (error) {
-    console.error('❌ Error al sincronizar con Supabase:', error);
-    return;
+  for (const processObj of parsedProcesses) {
+    if (processObj.id === 'D14') {
+      console.log('📝 Detalle de D14:', JSON.stringify(processObj, null, 2));
+    }
+
+    const { error } = await supabase
+      .from('processes')
+      .upsert(processObj, { onConflict: 'id' });
+
+    if (error) {
+      console.error(`❌ Error en proceso ${processObj.id} (${processObj.codigo}):`, error.message);
+      errorCount++;
+    } else {
+      successCount++;
+    }
   }
 
-  console.log('✅ Sincronización completada con éxito.');
+  console.log(`✅ Sincronización finalizada: ${successCount} exitosos, ${errorCount} fallidos.`);
   console.log(`✨ Total de categorías: ${parsedCategories.length}`);
-  console.log(`✨ Total de procesos: ${parsedProcesses.length}`);
 }
 
 syncProcesses().catch(err => {
