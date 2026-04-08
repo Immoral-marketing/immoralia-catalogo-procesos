@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   Dumbbell, 
@@ -103,6 +104,10 @@ const sectors = [
 ];
 
 const SectorSelector = () => {
+  useEffect(() => {
+    document.title = "Immoralia - Catálogo de Procesos - Seleccionador";
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
       {/* Background Decor */}

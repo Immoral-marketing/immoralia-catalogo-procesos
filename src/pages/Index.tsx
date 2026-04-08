@@ -43,6 +43,7 @@ const Index = () => {
   const [chatbotContext, setChatbotContext] = useState<string[]>([]);
 
   useEffect(() => {
+    document.title = "Immoralia - Catálogo de Procesos";
     const handleShowContact = (e: CustomEvent) => {
       if (e.detail?.source === 'chatbot') {
         setContactSource('chatbot');
@@ -118,17 +119,7 @@ const Index = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <Link to="/landing/centros-deportivos">
-                <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
-                  <Sparkles className="w-4 h-4 text-cyan-400" /> Centros Deportivos
-                </Button>
-              </Link>
-              
-              <Link to="/landing/gestorias">
-                <Button variant="outline" size="sm" className="gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/5">
-                  <Sparkles className="w-4 h-4 text-cyan-400" /> Gestorías
-                </Button>
-              </Link>
+
               
               {onboardingAnswers ? (
                 <div className="flex items-center gap-2">
@@ -230,16 +221,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {onboardingAnswers && (
-                  <div className="pt-4 border-t border-border flex flex-col gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="w-full justify-start gap-2">
-                      <Settings2 className="w-4 h-4" /> Editar respuestas
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={handleReset} className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
-                      <RotateCcw className="w-4 h-4" /> Restablecer
-                    </Button>
-                  </div>
-                )}
+
               </div>
             </aside>
 

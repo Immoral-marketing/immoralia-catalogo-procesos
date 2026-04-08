@@ -46,6 +46,7 @@ const GestoriasLanding = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Gestorías";
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
