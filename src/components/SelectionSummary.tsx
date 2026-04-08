@@ -43,7 +43,7 @@ export const SelectionSummary = ({
         <h3 className="text-xl font-bold text-foreground mb-4 shrink-0">Tu selección</h3>
 
         {/* Selected Processes List */}
-        <div className="space-y-2 mb-6 max-h-[40vh] overflow-y-auto shrink-0 pr-1">
+        <div className="space-y-2 mb-6 pr-1">
           {count === 0 ? (
             <p className="text-sm text-muted-foreground italic">
               Explora el catálogo y selecciona los procesos que quieras automatizar. ¡Puedes elegir tantos como necesites!
@@ -77,88 +77,6 @@ export const SelectionSummary = ({
             ))
           )}
         </div>
-
-        {/* Hosting Configuration */}
-        {count > 0 && (
-          <div className="mb-6 p-4 bg-primary/10 border-2 border-primary/30 rounded-xl animate-in fade-in slide-in-from-top-2 shadow-sm relative overflow-hidden shrink-0">
-            <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none">
-              <Server className="w-12 h-12" />
-            </div>
-
-            <div className="relative z-10 space-y-4">
-              <div className="flex items-center gap-2">
-                <Server className="w-4 h-4 text-primary" />
-                <h4 className="text-sm font-bold text-foreground">
-                  Ubicación de la automatización
-                </h4>
-              </div>
-
-              <p className="text-[11px] text-muted-foreground leading-snug">
-                Donde vivirá el motor de tus procesos.
-              </p>
-
-              <RadioGroup
-                value={n8nHosting}
-                onValueChange={(value) => onHostingChange?.(value as 'setup' | 'own')}
-                className="space-y-3"
-              >
-                <div className={cn(
-                  "flex items-start space-x-3 p-2 rounded-lg transition-colors border border-transparent",
-                  n8nHosting === 'setup' ? "bg-primary/5 border-primary/20" : "hover:bg-muted/50"
-                )}>
-                  <RadioGroupItem value="setup" id="setup" className="mt-1" />
-                  <Label htmlFor="setup" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-foreground text-[13px]">Gestionado por Immoralia</span>
-                      <Badge variant="outline" className="text-[9px] h-4 px-1.5 bg-primary/10 text-primary border-primary/20 uppercase tracking-wider font-extrabold">Recomendado</Badge>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground">
-                      Nosotros nos encargamos de todo. Ideal si no tienes equipo técnico.
-                    </p>
-                  </Label>
-                </div>
-
-                <div className={cn(
-                  "flex items-start space-x-3 p-2 rounded-lg transition-colors border border-transparent",
-                  n8nHosting === 'own' ? "bg-muted/80 border-border" : "hover:bg-muted/50"
-                )}>
-                  <RadioGroupItem value="own" id="own" className="mt-1" />
-                  <Label htmlFor="own" className="text-xs flex-1 cursor-pointer leading-tight space-y-1">
-                    <span className="font-bold text-foreground text-[13px]">Tengo mi propio servidor</span>
-                    <p className="text-[10px] text-muted-foreground">
-                      Ya dispones de n8n o un servidor (VPS) propio.
-                    </p>
-                  </Label>
-                </div>
-              </RadioGroup>
-
-              {/* Prominent Help CTA */}
-              <div className="pt-2 border-t border-primary/10">
-                <a
-                  href="/info/setup-automatizacion"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-between p-3 rounded-xl bg-background/50 border border-primary/20 hover:border-primary transition-all text-xs"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                      <HelpCircle className="w-4 h-4" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-foreground group-hover:text-primary transition-colors">¿Dudas con la elección?</span>
-                      <span className="text-[10px] text-muted-foreground line-clamp-1">Haz clic aquí para ver los detalles.</span>
-                    </div>
-                  </div>
-                  <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary" />
-                </a>
-              </div>
-
-              <p className="text-[9px] text-muted-foreground/60 italic leading-none pt-1">
-                * Recomendado para asegurar el funcionamiento.
-              </p>
-            </div>
-          </div>
-        )}
 
       </div>
 
