@@ -354,6 +354,7 @@ const EcommerceLanding = () => {
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
+                accentColor="#2563eb"
               />
             </div>
           </SheetContent>

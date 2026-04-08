@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { X, Server, Database, Info, HelpCircle, ExternalLink, Share2 } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Button } from "./ui/button";
@@ -20,6 +21,7 @@ interface SelectionSummaryProps {
   onShare?: () => void;
   variant?: 'card' | 'drawer';
   className?: string;
+  accentColor?: string;
 }
 
 export const SelectionSummary = ({
@@ -30,10 +32,13 @@ export const SelectionSummary = ({
   onShare,
   variant = 'card',
   className,
+  accentColor,
 }: SelectionSummaryProps) => {
   const { selectedProcessIds, toggleProcess } = useSelection();
   const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
   const count = selectedProcesses.length;
+
+  const [isShareHovered, setIsShareHovered] = useState(false);
 
 
   const content = (
@@ -86,7 +91,12 @@ export const SelectionSummary = ({
         <div className="mb-4 p-3 bg-muted rounded-lg">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-muted-foreground">Procesos seleccionados</span>
-            <span className="text-2xl font-bold text-primary leading-none">{count}</span>
+            <span 
+              className={cn("text-2xl font-bold leading-none", !accentColor && "text-primary")}
+              style={accentColor ? { color: accentColor } : {}}
+            >
+              {count}
+            </span>
           </div>
 
           {/* Call to Action Text */}
@@ -109,7 +119,11 @@ export const SelectionSummary = ({
           <Button
             onClick={onContact}
             disabled={count === 0}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-primary h-11"
+            className={cn(
+              "w-full font-semibold h-11 transition-all",
+              !accentColor && "bg-primary hover:bg-primary/90 text-primary-foreground glow-primary"
+            )}
+            style={accentColor ? { backgroundColor: accentColor, color: "#fff", boxShadow: `0 0 20px ${accentColor}40` } : {}}
           >
             Solicitar Oferta
           </Button>
@@ -117,7 +131,16 @@ export const SelectionSummary = ({
             variant="outline"
             onClick={onShare}
             disabled={count === 0}
-            className="w-full h-11 border-primary/20 text-foreground hover:bg-primary/5 hover:text-primary gap-2"
+            className={cn(
+              "w-full h-11 text-foreground gap-2 transition-all",
+              !accentColor && "border-primary/20 hover:bg-primary/5 hover:text-primary",
+              accentColor && "border-white/10"
+            )}
+            style={accentColor 
+              ? (isShareHovered ? { color: accentColor, borderColor: `${accentColor}50`, backgroundColor: `${accentColor}10` } : {}) 
+              : {}}
+            onMouseEnter={() => setIsShareHovered(true)}
+            onMouseLeave={() => setIsShareHovered(false)}
           >
             <Share2 className="w-4 h-4" />
             Compartir selección
