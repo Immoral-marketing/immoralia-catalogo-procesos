@@ -353,6 +353,7 @@ const ConstruccionLanding = () => {
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
+                accentColor="#d97706"
               />
             </div>
           </SheetContent>

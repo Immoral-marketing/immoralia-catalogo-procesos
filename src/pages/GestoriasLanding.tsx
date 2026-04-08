@@ -358,6 +358,7 @@ const GestoriasLanding = () => {
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
+                accentColor="#14b8a6"
               />
             </div>
           </SheetContent>
