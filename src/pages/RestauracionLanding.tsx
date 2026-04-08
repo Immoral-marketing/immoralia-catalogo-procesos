@@ -53,7 +53,7 @@ const RestauracionLanding = () => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
       }
-    }, 15000);
+    }, 60000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -127,8 +127,8 @@ const RestauracionLanding = () => {
             <Button size="lg" onClick={scrollToProcesses} className="bg-orange-600 hover:bg-orange-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-orange-900/20 transition-all hover:scale-105">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
-              Agendar Videollamada
+            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
+              Agendar llamada
             </Button>
           </div>
         </div>
@@ -308,8 +308,8 @@ const RestauracionLanding = () => {
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-orange-600 hover:bg-orange-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,88,12,0.3)] transition-all hover:scale-105">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
-              Agendar Llamada
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
+              Agendar llamada
             </Button>
           </div>
         </div>
