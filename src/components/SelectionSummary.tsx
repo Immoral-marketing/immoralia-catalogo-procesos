@@ -39,6 +39,7 @@ export const SelectionSummary = ({
   const count = selectedProcesses.length;
 
   const [isShareHovered, setIsShareHovered] = useState(false);
+  const [hoveredRemoveId, setHoveredRemoveId] = useState<string | null>(null);
 
 
   const content = (
@@ -73,10 +74,16 @@ export const SelectionSummary = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
                   onClick={() => toggleProcess(process.id)}
+                  onMouseEnter={() => setHoveredRemoveId(process.id)}
+                  onMouseLeave={() => setHoveredRemoveId(null)}
+                  style={accentColor ? { 
+                    backgroundColor: hoveredRemoveId === process.id ? accentColor : `${accentColor}1a`,
+                    color: hoveredRemoveId === process.id ? "#fff" : accentColor
+                  } : {}}
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 transition-colors" />
                 </Button>
               </div>
             ))
