@@ -21,13 +21,15 @@ const ProcessDetail = () => {
     const navigate = useNavigate();
     const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting, customizations, updateCustomization } = useSelection();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [slug]);
-
-
     const process = processes.find((p) => p.slug === slug);
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        if (process) {
+            document.title = `Immoralia - ${process.nombre}`;
+        }
+    }, [slug, process]);
 
     const [showContactForm, setShowContactForm] = useState(false);
     const [showCalendlyModal, setShowCalendlyModal] = useState(false);

@@ -44,12 +44,13 @@ const SportsLanding = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Centros Deportivos";
     // Popup after 15 seconds if onboarding not completed
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
       }
-    }, 15000);
+    }, 60000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -123,8 +124,8 @@ const SportsLanding = () => {
             <Button size="lg" onClick={scrollToProcesses} className="bg-cyan-600 hover:bg-cyan-500 text-white h-14 px-8 text-lg gap-2">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
-              Agendar Videollamada
+            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
+              Agendar llamada
             </Button>
           </div>
         </div>
@@ -245,6 +246,7 @@ const SportsLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#0891b2"
                         />
                       ))}
                   </div>
@@ -304,8 +306,8 @@ const SportsLanding = () => {
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-cyan-600 hover:bg-cyan-500 h-16 px-10 text-xl shadow-[0_0_40px_rgba(8,145,178,0.3)]">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
-              Agendar Llamada
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
+              Agendar llamada
             </Button>
           </div>
         </div>
@@ -351,6 +353,7 @@ const SportsLanding = () => {
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
+                accentColor="#0891b2"
               />
             </div>
           </SheetContent>
@@ -363,7 +366,7 @@ const SportsLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#06b6d4"
+          accentColor="#0891b2"
         />
       )}
 
@@ -371,7 +374,7 @@ const SportsLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Centros Deportivos"
-        accentColor="#06b6d4"
+        accentColor="#0891b2"
       />
     </div>
   );

@@ -41,11 +41,13 @@ export const ContactForm = ({
   onOpenOnboarding,
   source = 'web',
   chatbotContext = [],
-  accentColor = "#8b5cf6"
+  accentColor = "#0ea5e9"
 }: ContactFormProps) => {
   const { toast } = useToast();
   const { customizations } = useSelection();
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+
+  const [isSubmitHovered, setIsSubmitHovered] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -64,6 +66,23 @@ export const ContactForm = ({
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showUpsell, setShowUpsell] = useState(false);
+
+  const [hoveredField, setHoveredField] = useState<string | null>(null);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const getFieldStyle = (fieldName: string, isError: boolean) => {
+    if (isError) return {};
+    const isActive = hoveredField === fieldName || focusedField === fieldName;
+    return isActive ? {
+      borderColor: accentColor,
+      boxShadow: `0 0 0 1px ${accentColor}`,
+    } : {};
+  };
+
+  const getFieldClass = (isError: boolean) => {
+    const base = "bg-background transition-all duration-200 outline-none focus-visible:ring-0 focus-visible:ring-offset-0";
+    return isError ? `${base} border-destructive shadow-[0_0_0_1px_#ef4444]` : `${base} border-border`;
+  };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -249,7 +268,8 @@ export const ContactForm = ({
                         <Badge
                           key={process.id}
                           variant="outline"
-                          className="text-xs border-primary/30 text-primary"
+                          className="text-xs border-primary/30"
+                          style={{ borderColor: `${accentColor}4d`, color: accentColor }}
                         >
                           {process.nombre}
                         </Badge>
@@ -257,27 +277,6 @@ export const ContactForm = ({
                     </div>
                   </div>
 
-                  {source !== 'chatbot' && (
-                    <div className="pt-3 border-t border-border/50">
-                      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                        <Server className="w-4 h-4 text-primary" />
-                        Configuración de n8n
-                      </h4>
-                      <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
-                        {n8nHosting === 'setup' ? (
-                          <>
-                            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                            <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
-                          </>
-                        ) : (
-                          <>
-                            <div className="w-2 h-2 rounded-full bg-secondary" />
-                            <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -292,7 +291,12 @@ export const ContactForm = ({
                         setFormData({ ...formData, nombre: e.target.value });
                         if (errors.nombre) setErrors({ ...errors, nombre: "" });
                       }}
-                      className={`bg-background border-border ${errors.nombre ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                      onMouseEnter={() => setHoveredField('nombre')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('nombre')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('nombre', !!errors.nombre)}
+                      className={getFieldClass(!!errors.nombre)}
                     />
                     {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
                   </div>
@@ -309,7 +313,12 @@ export const ContactForm = ({
                         setFormData({ ...formData, email: e.target.value });
                         if (errors.email) setErrors({ ...errors, email: "" });
                       }}
-                      className={`bg-background border-border ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                      onMouseEnter={() => setHoveredField('email')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('email', !!errors.email)}
+                      className={getFieldClass(!!errors.email)}
                     />
                     {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
                   </div>
@@ -325,7 +334,12 @@ export const ContactForm = ({
                         setFormData({ ...formData, empresa: e.target.value });
                         if (errors.empresa) setErrors({ ...errors, empresa: "" });
                       }}
-                      className={`bg-background border-border ${errors.empresa ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                      onMouseEnter={() => setHoveredField('empresa')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('empresa')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('empresa', !!errors.empresa)}
+                      className={getFieldClass(!!errors.empresa)}
                     />
                     {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
                   </div>
@@ -343,7 +357,12 @@ export const ContactForm = ({
                       setFormData({ ...formData, comentario: e.target.value });
                       if (errors.comentario) setErrors({ ...errors, comentario: "" });
                     }}
-                    className={`bg-background border-border resize-none ${errors.comentario ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    onMouseEnter={() => setHoveredField('comentario')}
+                    onMouseLeave={() => setHoveredField(null)}
+                    onFocus={() => setFocusedField('comentario')}
+                    onBlur={() => setFocusedField(null)}
+                    style={getFieldStyle('comentario', !!errors.comentario)}
+                    className={`${getFieldClass(!!errors.comentario)} resize-none`}
                     placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
                   />
                   {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
@@ -353,7 +372,19 @@ export const ContactForm = ({
                   <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
                     Cancelar
                   </Button>
-                  <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    onMouseEnter={() => setIsSubmitHovered(true)}
+                    onMouseLeave={() => setIsSubmitHovered(false)}
+                    style={{ 
+                      backgroundColor: isSubmitHovered ? `${accentColor}e6` : accentColor,
+                      borderColor: accentColor,
+                      color: 'white',
+                      boxShadow: isSubmitHovered ? `0 0 20px ${accentColor}4d` : 'none'
+                    }}
+                    className="transition-all duration-300"
+                  >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

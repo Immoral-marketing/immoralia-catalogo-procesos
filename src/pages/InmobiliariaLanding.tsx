@@ -48,11 +48,12 @@ const InmobiliariaLanding = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Inmobiliaria";
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
       }
-    }, 15000);
+    }, 60000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -126,8 +127,8 @@ const InmobiliariaLanding = () => {
             <Button size="lg" onClick={scrollToProcesses} className="bg-emerald-600 hover:bg-emerald-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-emerald-900/20 transition-all hover:scale-105">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
-              Agendar Videollamada
+            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
+              Agendar llamada
             </Button>
           </div>
         </div>
@@ -248,6 +249,7 @@ const InmobiliariaLanding = () => {
                         <ProcessCard
                           key={process.id}
                           process={process}
+                          accentColor="#059669"
                         />
                       ))}
                   </div>
@@ -306,8 +308,8 @@ const InmobiliariaLanding = () => {
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-emerald-600 hover:bg-emerald-500 h-16 px-10 text-xl shadow-lg shadow-emerald-900/40 transition-all hover:scale-105">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
-              Agendar Llamada
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
+              Agendar llamada
             </Button>
           </div>
         </div>
@@ -353,6 +355,7 @@ const InmobiliariaLanding = () => {
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
+                accentColor="#059669"
               />
             </div>
           </SheetContent>
@@ -365,7 +368,7 @@ const InmobiliariaLanding = () => {
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#10b981"
+          accentColor="#059669"
         />
       )}
 
@@ -373,7 +376,7 @@ const InmobiliariaLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Inmobiliaria"
-        accentColor="#10b981"
+        accentColor="#059669"
       />
     </div>
   );

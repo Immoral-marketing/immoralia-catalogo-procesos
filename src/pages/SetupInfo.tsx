@@ -36,6 +36,7 @@ const SetupInfo = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        document.title = "Immoralia - Catálogo de Procesos - Configuración";
     }, []);
 
     const sections = [

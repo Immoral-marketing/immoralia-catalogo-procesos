@@ -130,7 +130,7 @@ const PAINS = [
     "Quiero automatizar presupuestos y respuestas"
 ];
 
-export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSector, accentColor = "#8b5cf6", upsellMode = false, onFinishUpsell }: OnboardingModalProps) => {
+export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSector, accentColor = "#0ea5e9", upsellMode = false, onFinishUpsell }: OnboardingModalProps) => {
     // step 0: Intro
     const [step, setStep] = useState(0); 
     const [answers, setAnswers] = useState<OnboardingAnswers>(() => ({
@@ -149,6 +149,13 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isPrevHovered, setIsPrevHovered] = useState(false);
+    const [isSkipHovered, setIsSkipHovered] = useState(false);
+    const [hoveredToolId, setHoveredToolId] = useState<string | null>(null);
+    const [hoveredCategoryToolId, setHoveredCategoryToolId] = useState<string | null>(null);
+    const [hoveredChannelId, setHoveredChannelId] = useState<string | null>(null);
+    const [hoveredMaturityId, setHoveredMaturityId] = useState<string | null>(null);
+    const [isAICheckboxHovered, setIsAICheckboxHovered] = useState(false);
+    const [hoveredPain, setHoveredPain] = useState<string | null>(null);
     const { toast } = useToast();
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -254,13 +261,21 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                 variant="ghost" 
                                 size="sm" 
                                 onClick={handleSkip} 
-                                className="text-muted-foreground hover:text-foreground" 
+                                className="text-muted-foreground transition-colors" 
                                 disabled={isSubmitting}
+                                onMouseEnter={() => setIsSkipHovered(true)}
+                                onMouseLeave={() => setIsSkipHovered(false)}
+                                style={isSkipHovered ? { color: 'white', backgroundColor: accentColor } : {}}
                             >
                                 Omitir por ahora
                             </Button>
                         </div>
-                        <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                        <div 
+                            className={cn(
+                                "h-2 w-full rounded-full overflow-hidden",
+                                prefilledSector ? "bg-white/10" : "bg-black/20"
+                            )}
+                        >
                             <div 
                                 className="h-full transition-all duration-500 ease-out" 
                                 style={{ 
@@ -381,16 +396,25 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                                     const toolLabel = typeof t === 'string' ? t : t.label;
                                                     const isSelected = answers.tools.includes(toolId);
 
+                                                    const isToolHovered = hoveredToolId === toolId;
                                                     return (
                                                         <Button
                                                             key={toolId}
                                                             variant={isSelected ? "default" : "outline"}
                                                             size="sm"
                                                             className="transition-all"
-                                                            style={isSelected ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                                            style={
+                                                                isSelected
+                                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                                    : isToolHovered
+                                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                                    : {}
+                                                            }
+                                                            onMouseEnter={() => setHoveredToolId(toolId)}
+                                                            onMouseLeave={() => setHoveredToolId(null)}
                                                             onClick={() => {
                                                                 let newTools = toggleItem(answers.tools, toolId);
-                                                                let extra: any = {};
+                                                                const extra: any = {};
 
                                                                 if (isPlatformCategory) {
                                                                     const platformKey = cat.id === 'crm' ? 'selected_crm_platform_id' : 'selected_erp_platform_id';
@@ -417,8 +441,12 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                                     style={
                                                         answers.tools.includes(`${categoryName}: Otro`) 
                                                         ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                        : hoveredToolId === `${categoryName}: Otro`
+                                                        ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
                                                         : { color: accentColor, borderColor: `${accentColor}80` }
                                                     }
+                                                    onMouseEnter={() => setHoveredToolId(`${categoryName}: Otro`)}
+                                                    onMouseLeave={() => setHoveredToolId(null)}
                                                     onClick={() => setAnswers({ ...answers, tools: toggleItem(answers.tools, `${categoryName}: Otro`) })}
                                                 >
                                                     Otro
@@ -454,7 +482,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                                 key={c}
                                                 variant={answers.channels.clients.includes(c) ? "default" : "outline"}
                                                 size="sm"
-                                                style={answers.channels.clients.includes(c) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                                style={
+                                                    answers.channels.clients.includes(c) 
+                                                        ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                        : hoveredChannelId === `client-${c}`
+                                                        ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                        : {}
+                                                }
+                                                onMouseEnter={() => setHoveredChannelId(`client-${c}`)}
+                                                onMouseLeave={() => setHoveredChannelId(null)}
                                                 onClick={() => setAnswers({
                                                     ...answers,
                                                     channels: { ...answers.channels, clients: toggleItem(answers.channels.clients, c) }
@@ -469,8 +505,12 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                             style={
                                                 answers.channels.clients.includes("Otro") 
                                                 ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                : hoveredToolId === "channel-client-otro"
+                                                ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
                                                 : { color: accentColor, borderColor: `${accentColor}80` }
                                             }
+                                            onMouseEnter={() => setHoveredToolId("channel-client-otro")}
+                                            onMouseLeave={() => setHoveredToolId(null)}
                                             onClick={() => setAnswers({
                                                 ...answers,
                                                 channels: { ...answers.channels, clients: toggleItem(answers.channels.clients, "Otro") }
@@ -500,7 +540,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                             key={c}
                                             variant={answers.channels.internal.includes(c) ? "default" : "outline"}
                                             size="sm"
-                                            style={answers.channels.internal.includes(c) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                            style={
+                                                answers.channels.internal.includes(c) 
+                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                    : hoveredChannelId === `internal-${c}`
+                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                    : {}
+                                            }
+                                            onMouseEnter={() => setHoveredChannelId(`internal-${c}`)}
+                                            onMouseLeave={() => setHoveredChannelId(null)}
                                             onClick={() => setAnswers({
                                                 ...answers,
                                                 channels: { ...answers.channels, internal: toggleItem(answers.channels.internal, c) }
@@ -515,8 +563,12 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                         style={
                                             answers.channels.internal.includes("Otro") 
                                             ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                            : hoveredToolId === "channel-internal-otro"
+                                            ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
                                             : { color: accentColor, borderColor: `${accentColor}80` }
                                         }
+                                        onMouseEnter={() => setHoveredToolId("channel-internal-otro")}
+                                        onMouseLeave={() => setHoveredToolId(null)}
                                         onClick={() => setAnswers({
                                             ...answers,
                                             channels: { ...answers.channels, internal: toggleItem(answers.channels.internal, "Otro") }
@@ -550,13 +602,21 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                         <button
                                             key={level.id}
                                             onClick={() => setAnswers({ ...answers, maturity: level.id as any })}
+                                            onMouseEnter={() => setHoveredMaturityId(level.id)}
+                                            onMouseLeave={() => setHoveredMaturityId(null)}
                                             className={cn(
                                                 "w-full text-left p-4 rounded-lg border transition-all",
                                                 isSelected 
                                                     ? "bg-primary/5 ring-1" 
-                                                    : "border-border hover:border-primary/50"
+                                                    : "border-border"
                                             )}
-                                            style={isSelected ? { borderColor: accentColor } : {}}
+                                            style={
+                                                isSelected 
+                                                    ? { borderColor: accentColor } 
+                                                    : hoveredMaturityId === level.id
+                                                    ? { borderColor: accentColor, backgroundColor: `${accentColor}05` }
+                                                    : {}
+                                            }
                                         >
                                             <div className="font-bold">{level.label}</div>
                                             <div className="text-sm text-muted-foreground">{level.description}</div>
@@ -566,14 +626,23 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                             </div>
                             <div className="pt-4 border-t border-border">
                                 <div className="flex items-center space-x-2 mb-2">
-                                    <Checkbox
-                                        id="ai-usage"
-                                        checked={answers.usesAI}
-                                        onCheckedChange={(checked) => setAnswers({ ...answers, usesAI: checked as boolean })}
-                                        className={cn(answers.usesAI && "bg-primary border-primary")}
-                                        style={answers.usesAI ? { backgroundColor: accentColor, borderColor: accentColor } : {}}
-                                    />
-                                    <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">¿Tu empresa ya utiliza IA?</Label>
+                                    <div 
+                                        className="flex items-center space-x-2"
+                                        onMouseEnter={() => setIsAICheckboxHovered(true)}
+                                        onMouseLeave={() => setIsAICheckboxHovered(false)}
+                                    >
+                                        <Checkbox
+                                            id="ai-usage"
+                                            checked={answers.usesAI}
+                                            onCheckedChange={(checked) => setAnswers({ ...answers, usesAI: checked as boolean })}
+                                            className={cn(answers.usesAI && "bg-primary border-primary")}
+                                            style={{ 
+                                                borderColor: accentColor,
+                                                backgroundColor: answers.usesAI ? accentColor : 'transparent'
+                                            }}
+                                        />
+                                        <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">¿Tu empresa ya utiliza IA?</Label>
+                                    </div>
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-4">
                                     Cuéntanos para qué la usas (ej: escribir emails, generar imágenes, análisis de datos...) y qué herramienta utilizas.
@@ -614,7 +683,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                         key={p}
                                         variant={answers.pains.includes(p) ? "default" : "outline"}
                                         className="justify-start h-auto py-3 text-left whitespace-normal leading-tight transition-all"
-                                        style={answers.pains.includes(p) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                        style={
+                                            answers.pains.includes(p) 
+                                                ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                : hoveredPain === p
+                                                ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                : {}
+                                        }
+                                        onMouseEnter={() => setHoveredPain(p)}
+                                        onMouseLeave={() => setHoveredPain(null)}
                                         onClick={() => setAnswers({ ...answers, pains: toggleItem(answers.pains, p) })}
                                     >
                                         {p}
@@ -725,7 +802,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                             onMouseLeave={() => setIsPrevHovered(false)}
                             disabled={step === 0 || isSubmitting}
                             className={cn(step === 0 ? "invisible" : "transition-colors")}
-                            style={isPrevHovered ? { backgroundColor: `${accentColor}15`, color: accentColor } : {}}
+                            style={isPrevHovered ? { backgroundColor: accentColor, color: 'white' } : {}}
                         >
                             <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
                         </Button>
