@@ -10,7 +10,7 @@ export const getCategoryColorClass = (categoriaNombre: string): string => {
       return "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
     case "Horarios y Proyectos":
       return "bg-indigo-500/10 text-indigo-400 border-indigo-500/30";
-    case "Internos Agencias":
+    case "Gestión Interna":
       return "bg-orange-500/10 text-orange-400 border-orange-500/30";
     default:
       return "bg-secondary/10 text-secondary border-secondary/30";

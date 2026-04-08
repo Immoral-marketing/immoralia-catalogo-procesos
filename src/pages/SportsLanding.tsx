@@ -44,6 +44,7 @@ const SportsLanding = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Centros Deportivos";
     // Popup after 15 seconds if onboarding not completed
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
