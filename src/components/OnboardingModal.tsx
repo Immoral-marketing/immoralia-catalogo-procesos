@@ -151,6 +151,11 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
     const [isPrevHovered, setIsPrevHovered] = useState(false);
     const [isSkipHovered, setIsSkipHovered] = useState(false);
     const [hoveredToolId, setHoveredToolId] = useState<string | null>(null);
+    const [hoveredCategoryToolId, setHoveredCategoryToolId] = useState<string | null>(null);
+    const [hoveredChannelId, setHoveredChannelId] = useState<string | null>(null);
+    const [hoveredMaturityId, setHoveredMaturityId] = useState<string | null>(null);
+    const [isAICheckboxHovered, setIsAICheckboxHovered] = useState(false);
+    const [hoveredPain, setHoveredPain] = useState<string | null>(null);
     const { toast } = useToast();
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -477,7 +482,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                                 key={c}
                                                 variant={answers.channels.clients.includes(c) ? "default" : "outline"}
                                                 size="sm"
-                                                style={answers.channels.clients.includes(c) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                                style={
+                                                    answers.channels.clients.includes(c) 
+                                                        ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                        : hoveredChannelId === `client-${c}`
+                                                        ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                        : {}
+                                                }
+                                                onMouseEnter={() => setHoveredChannelId(`client-${c}`)}
+                                                onMouseLeave={() => setHoveredChannelId(null)}
                                                 onClick={() => setAnswers({
                                                     ...answers,
                                                     channels: { ...answers.channels, clients: toggleItem(answers.channels.clients, c) }
@@ -527,7 +540,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                             key={c}
                                             variant={answers.channels.internal.includes(c) ? "default" : "outline"}
                                             size="sm"
-                                            style={answers.channels.internal.includes(c) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                            style={
+                                                answers.channels.internal.includes(c) 
+                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                    : hoveredChannelId === `internal-${c}`
+                                                    ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                    : {}
+                                            }
+                                            onMouseEnter={() => setHoveredChannelId(`internal-${c}`)}
+                                            onMouseLeave={() => setHoveredChannelId(null)}
                                             onClick={() => setAnswers({
                                                 ...answers,
                                                 channels: { ...answers.channels, internal: toggleItem(answers.channels.internal, c) }
@@ -581,13 +602,21 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                         <button
                                             key={level.id}
                                             onClick={() => setAnswers({ ...answers, maturity: level.id as any })}
+                                            onMouseEnter={() => setHoveredMaturityId(level.id)}
+                                            onMouseLeave={() => setHoveredMaturityId(null)}
                                             className={cn(
                                                 "w-full text-left p-4 rounded-lg border transition-all",
                                                 isSelected 
                                                     ? "bg-primary/5 ring-1" 
-                                                    : "border-border hover:border-primary/50"
+                                                    : "border-border"
                                             )}
-                                            style={isSelected ? { borderColor: accentColor } : {}}
+                                            style={
+                                                isSelected 
+                                                    ? { borderColor: accentColor } 
+                                                    : hoveredMaturityId === level.id
+                                                    ? { borderColor: accentColor, backgroundColor: `${accentColor}05` }
+                                                    : {}
+                                            }
                                         >
                                             <div className="font-bold">{level.label}</div>
                                             <div className="text-sm text-muted-foreground">{level.description}</div>
@@ -597,14 +626,23 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                             </div>
                             <div className="pt-4 border-t border-border">
                                 <div className="flex items-center space-x-2 mb-2">
-                                    <Checkbox
-                                        id="ai-usage"
-                                        checked={answers.usesAI}
-                                        onCheckedChange={(checked) => setAnswers({ ...answers, usesAI: checked as boolean })}
-                                        className={cn(answers.usesAI && "bg-primary border-primary")}
-                                        style={answers.usesAI ? { backgroundColor: accentColor, borderColor: accentColor } : {}}
-                                    />
-                                    <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">¿Tu empresa ya utiliza IA?</Label>
+                                    <div 
+                                        className="flex items-center space-x-2"
+                                        onMouseEnter={() => setIsAICheckboxHovered(true)}
+                                        onMouseLeave={() => setIsAICheckboxHovered(false)}
+                                    >
+                                        <Checkbox
+                                            id="ai-usage"
+                                            checked={answers.usesAI}
+                                            onCheckedChange={(checked) => setAnswers({ ...answers, usesAI: checked as boolean })}
+                                            className={cn(answers.usesAI && "bg-primary border-primary")}
+                                            style={{ 
+                                                borderColor: accentColor,
+                                                backgroundColor: answers.usesAI ? accentColor : 'transparent'
+                                            }}
+                                        />
+                                        <Label htmlFor="ai-usage" className="text-base cursor-pointer font-semibold">¿Tu empresa ya utiliza IA?</Label>
+                                    </div>
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-4">
                                     Cuéntanos para qué la usas (ej: escribir emails, generar imágenes, análisis de datos...) y qué herramienta utilizas.
@@ -645,7 +683,15 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
                                         key={p}
                                         variant={answers.pains.includes(p) ? "default" : "outline"}
                                         className="justify-start h-auto py-3 text-left whitespace-normal leading-tight transition-all"
-                                        style={answers.pains.includes(p) ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } : {}}
+                                        style={
+                                            answers.pains.includes(p) 
+                                                ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor } 
+                                                : hoveredPain === p
+                                                ? { backgroundColor: accentColor, color: 'white', borderColor: accentColor }
+                                                : {}
+                                        }
+                                        onMouseEnter={() => setHoveredPain(p)}
+                                        onMouseLeave={() => setHoveredPain(null)}
                                         onClick={() => setAnswers({ ...answers, pains: toggleItem(answers.pains, p) })}
                                     >
                                         {p}
