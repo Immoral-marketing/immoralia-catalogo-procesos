@@ -260,27 +260,6 @@ export const ContactForm = ({
                     </div>
                   </div>
 
-                  {source !== 'chatbot' && (
-                    <div className="pt-3 border-t border-border/50">
-                      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                        <Server className="w-4 h-4" style={{ color: accentColor }} />
-                        Configuración de n8n
-                      </h4>
-                      <div className="flex items-center gap-2 p-2 bg-background rounded border border-border">
-                        {n8nHosting === 'setup' ? (
-                          <>
-                            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                            <span className="text-sm">Necesito <strong>Setup de Auto</strong> (Alojado por Immoralia)</span>
-                          </>
-                        ) : (
-                          <>
-                            <div className="w-2 h-2 rounded-full bg-secondary" />
-                            <span className="text-sm">Ya dispongo de <strong>n8n</strong> (Servidor propio)</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
