@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Plus, Check, Play, LayoutGrid, Zap, Clock, MessageSquare, Info, Star, Settings2, ArrowRight } from "lucide-react";
+import { ChevronLeft, Plus, Check, LayoutGrid, Zap, Clock, MessageSquare, Info, Star, Settings2, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
@@ -112,7 +112,7 @@ const ProcessDetail = () => {
 
     useEffect(() => {
         if (!process) return;
-        const sections = ["resumen", "funcionamiento", "personalizacion", "demo", "faqs", "relacionados"];
+        const sections = ["resumen", "funcionamiento", "personalizacion", "faqs", "relacionados"];
         const observers = sections.map(id => {
             const element = document.getElementById(id);
             if (!element) return null;
@@ -299,8 +299,7 @@ const ProcessDetail = () => {
                                         { id: "resumen", label: "Resumen" },
                                         { id: "funcionamiento", label: "Cómo funciona" },
                                         { id: "personalizacion", label: "Personalización", show: process.customization?.options_blocks && process.customization.options_blocks.length > 0 },
-                                        { id: "demo", label: "Demo", show: process.demo?.video_url },
-                                        { id: "faqs", label: "FAQs", show: process.faqs && process.faqs.length > 0 },
+{ id: "faqs", label: "FAQs", show: process.faqs && process.faqs.length > 0 },
                                         { id: "relacionados", label: "Relacionados", show: relatedProcesses.length > 0 },
                                     ].map((tab) => (
                                         (tab.show !== false) && (
@@ -454,34 +453,6 @@ const ProcessDetail = () => {
                                             />
                                         </div>
                                     </div>
-                                </section>
-                            )}
-
-                            {/* SECTION: Demo */}
-                            {process.demo?.video_url && (
-                                <section id="demo" className="scroll-mt-48 space-y-8">
-                                    <h3 className="text-3xl font-bold">Demo del proceso</h3>
-                                    {process.demo.video_url === "PENDING" ? (
-                                        <div className="aspect-video rounded-3xl border-2 border-dashed border-primary/20 bg-primary/5 flex flex-col items-center justify-center gap-6 p-8 text-center group transition-all duration-300 hover:border-primary/40 hover:bg-primary/10">
-                                            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center animate-pulse group-hover:scale-110 transition-transform">
-                                                <Play className="w-10 h-10 text-primary fill-primary" />
-                                            </div>
-                                            <div className="max-w-md space-y-2">
-                                                <h4 className="text-xl font-bold">Video en preparación</h4>
-                                                <p className="text-muted-foreground">Estamos puliendo los últimos detalles de esta demo. Estará disponible muy pronto para que veas la magia en acción.</p>
-                                            </div>
-                                            <Badge variant="secondary" className="px-4 py-1 text-sm">Próximamente</Badge>
-                                        </div>
-                                    ) : (
-                                        <div className="aspect-video rounded-3xl overflow-hidden border border-border bg-black shadow-2xl relative group">
-                                            <iframe
-                                                src={process.demo.video_url}
-                                                className="w-full h-full"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                    )}
                                 </section>
                             )}
 
