@@ -5,6 +5,7 @@ import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
+import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronRight, 
@@ -45,6 +46,7 @@ const InmobiliariaLanding = () => {
   const { selectedProcessIds, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -349,9 +351,10 @@ const InmobiliariaLanding = () => {
                   Mi Selección
                 </SheetTitle>
               </SheetHeader>
-              <SelectionSummary 
+              <SelectionSummary
                 variant="drawer"
                 onContact={() => setShowContactForm(true)}
+                onShare={() => setShowShareModal(true)}
                 n8nHosting={n8nHosting}
                 onHostingChange={setN8nHosting}
                 className="flex-1 overflow-hidden"
@@ -376,6 +379,13 @@ const InmobiliariaLanding = () => {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         prefilledSector="Inmobiliaria"
+        accentColor="#059669"
+      />
+
+      <ShareSelectionModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        selectedProcesses={selectedProcesses}
         accentColor="#059669"
       />
     </div>
