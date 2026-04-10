@@ -34,7 +34,7 @@ interface Comision {
   pagada_at: string | null;
 }
 
-type AuthState = 'loading' | 'unauthenticated' | 'authenticated';
+type AuthState = 'loading' | 'unauthenticated' | 'set_password' | 'authenticated';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -71,14 +71,29 @@ export default function AfiliadoPage() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
+    // Detectar si viene de un enlace de invitación (?type=invite en el hash)
+    const hash = window.location.hash;
+    const hashParams = new URLSearchParams(hash.replace('#', ''));
+    const isInvite = hashParams.get('type') === 'invite';
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setAuthState(session ? 'authenticated' : 'unauthenticated');
+      if (session && isInvite) {
+        // Limpiar el hash de la URL
+        window.history.replaceState(null, '', window.location.pathname);
+        setAuthState('set_password');
+      } else {
+        setAuthState(session ? 'authenticated' : 'unauthenticated');
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      setAuthState(session ? 'authenticated' : 'unauthenticated');
+      if (event === 'USER_UPDATED') {
+        setAuthState('authenticated');
+      } else if (!session) {
+        setAuthState('unauthenticated');
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -96,7 +111,97 @@ export default function AfiliadoPage() {
     return <LoginForm onSuccess={() => setAuthState('authenticated')} />;
   }
 
+  if (authState === 'set_password') {
+    return <SetPasswordForm onSuccess={() => setAuthState('authenticated')} />;
+  }
+
   return <Dashboard session={session!} />;
+}
+
+// ---------------------------------------------------------------------------
+// Set Password Form (primer acceso desde enlace de invitación)
+// ---------------------------------------------------------------------------
+function SetPasswordForm({ onSuccess }: { onSuccess: () => void }) {
+  const { toast } = useToast();
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+
+    if (error) {
+      setError('No se pudo establecer la contraseña. Inténtalo de nuevo.');
+      setLoading(false);
+      return;
+    }
+
+    toast({ title: '¡Contraseña establecida!', description: 'Ya puedes acceder a tu panel de afiliado' });
+    onSuccess();
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+            <Link2 className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Bienvenido al portal</h1>
+          <p className="text-sm text-muted-foreground mt-1">Establece tu contraseña para acceder</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-password">Nueva contraseña</Label>
+              <Input
+                id="new-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo 8 caracteres"
+                required
+                autoFocus
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirmar contraseña</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder="Repite la contraseña"
+                required
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</> : 'Establecer contraseña'}
+            </Button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------------------
