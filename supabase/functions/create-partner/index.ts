@@ -52,10 +52,10 @@ serve(async (req) => {
     }
 
     // Leer los datos del nuevo partner
-    const { nombre, email, slug, password } = await req.json()
+    const { nombre, email, slug } = await req.json()
 
-    if (!nombre || !email || !slug || !password) {
-      return new Response(JSON.stringify({ error: 'Faltan campos requeridos: nombre, email, slug, password' }), {
+    if (!nombre || !email || !slug) {
+      return new Response(JSON.stringify({ error: 'Faltan campos requeridos: nombre, email, slug' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
@@ -73,15 +73,18 @@ serve(async (req) => {
       })
     }
 
-    // Crear usuario en Supabase Auth
-    const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
-      email: email.trim().toLowerCase(),
-      password,
-      email_confirm: true, // confirmado automáticamente, sin email de verificación
-    })
+    // Crear usuario vía invitación — Supabase envía email automático al partner
+    // con un enlace para que él mismo establezca su contraseña
+    const { data: newUser, error: createError } = await adminClient.auth.admin.inviteUserByEmail(
+      email.trim().toLowerCase(),
+      {
+        redirectTo: 'https://procesos.immoralia.es/afiliado',
+        data: { nombre: nombre.trim(), slug: slug.toLowerCase().trim() },
+      }
+    )
 
     if (createError || !newUser.user) {
-      return new Response(JSON.stringify({ error: createError?.message ?? 'Error al crear usuario Auth' }), {
+      return new Response(JSON.stringify({ error: createError?.message ?? 'Error al enviar la invitación' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }

@@ -13,8 +13,11 @@ import {
 } from '@/components/ui/dialog';
 import {
   Loader2, LogOut, Users, FileText, Euro, Plus, Check, X,
-  ChevronDown, ToggleLeft, ToggleRight, Trophy,
+  ChevronDown, ToggleLeft, ToggleRight, Trophy, Copy, MoreHorizontal, Pencil, Trash2,
 } from 'lucide-react';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 
 // ---------------------------------------------------------------------------
@@ -556,6 +559,13 @@ function PartnersTab() {
     load();
   };
 
+  const deletePartner = async (partner: Partner) => {
+    if (!window.confirm(`¿Eliminar a ${partner.nombre}? Esta acción no se puede deshacer.`)) return;
+    await supabase.from('partners').delete().eq('id', partner.id);
+    toast({ title: 'Partner eliminado' });
+    load();
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -580,7 +590,7 @@ function PartnersTab() {
                   <th className="px-4 py-3 text-left">Enlace</th>
                   <th className="px-4 py-3 text-right">Visitas</th>
                   <th className="px-4 py-3 text-center">Estado</th>
-                  <th className="px-4 py-3 text-center">Acción</th>
+                  <th className="px-4 py-3 text-center w-12"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -604,9 +614,24 @@ function PartnersTab() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <Button variant="ghost" size="sm" onClick={() => toggleActivo(p)} className="text-xs h-7">
-                        {p.activo ? <><ToggleRight className="h-4 w-4 mr-1 text-emerald-400" />Desactivar</> : <><ToggleLeft className="h-4 w-4 mr-1" />Activar</>}
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => toggleActivo(p)}>
+                            {p.activo
+                              ? <><ToggleRight className="h-4 w-4 mr-2 text-emerald-400" />Desactivar</>
+                              : <><ToggleLeft className="h-4 w-4 mr-2" />Activar</>}
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => deletePartner(p)} className="text-destructive focus:text-destructive">
+                            <Trash2 className="h-4 w-4 mr-2" />Eliminar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </td>
                   </tr>
                 ))}
@@ -628,9 +653,45 @@ function PartnersTab() {
 
 function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; onCancel: () => void }) {
   const { toast } = useToast();
-  const [form, setForm] = useState({ nombre: '', email: '', slug: '', password: '' });
+  const [form, setForm] = useState({ nombre: '', email: '', slug: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copiedUrl, setCopiedUrl] = useState(false);
+  const [slugError, setSlugError] = useState('');
+  const [checkingSlug, setCheckingSlug] = useState(false);
+
+  // Genera el slug automáticamente al escribir el nombre (nombre-apellido)
+  const handleNombreChange = (value: string) => {
+    const autoSlug = value.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, '')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)       // máximo nombre + primer apellido
+      .join('-');
+    setForm((f) => ({ ...f, nombre: value, slug: autoSlug }));
+    setSlugError('');
+  };
+
+  // Valida que el slug no esté en uso al salir del campo
+  const handleSlugBlur = async () => {
+    const slug = form.slug.trim();
+    if (!slug) return;
+    setCheckingSlug(true);
+    const { data } = await supabase.rpc('get_partner_id_by_slug', { p_slug: slug });
+    setCheckingSlug(false);
+    if (data) setSlugError(`El slug "${slug}" ya está en uso. Elige otro.`);
+    else setSlugError('');
+  };
+
+  const referralUrl = form.slug ? `https://procesos.immoralia.es/?ref=${form.slug}` : '';
+
+  const handleCopyUrl = async () => {
+    if (!referralUrl) return;
+    await navigator.clipboard.writeText(referralUrl);
+    setCopiedUrl(true);
+    setTimeout(() => setCopiedUrl(false), 2000);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -642,7 +703,6 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
         nombre: form.nombre.trim(),
         email: form.email.trim().toLowerCase(),
         slug: form.slug.trim().toLowerCase(),
-        password: form.password,
       },
     });
 
@@ -652,7 +712,7 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
       return;
     }
 
-    toast({ title: 'Partner creado', description: `${form.nombre} puede acceder con sus credenciales` });
+    toast({ title: 'Invitación enviada', description: `${form.nombre} recibirá un email para establecer su contraseña` });
     onCreated();
   };
 
@@ -666,26 +726,43 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 col-span-2">
               <Label>Nombre</Label>
-              <Input placeholder="Maggie García" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} required />
+              <Input placeholder="Maggie García" value={form.nombre} onChange={(e) => handleNombreChange(e.target.value)} required />
             </div>
             <div className="space-y-2 col-span-2">
               <Label>Email</Label>
               <Input type="email" placeholder="maggie@ejemplo.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
             </div>
-            <div className="space-y-2">
-              <Label>Slug (URL)</Label>
-              <Input placeholder="maggie" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value.replace(/[^a-z0-9-]/gi, '').toLowerCase() })} required />
-              <p className="text-xs text-muted-foreground">procesos.immoralia.es/?ref={form.slug || 'slug'}</p>
+            <div className="space-y-2 col-span-2">
+              <Label>Slug (URL) — editable</Label>
+              <Input
+                placeholder="maggie"
+                value={form.slug}
+                onChange={(e) => { setForm({ ...form, slug: e.target.value.replace(/[^a-z0-9-]/gi, '').toLowerCase() }); setSlugError(''); }}
+                onBlur={handleSlugBlur}
+                required
+                className={slugError ? 'border-destructive' : ''}
+              />
+              {checkingSlug && <p className="text-xs text-muted-foreground">Comprobando disponibilidad...</p>}
+              {slugError && <p className="text-xs text-destructive">{slugError}</p>}
+              {form.slug && !slugError && (
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="flex-1 font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded px-2 py-1 truncate">
+                    {referralUrl}
+                  </span>
+                  <Button type="button" variant="outline" size="sm" className="h-7 text-xs shrink-0" onClick={handleCopyUrl}>
+                    {copiedUrl ? <><Check className="h-3 w-3 mr-1" />Copiado</> : <><Copy className="h-3 w-3 mr-1" />Copiar</>}
+                  </Button>
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <Label>Contraseña inicial</Label>
-              <Input type="password" placeholder="Mínimo 6 caracteres" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={6} />
-            </div>
+            <p className="col-span-2 text-xs text-muted-foreground bg-muted rounded-lg px-3 py-2">
+              Se enviará un email de invitación al partner para que establezca su propia contraseña.
+            </p>
           </div>
           {error && <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">{error}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !!slugError || checkingSlug}>
               {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando...</> : 'Crear partner'}
             </Button>
           </DialogFooter>
