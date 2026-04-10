@@ -126,8 +126,14 @@ export const processes: Process[] = [
     categoriaNombre: "Facturas y Gastos",
     nombre: "Informe semanal de facturas vencidas",
     tagline: "Controla cada semana cómo van los impagos.",
+    one_liner: "Cada lunes sabes exactamente quién te debe dinero, cuánto y desde cuándo. Sin buscar en el ERP, sin perder tiempo.",
     recomendado: true,
     descripcionDetallada: "Cada lunes → recibes un informe con un desglose de las facturas vencidas, quién debe cuánto y desde cuándo. Revisamos todas las facturas con estado 'vencida'. Calculamos antigüedad, importe total y asignamos cliente. Generamos un informe automático.",
+    benefits: [
+      "Sabes cada lunes quién te debe dinero y cuánto, sin tener que abrir el ERP",
+      "Recibes el informe directamente en tu canal favorito: email, Slack, WhatsApp o Teams",
+      "Priorizas cobros con datos reales: nombre del cliente, importe y días de retraso"
+    ],
     summary: {
       what_it_is: "Informe automatizado que consolida la deuda pendiente de clientes para una gestión de cobros proactiva.",
       for_who: ["Departamentos financieros", "Dueños de agencias", "Project Managers"],
@@ -140,9 +146,9 @@ export const processes: Process[] = [
       integrations: ["ERP", "Comunicación"]
     },
     how_it_works_steps: [
-      { title: "Extracción de datos", short: "Leemos facturas vencidas desde tu ERP.", detail: "Cada semana, el sistema revisa automáticamente tu software de gestión buscando facturas con fecha de vencimiento superada." },
-      { title: "Consolidación", short: "Agrupamos deuda por cliente y antigüedad.", detail: "Calculamos cuánto debe cada cliente y cuántos días de retraso lleva acumulados." },
-      { title: "Envío de reporte", short: "Recibes el resumen en tu canal favorito.", detail: "Generamos un informe limpio y directo para que sepas dónde poner el foco el lunes por la mañana." }
+      { title: "Lo configuras una sola vez", short: "Conectamos tu ERP y defines el canal de envío.", detail: "Conectamos tu ERP y defines el canal donde quieres recibir el informe. A partir de ahí, todo es automático." },
+      { title: "Cada semana el sistema hace el trabajo", short: "Revisamos todas las facturas vencidas.", detail: "Revisamos automáticamente todas las facturas vencidas, calculamos cuántos días lleva sin pagar cada cliente y agrupamos los importes." },
+      { title: "Recibes el informe y decides a quién llamar", short: "Te llega un resumen con el ranking de deuda.", detail: "Te llega un resumen limpio con el ranking de deuda: quién debe más, cuánto y desde cuándo. Sin buscar, sin calcular." }
     ],
     customization: {
       options_blocks: [
@@ -153,6 +159,8 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     faqs: [
+      { q: "¿Necesito dar acceso a toda mi contabilidad?", a: "No. Solo necesitamos acceso de lectura a las facturas vencidas. No modificamos ningún dato de tu ERP ni accedemos a información que no sea estrictamente la deuda pendiente." },
+      { q: "¿Funciona con mi ERP?", a: "Nos integramos con los ERPs más habituales: Holded, Sage, Odoo, Factura Directa y otros. Si no estás seguro, cuéntanos cuál usas y te lo confirmamos en 24h." },
       { q: "¿Se puede filtrar por etiquetas en el ERP?", a: "Sí, podemos segmentar el informe por etiquetas de cliente o de factura que tengas definidas." }
     ],
     pasos: [
