@@ -114,20 +114,6 @@ const ProcessDetailFacturasVencidas = () => {
                         </ul>
                     </div>
 
-                    {/* MÉTRICAS */}
-                    <div className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border bg-card">
-                        {[
-                            { value: "1h", label: "ahorrada cada semana" },
-                            { value: "Cada lunes", label: "informe automático" },
-                            { value: "0", label: "exportaciones manuales" },
-                        ].map(({ value, label }, i) => (
-                            <div key={i} className="flex flex-col items-center justify-center px-4 py-6 text-center">
-                                <span className="text-2xl md:text-3xl font-bold text-primary leading-none">{value}</span>
-                                <span className="text-xs text-muted-foreground mt-2 leading-snug">{label}</span>
-                            </div>
-                        ))}
-                    </div>
-
                     {/* LO QUE CONSEGUIRÁS */}
                     <div className="space-y-6 py-2">
                         <div className="text-center space-y-2">
@@ -150,16 +136,21 @@ const ProcessDetailFacturasVencidas = () => {
                                 </div>
                             ))}
                         </div>
-                        {process.indicators?.integrations && process.indicators.integrations.length > 0 && (
-                            <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
-                                <span className="text-xs text-muted-foreground mr-1 self-center">Integra con:</span>
-                                {process.indicators.integrations.map(tool => (
-                                    <span key={tool} className="px-2.5 py-1 rounded-md bg-card text-primary text-xs font-medium border border-primary/30">
-                                        {tool}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
+
+                        {/* MÉTRICAS */}
+                        <div className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border bg-card">
+                            {[
+                                { value: "1h", label: "ahorrada cada semana" },
+                                { value: "Cada lunes", label: "informe automático" },
+                                { value: "0", label: "exportaciones manuales" },
+                            ].map(({ value, label }, i) => (
+                                <div key={i} className="flex flex-col items-center justify-center px-4 py-6 text-center">
+                                    <span className="text-2xl md:text-3xl font-bold text-primary leading-none">{value}</span>
+                                    <span className="text-xs text-muted-foreground mt-2 leading-snug">{label}</span>
+                                </div>
+                            ))}
+                        </div>
+
                     </div>
 
                 </section>
