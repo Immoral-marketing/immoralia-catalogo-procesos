@@ -3,6 +3,7 @@ import { Loader2, Server, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getReferralSlug } from "@/lib/referral";
 import {
   Dialog,
   DialogContent,
@@ -167,6 +168,29 @@ export const ContactForm = ({
       if (error) throw error;
 
       console.log("Email sent successfully:", data);
+
+      // Registrar la solicitud en Supabase con atribución al partner (si hay cookie)
+      const referralSlug = getReferralSlug();
+      let partnerId: string | null = null;
+
+      if (referralSlug) {
+        const { data: pid } = await supabase.rpc('get_partner_id_by_slug', { p_slug: referralSlug });
+        partnerId = pid ?? null;
+      }
+
+      await supabase.from('solicitudes').insert({
+        partner_id: partnerId,
+        datos_formulario: {
+          nombre: formData.nombre,
+          email: formData.email,
+          empresa: formData.empresa,
+          comentario: formData.comentario,
+          source,
+          n8nHosting,
+          procesos: selectedProcesses.map((p) => ({ id: p.id, nombre: p.nombre })),
+        },
+      });
+
       setSubmitted(true);
 
       toast({
