@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ProcessDetail from "./pages/ProcessDetail";
+import ProcessDetailFacturasVencidas from "./pages/ProcessDetailFacturasVencidas";
 import SportsLanding from "./pages/SportsLanding";
 import GestoriasLanding from "./pages/GestoriasLanding";
 import SaludLanding from "./pages/SaludLanding";
@@ -31,6 +32,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<SectorSelector />} />
             <Route path="/catalogo/completo" element={<Index />} />
+            <Route path="/catalogo/procesos/informe-semanal-facturas-vencidas" element={<ProcessDetailFacturasVencidas />} />
             <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
             <Route path="/landing/centros-deportivos" element={<SportsLanding />} />
             <Route path="/landing/gestorias" element={<GestoriasLanding />} />
