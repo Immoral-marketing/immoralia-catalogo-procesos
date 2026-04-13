@@ -74,7 +74,7 @@ const ConstruccionLanding = () => {
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
   }, [construccionProcesses]);
 
-  const [activeCategory, setActiveCategory] = useState(construccionCategories[0]?.id || "");
+  const [activeCategory, setActiveCategory] = useState("todos");
 
   const selectedProcesses = useMemo(() => {
     return processes.filter(p => selectedProcessIds.has(p.id));
@@ -229,6 +229,12 @@ const ConstruccionLanding = () => {
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
               <div className="flex justify-center mb-12">
                 <TabsList className="bg-white/5 border border-white/5 p-1 h-auto flex flex-wrap justify-center gap-1 sm:gap-2">
+                  <TabsTrigger
+                    value="todos"
+                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-amber-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                  >
+                    Todos
+                  </TabsTrigger>
                   {construccionCategories.map((cat) => (
                     <TabsTrigger
                       key={cat.id}
@@ -241,6 +247,17 @@ const ConstruccionLanding = () => {
                 </TabsList>
               </div>
 
+              <TabsContent value="todos" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {construccionProcesses.map((process) => (
+                    <ProcessCard
+                      key={process.id}
+                      process={process}
+                      accentColor="#d97706"
+                    />
+                  ))}
+                </div>
+              </TabsContent>
               {construccionCategories.map((cat) => (
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
