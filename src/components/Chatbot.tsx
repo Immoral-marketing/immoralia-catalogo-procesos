@@ -26,7 +26,7 @@ const Chatbot: React.FC = () => {
     const [isMinimized, setIsMinimized] = useState(false);
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: '¡Hola! Soy el asistente de Immoralia. ¿En qué puedo ayudarte hoy? Puedo resolver dudas sobre nuestros procesos de automatización o sobre el setup de n8n.' }
+        { role: 'assistant', content: '¡Hola! Soy el asistente de Immoralia. ¿En qué puedo ayudarte hoy?' }
     ]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasAnalyzed, setHasAnalyzed] = useState(false);
