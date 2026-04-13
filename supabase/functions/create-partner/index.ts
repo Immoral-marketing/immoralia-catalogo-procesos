@@ -75,10 +75,11 @@ serve(async (req) => {
 
     // Crear usuario vía invitación — Supabase envía email automático al partner
     // con un enlace para que él mismo establezca su contraseña
+    const siteUrl = Deno.env.get('SITE_URL') ?? 'https://procesos.immoralia.es'
     const { data: newUser, error: createError } = await adminClient.auth.admin.inviteUserByEmail(
       email.trim().toLowerCase(),
       {
-        redirectTo: 'https://procesos.immoralia.es/afiliado',
+        redirectTo: `${siteUrl}/afiliado`,
         data: { nombre: nombre.trim(), slug: slug.toLowerCase().trim() },
       }
     )
