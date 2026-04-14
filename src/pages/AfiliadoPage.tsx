@@ -34,7 +34,7 @@ interface Comision {
   pagada_at: string | null;
 }
 
-type AuthState = 'loading' | 'unauthenticated' | 'set_password' | 'authenticated';
+type AuthState = 'loading' | 'unauthenticated' | 'forgot_password' | 'set_password' | 'authenticated';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -74,12 +74,13 @@ export default function AfiliadoPage() {
     // Detectar si viene de un enlace de invitación (?type=invite en el hash)
     const hash = window.location.hash;
     const hashParams = new URLSearchParams(hash.replace('#', ''));
-    const isInvite = hashParams.get('type') === 'invite';
+    const linkType = hashParams.get('type');
+    const isInvite = linkType === 'invite';
+    const isRecovery = linkType === 'recovery';
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session && isInvite) {
-        // Limpiar el hash de la URL
+      if (session && (isInvite || isRecovery)) {
         window.history.replaceState(null, '', window.location.pathname);
         setAuthState('set_password');
       } else {
@@ -108,7 +109,14 @@ export default function AfiliadoPage() {
   }
 
   if (authState === 'unauthenticated') {
-    return <LoginForm onSuccess={() => setAuthState('authenticated')} />;
+    return <LoginForm
+      onSuccess={() => setAuthState('authenticated')}
+      onForgotPassword={() => setAuthState('forgot_password')}
+    />;
+  }
+
+  if (authState === 'forgot_password') {
+    return <ForgotPasswordForm onBack={() => setAuthState('unauthenticated')} />;
   }
 
   if (authState === 'set_password') {
@@ -207,7 +215,7 @@ function SetPasswordForm({ onSuccess }: { onSuccess: () => void }) {
 // ---------------------------------------------------------------------------
 // Login Form
 // ---------------------------------------------------------------------------
-function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+function LoginForm({ onSuccess, onForgotPassword }: { onSuccess: () => void; onForgotPassword: () => void }) {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -288,6 +296,14 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
                 'Acceder'
               )}
             </Button>
+
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </form>
         </div>
 
@@ -295,6 +311,97 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
           Las credenciales son asignadas por el equipo de Immoralia.<br />
           Si tienes problemas, escribe a <span className="text-foreground">team@immoral.com</span>
         </p>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Forgot Password Form
+// ---------------------------------------------------------------------------
+function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
+  const { toast } = useToast();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('reset-partner-password', {
+        body: {
+          email: email.trim().toLowerCase(),
+          redirectTo: `${window.location.origin}/afiliado`,
+        },
+      });
+
+      if (error) throw error;
+      setSent(true);
+    } catch {
+      toast({
+        title: 'Error al enviar el email',
+        description: 'Inténtalo de nuevo o contacta con el equipo.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+            <Link2 className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Recuperar contraseña</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Te enviaremos un enlace para crear una nueva
+          </p>
+        </div>
+
+        <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
+          {sent ? (
+            <div className="text-center space-y-3">
+              <p className="text-foreground font-medium">Email enviado</p>
+              <p className="text-sm text-muted-foreground">
+                Si tu email está registrado, recibirás un enlace para restablecer tu contraseña.
+                Revisa también la carpeta de spam.
+              </p>
+              <Button variant="outline" className="w-full mt-4" onClick={onBack}>
+                Volver al login
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  required
+                  autoFocus
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Enviando...</> : 'Enviar enlace'}
+              </Button>
+              <button
+                type="button"
+                onClick={onBack}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Volver al login
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -313,7 +420,7 @@ function Dashboard({ session }: { session: Session }) {
   const [copied, setCopied] = useState(false);
 
   const referralUrl = partner
-    ? `https://procesos.immoralia.es/?ref=${partner.slug}`
+    ? `${window.location.origin}/?ref=${partner.slug}`
     : '';
 
   const loadData = useCallback(async () => {
