@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ProcessDetail from "./pages/ProcessDetail";
+import ProcessDetailFacturasVencidas from "./pages/ProcessDetailFacturasVencidas";
 import SportsLanding from "./pages/SportsLanding";
 import GestoriasLanding from "./pages/GestoriasLanding";
 import SaludLanding from "./pages/SaludLanding";
@@ -15,9 +16,12 @@ import EcommerceLanding from "./pages/EcommerceLanding";
 import InmobiliariaLanding from "./pages/InmobiliariaLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
 import SectorSelector from "./pages/SectorSelector";
+import AfiliadoPage from "./pages/AfiliadoPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
+import { ReferralTracker } from "./components/ReferralTracker";
 
 const queryClient = new QueryClient();
 
@@ -28,9 +32,11 @@ const App = () => (
       <Sonner />
       <SelectionProvider>
         <BrowserRouter>
+          <ReferralTracker />
           <Routes>
             <Route path="/" element={<SectorSelector />} />
             <Route path="/catalogo/completo" element={<Index />} />
+            <Route path="/catalogo/procesos/informe-semanal-facturas-vencidas" element={<ProcessDetailFacturasVencidas />} />
             <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
             <Route path="/landing/centros-deportivos" element={<SportsLanding />} />
             <Route path="/landing/gestorias" element={<GestoriasLanding />} />
@@ -41,6 +47,8 @@ const App = () => (
             <Route path="/landing/ecommerce" element={<EcommerceLanding />} />
             <Route path="/landing/inmobiliaria" element={<InmobiliariaLanding />} />
             <Route path="/landing/agencias" element={<AgenciasLanding />} />
+            <Route path="/afiliado" element={<AfiliadoPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

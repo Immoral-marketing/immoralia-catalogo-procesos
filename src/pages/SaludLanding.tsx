@@ -73,7 +73,7 @@ const SaludLanding = () => {
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
   }, [saludProcesses]);
 
-  const [activeCategory, setActiveCategory] = useState(saludCategories[0]?.id || "");
+  const [activeCategory, setActiveCategory] = useState("todos");
 
   const selectedProcesses = useMemo(() => {
     return processes.filter(p => selectedProcessIds.has(p.id));
@@ -228,6 +228,12 @@ const SaludLanding = () => {
             <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
               <div className="flex justify-center mb-12">
                 <TabsList className="bg-white/5 border border-white/5 p-1 h-auto flex flex-wrap justify-center gap-1 sm:gap-2">
+                  <TabsTrigger
+                    value="todos"
+                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                  >
+                    Todos
+                  </TabsTrigger>
                   {saludCategories.map((cat) => (
                     <TabsTrigger
                       key={cat.id}
@@ -240,6 +246,17 @@ const SaludLanding = () => {
                 </TabsList>
               </div>
 
+              <TabsContent value="todos" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {saludProcesses.map((process) => (
+                    <ProcessCard
+                      key={process.id}
+                      process={process}
+                      accentColor="#2563eb"
+                    />
+                  ))}
+                </div>
+              </TabsContent>
               {saludCategories.map((cat) => (
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
