@@ -68,8 +68,8 @@ const RestauracionLanding = () => {
   const restauracionCategories = useMemo(() => {
     const catsMap = new Map();
     restauracionProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -263,7 +263,7 @@ const RestauracionLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {restauracionProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -288,11 +288,11 @@ const RestauracionLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Se integra con mi TPV actual?",
-                a: "Podemos extraer datos de la mayoría de TPVs modernos para automatizar informes de ventas y control de inventarios."
+                q: "¿Funciona con mi sistema de cobros actual?",
+                a: "Podemos extraer datos de la mayoría de sistemas de cobro modernos para automatizar informes de ventas y control de existencias."
               },
               {
-                q: "¿Cómo evita el Bot las reservas falsas?",
+                q: "¿Cómo se evitan las reservas falsas?",
                 a: "Podemos configurar validación por SMS o incluso solicitar una fianza de reserva automática para grupos grandes."
               },
               {

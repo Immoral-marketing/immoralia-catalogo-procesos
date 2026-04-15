@@ -71,8 +71,8 @@ const ConstruccionLanding = () => {
   const construccionCategories = useMemo(() => {
     const catsMap = new Map();
     construccionProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -275,7 +275,7 @@ const ConstruccionLanding = () => {
                 { value: "todos", items: construccionProcesses },
                 ...construccionCategories.map(cat => ({
                   value: cat.id,
-                  items: construccionProcesses.filter(p => p.categoria === cat.id)
+                  items: construccionProcesses.filter(p => p.categoriaNombre === cat.id)
                 }))
               ].map(({ value, items }) => (
                 <TabsContent key={value} value={value} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -300,7 +300,7 @@ const ConstruccionLanding = () => {
                           >
                             <span
                               className="hidden sm:flex w-44 shrink-0 justify-center text-xs text-amber-400/70 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded font-medium whitespace-nowrap text-center cursor-pointer hover:bg-amber-500/20 hover:text-amber-300 transition-colors"
-                              onClick={() => setActiveCategory(process.categoria)}
+                              onClick={() => setActiveCategory(process.categoriaNombre)}
                             >
                               {process.categoriaNombre}
                             </span>

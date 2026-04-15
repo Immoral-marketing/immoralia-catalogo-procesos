@@ -68,8 +68,8 @@ const InmobiliariaLanding = () => {
   const inmobiliariaCategories = useMemo(() => {
     const catsMap = new Map();
     inmobiliariaProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -123,7 +123,7 @@ const InmobiliariaLanding = () => {
             </span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Automatizamos el seguimiento de leads, la cualificación de interesados y la gestión documental para que no pierdas ni una oportunidad.
+            Automatizamos el seguimiento de interesados, la selección de los más cualificados y la gestión documental para que no pierdas ni una oportunidad.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             <Button size="lg" onClick={scrollToProcesses} className="bg-emerald-600 hover:bg-emerald-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-emerald-900/20 transition-all hover:scale-105">
@@ -145,9 +145,9 @@ const InmobiliariaLanding = () => {
               {[
                 "Llamadas constantes por propiedades que ya no están disponibles.",
                 "Interesados que no responden tras enviar la primera información.",
-                "Carga administrativa pesada en el onboarding de propietarios.",
-                "Perder leads de portales por tardar horas en contestar.",
-                "Dificultad para cualificar si un interesado tiene potencial real.",
+                "Carga administrativa pesada en la incorporación de nuevos propietarios.",
+                "Perder interesados de portales por tardar horas en contestar.",
+                "Dificultad para saber si un interesado tiene capacidad de compra real.",
                 "Olvidar hacer seguimiento a presupuestos de reforma o servicios asociados."
               ].map((pain, i) => (
                 <div key={i} className="flex gap-4 p-6 rounded-2xl bg-black/40 border border-white/5 hover:border-emerald-500/20 transition-all hover:translate-y-[-2px] group">
@@ -174,16 +174,16 @@ const InmobiliariaLanding = () => {
               {
                 icon: <MessageSquare className="w-8 h-8 text-emerald-400" />,
                 title: "Respuesta Inmediata",
-                desc: "Un asistente inteligente que atiende consultas de portales 24/7 y cualifica al interesado al instante."
+                desc: "Un asistente que atiende consultas de portales 24/7 y filtra al interesado al instante."
               },
               {
                 icon: <Key className="w-8 h-8 text-emerald-400" />,
                 title: "Seguimiento Infatigable",
-                desc: "Automatizamos el 'nurturing' de leads para que siempre estés en la mente del comprador o inquilino."
+                desc: "Automatizamos el seguimiento continuo para que siempre estés presente en la mente del comprador o inquilino."
               },
               {
                 icon: <Zap className="w-8 h-8 text-emerald-400" />,
-                title: "Onboarding Sin Fricción",
+                title: "Alta Sin Complicaciones",
                 desc: "Digitalizamos el alta de nuevas propiedades y clientes, eliminando el papeleo y los errores manuales."
               }
             ].map((prop, i) => (
@@ -263,7 +263,7 @@ const InmobiliariaLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {inmobiliariaProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -288,11 +288,11 @@ const InmobiliariaLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Se integra con mi CRM inmobiliario (Idealista, Fotocasa, etc.)?",
-                a: "Podemos capturar leads de los principales portales y sincronizarlos con tu CRM habitual para que no tengas que cambiar de herramienta."
+                q: "¿Funciona con los portales que ya uso (Idealista, Fotocasa, etc.)?",
+                a: "Podemos capturar contactos de los principales portales y sincronizarlos con tu herramienta habitual para que no tengas que cambiar nada."
               },
               {
-                q: "¿Cómo cualifica el Bot a un interesado?",
+                q: "¿Cómo se filtra si un interesado es serio?",
                 a: "A través de una breve charla automatizada, el sistema puede preguntar por presupuesto, zona de interés y capacidad financiera antes de pasarlo a un agente."
               },
               {
@@ -321,7 +321,7 @@ const InmobiliariaLanding = () => {
             ¿Listo para escalar <br /> tu inmobiliaria?
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
-            Deja de perder leads por falta de tiempo y empieza a cerrar más operaciones con automatización inteligente. Solicitar oferta ahora personalizada.
+            Deja de perder oportunidades por falta de tiempo y empieza a cerrar más operaciones. Solicita tu oferta personalizada ahora.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-emerald-600 hover:bg-emerald-500 h-16 px-10 text-xl shadow-lg shadow-emerald-900/40 transition-all hover:scale-105">

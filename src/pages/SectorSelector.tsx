@@ -76,7 +76,7 @@ const sectors = [
   },
   {
     id: "ecommerce",
-    title: "E-commerce / Retail",
+    title: "Tienda Online / Retail",
     description: "Tiendas online, moda y comercio minorista.",
     icon: ShoppingBag,
     path: "/landing/ecommerce",
