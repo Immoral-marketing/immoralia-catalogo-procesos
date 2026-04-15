@@ -65,8 +65,8 @@ const SportsLanding = () => {
   const sportsCategories = useMemo(() => {
     const catsMap = new Map();
     sportsProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -142,7 +142,7 @@ const SportsLanding = () => {
               {[
                 "Atender WhatsApps a deshoras por reservas y cancelaciones.",
                 "Socios que no aparecen por el centro y acaban dándose de baja.",
-                "Perder leads de pruebas gratuitas por falta de seguimiento.",
+                "Perder posibles socios de clases de prueba por no hacer seguimiento.",
                 "Gestionar cobros e impagos manualmente cada principio de mes.",
                 "Invertir horas en Excel para saber cuántas clases se han dado.",
                 "Informar a todos los alumnos de un cambio de horario/profesor."
@@ -170,18 +170,18 @@ const SportsLanding = () => {
             {[
               {
                 icon: <Users className="w-8 h-8 text-cyan-400" />,
-                title: "Captación 24/7",
-                desc: "Tus formularios y redes sociales trabajan solos. Los leads entran, se etiquetan y reciben su secuencia de bienvenida al instante."
+                title: "Nuevos socios a cualquier hora",
+                desc: "Tus formularios y redes sociales trabajan solos. Cada persona interesada recibe respuesta automática al instante, sin que nadie tenga que hacer nada."
               },
               {
                 icon: <Clock className="w-8 h-8 text-cyan-400" />,
                 title: "Ahorro del 80% de Tiempo",
-                desc: "Elimina las tareas administrativas repetitivas. Reservas, cancelaciones y recordatorios se gestionan sin intervención humana."
+                desc: "Las tareas repetitivas desaparecen. Reservas, cancelaciones y recordatorios se gestionan solos, sin que nadie tenga que tocarlos."
               },
               {
                 icon: <ShieldCheck className="w-8 h-8 text-cyan-400" />,
-                title: "Retención Inteligente",
-                desc: "Detectamos cuando un alumno deja de asistir antes de que él mismo sepa que quiere darse de baja, activando flujos de rescate."
+                title: "Menos bajas de socios",
+                desc: "Detectamos cuando un alumno deja de asistir y le mandamos un mensaje personalizado antes de que decida darse de baja."
               }
             ].map((prop, i) => (
               <div key={i} className="text-center space-y-4">
@@ -260,7 +260,7 @@ const SportsLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {sportsProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -284,19 +284,19 @@ const SportsLanding = () => {
             {[
               {
                 q: "¿Es necesario cambiar mi software actual (Mindbody, Virtuagym, etc)?",
-                a: "No. En Immoralia nos integramos con tu software actual a través de sus APIs o conectores. Nuestro objetivo es potenciar lo que ya tienes, no sustituirlo."
+                a: "No. Nos conectamos con lo que ya usas sin que tengas que cambiar nada. Nuestro objetivo es potenciar lo que ya tienes, no sustituirlo."
               },
               {
-                q: "¿Cuánto tiempo se tarda en implementar estas automatizaciones?",
-                a: "Depende de la complejidad, pero procesos como el lead capture o secuencias de bienvenida pueden estar listos en menos de 7 días."
+                q: "¿Cuánto tiempo se tarda en poner esto en marcha?",
+                a: "Depende de lo que necesites, pero cosas como responder automáticamente a interesados o enviar recordatorios de reserva pueden estar funcionando en menos de 7 días."
               },
               {
-                q: "¿Qué herramientas necesito contratar?",
-                a: "Nosotros te recomendaremos el stack mínimo viable según tu volumen (normalmente herramientas como Make.com o ActiveCampaign). Te ayudamos a optimizar costes."
+                q: "¿Necesito contratar algún programa o aplicación nueva?",
+                a: "Te recomendamos solo lo necesario según el tamaño de tu centro. Te ayudamos a elegir las opciones más baratas y sencillas, y a optimizar lo que ya tienes."
               },
               {
-                q: "¿Cómo se mide el éxito de la automatización?",
-                a: "Miramos métricas claras: horas ahorradas en recepción, reducción de la tasa de churn (bajas) y aumento en el ratio de conversión de leads a socios."
+                q: "¿Cómo sabemos si está funcionando?",
+                a: "Lo medimos con cosas concretas: horas que deja de hacer tu equipo a mano, cuántas bajas se evitan y cuántos nuevos socios entran cada mes."
               }
             ].map((faq, i) => (
               <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">

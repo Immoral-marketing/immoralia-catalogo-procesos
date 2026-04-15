@@ -66,8 +66,8 @@ const SaludLanding = () => {
   const saludCategories = useMemo(() => {
     const catsMap = new Map();
     saludProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -172,12 +172,12 @@ const SaludLanding = () => {
               {
                 icon: <MessageSquare className="w-8 h-8 text-blue-400" />,
                 title: "Atención 24/7",
-                desc: "Tus pacientes reciben respuestas al instante, incluso fuera de horario. La IA gestiona dudas y deriva casos críticos."
+                desc: "Tus pacientes reciben respuestas al instante, incluso fuera de horario. Responde dudas de forma automática y avisa cuando hace falta atención humana."
               },
               {
                 icon: <Calendar className="w-8 h-8 text-blue-400" />,
                 title: "Optimización de Agenda",
-                desc: "Recordatorios y confirmaciones automáticas que reducen los 'No-Shows' hasta en un 80% de forma garantizada."
+                desc: "Recordatorios y confirmaciones automáticas que reducen las citas perdidas hasta en un 80%."
               },
               {
                 icon: <ShieldCheck className="w-8 h-8 text-blue-400" />,
@@ -261,7 +261,7 @@ const SaludLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {saludProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -291,7 +291,7 @@ const SaludLanding = () => {
               },
               {
                 q: "¿Se integra con mi software de gestión clínica actual?",
-                a: "En la mayoría de los casos, sí. Podemos conectar con tu software vía API o mediante automatizaciones que sincronizan calendarios y fichas de pacientes."
+                a: "En la mayoría de los casos, sí. Podemos conectar con tu software de forma directa o sincronizando calendarios y fichas de pacientes automáticamente."
               },
               {
                 q: "¿Mis pacientes notarán que es una automatización?",

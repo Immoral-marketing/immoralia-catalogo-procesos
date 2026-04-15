@@ -69,8 +69,8 @@ const AgenciasLanding = () => {
   const agenciasCategories = useMemo(() => {
     const catsMap = new Map();
     agenciasProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -124,7 +124,7 @@ const AgenciasLanding = () => {
             </span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Automatizamos tu onboarding de clientes, la gestión de proyectos y la facturación recurrente para que te centres en la estrategia y la creatividad.
+            Automatizamos la incorporación de nuevos clientes, la gestión de proyectos y la facturación recurrente para que te centres en la estrategia y la creatividad.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             <Button size="lg" onClick={scrollToProcesses} className="bg-rose-600 hover:bg-rose-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-rose-900/20 transition-all hover:scale-105">
@@ -145,7 +145,7 @@ const AgenciasLanding = () => {
             <div className="grid md:grid-cols-2 gap-8">
               {[
                 "Dedicamos horas a tareas administrativas que no facturamos.",
-                "El onboarding de nuevos clientes es lento y caótico.",
+                "La incorporación de nuevos clientes es lenta y caótica.",
                 "Falta de visibilidad sobre la rentabilidad real de cada proyecto.",
                 "Perder oportunidades por no hacer seguimiento a los presupuestos enviados.",
                 "Gestionar facturas de freelancers y proveedores de forma manual.",
@@ -174,7 +174,7 @@ const AgenciasLanding = () => {
             {[
               {
                 icon: <Rocket className="w-8 h-8 text-rose-400" />,
-                title: "Onboarding Instantáneo",
+                title: "Incorporación sin Esperas",
                 desc: "Automatizamos la creación de carpetas, tableros de proyecto y mensajes de bienvenida al segundo de cerrar la venta."
               },
               {
@@ -184,8 +184,8 @@ const AgenciasLanding = () => {
               },
               {
                 icon: <Zap className="w-8 h-8 text-rose-400" />,
-                title: "Escalabilidad Operativa",
-                desc: "Sustituye procesos manuales por automatizaciones que trabajan 24/7, permitiéndote absorber más clientes con la misma estructura."
+                title: "Crece sin Ampliar el Equipo",
+                desc: "Sustituye procesos manuales por tareas que se hacen solas, permitiéndote atender más clientes con la misma estructura."
               }
             ].map((prop, i) => (
               <div key={i} className="text-center space-y-4 group">
@@ -264,7 +264,7 @@ const AgenciasLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {agenciasProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -289,11 +289,11 @@ const AgenciasLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Se integra con mi CRM y Gestor de Tareas (ClickUp, Asana, Notion)?",
+                q: "¿Funciona con mis herramientas de trabajo (ClickUp, Asana, Notion)?",
                 a: "Totalmente. Nuestras soluciones se conectan nativamente con las herramientas que ya usas para que no tengas que cambiar tu forma de trabajar."
               },
               {
-                q: "¿Cuánto tiempo se ahorra con el onboarding automático?",
+                q: "¿Cuánto tiempo se ahorra al automatizar la incorporación de clientes?",
                 a: "Nuestros clientes ahorran una media de 3 a 5 horas por cliente nuevo, eliminando errores y asegurando una experiencia premium desde el inicio."
               },
               {

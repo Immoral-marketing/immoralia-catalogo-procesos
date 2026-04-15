@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro } from 'lucide-react';
+import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro, KeyRound, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // ---------------------------------------------------------------------------
@@ -34,7 +34,7 @@ interface Comision {
   pagada_at: string | null;
 }
 
-type AuthState = 'loading' | 'unauthenticated' | 'set_password' | 'authenticated';
+type AuthState = 'loading' | 'unauthenticated' | 'forgot_password' | 'set_password' | 'authenticated';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -74,12 +74,13 @@ export default function AfiliadoPage() {
     // Detectar si viene de un enlace de invitación (?type=invite en el hash)
     const hash = window.location.hash;
     const hashParams = new URLSearchParams(hash.replace('#', ''));
-    const isInvite = hashParams.get('type') === 'invite';
+    const linkType = hashParams.get('type');
+    const isInvite = linkType === 'invite';
+    const isRecovery = linkType === 'recovery';
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session && isInvite) {
-        // Limpiar el hash de la URL
+      if (session && (isInvite || isRecovery)) {
         window.history.replaceState(null, '', window.location.pathname);
         setAuthState('set_password');
       } else {
@@ -108,7 +109,14 @@ export default function AfiliadoPage() {
   }
 
   if (authState === 'unauthenticated') {
-    return <LoginForm onSuccess={() => setAuthState('authenticated')} />;
+    return <LoginForm
+      onSuccess={() => setAuthState('authenticated')}
+      onForgotPassword={() => setAuthState('forgot_password')}
+    />;
+  }
+
+  if (authState === 'forgot_password') {
+    return <ForgotPasswordForm onBack={() => setAuthState('unauthenticated')} />;
   }
 
   if (authState === 'set_password') {
@@ -207,7 +215,7 @@ function SetPasswordForm({ onSuccess }: { onSuccess: () => void }) {
 // ---------------------------------------------------------------------------
 // Login Form
 // ---------------------------------------------------------------------------
-function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+function LoginForm({ onSuccess, onForgotPassword }: { onSuccess: () => void; onForgotPassword: () => void }) {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -288,6 +296,14 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
                 'Acceder'
               )}
             </Button>
+
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </form>
         </div>
 
@@ -295,6 +311,95 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
           Las credenciales son asignadas por el equipo de Immoralia.<br />
           Si tienes problemas, escribe a <span className="text-foreground">team@immoral.com</span>
         </p>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Forgot Password Form
+// ---------------------------------------------------------------------------
+function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
+  const { toast } = useToast();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      email.trim().toLowerCase(),
+      { redirectTo: `${window.location.origin}/afiliado` },
+    );
+
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: 'Error al enviar el email',
+        description: 'Inténtalo de nuevo o contacta con el equipo.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSent(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+            <Link2 className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Recuperar contraseña</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Te enviaremos un enlace para crear una nueva
+          </p>
+        </div>
+
+        <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
+          {sent ? (
+            <div className="text-center space-y-3">
+              <p className="text-foreground font-medium">Email enviado</p>
+              <p className="text-sm text-muted-foreground">
+                Si tu email está registrado, recibirás un enlace para restablecer tu contraseña.
+                Revisa también la carpeta de spam.
+              </p>
+              <Button variant="outline" className="w-full mt-4" onClick={onBack}>
+                Volver al login
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  required
+                  autoFocus
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Enviando...</> : 'Enviar enlace'}
+              </Button>
+              <button
+                type="button"
+                onClick={onBack}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Volver al login
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -313,7 +418,7 @@ function Dashboard({ session }: { session: Session }) {
   const [copied, setCopied] = useState(false);
 
   const referralUrl = partner
-    ? `https://procesos.immoralia.es/?ref=${partner.slug}`
+    ? `${window.location.origin}/?ref=${partner.slug}`
     : '';
 
   const loadData = useCallback(async () => {
@@ -582,8 +687,135 @@ function Dashboard({ session }: { session: Session }) {
             </div>
           )}
         </section>
+
+        {/* ── Seguridad de la cuenta ── */}
+        <ChangePasswordSection />
+
       </main>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Change Password Section
+// ---------------------------------------------------------------------------
+function ChangePasswordSection() {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleToggle = () => {
+    setOpen((prev) => !prev);
+    setError('');
+    setPassword('');
+    setConfirm('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (error) {
+      setError('No se pudo actualizar la contraseña. Inténtalo de nuevo.');
+      return;
+    }
+
+    toast({ title: 'Contraseña actualizada', description: 'Ya puedes usar tu nueva contraseña en el próximo acceso.' });
+    setOpen(false);
+    setPassword('');
+    setConfirm('');
+  };
+
+  return (
+    <section className="bg-card border border-border rounded-xl overflow-hidden">
+      {/* Header — siempre visible */}
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/30 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-slate-500/10 shrink-0">
+            <KeyRound className="h-4 w-4 text-slate-400" />
+          </div>
+          <div className="text-left">
+            <h2 className="font-semibold text-foreground text-sm">Seguridad de la cuenta</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Cambia tu contraseña de acceso al portal</p>
+          </div>
+        </div>
+        {open
+          ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+          : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+        }
+      </button>
+
+      {/* Formulario — colapsable */}
+      {open && (
+        <div className="px-6 pb-6 border-t border-border pt-5">
+          <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
+            <div className="space-y-2">
+              <Label htmlFor="change-password">Nueva contraseña</Label>
+              <Input
+                id="change-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo 8 caracteres"
+                required
+                autoFocus
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="change-confirm">Confirmar nueva contraseña</Label>
+              <Input
+                id="change-confirm"
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder="Repite la contraseña"
+                required
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+            <div className="flex items-center gap-3 pt-1">
+              <Button type="submit" size="sm" disabled={loading}>
+                {loading
+                  ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</>
+                  : 'Actualizar contraseña'
+                }
+              </Button>
+              <button
+                type="button"
+                onClick={handleToggle}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </section>
   );
 }
 
