@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Dumbbell, 
-  Briefcase, 
-  Stethoscope, 
-  Utensils, 
-  ShoppingBag, 
-  Home, 
-  Users, 
+import {
+  Dumbbell,
+  Briefcase,
+  Stethoscope,
+  Utensils,
+  ShoppingBag,
+  Home,
+  Users,
   ChevronRight,
   Sparkles,
   ArrowRight,
   HardHat,
-  GraduationCap
+  GraduationCap,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -130,13 +130,18 @@ const SectorSelector = () => {
               automatización inteligente
             </span>
           </h1>
-          <p className="text-lg text-gray-400 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            Selecciona tu industria para descubrir soluciones diseñadas específicamente para tus retos operativos.
+          <p className="text-xl md:text-2xl font-semibold text-white animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            Tus herramientas, conectadas. Sin trabajo manual.
+          </p>
+          <p className="text-sm text-gray-300 border border-cyan-500/30 bg-cyan-500/5 rounded-full px-6 py-2.5 inline-block animate-in fade-in duration-700 delay-500">
+            No sustituimos tus herramientas. Las conectamos y eliminamos el trabajo manual que hay entre ellas.
           </p>
         </div>
       </header>
 
+
       <main className="container mx-auto px-6 py-12 max-w-6xl">
+        <p className="text-sm text-gray-400 uppercase tracking-widest text-center mb-8 font-semibold">Selecciona tu sector</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
           {sectors.map((sector) => {
             const isActive = sector.status === "active";
