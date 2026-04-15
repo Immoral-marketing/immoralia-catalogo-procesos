@@ -7,22 +7,24 @@ import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { 
-  ChevronRight, 
-  Users, 
-  Zap, 
-  MessageSquare, 
-  ShieldCheck, 
+import {
+  ChevronRight,
+  Users,
+  Zap,
+  MessageSquare,
+  ShieldCheck,
   ArrowRight,
   TrendingDown,
   Clock,
   CheckCircle2,
   LayoutGrid,
+  List,
   HardHat,
   Calculator,
   FileText,
   Sparkles,
-  Search
+  Search,
+  Check
 } from "lucide-react";
 import { 
   Sheet, 
@@ -39,10 +41,12 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import { isOnboardingCompleted } from "@/lib/onboarding-utils";
+import { useNavigate } from "react-router-dom";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const ConstruccionLanding = () => {
-  const { selectedProcessIds, n8nHosting, setN8nHosting } = useSelection();
+  const navigate = useNavigate();
+  const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -75,6 +79,7 @@ const ConstruccionLanding = () => {
   }, [construccionProcesses]);
 
   const [activeCategory, setActiveCategory] = useState("todos");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const selectedProcesses = useMemo(() => {
     return processes.filter(p => selectedProcessIds.has(p.id));
@@ -122,7 +127,7 @@ const ConstruccionLanding = () => {
             </span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Automatizamos la captura de leads, la generación de presupuestos y el control de gastos para que tu equipo se centre en construir.
+            Automatizamos la captación de clientes, los presupuestos y el control de gastos para que tu equipo se centre en construir.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             <Button size="lg" onClick={scrollToProcesses} className="bg-amber-600 hover:bg-amber-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-amber-900/20 transition-all hover:scale-105">
@@ -172,18 +177,18 @@ const ConstruccionLanding = () => {
             {[
               {
                 icon: <Calculator className="w-8 h-8 text-amber-400" />,
-                title: "Presupuestos Ágiles",
-                desc: "Genera ofertas precisas en minutos, no días. La IA ayuda a calcular materiales y mano de obra sin errores."
+                title: "Presupuestos en minutos",
+                desc: "Genera ofertas precisas en minutos, no días. El sistema calcula materiales y mano de obra sin errores."
               },
               {
                 icon: <FileText className="w-8 h-8 text-amber-400" />,
-                title: "Control de Obra 360º",
+                title: "Control total de la obra",
                 desc: "Seguimiento automático de facturas y gastos por proyecto. Sabrás tu margen real en cada momento."
               },
               {
                 icon: <Users className="w-8 h-8 text-amber-400" />,
-                title: "Captura de Leads",
-                desc: "Tus redes sociales y web trabajan para traerte nuevas obras. Los interesados reciben info al instante."
+                title: "Más clientes, menos esfuerzo",
+                desc: "Tus redes sociales y web trabajan para traerte nuevas obras. Cada interesado recibe respuesta al instante."
               }
             ].map((prop, i) => (
               <div key={i} className="text-center space-y-4 group">
@@ -211,18 +216,37 @@ const ConstruccionLanding = () => {
                 <h2 className="text-3xl md:text-5xl font-bold mb-4">Selecciona tus Soluciones</h2>
                 <p className="text-gray-400">Elige los procesos que quieres automatizar en tu empresa. Añade tantos como necesites a tu selección.</p>
               </div>
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-black/40 border border-white/5">
-                <div className="text-right hidden sm:block">
-                  <p className="text-xs text-gray-500 uppercase tracking-wider">Tu selección</p>
-                  <p className="text-lg font-bold text-amber-400">{selectedProcessIds.size} procesos</p>
+              <div className="flex items-center gap-3">
+                {/* Toggle vista */}
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-1 gap-1">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-amber-600 text-white" : "text-gray-400 hover:text-white"}`}
+                    title="Vista en tarjetas"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-amber-600 text-white" : "text-gray-400 hover:text-white"}`}
+                    title="Vista en lista"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
                 </div>
-                <Button 
-                  onClick={() => setShowContactForm(true)}
-                  disabled={selectedProcessIds.size === 0}
-                  className="bg-amber-600 hover:bg-amber-500 disabled:bg-gray-800 h-12 px-6 font-bold shadow-lg shadow-amber-900/20 transition-all active:scale-95"
-                >
-                  Continuar selección <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-black/40 border border-white/5">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider">Tu selección</p>
+                    <p className="text-lg font-bold text-amber-400">{selectedProcessIds.size} procesos</p>
+                  </div>
+                  <Button
+                    onClick={() => setShowContactForm(true)}
+                    disabled={selectedProcessIds.size === 0}
+                    className="bg-amber-600 hover:bg-amber-500 disabled:bg-gray-800 h-12 px-6 font-bold shadow-lg shadow-amber-900/20 transition-all active:scale-95"
+                  >
+                    Continuar selección <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -247,30 +271,72 @@ const ConstruccionLanding = () => {
                 </TabsList>
               </div>
 
-              <TabsContent value="todos" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {construccionProcesses.map((process) => (
-                    <ProcessCard
-                      key={process.id}
-                      process={process}
-                      accentColor="#d97706"
-                    />
-                  ))}
-                </div>
-              </TabsContent>
-              {construccionCategories.map((cat) => (
-                <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {construccionProcesses
-                      .filter(p => p.categoria === cat.id)
-                      .map((process) => (
+              {[
+                { value: "todos", items: construccionProcesses },
+                ...construccionCategories.map(cat => ({
+                  value: cat.id,
+                  items: construccionProcesses.filter(p => p.categoria === cat.id)
+                }))
+              ].map(({ value, items }) => (
+                <TabsContent key={value} value={value} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {viewMode === "grid" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {items.map((process) => (
                         <ProcessCard
                           key={process.id}
                           process={process}
                           accentColor="#d97706"
                         />
                       ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col divide-y divide-white/5 rounded-xl border border-white/5 overflow-hidden">
+                      {items.map((process) => {
+                        const isSelected = selectedProcessIds.has(process.id);
+                        return (
+                          <div
+                            key={process.id}
+                            className={`flex items-center gap-4 px-6 py-4 bg-black/30 hover:bg-black/50 transition-all group ${isSelected ? "border-l-2 border-amber-500" : "border-l-2 border-transparent"}`}
+                          >
+                            <span
+                              className="hidden sm:flex w-44 shrink-0 justify-center text-xs text-amber-400/70 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded font-medium whitespace-nowrap text-center cursor-pointer hover:bg-amber-500/20 hover:text-amber-300 transition-colors"
+                              onClick={() => setActiveCategory(process.categoria)}
+                            >
+                              {process.categoriaNombre}
+                            </span>
+                            <p
+                              className="flex-1 font-medium text-gray-200 group-hover:text-white transition-colors cursor-pointer"
+                              onClick={() => navigate(`/catalogo/procesos/${process.slug}`)}
+                            >
+                              {process.nombre}
+                            </p>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 hidden sm:flex"
+                                onClick={() => navigate(`/catalogo/procesos/${process.slug}`)}
+                              >
+                                Saber más <ChevronRight className="w-4 h-4 ml-1" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant={isSelected ? "default" : "outline"}
+                                onClick={() => toggleProcess(process.id)}
+                                className="gap-1.5 transition-all hover:!bg-amber-500/15 hover:!text-amber-300 hover:!border-amber-400"
+                                style={isSelected
+                                  ? { backgroundColor: "#d97706", borderColor: "#d97706", color: "white" }
+                                  : { borderColor: "#d97706", color: "#d97706" }
+                                }
+                              >
+                                {isSelected ? <><Check className="w-3.5 h-3.5" /> Añadido</> : "Seleccionar"}
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </TabsContent>
               ))}
             </Tabs>
@@ -287,16 +353,16 @@ const ConstruccionLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Se puede integrar con mi software de presupuestos?",
-                a: "Sí, podemos conectar con la mayoría de herramientas de facturación y ERPs del mercado o usar automatizaciones para sincronizar datos."
+                q: "¿Se puede conectar con el programa que ya uso para hacer presupuestos?",
+                a: "Sí, nos conectamos con la mayoría de programas de facturación y gestión del mercado sin que tengas que cambiar nada de lo que ya tienes."
               },
               {
-                q: "¿Cómo ayuda la IA en los presupuestos?",
-                a: "La IA puede leer solicitudes de clientes (incluso por voz) y proponer una lista de materiales y tiempos basada en tu histórico, reduciendo errores y tiempo de respuesta."
+                q: "¿Cómo funciona la generación automática de presupuestos?",
+                a: "El sistema lee la solicitud del cliente y, basándose en tus tarifas y tu historial, propone una lista de materiales y tiempos lista para revisar y enviar."
               },
               {
                 q: "¿Sirve para reformistas autónomos o solo para constructoras?",
-                a: "Nuestras soluciones son modulares. Un autónomo puede beneficiarse del Bot de WhatsApp y el control de facturas, mientras que una constructora usará todo el stack."
+                a: "Para ambos. Un autónomo puede empezar por responder automáticamente en WhatsApp y llevar el control de facturas. Una empresa más grande puede usar todo el catálogo."
               }
             ].map((faq, i) => (
               <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-amber-500/10 transition-all hover:bg-white/[0.07] group">
