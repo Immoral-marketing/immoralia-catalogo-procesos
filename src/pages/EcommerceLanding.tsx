@@ -68,8 +68,8 @@ const EcommerceLanding = () => {
   const ecommerceCategories = useMemo(() => {
     const catsMap = new Map();
     ecommerceProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -144,11 +144,11 @@ const EcommerceLanding = () => {
             <div className="grid md:grid-cols-2 gap-8">
               {[
                 "Atender cientos de dudas sobre estados de pedido por WhatsApp.",
-                "Gestionar devoluciones y reembolsos manualmente en el ERP.",
+                "Gestionar devoluciones y reembolsos manualmente en el sistema de gestión.",
                 "Errores en la facturación que retrasan los cierres mensuales.",
                 "Perder ventas porque el equipo no llega a tiempo a responder dudas.",
-                "Dificultad para centralizar la información de clientes multicanal.",
-                "Carga administrativa excesiva en picos de demanda (Black Friday)."
+                "Dificultad para centralizar la información de clientes de distintos canales de venta.",
+                "Carga administrativa excesiva en picos de demanda como rebajas o campañas especiales."
               ].map((pain, i) => (
                 <div key={i} className="flex gap-4 p-6 rounded-2xl bg-black/40 border border-white/5 hover:border-blue-500/20 transition-all hover:translate-y-[-2px] group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -167,14 +167,14 @@ const EcommerceLanding = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Lo que Conseguirás con Immoralia</h2>
-            <p className="text-gray-400">Escalamos la operativa de tu e-commerce sin aumentar tu equipo.</p>
+            <p className="text-gray-400">Escalamos la operativa de tu tienda online sin aumentar tu equipo.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
             {[
               {
                 icon: <MessageSquare className="w-8 h-8 text-blue-400" />,
                 title: "Atención al Cliente 24/7",
-                desc: "Un Bot inteligente que resuelve dudas de estado de pedido y productos, derivando solo lo complejo."
+                desc: "Un asistente automatizado que resuelve dudas de estado de pedido y productos, derivando solo lo complejo."
               },
               {
                 icon: <Truck className="w-8 h-8 text-blue-400" />,
@@ -263,7 +263,7 @@ const EcommerceLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {ecommerceProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -288,16 +288,16 @@ const EcommerceLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Se integra con Shopify o WooCommerce?",
-                a: "Sí, nuestras soluciones se conectan nativamente con las principales plataformas de e-commerce y con tu ERP/software de gestión."
+                q: "¿Funciona con mi tienda online?",
+                a: "Sí, nos conectamos con las principales tiendas online y con tu programa de gestión sin que tengas que cambiar nada."
               },
               {
-                q: "¿Cómo gestiona el Bot las consultas sobre pedidos?",
-                a: "La IA consulta en tiempo real el estado de envío en tu sistema y responde al cliente directamente sin intervención humana."
+                q: "¿Cómo se responden las consultas sobre pedidos?",
+                a: "El sistema consulta en tiempo real el estado de envío y responde al cliente directamente sin intervención humana."
               },
               {
                 q: "¿Puede automatizar la emisión de facturas?",
-                a: "Totalmente. Podemos configurar flujos que generen y envíen la factura legal al cliente en cuanto se confirma el pago del pedido."
+                a: "Sí. Podemos configurar que se genere y envíe la factura legal al cliente en cuanto se confirma el pago del pedido."
               }
             ].map((faq, i) => (
               <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-blue-500/10 transition-all hover:bg-white/[0.07] group">
@@ -318,7 +318,7 @@ const EcommerceLanding = () => {
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
-            ¿Listo para escalar <br /> tu E-commerce?
+            ¿Listo para escalar <br /> tu tienda online?
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
             Deja de perder tiempo en procesos manuales y empieza a construir una marca escalable. Solicita tu oferta ahora personalizada.

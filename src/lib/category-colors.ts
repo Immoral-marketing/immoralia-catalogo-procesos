@@ -4,9 +4,7 @@ export const getCategoryColorClass = (categoriaNombre: string): string => {
       return "bg-pink-500/10 text-pink-400 border-pink-500/30";
     case "Auditoría tecnológica":
       return "bg-amber-500/10 text-amber-500 border-amber-500/30";
-    case "Facturas y Gastos":
-      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
-    case "Finanzas y Tesorería":
+    case "Facturación y Finanzas":
       return "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
     case "Horarios y Proyectos":
       return "bg-indigo-500/10 text-indigo-400 border-indigo-500/30";

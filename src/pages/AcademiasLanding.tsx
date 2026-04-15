@@ -67,8 +67,8 @@ const AcademiasLanding = () => {
   const academiasCategories = useMemo(() => {
     const catsMap = new Map();
     academiasProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
     return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
@@ -145,7 +145,7 @@ const AcademiasLanding = () => {
                 "Atender WhatsApps a deshoras por consultas de horarios o precios.",
                 "Alumnos que olvidan sus clases de prueba o tutorías.",
                 "Gestionar cobros y devoluciones manualmente cada mes.",
-                "Perder leads de interesados por falta de respuesta inmediata.",
+                "Perder alumnos interesados por no responder a tiempo.",
                 "Carga administrativa excesiva en la matriculación de nuevos cursos.",
                 "Dificultad para mantener informados a padres y alumnos de cambios."
               ].map((pain, i) => (
@@ -262,7 +262,7 @@ const AcademiasLanding = () => {
                 <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {academiasProcesses
-                      .filter(p => p.categoria === cat.id)
+                      .filter(p => p.categoriaNombre === cat.id)
                       .map((process) => (
                         <ProcessCard
                           key={process.id}
@@ -291,12 +291,12 @@ const AcademiasLanding = () => {
                 a: "Sí, podemos conectar con las plataformas de gestión educativa más habituales o usar automatizaciones para sincronizar calendarios y bases de datos."
               },
               {
-                q: "¿Puede la IA realizar pruebas de nivel?",
-                a: "Podemos configurar flujos que realicen preguntas iniciales y clasifiquen al alumno según sus respuestas, ahorrando tiempo al profesor en la primera toma de contacto."
+                q: "¿Puede el sistema realizar pruebas de nivel?",
+                a: "Podemos configurar preguntas automáticas iniciales que clasifiquen al alumno según sus respuestas, ahorrando tiempo al profesor en la primera toma de contacto."
               },
               {
-                q: "¿Cómo gestiona el Bot las dudas sobre precios?",
-                a: "La IA consulta tu catálogo de cursos y ofrece la información detallada según la demanda del usuario, pudiendo incluso enviar folletos en PDF automáticamente."
+                q: "¿Cómo responde el sistema a las preguntas sobre precios?",
+                a: "El sistema consulta tu catálogo de cursos y ofrece la información detallada según lo que pida el usuario, pudiendo incluso enviar folletos en PDF automáticamente."
               }
             ].map((faq, i) => (
               <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-violet-500/10 transition-all hover:bg-white/[0.07] group">

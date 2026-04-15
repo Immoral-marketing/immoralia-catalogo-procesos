@@ -66,12 +66,11 @@ const GestoriasLanding = () => {
   const gestoriasCategories = useMemo(() => {
     const catsMap = new Map();
     gestoriasProcesses.forEach(p => {
-      if (!catsMap.has(p.categoria)) {
-        catsMap.set(p.categoria, p.categoriaNombre);
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
     });
 
-    // Ordenar categorías según el orden estándar A-F
     return Array.from(catsMap.entries())
       .map(([id, name]) => ({ id, name }))
       .sort((a, b) => a.id.localeCompare(b.id));
@@ -186,7 +185,7 @@ const GestoriasLanding = () => {
               {
                 icon: <MessageSquare className="w-8 h-8 text-teal-400" />,
                 title: "Atención Proactiva",
-                desc: "Tus clientes conocen el estado de su expediente 24/7 sin llamarte. Resolución de dudas comunes vía WhatsApp con IA."
+                desc: "Tus clientes conocen el estado de su expediente 24/7 sin llamarte. Respuesta automática a dudas comunes por WhatsApp."
               }
             ].map((prop, i) => (
               <div key={i} className="text-center space-y-4 group">
@@ -264,7 +263,7 @@ const GestoriasLanding = () => {
               <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {gestoriasProcesses
-                    .filter(p => p.categoria === cat.id)
+                    .filter(p => p.categoriaNombre === cat.id)
                     .map((process) => (
                       <ProcessCard
                         key={process.id}
@@ -288,11 +287,11 @@ const GestoriasLanding = () => {
           <div className="space-y-6">
             {[
               {
-                q: "¿Cómo se integran estas automatizaciones con mi ERP actual?",
-                a: "Trabajamos con las APIs de los principales softwares del mercado (A3, Holded, Sage, etc.) o mediante la lectura automática de carpetas compartidas. No tienes que cambiar tu forma de trabajar, solo potenciarla."
+                q: "¿Funciona con el software de gestión que ya uso?",
+                a: "Nos conectamos con los principales programas del mercado (A3, Holded, Sage, etc.) o leyendo carpetas compartidas de forma automática. No tienes que cambiar tu forma de trabajar."
               },
               {
-                q: "¿Es seguro procesar datos de clientes con IA?",
+                q: "¿Es seguro procesar los datos de mis clientes?",
                 a: "Absolutamente. Utilizamos entornos seguros y cumplimos estrictamente con la RGPD. Los datos solo se procesan para las tareas definidas y nunca se utilizan para entrenar modelos públicos."
               },
               {
@@ -300,7 +299,7 @@ const GestoriasLanding = () => {
                 a: "Nuestro sistema está diseñado para ellos. No necesitan apps complejas; la mayoría de las interacciones se realizan vía WhatsApp o Email con enlaces directos, facilitando la adopción al máximo."
               },
               {
-                q: "¿Cómo calculo el retorno de inversión (ROI)?",
+                q: "¿Cómo sé si vale la pena?",
                 a: "Miramos dos factores: las horas liberadas de tu equipo administrativo (que pueden dedicar a tareas de mayor valor) y la reducción de fugas de clientes por una mejora radical en la atención."
               }
             ].map((faq, i) => (
@@ -325,7 +324,7 @@ const GestoriasLanding = () => {
             Escala tu Gestión, <br className="hidden md:block" /> Reduce tu Estrés
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
-            Únete a la nueva generación de despachos inteligentes. Empieza hoy mismo tu transformación digital.
+            Empieza hoy mismo a trabajar de forma más eficiente y a dedicar tu tiempo a lo que realmente aporta valor.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-teal-600 hover:bg-teal-500 h-16 px-10 text-xl shadow-[0_0_40px_rgba(20,184,166,0.3)] transition-all hover:scale-105">
