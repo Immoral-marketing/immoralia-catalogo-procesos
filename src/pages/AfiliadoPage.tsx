@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro } from 'lucide-react';
+import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro, KeyRound, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // ---------------------------------------------------------------------------
@@ -329,25 +329,23 @@ function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const { error } = await supabase.functions.invoke('reset-partner-password', {
-        body: {
-          email: email.trim().toLowerCase(),
-          redirectTo: `${window.location.origin}/afiliado`,
-        },
-      });
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      email.trim().toLowerCase(),
+      { redirectTo: `${window.location.origin}/afiliado` },
+    );
 
-      if (error) throw error;
-      setSent(true);
-    } catch {
+    setLoading(false);
+
+    if (error) {
       toast({
         title: 'Error al enviar el email',
         description: 'Inténtalo de nuevo o contacta con el equipo.',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    setSent(true);
   };
 
   return (
@@ -689,8 +687,135 @@ function Dashboard({ session }: { session: Session }) {
             </div>
           )}
         </section>
+
+        {/* ── Seguridad de la cuenta ── */}
+        <ChangePasswordSection />
+
       </main>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Change Password Section
+// ---------------------------------------------------------------------------
+function ChangePasswordSection() {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleToggle = () => {
+    setOpen((prev) => !prev);
+    setError('');
+    setPassword('');
+    setConfirm('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (error) {
+      setError('No se pudo actualizar la contraseña. Inténtalo de nuevo.');
+      return;
+    }
+
+    toast({ title: 'Contraseña actualizada', description: 'Ya puedes usar tu nueva contraseña en el próximo acceso.' });
+    setOpen(false);
+    setPassword('');
+    setConfirm('');
+  };
+
+  return (
+    <section className="bg-card border border-border rounded-xl overflow-hidden">
+      {/* Header — siempre visible */}
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/30 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-slate-500/10 shrink-0">
+            <KeyRound className="h-4 w-4 text-slate-400" />
+          </div>
+          <div className="text-left">
+            <h2 className="font-semibold text-foreground text-sm">Seguridad de la cuenta</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Cambia tu contraseña de acceso al portal</p>
+          </div>
+        </div>
+        {open
+          ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+          : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+        }
+      </button>
+
+      {/* Formulario — colapsable */}
+      {open && (
+        <div className="px-6 pb-6 border-t border-border pt-5">
+          <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
+            <div className="space-y-2">
+              <Label htmlFor="change-password">Nueva contraseña</Label>
+              <Input
+                id="change-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo 8 caracteres"
+                required
+                autoFocus
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="change-confirm">Confirmar nueva contraseña</Label>
+              <Input
+                id="change-confirm"
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder="Repite la contraseña"
+                required
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+            <div className="flex items-center gap-3 pt-1">
+              <Button type="submit" size="sm" disabled={loading}>
+                {loading
+                  ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</>
+                  : 'Actualizar contraseña'
+                }
+              </Button>
+              <button
+                type="button"
+                onClick={handleToggle}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </section>
   );
 }
 
