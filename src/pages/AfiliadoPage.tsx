@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro, KeyRound, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Copy, Check, LogOut, Link2, Users, FileText, Euro, KeyRound, ChevronDown, ChevronUp, Upload, Paperclip } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // ---------------------------------------------------------------------------
@@ -32,6 +32,7 @@ interface Comision {
   importe_comision: number;
   estado: string;
   pagada_at: string | null;
+  factura_url: string | null;
 }
 
 type AuthState = 'loading' | 'unauthenticated' | 'forgot_password' | 'set_password' | 'authenticated';
@@ -416,6 +417,7 @@ function Dashboard({ session }: { session: Session }) {
   const [clicksCount, setClicksCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
 
   const referralUrl = partner
     ? `${window.location.origin}/?ref=${partner.slug}`
@@ -462,7 +464,7 @@ function Dashboard({ session }: { session: Session }) {
       // 4. Comisiones
       const { data: comisionesData } = await supabase
         .from('comisiones')
-        .select('id, solicitud_id, importe_comision, estado, pagada_at')
+        .select('id, solicitud_id, importe_comision, estado, pagada_at, factura_url')
         .eq('partner_id', partnerData.id)
         .order('created_at', { ascending: false });
 
@@ -489,6 +491,33 @@ function Dashboard({ session }: { session: Session }) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+  };
+
+  const handleUploadFactura = async (comisionId: string, file: File) => {
+    if (!partner) return;
+    setUploading((prev) => ({ ...prev, [comisionId]: true }));
+    try {
+      const path = `${partner.id}/${comisionId}`;
+      const { error: uploadError } = await supabase.storage
+        .from('facturas-afiliados')
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (uploadError) throw uploadError;
+
+      const { error: rpcError } = await supabase.rpc('set_comision_factura_url', {
+        p_comision_id: comisionId,
+        p_factura_url: path,
+      });
+
+      if (rpcError) throw rpcError;
+
+      toast({ title: 'Factura adjuntada', description: 'El equipo la recibirá para procesar el pago.' });
+      loadData();
+    } catch {
+      toast({ title: 'Error al subir la factura', description: 'Inténtalo de nuevo.', variant: 'destructive' });
+    } finally {
+      setUploading((prev) => ({ ...prev, [comisionId]: false }));
+    }
   };
 
   // Totales de comisiones
@@ -595,12 +624,6 @@ function Dashboard({ session }: { session: Session }) {
                 <p className="text-xl font-bold text-amber-400">{formatEur(totalPendiente)}</p>
               </div>
             </div>
-            {totalPendiente > 0 && totalPendiente < 100 && (
-              <p className="text-xs text-muted-foreground mt-4 text-center">
-                El mínimo para procesar el pago es de <strong className="text-foreground">100€</strong>.
-                Te faltan <strong className="text-amber-400">{formatEur(100 - totalPendiente)}</strong> para alcanzarlo.
-              </p>
-            )}
           </section>
         )}
 
@@ -635,6 +658,9 @@ function Dashboard({ session }: { session: Session }) {
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wide">
                       Comisión
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      Factura
                     </th>
                   </tr>
                 </thead>
@@ -677,6 +703,55 @@ function Dashboard({ session }: { session: Session }) {
                             <span className="text-muted-foreground text-xs">
                               {['aprobada', 'cerrada'].includes(sol.estado) ? '—' : 'Por determinar'}
                             </span>
+                          )}
+                        </td>
+
+                        {/* ── Factura ── */}
+                        <td className="px-6 py-4 text-center">
+                          {comision ? (
+                            comision.factura_url ? (
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Paperclip className="h-3 w-3 text-emerald-400" />
+                                <span className="text-xs text-emerald-400 font-medium">Adjuntada</span>
+                                <label className="cursor-pointer ml-1">
+                                  <input
+                                    type="file"
+                                    className="hidden"
+                                    accept=".pdf,.jpg,.jpeg,.png"
+                                    onChange={(e) => {
+                                      const f = e.target.files?.[0];
+                                      if (f) handleUploadFactura(comision.id, f);
+                                      e.target.value = '';
+                                    }}
+                                  />
+                                  <span className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2 cursor-pointer">
+                                    Reemplazar
+                                  </span>
+                                </label>
+                              </div>
+                            ) : (
+                              <label className="cursor-pointer">
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const f = e.target.files?.[0];
+                                    if (f) handleUploadFactura(comision.id, f);
+                                    e.target.value = '';
+                                  }}
+                                />
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors cursor-pointer">
+                                  {uploading[comision.id]
+                                    ? <Loader2 className="h-3 w-3 animate-spin" />
+                                    : <Upload className="h-3 w-3" />
+                                  }
+                                  {uploading[comision.id] ? 'Subiendo...' : 'Adjuntar'}
+                                </span>
+                              </label>
+                            )
+                          ) : (
+                            <span className="text-muted-foreground text-xs">—</span>
                           )}
                         </td>
                       </tr>
