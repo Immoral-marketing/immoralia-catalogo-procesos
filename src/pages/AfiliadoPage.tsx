@@ -675,7 +675,7 @@ function Dashboard({ session }: { session: Session }) {
                             </div>
                           ) : (
                             <span className="text-muted-foreground text-xs">
-                              {sol.estado === 'aprobada' ? '—' : 'Por determinar'}
+                              {['aprobada', 'cerrada'].includes(sol.estado) ? '—' : 'Por determinar'}
                             </span>
                           )}
                         </td>
