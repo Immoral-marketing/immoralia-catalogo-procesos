@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   Loader2, LogOut, Users, FileText, Euro, Plus, Check, X,
-  ChevronDown, ToggleLeft, ToggleRight, Trophy, Copy, MoreHorizontal, Pencil, Trash2,
+  ChevronDown, ToggleLeft, ToggleRight, Trophy, Copy, MoreHorizontal, Pencil, Trash2, Download, Paperclip,
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -52,6 +52,7 @@ interface ComisionAdmin {
   estado: string;
   created_at: string;
   pagada_at: string | null;
+  factura_url: string | null;
   partner?: { nombre: string; slug: string } | null;
 }
 
@@ -823,6 +824,17 @@ function ComisionesTab() {
     load();
   };
 
+  const handleDescargarFactura = async (facturaUrl: string) => {
+    const { data, error } = await supabase.storage
+      .from('facturas-afiliados')
+      .createSignedUrl(facturaUrl, 300); // 5 min de validez
+    if (error || !data?.signedUrl) {
+      toast({ title: 'Error al generar el enlace de descarga', variant: 'destructive' });
+      return;
+    }
+    window.open(data.signedUrl, '_blank');
+  };
+
   // Filtrado de la tabla de comisiones
   const filteredComisiones = comisiones.filter((c) => {
     if (filterPartner !== 'todos' && c.partner_id !== filterPartner) return false;
@@ -872,9 +884,6 @@ function ComisionesTab() {
                     <span className="text-muted-foreground">Pendiente</span>
                     <span className="font-semibold text-amber-400">{formatEur(pendiente)}</span>
                   </div>
-                  {pendiente > 0 && pendiente < 100 && (
-                    <p className="text-xs text-muted-foreground pt-1">Falta {formatEur(100 - pendiente)} para el mínimo de pago</p>
-                  )}
                 </div>
               </div>
             ))}
@@ -931,6 +940,7 @@ function ComisionesTab() {
                     <th className="px-4 py-3 text-left">Estado</th>
                     <th className="px-4 py-3 text-left">Fecha generación</th>
                     <th className="px-4 py-3 text-left">Fecha pago</th>
+                    <th className="px-4 py-3 text-center">Factura</th>
                     <th className="px-4 py-3 text-center">Acción</th>
                   </tr>
                 </thead>
@@ -955,6 +965,22 @@ function ComisionesTab() {
                           {c.pagada_at ? formatDate(c.pagada_at) : '—'}
                         </td>
                         <td className="px-4 py-3 text-center">
+                          {c.factura_url ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs gap-1 text-emerald-400 border-emerald-500/30 hover:text-emerald-300"
+                              onClick={() => handleDescargarFactura(c.factura_url!)}
+                            >
+                              <Download className="h-3 w-3" />Descargar
+                            </Button>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                              <Paperclip className="h-3 w-3 opacity-40" />Sin factura
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center">
                           {c.estado !== 'pagada' && (
                             <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => marcarPagada(c.id)}>
                               <Check className="h-3 w-3 mr-1" />Marcar pagada
@@ -977,7 +1003,7 @@ function ComisionesTab() {
                         <div className="text-purple-400">{formatEur(totalPagadaTabla)} pagado</div>
                       </div>
                     </td>
-                    <td colSpan={4} />
+                    <td colSpan={5} />
                   </tr>
                 </tfoot>
               </table>
