@@ -264,6 +264,7 @@ function SolicitudesTab() {
   const [filterEstado, setFilterEstado] = useState('todos');
   const [filterPartner, setFilterPartner] = useState('todos');
   const [aprobarModal, setAprobarModal] = useState<{ solicitud: SolicitudAdmin } | null>(null);
+  const [cerrarModal, setCerrarModal] = useState<{ solicitud: SolicitudAdmin } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -283,30 +284,31 @@ function SolicitudesTab() {
       setAprobarModal({ solicitud: sol });
       return;
     }
+    if (nuevoEstado === 'cerrada') {
+      setCerrarModal({ solicitud: sol });
+      return;
+    }
     await supabase.from('solicitudes').update({ estado: nuevoEstado }).eq('id', sol.id);
     toast({ title: 'Estado actualizado' });
     load();
   };
 
-  const handleAprobar = async (solicitudId: string, partnerId: string | null, importe: number) => {
+  // Aprobar: solo guarda importe + estado. La comisión la gestiona el trigger SQL al cerrar.
+  const handleAprobar = async (solicitudId: string, _partnerId: string | null, importe: number) => {
     await supabase.from('solicitudes').update({ estado: 'aprobada', importe_cobrado: importe }).eq('id', solicitudId);
-
-    if (partnerId) {
-      const { data: existing } = await supabase.from('comisiones').select('id').eq('solicitud_id', solicitudId).single();
-      if (!existing) {
-        const importeComision = importe * 0.15;
-        await supabase.from('comisiones').insert({
-          solicitud_id: solicitudId,
-          partner_id: partnerId,
-          importe_base: importe,
-          importe_comision: importeComision,
-          estado: importeComision >= 100 ? 'confirmada' : 'pendiente',
-        });
-      }
-    }
-
-    toast({ title: 'Solicitud aprobada', description: partnerId ? 'Comisión generada automáticamente' : 'Sin partner asignado — no se genera comisión' });
+    toast({ title: 'Solicitud aprobada' });
     setAprobarModal(null);
+    load();
+  };
+
+  // Cerrar: guarda importe + estado. El trigger SQL auto-genera la comisión si procede.
+  const handleCerrar = async (solicitudId: string, importe: number) => {
+    await supabase.from('solicitudes').update({ estado: 'cerrada', importe_cobrado: importe }).eq('id', solicitudId);
+    toast({
+      title: 'Solicitud cerrada',
+      description: 'Si hay partner asignado, la comisión se ha generado automáticamente.',
+    });
+    setCerrarModal(null);
     load();
   };
 
@@ -429,10 +431,21 @@ function SolicitudesTab() {
 
       {/* Modal Aprobar */}
       {aprobarModal && (
-        <AprobarModal
+        <ImporteModal
+          mode="aprobar"
           solicitud={aprobarModal.solicitud}
           onConfirm={(importe) => handleAprobar(aprobarModal.solicitud.id, aprobarModal.solicitud.partner_id, importe)}
           onCancel={() => setAprobarModal(null)}
+        />
+      )}
+
+      {/* Modal Cerrar */}
+      {cerrarModal && (
+        <ImporteModal
+          mode="cerrar"
+          solicitud={cerrarModal.solicitud}
+          onConfirm={(importe) => handleCerrar(cerrarModal.solicitud.id, importe)}
+          onCancel={() => setCerrarModal(null)}
         />
       )}
     </div>
@@ -464,9 +477,10 @@ function PartnerOverrideSelect({
   );
 }
 
-function AprobarModal({
-  solicitud, onConfirm, onCancel,
+function ImporteModal({
+  mode, solicitud, onConfirm, onCancel,
 }: {
+  mode: 'aprobar' | 'cerrar';
   solicitud: SolicitudAdmin;
   onConfirm: (importe: number) => void;
   onCancel: () => void;
@@ -479,16 +493,21 @@ function AprobarModal({
     onConfirm(n);
   };
 
+  const isCerrar = mode === 'cerrar';
+  const title    = isCerrar ? 'Cerrar solicitud' : 'Aprobar solicitud';
+  const desc     = isCerrar
+    ? 'Introduce el importe cobrado. Si hay partner asignado, se generará la comisión (10%) automáticamente.'
+    : 'Introduce el importe cobrado al cliente.';
+  const btnLabel = isCerrar ? 'Cerrar solicitud' : 'Aprobar';
+
   return (
     <Dialog open onOpenChange={onCancel}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Aprobar solicitud</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
-          <p className="text-sm text-muted-foreground">
-            Introduce el importe cobrado al cliente. Se calculará automáticamente la comisión (15%).
-          </p>
+          <p className="text-sm text-muted-foreground">{desc}</p>
           <div className="space-y-2">
             <Label>Importe cobrado (€)</Label>
             <Input
@@ -507,10 +526,12 @@ function AprobarModal({
                 <span className="text-muted-foreground">Importe cobrado</span>
                 <span className="font-medium">{formatEur(parseFloat(importe))}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Comisión partner (15%)</span>
-                <span className="font-medium text-emerald-400">{formatEur(parseFloat(importe) * 0.15)}</span>
-              </div>
+              {isCerrar && solicitud.partner_id && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Comisión partner (10%)</span>
+                  <span className="font-medium text-emerald-400">{formatEur(parseFloat(importe) * 0.10)}</span>
+                </div>
+              )}
               {solicitud.partner_id === null && (
                 <p className="text-xs text-amber-400 pt-1">Sin partner asignado — no se genera comisión</p>
               )}
@@ -520,7 +541,7 @@ function AprobarModal({
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>Cancelar</Button>
           <Button onClick={handleConfirm} disabled={!importe || isNaN(parseFloat(importe)) || parseFloat(importe) <= 0}>
-            Aprobar
+            {btnLabel}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -780,6 +801,8 @@ function ComisionesTab() {
   const [comisiones, setComisiones] = useState<ComisionAdmin[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterPartner, setFilterPartner] = useState('todos');
+  const [filterEstado, setFilterEstado] = useState('todos');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -799,6 +822,19 @@ function ComisionesTab() {
     toast({ title: 'Comisión marcada como pagada' });
     load();
   };
+
+  // Filtrado de la tabla de comisiones
+  const filteredComisiones = comisiones.filter((c) => {
+    if (filterPartner !== 'todos' && c.partner_id !== filterPartner) return false;
+    if (filterEstado  !== 'todos' && c.estado    !== filterEstado)   return false;
+    return true;
+  });
+  const totalPendienteTabla = filteredComisiones
+    .filter((c) => c.estado !== 'pagada')
+    .reduce((s, c) => s + c.importe_comision, 0);
+  const totalPagadaTabla = filteredComisiones
+    .filter((c) => c.estado === 'pagada')
+    .reduce((s, c) => s + c.importe_comision, 0);
 
   // Totales por partner
   const totalesPorPartner = partners.map((p) => {
@@ -848,12 +884,41 @@ function ComisionesTab() {
 
       {/* Tabla de comisiones */}
       <section>
-        <h2 className="text-base font-semibold text-foreground mb-3">Todas las comisiones</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <h2 className="text-base font-semibold text-foreground">Todas las comisiones</h2>
+          <div className="flex gap-2">
+            <Select value={filterPartner} onValueChange={setFilterPartner}>
+              <SelectTrigger className="w-44 h-8 text-xs">
+                <SelectValue placeholder="Partner" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos los partners</SelectItem>
+                {partners.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={filterEstado} onValueChange={setFilterEstado}>
+              <SelectTrigger className="w-36 h-8 text-xs">
+                <SelectValue placeholder="Estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos</SelectItem>
+                <SelectItem value="pendiente">Pendiente</SelectItem>
+                <SelectItem value="confirmada">Confirmada</SelectItem>
+                <SelectItem value="pagada">Pagada</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
-          ) : comisiones.length === 0 ? (
-            <div className="py-16 text-center text-muted-foreground">No hay comisiones aún</div>
+          ) : filteredComisiones.length === 0 ? (
+            <div className="py-16 text-center text-muted-foreground">
+              {comisiones.length === 0 ? 'No hay comisiones aún' : 'No hay comisiones con estos filtros'}
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -862,14 +927,15 @@ function ComisionesTab() {
                     <th className="px-4 py-3 text-left">Partner</th>
                     <th className="px-4 py-3 text-left">Solicitud</th>
                     <th className="px-4 py-3 text-right">Base</th>
-                    <th className="px-4 py-3 text-right">Comisión (15%)</th>
+                    <th className="px-4 py-3 text-right">Comisión (10%)</th>
                     <th className="px-4 py-3 text-left">Estado</th>
+                    <th className="px-4 py-3 text-left">Fecha generación</th>
                     <th className="px-4 py-3 text-left">Fecha pago</th>
                     <th className="px-4 py-3 text-center">Acción</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {comisiones.map((c) => {
+                  {filteredComisiones.map((c) => {
                     const conf = ESTADO_COMISION[c.estado] ?? ESTADO_COMISION.pendiente;
                     return (
                       <tr key={c.id} className="hover:bg-muted/30 transition-colors">
@@ -884,6 +950,7 @@ function ComisionesTab() {
                             {conf.label}
                           </span>
                         </td>
+                        <td className="px-4 py-3 text-muted-foreground text-xs">{formatDate(c.created_at)}</td>
                         <td className="px-4 py-3 text-muted-foreground text-xs">
                           {c.pagada_at ? formatDate(c.pagada_at) : '—'}
                         </td>
@@ -898,6 +965,21 @@ function ComisionesTab() {
                     );
                   })}
                 </tbody>
+                {/* ── Totales ── */}
+                <tfoot>
+                  <tr className="border-t-2 border-border bg-muted/40 text-xs font-semibold">
+                    <td colSpan={3} className="px-4 py-3 text-muted-foreground">
+                      {filteredComisiones.length} comisión{filteredComisiones.length !== 1 ? 'es' : ''}
+                    </td>
+                    <td className="px-4 py-3 text-right" colSpan={1}>
+                      <div className="space-y-0.5">
+                        <div className="text-amber-400">{formatEur(totalPendienteTabla)} pendiente</div>
+                        <div className="text-purple-400">{formatEur(totalPagadaTabla)} pagado</div>
+                      </div>
+                    </td>
+                    <td colSpan={4} />
+                  </tr>
+                </tfoot>
               </table>
             </div>
           )}
