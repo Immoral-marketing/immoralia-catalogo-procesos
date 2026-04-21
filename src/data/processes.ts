@@ -3754,6 +3754,120 @@ export const processes: Process[] = [
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion"
   },
+
+  {
+    id: "AG1",
+    codigo: "AG1",
+    slug: "recordatorio-horas-no-registradas",
+    categoria: "A",
+    categoriaNombre: "Facturación y Finanzas",
+    nombre: "Recordatorio automático al equipo cuando hay horas sin registrar",
+    tagline: "Si tu equipo factura por horas, cada hora sin registrar es dinero perdido.",
+    recomendado: true,
+    descripcionDetallada: "Al final de cada jornada, el sistema revisa qué miembros del equipo no han registrado horas en su herramienta de tracking (Glassy, Timely, Harvest...). Los que no han imputado nada reciben un recordatorio automático y personalizado por Slack o email. Si el patrón se repite varios días seguidos, el responsable recibe un aviso consolidado para actuar.",
+    summary: {
+      what_it_is: "Sistema de control de imputación horaria que detecta lagunas de registro y avisa al equipo antes de que el cierre de mes deje horas sin facturar.",
+      for_who: ["CEOs de agencia", "Project Managers", "Responsables de facturación"],
+      requirements: ["Herramienta de tracking de horas (Glassy, Timely, Harvest u otra)", "Canal de comunicación interna (Slack, email o Teams)"],
+      output: "Recordatorio automático diario a quien no ha registrado horas + informe semanal al responsable con el histórico de lagunas por persona."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Tracking de horas", "Comunicación interna"]
+    },
+    how_it_works_steps: [
+      { title: "Consulta diaria de imputaciones", short: "Leemos quién ha registrado y quién no.", detail: "Cada día a la hora que definas, el sistema extrae de tu herramienta de tracking la lista de personas activas y comprueba si han registrado al menos X minutos ese día." },
+      { title: "Filtrado de ausencias justificadas", short: "Excluimos vacaciones y días libres.", detail: "Si la persona tiene marcado un día de vacaciones, festivo o ausencia aprobada, el sistema la ignora y no envía el recordatorio." },
+      { title: "Recordatorio personalizado", short: "Cada uno recibe su propio aviso.", detail: "El mensaje lleva el nombre de la persona, el día en cuestión y un enlace directo a su herramienta de registro para facilitar la acción inmediata." },
+      { title: "Informe de reincidencia al manager", short: "El responsable ve el patrón.", detail: "Si alguien acumula 3 o más días sin registrar en la semana, el manager recibe un resumen agrupado para intervenir si es necesario." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Herramienta de tracking", options: ["Glassy", "Timely", "Harvest", "Toggl", "Clockify", "Otra"] },
+        { type: "select", label: "Canal del recordatorio", options: ["Slack DM", "Email", "Teams", "WhatsApp"] },
+        { type: "select", label: "Hora del aviso diario", options: ["17:00", "18:00", "19:00", "Personalizada"] },
+        { type: "radio", label: "¿Informe semanal al manager?", options: ["Sí", "No"] }
+      ],
+      free_text_placeholder: "¿Hay perfiles del equipo que deben quedar excluidos del recordatorio (p.ej. freelances externos)?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Funciona con Glassy?", a: "Sí, Glassy tiene API y webhooks que permiten leer imputaciones en tiempo real. Es una de las integraciones más directas." },
+      { q: "¿Qué pasa si alguien tiene un día de vacaciones?", a: "El sistema cruza el calendario de ausencias para no enviar recordatorios en días no laborables. Solo avisa cuando realmente hay horas que debieron imputarse." },
+      { q: "¿Se puede configurar un mínimo de horas diarias?", a: "Sí, puedes definir el umbral: por ejemplo, avisar solo si la persona ha registrado menos de 4 horas en un día de trabajo completo." },
+      { q: "¿El equipo ve quién ha recibido el aviso?", a: "No, cada aviso es un DM privado. Solo el manager recibe el informe consolidado de reincidencias." }
+    ],
+    pasos: [
+      "Consultamos a diario las imputaciones de cada miembro del equipo en la herramienta de tracking",
+      "Cruzamos con el calendario de ausencias para filtrar días no laborables",
+      "Enviamos recordatorio personalizado a quienes no han registrado horas",
+      "Generamos informe semanal para el manager con el histórico de lagunas"
+    ],
+    personalizacion: "Elige la herramienta de tracking, el canal del aviso, la hora del disparo diario y el umbral de horas mínimas.",
+    related_processes: ["facturacion-automatica-horas-freelance", "informe-mensual-horas-estimadas"],
+    herramientas: ["Glassy", "Timely", "Harvest", "Toggl", "Make", "Slack", "Email"],
+    dolores: ["El equipo no registra las horas y perdemos ingresos al facturar", "Al cerrar el mes siempre faltan horas imputadas"],
+    integration_domains: ["OTHER"],
+    landing_slug: "agencias"
+  },
+
+  {
+    id: "AG2",
+    codigo: "AG2",
+    slug: "consolidacion-solicitudes-multicanal",
+    categoria: "E",
+    categoriaNombre: "Atención y Ventas",
+    nombre: "Panel unificado de todas las solicitudes entrantes de cualquier canal",
+    tagline: "Formulario, Instagram, WhatsApp... todo en un único sitio, sin que nada se pierda.",
+    recomendado: true,
+    descripcionDetallada: "Cada vez que llega una solicitud nueva — por el formulario de la web, un DM de Instagram o un WhatsApp — el sistema la captura, extrae los datos relevantes (nombre, contacto, canal de origen, mensaje) y crea automáticamente una ficha unificada en Notion, Airtable o el CRM que uses. El responsable recibe aviso inmediato y ya dispone de toda la información en un solo lugar, sin tener que revisar tres aplicaciones distintas.",
+    summary: {
+      what_it_is: "Centralización automática de todas las solicitudes entrantes en un único panel, independientemente del canal por el que lleguen.",
+      for_who: ["CEOs de agencia", "Account Managers", "Equipos de ventas y captación"],
+      requirements: ["Al menos uno de: formulario web, Instagram Business, WhatsApp Business API", "Panel de destino: Notion, Airtable, CRM (HubSpot, Pipedrive u otro) o Google Sheets"],
+      output: "Ficha unificada por cada solicitud con: canal de origen, fecha/hora, datos de contacto, mensaje completo y estado de seguimiento — más notificación al responsable."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Formularios", "RRSS / Mensajería", "CRM"]
+    },
+    how_it_works_steps: [
+      { title: "Escucha multicanal", short: "Monitorizamos todos los puntos de entrada.", detail: "Conectamos simultáneamente el formulario web, los DMs de Instagram Business y el número de WhatsApp Business para capturar cada mensaje entrante en tiempo real." },
+      { title: "Normalización de datos", short: "Damos el mismo formato a todo.", detail: "Independientemente del canal, extraemos siempre los mismos campos: nombre, contacto, canal de origen, timestamp y contenido del mensaje, para que el panel sea homogéneo." },
+      { title: "Creación automática de ficha", short: "Abrimos el registro en tu herramienta.", detail: "Se crea automáticamente una nueva entrada en Notion, Airtable o el CRM elegido, con todos los datos normalizados y etiquetada por canal de origen." },
+      { title: "Notificación al responsable", short: "El equipo lo sabe al instante.", detail: "El account o comercial responsable recibe un aviso inmediato con el resumen de la solicitud y el enlace directo al registro para actuar sin demora." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Canales a conectar", options: ["Solo formulario web", "Formulario + WhatsApp", "Formulario + Instagram DM", "Los tres canales"] },
+        { type: "select", label: "Panel de destino", options: ["Notion", "Airtable", "HubSpot", "Pipedrive", "Google Sheets", "Otro CRM"] },
+        { type: "select", label: "Canal de notificación al equipo", options: ["Slack", "Email", "Teams", "WhatsApp interno"] },
+        { type: "radio", label: "¿Asignación automática por tipo de solicitud?", options: ["Sí, según palabras clave", "No, todas al mismo responsable"] }
+      ],
+      free_text_placeholder: "¿Tienes reglas de asignación específicas según el servicio solicitado o la zona geográfica del lead?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Necesito WhatsApp Business API o vale con WhatsApp normal?", a: "Para la integración automática es necesaria la API de WhatsApp Business. Si solo tienes WhatsApp normal, podemos valorar alternativas como Manychat o Make con QR." },
+      { q: "¿Se duplican las solicitudes si alguien escribe por dos canales?", a: "Podemos configurar deduplicación por número de teléfono o email para evitar fichas duplicadas del mismo contacto." },
+      { q: "¿Funciona con Instagram si no tenemos muchos seguidores?", a: "Sí, la integración es con Instagram Business y no depende del número de seguidores, solo de tener la cuenta configurada como cuenta de empresa." },
+      { q: "¿Podemos ver métricas de cuántas solicitudes llegan por cada canal?", a: "Absolutamente. Al tener todo etiquetado por canal de origen, puedes generar dashboards automáticos que muestran la distribución por canal, tiempo de respuesta y tasa de conversión." }
+    ],
+    pasos: [
+      "Capturamos el mensaje en tiempo real desde el canal de origen (web, Instagram DM o WhatsApp)",
+      "Normalizamos los datos al mismo formato (nombre, contacto, canal, mensaje, timestamp)",
+      "Creamos la ficha automáticamente en Notion, Airtable o el CRM elegido",
+      "Notificamos al responsable con el resumen y enlace directo al registro"
+    ],
+    personalizacion: "Elige qué canales conectar, dónde centralizar las fichas y las reglas de asignación por tipo de solicitud.",
+    related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"],
+    herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
+    dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "agencias"
+  },
 ];
 
 export const categories = [
