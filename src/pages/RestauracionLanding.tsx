@@ -50,7 +50,7 @@ const RestauracionLanding = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "Immoralia - Catálogo de Procesos - Restauración";
+    document.title = "Immoralia - Catálogo de Procesos - Hostelería";
     const timer = setTimeout(() => {
       if (!isOnboardingCompleted()) {
         setShowOnboarding(true);
@@ -59,11 +59,19 @@ const RestauracionLanding = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Filtrar procesos para Restauración
-  const restauracionProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "restauracion" || p.sectores?.includes("Restauración") || p.sectores?.includes("Restaurantes")),
-    []
-  );
+  // Filtrar procesos para Hostelería, depriorizando los que la mayoría ya tiene cubiertos
+  const restauracionProcesses = useMemo(() => {
+    const deprioritized = ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"];
+    const all = processes.filter(p =>
+      p.landing_slug === "restauracion" ||
+      p.sectores?.includes("Hostelería") ||
+      p.sectores?.includes("Restaurantes")
+    );
+    return [
+      ...all.filter(p => !deprioritized.includes(p.slug)),
+      ...all.filter(p => deprioritized.includes(p.slug)),
+    ];
+  }, []);
 
   const restauracionCategories = useMemo(() => {
     const catsMap = new Map();
@@ -210,7 +218,7 @@ const RestauracionLanding = () => {
                   <span className="text-orange-400 font-medium tracking-widest uppercase text-xs">CATÁLOGO ESPECIALIZADO</span>
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold mb-4">Selecciona tus Soluciones</h2>
-                <p className="text-gray-400">Elige los procesos que quieres automatizar en tu restaurante. Añade tantos como necesites a tu selección.</p>
+                <p className="text-gray-400">Elige los procesos que quieres automatizar en tu negocio. Añade tantos como necesites a tu selección.</p>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-xl bg-black/40 border border-white/5">
                 <div className="text-right hidden sm:block">
@@ -318,7 +326,7 @@ const RestauracionLanding = () => {
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
-            ¿Listo para escalar <br /> tu restaurante?
+            ¿Listo para escalar <br /> tu negocio?
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
             Deja de perder tiempo en administración y empieza a construir un negocio de vanguardia. Solicita tu oferta ahora personalizada.
@@ -338,7 +346,7 @@ const RestauracionLanding = () => {
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
           <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
-          <p className="text-gray-600 text-sm">© 2026 Immoralia. Soluciones de Automatización para Restauración & Hostelería.</p>
+          <p className="text-gray-600 text-sm">© 2026 Immoralia. Soluciones de Automatización para Hostelería.</p>
         </div>
       </footer>
 
@@ -395,7 +403,7 @@ const RestauracionLanding = () => {
       <OnboardingModal
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
-        prefilledSector="Restauración"
+        prefilledSector="Hostelería"
         accentColor="#ea580c"
       />
 
