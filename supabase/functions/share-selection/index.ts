@@ -76,7 +76,7 @@ serve(async (req) => {
                     method: "POST",
                     headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
                     body: JSON.stringify({
-                        from: "Immoralia <onboarding@resend.dev>",
+                        from: "Immoralia <noreply@immoralia.es>",
                         to: [receiverEmail],
                         subject: `${safeSenderName} ha compartido su selección de procesos contigo`,
                         html: getProfessionalTemplate({

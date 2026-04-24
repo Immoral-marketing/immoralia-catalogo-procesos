@@ -52,6 +52,7 @@ const Chatbot: React.FC = () => {
 
     const accentColor = getAccentColor();
     const isLanding = accentColor !== '#000000';
+    const isProcessDetail = location.pathname.startsWith('/catalogo/procesos/');
 
     const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
         if (messages.length <= 1 || hasAnalyzed) return;
@@ -83,6 +84,7 @@ const Chatbot: React.FC = () => {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages]);
+
 
     const submitLead = async (finalData: LeadData) => {
         setIsLoading(true);
@@ -174,8 +176,13 @@ const Chatbot: React.FC = () => {
         return (
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl z-50 p-0 overflow-hidden group transition-all hover:scale-110"
-                style={isLanding ? { backgroundColor: accentColor } : {}}
+                className={`fixed right-6 w-14 h-14 rounded-full shadow-2xl z-[60] p-0 overflow-hidden group transition-all hover:scale-110 ${
+                    isProcessDetail ? "bottom-[7px]" : "bottom-6"
+                }`}
+                style={isProcessDetail
+                    ? { backgroundColor: 'rgba(0,0,0,0.85)' }
+                    : isLanding ? { backgroundColor: accentColor } : {}
+                }
             >
                 <MessageSquare className="w-6 h-6 text-white transition-transform group-hover:rotate-12" />
             </Button>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   Dumbbell,
@@ -9,15 +9,17 @@ import {
   Home,
   Users,
   ChevronRight,
-  Sparkles,
   ArrowRight,
   HardHat,
   GraduationCap,
+  LayoutGrid,
 } from "lucide-react";
+import { StepIndicator } from "@/components/StepIndicator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { processes } from "@/data/processes";
 
 const sectors = [
   {
@@ -27,7 +29,9 @@ const sectors = [
     icon: Dumbbell,
     path: "/landing/centros-deportivos",
     status: "active",
-    accent: "from-cyan-500/20 to-blue-500/20"
+    accent: "from-cyan-500/20 to-blue-500/20",
+    landingSlug: "centros-deportivos",
+    sectorNames: [] as string[],
   },
   {
     id: "gestorias",
@@ -36,7 +40,9 @@ const sectors = [
     icon: Briefcase,
     path: "/landing/gestorias",
     status: "active",
-    accent: "from-teal-500/20 to-cyan-600/20"
+    accent: "from-teal-500/20 to-cyan-600/20",
+    landingSlug: "gestorias",
+    sectorNames: ["Gestoria"],
   },
   {
     id: "health",
@@ -45,7 +51,9 @@ const sectors = [
     icon: Stethoscope,
     path: "/landing/salud",
     status: "active",
-    accent: "from-blue-500/20 to-indigo-500/20"
+    accent: "from-blue-500/20 to-indigo-500/20",
+    landingSlug: "salud",
+    sectorNames: ["Clínicas / Salud / Dental / Veterinaria"],
   },
   {
     id: "construction",
@@ -54,7 +62,9 @@ const sectors = [
     icon: HardHat,
     path: "/landing/construccion",
     status: "active",
-    accent: "from-orange-500/10 to-amber-500/20"
+    accent: "from-orange-500/10 to-amber-500/20",
+    landingSlug: "construccion",
+    sectorNames: ["Construcción & Reformas"],
   },
   {
     id: "academias",
@@ -63,16 +73,18 @@ const sectors = [
     icon: GraduationCap,
     path: "/landing/academias",
     status: "active",
-    accent: "from-violet-500/20 to-purple-500/20"
+    accent: "from-violet-500/20 to-purple-500/20",
+    landingSlug: "academias",
+    sectorNames: ["Academias / Formación"],
   },
   {
     id: "food",
-    title: "Hostelería",
-    description: "Restaurantes, cafeterías, bares y grupos de hostelería.",
     icon: Utensils,
     path: "/landing/restauracion",
     status: "active",
-    accent: "from-orange-500/20 to-red-500/20"
+    accent: "from-orange-500/20 to-red-500/20",
+    landingSlug: "restauracion",
+    sectorNames: ["Restauración", "Restaurantes"],
   },
   {
     id: "ecommerce",
@@ -81,7 +93,9 @@ const sectors = [
     icon: ShoppingBag,
     path: "/landing/ecommerce",
     status: "active",
-    accent: "from-blue-500/20 to-cyan-500/20"
+    accent: "from-blue-500/20 to-cyan-500/20",
+    landingSlug: "ecommerce",
+    sectorNames: ["E-commerce", "Retail"],
   },
   {
     id: "realestate",
@@ -90,7 +104,9 @@ const sectors = [
     icon: Home,
     path: "/landing/inmobiliaria",
     status: "active",
-    accent: "from-emerald-500/20 to-green-600/20"
+    accent: "from-emerald-500/20 to-green-600/20",
+    landingSlug: "inmobiliaria",
+    sectorNames: ["Inmobiliaria", "Inmobiliarias"],
   },
   {
     id: "consultancy",
@@ -99,14 +115,28 @@ const sectors = [
     icon: Users,
     path: "/landing/agencias",
     status: "active",
-    accent: "from-rose-500/20 to-pink-500/20"
-  }
+    accent: "from-rose-500/20 to-pink-500/20",
+    landingSlug: "agencias",
+    sectorNames: ["Agencia/marketing", "Consultoría"],
+  },
 ];
 
 const SectorSelector = () => {
   useEffect(() => {
     document.title = "Immoralia - Catálogo de Procesos - Seleccionador";
   }, []);
+
+  const sectorCounts = useMemo(() => {
+    return sectors.reduce((acc, sector) => {
+      acc[sector.id] = processes.filter(p =>
+        p.landing_slug === sector.landingSlug ||
+        (sector.sectorNames.some(name => p.sectores?.includes(name)))
+      ).length;
+      return acc;
+    }, {} as Record<string, number>);
+  }, []);
+
+  const totalCount = processes.length;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
@@ -117,12 +147,12 @@ const SectorSelector = () => {
       </div>
 
       <header className="container mx-auto px-6 py-12 flex flex-col items-center text-center">
-        <img 
-          src={immoraliaLogo} 
-          alt="Immoralia" 
-          className="h-10 mb-12 animate-in fade-in slide-in-from-top-4 duration-700" 
+        <img
+          src={immoraliaLogo}
+          alt="Immoralia"
+          className="h-10 mb-12 animate-in fade-in slide-in-from-top-4 duration-700"
         />
-        
+
         <div className="max-w-3xl space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
             Potencia tu negocio con <br className="hidden md:block" />
@@ -139,6 +169,7 @@ const SectorSelector = () => {
         </div>
       </header>
 
+      <StepIndicator currentStep={1} />
 
       <main className="container mx-auto px-6 py-12 max-w-6xl">
         <p className="text-sm text-gray-400 uppercase tracking-widest text-center mb-8 font-semibold">Selecciona tu sector</p>
@@ -146,26 +177,31 @@ const SectorSelector = () => {
           {sectors.map((sector) => {
             const isActive = sector.status === "active";
             const Icon = sector.icon;
+            const count = sectorCounts[sector.id] ?? 0;
 
             return (
-              <Link 
-                key={sector.id} 
+              <Link
+                key={sector.id}
                 to={sector.path}
                 className={`group relative h-full transition-all duration-300 ${!isActive ? 'opacity-70 hover:opacity-100' : 'hover:scale-[1.02]'}`}
               >
-                <Card className={`h-full border-white/5 bg-black/40 backdrop-blur-xl overflow-hidden transition-all duration-500 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_30px_rgba(8,145,178,0.1)] flex flex-col`}>
+                <Card className="h-full border-white/5 bg-black/40 backdrop-blur-xl overflow-hidden transition-all duration-500 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_30px_rgba(8,145,178,0.1)] flex flex-col">
                   <div className={`absolute inset-0 bg-gradient-to-br ${sector.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  
+
                   <CardHeader className="relative z-10">
                     <div className="flex justify-between items-start mb-4">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${isActive ? 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-black group-hover:rotate-6' : 'bg-white/5 text-gray-500'}`}>
-                        <Icon className="w-6 h-6" />
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${isActive ? 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-black group-hover:rotate-6' : 'bg-white/5 text-gray-500'}`}>
+                        <Icon className="w-8 h-8" />
                       </div>
-                      {!isActive && (
+                      {isActive && count > 0 ? (
+                        <span className="text-[11px] font-semibold text-cyan-400/80 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-full tabular-nums">
+                          {count} automatizaciones
+                        </span>
+                      ) : !isActive ? (
                         <Badge variant="outline" className="bg-white/5 border-white/10 text-[10px] uppercase tracking-wider text-gray-400 font-bold">
                           Próximamente
                         </Badge>
-                      )}
+                      ) : null}
                     </div>
                     <CardTitle className="text-2xl font-bold group-hover:text-cyan-400 transition-colors">
                       {sector.title}
@@ -174,7 +210,7 @@ const SectorSelector = () => {
                       {sector.description}
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent className="relative z-10 mt-auto pt-4">
                     <div className="flex items-center gap-2 text-sm font-medium transition-all duration-300 transform translate-x-0 group-hover:translate-x-2">
                       <span className={isActive ? "text-cyan-400" : "text-gray-500"}>
@@ -188,25 +224,32 @@ const SectorSelector = () => {
             );
           })}
 
-          {/* Catalog Explorar Card */}
-          <Link 
-            to="/catalogo/completo"
-            className="group relative h-full md:col-span-2 lg:col-span-1"
-          >
-            <Card className="h-full border-dashed border-white/10 bg-transparent hover:bg-white/5 transition-all duration-300 flex flex-col items-center justify-center text-center p-8">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <ArrowRight className="w-8 h-8 text-gray-500 group-hover:text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">¿Quieres ver todo?</h3>
-              <p className="text-gray-500 text-sm mb-6">
-                Explora el catálogo completo con más de 70 procesos de automatización.
-              </p>
-              <Button variant="link" className="text-cyan-400 p-0 h-auto font-bold gap-2">
-                Explorar catálogo completo <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Card>
-          </Link>
         </div>
+
+        {/* Banner "Ver catálogo completo" */}
+        <Link to="/catalogo/completo" className="group block mt-6">
+          <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-r from-cyan-950/50 via-black/70 to-blue-950/50 px-8 py-7 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_40px_rgba(8,145,178,0.12)]">
+            {/* Subtle animated gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <div className="relative z-10 flex items-center gap-5">
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 shrink-0 transition-all duration-300 group-hover:bg-cyan-500/15 group-hover:border-cyan-500/30 group-hover:text-cyan-400">
+                <LayoutGrid className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-cyan-400/60 uppercase tracking-widest font-semibold mb-0.5">{totalCount} automatizaciones disponibles</p>
+                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">¿No encuentras tu sector? Explora el catálogo completo</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Sin filtros de industria. Todos los procesos en un solo lugar.</p>
+              </div>
+            </div>
+
+            <div className="relative z-10 shrink-0">
+              <span className="inline-flex items-center gap-2 bg-white text-black font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 group-hover:bg-cyan-400 group-hover:gap-3">
+                Ver catálogo completo <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+        </Link>
       </main>
 
       <footer className="container mx-auto px-6 py-12 text-center border-t border-white/5 mt-12 bg-black/50 overflow-hidden relative">
