@@ -56,6 +56,43 @@ const ProcessDetailFacturasVencidas = () => {
                         className="h-8 cursor-pointer"
                         onClick={() => navigate("/")}
                     />
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button
+                                className={`relative h-10 px-4 gap-2 border transition-all ${
+                                    selectedProcessIds.size > 0
+                                        ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-[0_0_20px_rgba(0,200,220,0.2)]"
+                                        : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-accent"
+                                }`}
+                            >
+                                <LayoutGrid className="w-4 h-4" />
+                                <span className="hidden sm:inline">Mi Selección</span>
+                                {selectedProcessIds.size > 0 && (
+                                    <span className="absolute -top-1.5 -right-1.5 bg-background text-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary">
+                                        {selectedProcessIds.size}
+                                    </span>
+                                )}
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="right" className="bg-background border-border w-full sm:max-w-md p-0 overflow-hidden">
+                            <div className="h-full flex flex-col p-6 overflow-hidden">
+                                <SheetHeader className="mb-2 text-left">
+                                    <SheetTitle className="text-foreground text-2xl font-bold flex items-center gap-2">
+                                        <LayoutGrid className="w-6 h-6 text-primary" />
+                                        Mi Selección
+                                    </SheetTitle>
+                                </SheetHeader>
+                                <SelectionSummary
+                                    variant="drawer"
+                                    onContact={() => setShowContactForm(true)}
+                                    onShare={() => setShowShareModal(true)}
+                                    n8nHosting={n8nHosting}
+                                    onHostingChange={setN8nHosting}
+                                    className="flex-1 overflow-hidden"
+                                />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
                 </div>
                 <div className="mx-auto max-w-[860px] px-4 md:px-6 pb-3">
                     <ol className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -386,44 +423,6 @@ const ProcessDetailFacturasVencidas = () => {
                 </div>
             </div>
 
-            {/* Mi selección floating Sheet */}
-            {selectedProcessIds.size > 0 && (
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button
-                            className="fixed bottom-24 left-8 z-50 h-14 pl-4 pr-6 rounded-full bg-primary hover:bg-primary/90 shadow-[0_0_20px_rgba(0,200,220,0.3)] border-none transition-all duration-300 hover:scale-105 animate-in fade-in slide-in-from-left-4"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
-                                    <LayoutGrid className="w-6 h-6 text-primary-foreground" />
-                                    <span className="absolute -top-2 -right-2 bg-background text-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary">
-                                        {selectedProcessIds.size}
-                                    </span>
-                                </div>
-                                <span className="font-bold text-primary-foreground tracking-wide uppercase text-sm">Mi Selección</span>
-                            </div>
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="right" className="bg-background border-border w-full sm:max-w-md p-0 overflow-hidden">
-                        <div className="h-full flex flex-col p-6 overflow-hidden">
-                            <SheetHeader className="mb-2 text-left">
-                                <SheetTitle className="text-foreground text-2xl font-bold flex items-center gap-2">
-                                    <LayoutGrid className="w-6 h-6 text-primary" />
-                                    Mi Selección
-                                </SheetTitle>
-                            </SheetHeader>
-                            <SelectionSummary
-                                variant="drawer"
-                                onContact={() => setShowContactForm(true)}
-                                onShare={() => setShowShareModal(true)}
-                                n8nHosting={n8nHosting}
-                                onHostingChange={setN8nHosting}
-                                className="flex-1 overflow-hidden"
-                            />
-                        </div>
-                    </SheetContent>
-                </Sheet>
-            )}
 
             {/* Modals */}
             <ContactForm

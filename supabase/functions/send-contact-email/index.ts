@@ -367,7 +367,7 @@ ${processesText}`;
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
             body: JSON.stringify({
-              from: "Immoralia Notificaciones <onboarding@resend.dev>",
+              from: "Immoralia Notificaciones <noreply@immoralia.es>",
               to: ["team@immoralia.es"],
               subject: `${isChatbot && isBusinessHours ? '⚡ [INMEDIATO] ' : '🚀 '}Lead: ${safeEmpresa} - ${safeNombre}`,
               html: getProfessionalTemplate({
@@ -423,7 +423,7 @@ ${processesText}`;
               method: "POST",
               headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
               body: JSON.stringify({
-                from: "Immoralia <onboarding@resend.dev>",
+                from: "Immoralia <noreply@immoralia.es>",
                 to: [email],
                 subject: clientSubject,
                 html: getProfessionalTemplate({
