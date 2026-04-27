@@ -67,8 +67,8 @@ const sectors = [
   },
   {
     id: "food",
-    title: "Restauración",
-    description: "Restaurantes, cafeterías y grupos de hostelería.",
+    title: "Hostelería",
+    description: "Restaurantes, cafeterías, bares y grupos de hostelería.",
     icon: Utensils,
     path: "/landing/restauracion",
     status: "active",

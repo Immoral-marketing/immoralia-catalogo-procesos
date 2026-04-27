@@ -319,7 +319,7 @@ export const processes: Process[] = [
       "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria", "Academias / Formación", "Restauración"],
+    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria", "Academias / Formación", "Hostelería"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
@@ -370,7 +370,8 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
     related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Academias / Formación", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria", "Hostelería"]
   },
 
   {
@@ -417,7 +418,8 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
     related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria"]
   },
 
   {
@@ -464,7 +466,8 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
     related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"],
-    integration_domains: ["OTHER"]
+    integration_domains: ["OTHER"],
+    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria"]
   },
 
   {
@@ -889,7 +892,7 @@ export const processes: Process[] = [
       "Guardamos el contexto para retomar sin perder información"
     ],
     personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Academias / Formación", "Restauración"],
+    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Academias / Formación", "Hostelería"],
     related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
     integration_domains: ["OTHER"],
     landing_slug: "salud"
@@ -938,7 +941,7 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria", "Academias / Formación", "Restauración"],
+    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria", "Academias / Formación", "Hostelería"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
     landing_slug: "academias"
@@ -1084,7 +1087,7 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria", "Academias / Formación", "Restauración"],
+    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria", "Academias / Formación", "Hostelería"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"],
     landing_slug: "restauracion"
@@ -1181,7 +1184,7 @@ export const processes: Process[] = [
       "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
     ],
     personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales", "Academias / Formación", "Restauración"],
+    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales", "Academias / Formación", "Hostelería"],
     herramientas: ["Mensajería", "Calendario"],
     dolores: ["Se olvidan de la cita / hay muchas ausencias"],
     related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"],
@@ -1281,7 +1284,7 @@ export const processes: Process[] = [
       "Roadmap por fases + backlog priorizado"
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínicas / Salud / Dental / Veterinaria", "Restauración", "Construcción & Reformas", "Academias / Formación"],
+    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínicas / Salud / Dental / Veterinaria", "Hostelería", "Construcción & Reformas", "Academias / Formación"],
     herramientas: [],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
     landing_slug: "salud"
@@ -1356,7 +1359,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtro de ex-socios (baja > 3 meses)","Envío de oferta vía Email/WhatsApp","Seguimiento de respuesta"],
     personalizacion: "Define el tiempo de inactividad y las fechas de lanzamiento.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
     landing_slug: "centros-deportivos"
@@ -1406,7 +1409,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de 'Prueba sin Alta'","Secuencia 15/30/60 días","Aviso a equipo si hay respuesta"],
     personalizacion: "Define los incentivos y el número de recordatorios.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
     landing_slug: "centros-deportivos"
@@ -1431,7 +1434,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger a los 30 días del alta","Envío de link único de referido","Atribución automática de premio"],
     personalizacion: "Elige el premio (mes gratis, descuento, etc.).",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
     landing_slug: "centros-deportivos"
@@ -1456,7 +1459,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Análisis de frecuencia de asistencia","Detección de 'riesgo de abandono'","Mensaje preventivo personalizado"],
     personalizacion: "Ajusta los días de inactividad según la intensidad del centro.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos"
@@ -1481,7 +1484,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por antigüedad o cambio de nivel","Envío de oferta de material","Link a tienda online"],
     personalizacion: "Elige qué material recomendar por cada nivel/antigüedad.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","ActiveCampaign","Shopify"],
     dolores: ["Quiero automatizar presupuestos y respuestas"],
     landing_slug: "centros-deportivos"
@@ -1506,7 +1509,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Conteo automático de sesiones consumidas","Aviso de 'bono pronto a agotar'","Link de renovación inmediata"],
     personalizacion: "Configura el número de clases para el aviso de renovación.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
     landing_slug: "centros-deportivos"
@@ -1656,7 +1659,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtrado de alumnos elegibles","Envío masivo de invitaciones","Consolidación de confirmaciones"],
     personalizacion: "Ajusta los requisitos por cada nivel o cinturón.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Google Sheets","Gmail","WhatsApp Business API"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos"
@@ -1681,7 +1684,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Reporte de lesión","Alerta automática a instructores","Programación de check-up de salud"],
     personalizacion: "Define los tipos de lesiones y el protocolo de seguimiento.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos"
@@ -1731,7 +1734,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Segmentación Alumno vs Tutor","Alertas de asistencia en tiempo real","Recordatorios de eventos infantiles"],
     personalizacion: "Elige qué avisos enviar a los padres y por qué canal.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","WhatsApp Business API","ActiveCampaign"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos"
@@ -1756,7 +1759,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Agregación de actividad mensual","Generación de reporte visual","Envío personalizado automatizado"],
     personalizacion: "Define qué hitos celebrar (ej. '10 clases este mes').",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos"
@@ -1887,6 +1890,150 @@ export const processes: Process[] = [
     landing_slug: "centros-deportivos"
   },
   {
+    id: "AC25",
+    codigo: "AC25",
+    slug: "notificacion-cambios-cancelaciones-clase",
+    categoria: "B",
+    categoriaNombre: "Horarios y Proyectos",
+    nombre: "Aviso automático a alumnos cuando se cancela o cambia una clase",
+    tagline: "Cero sorpresas. Tus alumnos siempre informados al instante.",
+    recomendado: true,
+    descripcionDetallada: "Cuando un profesor cancela o reprograma una clase, el sistema notifica automáticamente a todos los alumnos matriculados en ese grupo con el motivo y, si aplica, la nueva fecha. Sin WhatsApps manuales, sin correos uno a uno.",
+    summary: {
+      what_it_is: "Comunicación automática de incidencias de horario a todos los alumnos afectados en tiempo real.",
+      for_who: ["Directores de academia", "Coordinadores académicos", "Administración"],
+      requirements: ["Software de gestión de alumnos", "Canal de comunicación (Email o WhatsApp)"],
+      output: "Notificación instantánea a todos los alumnos del grupo afectado."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Gestión de alumnos", "Comunicación"]
+    },
+    how_it_works_steps: [
+      { title: "Detección de cambio", short: "Detectamos la cancelación o cambio.", detail: "El sistema monitoriza el calendario de clases y detecta cualquier modificación o cancelación en tiempo real." },
+      { title: "Segmentación de afectados", short: "Identificamos a los alumnos del grupo.", detail: "Se obtiene automáticamente la lista de alumnos matriculados en esa clase o grupo específico." },
+      { title: "Envío masivo personalizado", short: "Notificamos a todos a la vez.", detail: "Cada alumno recibe un mensaje con su nombre, la clase afectada y, si aplica, la nueva fecha propuesta." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Canal de notificación", options: ["Email", "WhatsApp", "Ambos"] },
+        { type: "select", label: "¿Proponer nueva fecha automáticamente?", options: ["Sí, si hay hueco disponible", "No, solo avisar del cambio"] }
+      ],
+      free_text_placeholder: "¿Necesitas avisar también a los padres en el caso de alumnos menores?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Funciona si tenemos varios profesores y grupos?", a: "Sí, el sistema distingue por grupo y solo notifica a los alumnos del grupo afectado." },
+      { q: "¿Podemos personalizar el mensaje?", a: "Completamente. Puedes definir plantillas distintas para cancelación, cambio de hora o cambio de aula." }
+    ],
+    pasos: [
+      "Detectamos cancelación o cambio en el calendario de clases",
+      "Obtenemos la lista de alumnos del grupo afectado",
+      "Enviamos notificación personalizada a cada alumno"
+    ],
+    personalizacion: "Elige el canal, el tono del mensaje y si quieres incluir propuesta de nueva fecha.",
+    related_processes: ["control-asistencia-alertas-faltas", "matricula-asignacion-nivel-automatica"],
+    integration_domains: ["OTHER"],
+    landing_slug: "academias"
+  },
+  {
+    id: "AC26",
+    codigo: "AC26",
+    slug: "control-asistencia-alertas-faltas",
+    categoria: "B",
+    categoriaNombre: "Horarios y Proyectos",
+    nombre: "Control automático de asistencia con alertas cuando un alumno acumula faltas",
+    tagline: "Detecta el absentismo antes de que sea un problema.",
+    recomendado: true,
+    descripcionDetallada: "El sistema registra la asistencia de cada alumno. Si acumula X faltas consecutivas o supera un porcentaje de ausencias, se genera alerta interna para el coordinador y se envía un mensaje automático al alumno (o a su tutor si es menor). Imprescindible en academias con requisitos de asistencia mínima para certificación.",
+    summary: {
+      what_it_is: "Sistema de seguimiento de asistencia que detecta absentismo y actúa de forma automática antes de que el alumno abandone.",
+      for_who: ["Coordinadores académicos", "Directores de academia", "Tutores"],
+      requirements: ["Software de gestión de alumnos o registro de asistencia", "Canal de comunicación"],
+      output: "Alerta al coordinador + mensaje automático al alumno o tutor cuando se superan los umbrales definidos."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["Gestión de alumnos", "Comunicación"]
+    },
+    how_it_works_steps: [
+      { title: "Registro de asistencia", short: "Leemos las asistencias del día.", detail: "Cada día lectivo el sistema consulta el registro de asistencia e identifica ausencias no justificadas." },
+      { title: "Cálculo de umbrales", short: "Comprobamos si se ha superado el límite.", detail: "Calculamos el número de faltas consecutivas y el porcentaje acumulado sobre el total de clases del período." },
+      { title: "Acción automática", short: "Alertamos y contactamos.", detail: "El coordinador recibe un aviso interno y el alumno (o tutor) recibe un mensaje empático preguntando si todo va bien." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Umbral de faltas para alerta", options: ["2 faltas consecutivas", "3 faltas consecutivas", "20% de ausencias en el mes"] },
+        { type: "select", label: "¿A quién notificar?", options: ["Solo al alumno", "Solo al coordinador", "A ambos", "Al tutor si es menor de edad"] }
+      ],
+      free_text_placeholder: "¿Tienes requisito de asistencia mínima para aprobar o certificar?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Distingue entre faltas justificadas e injustificadas?", a: "Sí, puedes marcar una ausencia como justificada y el sistema no la contabiliza para el umbral de alerta." },
+      { q: "¿Funciona con academias de idiomas y también de formación profesional?", a: "Absolutamente, es configurable por tipo de curso y los umbrales se pueden ajustar según las exigencias de cada programa." }
+    ],
+    pasos: [
+      "Leemos el registro de asistencia de cada sesión",
+      "Calculamos faltas acumuladas y porcentaje de ausencias",
+      "Enviamos alerta al coordinador y mensaje al alumno o tutor"
+    ],
+    personalizacion: "Define el umbral de faltas, a quién avisar y el tono del mensaje (recordatorio amable o formal).",
+    related_processes: ["notificacion-cambios-cancelaciones-clase", "matricula-asignacion-nivel-automatica"],
+    integration_domains: ["OTHER"],
+    landing_slug: "academias"
+  },
+  {
+    id: "AC27",
+    codigo: "AC27",
+    slug: "matricula-asignacion-nivel-automatica",
+    categoria: "B",
+    categoriaNombre: "Horarios y Proyectos",
+    nombre: "Matrícula automática y asignación al grupo según nivel del alumno",
+    tagline: "Del formulario al grupo correcto, sin intervención manual.",
+    recomendado: true,
+    descripcionDetallada: "Cuando un nuevo alumno completa el formulario de inscripción o la prueba de nivel, el sistema lo asigna automáticamente al grupo adecuado, le envía el horario y la documentación de bienvenida, y notifica al profesor del grupo. Aplica a academias de idiomas, música, autoescuelas, formación profesional y cualquier formación por niveles.",
+    summary: {
+      what_it_is: "Flujo de alta automatizado que lleva al nuevo alumno desde el registro hasta su primer día de clase sin gestión manual.",
+      for_who: ["Administración de academia", "Coordinadores académicos", "Directores"],
+      requirements: ["Formulario de inscripción o prueba de nivel", "Software de gestión de alumnos", "Canal de comunicación"],
+      output: "Alumno asignado a grupo + email/WhatsApp de bienvenida con horario y documentación + aviso al profesor."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Formularios", "Gestión de alumnos", "Comunicación"]
+    },
+    how_it_works_steps: [
+      { title: "Recepción de inscripción", short: "El alumno completa el formulario.", detail: "Cuando alguien se inscribe o realiza la prueba de nivel, el sistema recibe los datos automáticamente." },
+      { title: "Asignación de grupo", short: "Encontramos el grupo correcto.", detail: "Según el resultado del nivel y la disponibilidad de plazas, el sistema asigna al alumno al grupo más adecuado." },
+      { title: "Bienvenida y aviso", short: "Todos quedan informados.", detail: "El alumno recibe horario, profesor asignado y documentación de bienvenida. El profesor recibe aviso de nuevo alumno." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "¿Cómo se determina el nivel?", options: ["Resultado de prueba online", "Evaluación presencial previa", "Nivel declarado por el alumno"] },
+        { type: "select", label: "¿Qué incluye el kit de bienvenida?", options: ["Horario + normativa", "Horario + materiales del curso", "Solo confirmación de plaza"] }
+      ],
+      free_text_placeholder: "¿Necesitas que el alumno firme algún documento antes de empezar?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Qué pasa si no hay plazas disponibles en el nivel asignado?", a: "El sistema puede añadirlo a lista de espera y notificarle automáticamente cuando se abra una plaza." },
+      { q: "¿Funciona para inscripciones masivas al inicio de curso?", a: "Sí, está diseñado para gestionar altas individuales y también oleadas de matriculación al inicio de cada período." }
+    ],
+    pasos: [
+      "Recibimos los datos de inscripción o resultado de prueba de nivel",
+      "Asignamos al alumno al grupo disponible más adecuado",
+      "Enviamos bienvenida al alumno y aviso al profesor del grupo"
+    ],
+    personalizacion: "Personaliza el criterio de asignación, el contenido del kit de bienvenida y los avisos al equipo docente.",
+    related_processes: ["notificacion-cambios-cancelaciones-clase", "control-asistencia-alertas-faltas"],
+    integration_domains: ["OTHER"],
+    landing_slug: "academias"
+  },
+  {
     id: "RO25",
     codigo: "RO25",
     slug: "onboarding-empleado-entrenador",
@@ -1906,7 +2053,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lanzamiento de workflow por nuevo contrato","Distribución de kit de bienvenida digital","Seguimiento de tareas de onboarding"],
     personalizacion: "Adapta el checklist por rol (staff, instructor, alumno).",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Notion","Gmail"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos"
@@ -3606,6 +3753,120 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion"
+  },
+
+  {
+    id: "AG1",
+    codigo: "AG1",
+    slug: "recordatorio-horas-no-registradas",
+    categoria: "A",
+    categoriaNombre: "Facturación y Finanzas",
+    nombre: "Recordatorio automático al equipo cuando hay horas sin registrar",
+    tagline: "Si tu equipo factura por horas, cada hora sin registrar es dinero perdido.",
+    recomendado: true,
+    descripcionDetallada: "Al final de cada jornada, el sistema revisa qué miembros del equipo no han registrado horas en su herramienta de tracking (Glassy, Timely, Harvest...). Los que no han imputado nada reciben un recordatorio automático y personalizado por Slack o email. Si el patrón se repite varios días seguidos, el responsable recibe un aviso consolidado para actuar.",
+    summary: {
+      what_it_is: "Sistema de control de imputación horaria que detecta lagunas de registro y avisa al equipo antes de que el cierre de mes deje horas sin facturar.",
+      for_who: ["CEOs de agencia", "Project Managers", "Responsables de facturación"],
+      requirements: ["Herramienta de tracking de horas (Glassy, Timely, Harvest u otra)", "Canal de comunicación interna (Slack, email o Teams)"],
+      output: "Recordatorio automático diario a quien no ha registrado horas + informe semanal al responsable con el histórico de lagunas por persona."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Tracking de horas", "Comunicación interna"]
+    },
+    how_it_works_steps: [
+      { title: "Consulta diaria de imputaciones", short: "Leemos quién ha registrado y quién no.", detail: "Cada día a la hora que definas, el sistema extrae de tu herramienta de tracking la lista de personas activas y comprueba si han registrado al menos X minutos ese día." },
+      { title: "Filtrado de ausencias justificadas", short: "Excluimos vacaciones y días libres.", detail: "Si la persona tiene marcado un día de vacaciones, festivo o ausencia aprobada, el sistema la ignora y no envía el recordatorio." },
+      { title: "Recordatorio personalizado", short: "Cada uno recibe su propio aviso.", detail: "El mensaje lleva el nombre de la persona, el día en cuestión y un enlace directo a su herramienta de registro para facilitar la acción inmediata." },
+      { title: "Informe de reincidencia al manager", short: "El responsable ve el patrón.", detail: "Si alguien acumula 3 o más días sin registrar en la semana, el manager recibe un resumen agrupado para intervenir si es necesario." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Herramienta de tracking", options: ["Glassy", "Timely", "Harvest", "Toggl", "Clockify", "Otra"] },
+        { type: "select", label: "Canal del recordatorio", options: ["Slack DM", "Email", "Teams", "WhatsApp"] },
+        { type: "select", label: "Hora del aviso diario", options: ["17:00", "18:00", "19:00", "Personalizada"] },
+        { type: "radio", label: "¿Informe semanal al manager?", options: ["Sí", "No"] }
+      ],
+      free_text_placeholder: "¿Hay perfiles del equipo que deben quedar excluidos del recordatorio (p.ej. freelances externos)?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Funciona con Glassy?", a: "Sí, Glassy tiene API y webhooks que permiten leer imputaciones en tiempo real. Es una de las integraciones más directas." },
+      { q: "¿Qué pasa si alguien tiene un día de vacaciones?", a: "El sistema cruza el calendario de ausencias para no enviar recordatorios en días no laborables. Solo avisa cuando realmente hay horas que debieron imputarse." },
+      { q: "¿Se puede configurar un mínimo de horas diarias?", a: "Sí, puedes definir el umbral: por ejemplo, avisar solo si la persona ha registrado menos de 4 horas en un día de trabajo completo." },
+      { q: "¿El equipo ve quién ha recibido el aviso?", a: "No, cada aviso es un DM privado. Solo el manager recibe el informe consolidado de reincidencias." }
+    ],
+    pasos: [
+      "Consultamos a diario las imputaciones de cada miembro del equipo en la herramienta de tracking",
+      "Cruzamos con el calendario de ausencias para filtrar días no laborables",
+      "Enviamos recordatorio personalizado a quienes no han registrado horas",
+      "Generamos informe semanal para el manager con el histórico de lagunas"
+    ],
+    personalizacion: "Elige la herramienta de tracking, el canal del aviso, la hora del disparo diario y el umbral de horas mínimas.",
+    related_processes: ["facturacion-automatica-horas-freelance", "informe-mensual-horas-estimadas"],
+    herramientas: ["Glassy", "Timely", "Harvest", "Toggl", "Make", "Slack", "Email"],
+    dolores: ["El equipo no registra las horas y perdemos ingresos al facturar", "Al cerrar el mes siempre faltan horas imputadas"],
+    integration_domains: ["OTHER"],
+    landing_slug: "agencias"
+  },
+
+  {
+    id: "AG2",
+    codigo: "AG2",
+    slug: "consolidacion-solicitudes-multicanal",
+    categoria: "E",
+    categoriaNombre: "Atención y Ventas",
+    nombre: "Panel unificado de todas las solicitudes entrantes de cualquier canal",
+    tagline: "Formulario, Instagram, WhatsApp... todo en un único sitio, sin que nada se pierda.",
+    recomendado: true,
+    descripcionDetallada: "Cada vez que llega una solicitud nueva — por el formulario de la web, un DM de Instagram o un WhatsApp — el sistema la captura, extrae los datos relevantes (nombre, contacto, canal de origen, mensaje) y crea automáticamente una ficha unificada en Notion, Airtable o el CRM que uses. El responsable recibe aviso inmediato y ya dispone de toda la información en un solo lugar, sin tener que revisar tres aplicaciones distintas.",
+    summary: {
+      what_it_is: "Centralización automática de todas las solicitudes entrantes en un único panel, independientemente del canal por el que lleguen.",
+      for_who: ["CEOs de agencia", "Account Managers", "Equipos de ventas y captación"],
+      requirements: ["Al menos uno de: formulario web, Instagram Business, WhatsApp Business API", "Panel de destino: Notion, Airtable, CRM (HubSpot, Pipedrive u otro) o Google Sheets"],
+      output: "Ficha unificada por cada solicitud con: canal de origen, fecha/hora, datos de contacto, mensaje completo y estado de seguimiento — más notificación al responsable."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Formularios", "RRSS / Mensajería", "CRM"]
+    },
+    how_it_works_steps: [
+      { title: "Escucha multicanal", short: "Monitorizamos todos los puntos de entrada.", detail: "Conectamos simultáneamente el formulario web, los DMs de Instagram Business y el número de WhatsApp Business para capturar cada mensaje entrante en tiempo real." },
+      { title: "Normalización de datos", short: "Damos el mismo formato a todo.", detail: "Independientemente del canal, extraemos siempre los mismos campos: nombre, contacto, canal de origen, timestamp y contenido del mensaje, para que el panel sea homogéneo." },
+      { title: "Creación automática de ficha", short: "Abrimos el registro en tu herramienta.", detail: "Se crea automáticamente una nueva entrada en Notion, Airtable o el CRM elegido, con todos los datos normalizados y etiquetada por canal de origen." },
+      { title: "Notificación al responsable", short: "El equipo lo sabe al instante.", detail: "El account o comercial responsable recibe un aviso inmediato con el resumen de la solicitud y el enlace directo al registro para actuar sin demora." }
+    ],
+    customization: {
+      options_blocks: [
+        { type: "select", label: "Canales a conectar", options: ["Solo formulario web", "Formulario + WhatsApp", "Formulario + Instagram DM", "Los tres canales"] },
+        { type: "select", label: "Panel de destino", options: ["Notion", "Airtable", "HubSpot", "Pipedrive", "Google Sheets", "Otro CRM"] },
+        { type: "select", label: "Canal de notificación al equipo", options: ["Slack", "Email", "Teams", "WhatsApp interno"] },
+        { type: "radio", label: "¿Asignación automática por tipo de solicitud?", options: ["Sí, según palabras clave", "No, todas al mismo responsable"] }
+      ],
+      free_text_placeholder: "¿Tienes reglas de asignación específicas según el servicio solicitado o la zona geográfica del lead?"
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { q: "¿Necesito WhatsApp Business API o vale con WhatsApp normal?", a: "Para la integración automática es necesaria la API de WhatsApp Business. Si solo tienes WhatsApp normal, podemos valorar alternativas como Manychat o Make con QR." },
+      { q: "¿Se duplican las solicitudes si alguien escribe por dos canales?", a: "Podemos configurar deduplicación por número de teléfono o email para evitar fichas duplicadas del mismo contacto." },
+      { q: "¿Funciona con Instagram si no tenemos muchos seguidores?", a: "Sí, la integración es con Instagram Business y no depende del número de seguidores, solo de tener la cuenta configurada como cuenta de empresa." },
+      { q: "¿Podemos ver métricas de cuántas solicitudes llegan por cada canal?", a: "Absolutamente. Al tener todo etiquetado por canal de origen, puedes generar dashboards automáticos que muestran la distribución por canal, tiempo de respuesta y tasa de conversión." }
+    ],
+    pasos: [
+      "Capturamos el mensaje en tiempo real desde el canal de origen (web, Instagram DM o WhatsApp)",
+      "Normalizamos los datos al mismo formato (nombre, contacto, canal, mensaje, timestamp)",
+      "Creamos la ficha automáticamente en Notion, Airtable o el CRM elegido",
+      "Notificamos al responsable con el resumen y enlace directo al registro"
+    ],
+    personalizacion: "Elige qué canales conectar, dónde centralizar las fichas y las reglas de asignación por tipo de solicitud.",
+    related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"],
+    herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
+    dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "agencias"
   },
 ];
 

@@ -57,7 +57,7 @@ interface ComisionAdmin {
 }
 
 type AdminTab = 'partners' | 'solicitudes' | 'comisiones';
-type AuthState = 'loading' | 'unauthenticated' | 'not_admin' | 'authenticated';
+type AuthState = 'loading' | 'unauthenticated' | 'not_admin' | 'authenticated' | 'password_recovery';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -94,19 +94,38 @@ export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { setAuthState('unauthenticated'); return; }
-      setSession(session);
+    // Detectar recovery flow desde el hash de la URL antes de cualquier cosa.
+    // Cuando Supabase redirige con type=recovery en el hash, el usuario ya
+    // tiene sesión válida, pero NO queremos entrar al dashboard — queremos
+    // mostrar el formulario de nueva contraseña.
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const isRecoveryFlow = hashParams.get('type') === 'recovery';
 
-      const { data } = await supabase.from('super_admins').select('user_id').eq('user_id', session.user.id).single();
-      setAuthState(data ? 'authenticated' : 'not_admin');
-    };
+    if (isRecoveryFlow) {
+      // No hacemos checkAuth; esperamos el evento PASSWORD_RECOVERY
+      // que Supabase dispara al procesar el hash automáticamente.
+      setAuthState('loading'); // mantener spinner hasta que llegue el evento
+    } else {
+      const checkAuth = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) { setAuthState('unauthenticated'); return; }
+        setSession(session);
 
-    checkAuth();
+        const { data } = await supabase.from('super_admins').select('user_id').eq('user_id', session.user.id).single();
+        setAuthState(data ? 'authenticated' : 'not_admin');
+      };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (!session) { setAuthState('unauthenticated'); setSession(null); }
+      checkAuth();
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setSession(session);
+        setAuthState('password_recovery');
+      } else if (!session) {
+        setAuthState('unauthenticated');
+        setSession(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -118,6 +137,10 @@ export default function AdminPage() {
 
   if (authState === 'unauthenticated') {
     return <AdminLogin onSuccess={(s) => { setSession(s); setAuthState('authenticated'); }} />;
+  }
+
+  if (authState === 'password_recovery') {
+    return <AdminPasswordReset onDone={() => { supabase.auth.signOut(); setAuthState('unauthenticated'); }} />;
   }
 
   if (authState === 'not_admin') {
@@ -145,6 +168,7 @@ function AdminLogin({ onSuccess }: { onSuccess: (s: Session) => void }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [view, setView] = useState<'login' | 'forgot'>('login');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,6 +195,10 @@ function AdminLogin({ onSuccess }: { onSuccess: (s: Session) => void }) {
     onSuccess(data.session);
   };
 
+  if (view === 'forgot') {
+    return <AdminForgotPassword onBack={() => setView('login')} />;
+  }
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
@@ -188,12 +216,187 @@ function AdminLogin({ onSuccess }: { onSuccess: (s: Session) => void }) {
               <Input id="admin-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="admin-password">Contraseña</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="admin-password">Contraseña</Label>
+                <button
+                  type="button"
+                  onClick={() => setView('forgot')}
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </div>
               <Input id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
             </div>
             {error && <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Accediendo...</> : 'Acceder'}
+            </Button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Recuperar contraseña — paso 1: solicitar email
+// ---------------------------------------------------------------------------
+function AdminForgotPassword({ onBack }: { onBack: () => void }) {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/admin`,
+    });
+
+    setLoading(false);
+    if (error) {
+      setError('No se pudo enviar el email. Comprueba que la dirección es correcta.');
+      return;
+    }
+    setSent(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+            <Users className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Recuperar contraseña</h1>
+          <p className="text-sm text-muted-foreground mt-1">Te enviaremos un enlace para restablecerla</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
+          {sent ? (
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/10 mb-2">
+                <Check className="h-6 w-6 text-emerald-500" />
+              </div>
+              <p className="text-sm text-foreground font-medium">Email enviado</p>
+              <p className="text-sm text-muted-foreground">
+                Revisa tu bandeja de entrada en <span className="font-medium text-foreground">{email}</span> y haz clic en el enlace para establecer tu nueva contraseña.
+              </p>
+              <Button variant="outline" className="w-full mt-2" onClick={onBack}>
+                Volver al inicio de sesión
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email de administrador</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  placeholder="tu@email.com"
+                />
+              </div>
+              {error && <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">{error}</p>}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Enviando...</> : 'Enviar enlace de recuperación'}
+              </Button>
+              <button
+                type="button"
+                onClick={onBack}
+                className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors text-center"
+              >
+                ← Volver al inicio de sesión
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Recuperar contraseña — paso 2: establecer nueva contraseña
+// ---------------------------------------------------------------------------
+function AdminPasswordReset({ onDone }: { onDone: () => void }) {
+  const { toast } = useToast();
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (error) {
+      setError('No se pudo actualizar la contraseña. El enlace puede haber expirado.');
+      return;
+    }
+
+    toast({ title: 'Contraseña actualizada', description: 'Ya puedes iniciar sesión con tu nueva contraseña.' });
+    onDone();
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+            <Users className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Nueva contraseña</h1>
+          <p className="text-sm text-muted-foreground mt-1">Elige una contraseña segura para tu cuenta</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-password">Nueva contraseña</Label>
+              <Input
+                id="new-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                placeholder="Mínimo 8 caracteres"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirmar contraseña</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                required
+                autoComplete="new-password"
+                placeholder="Repite la contraseña"
+              />
+            </div>
+            {error && <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">{error}</p>}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</> : 'Establecer nueva contraseña'}
             </Button>
           </form>
         </div>
@@ -559,6 +762,7 @@ function PartnersTab() {
   const [clicksByPartner, setClicksByPartner] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -643,6 +847,9 @@ function PartnersTab() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setEditingPartner(p)}>
+                            <Pencil className="h-4 w-4 mr-2" />Editar
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => toggleActivo(p)}>
                             {p.activo
                               ? <><ToggleRight className="h-4 w-4 mr-2 text-emerald-400" />Desactivar</>
@@ -667,6 +874,14 @@ function PartnersTab() {
         <CreatePartnerModal
           onCreated={() => { setShowCreate(false); load(); }}
           onCancel={() => setShowCreate(false)}
+        />
+      )}
+
+      {editingPartner && (
+        <EditPartnerModal
+          partner={editingPartner}
+          onSaved={() => { setEditingPartner(null); load(); }}
+          onCancel={() => setEditingPartner(null)}
         />
       )}
     </div>
@@ -786,6 +1001,164 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
             <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
             <Button type="submit" disabled={loading || !!slugError || checkingSlug}>
               {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando...</> : 'Crear partner'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Modal: Editar partner
+// ---------------------------------------------------------------------------
+function EditPartnerModal({ partner, onSaved, onCancel }: {
+  partner: Partner;
+  onSaved: () => void;
+  onCancel: () => void;
+}) {
+  const { toast } = useToast();
+  const [form, setForm] = useState({
+    nombre: partner.nombre,
+    email: partner.email,
+    slug: partner.slug,
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [slugError, setSlugError] = useState('');
+
+  const slugChanged = form.slug.trim().toLowerCase() !== partner.slug;
+
+  // Feedback inline al salir del campo (no bloquea el botón)
+  const handleSlugBlur = async () => {
+    const slug = form.slug.trim().toLowerCase();
+    if (!slug || slug === partner.slug) { setSlugError(''); return; }
+    const { data } = await supabase
+      .from('partners')
+      .select('id')
+      .eq('slug', slug)
+      .neq('id', partner.id)
+      .maybeSingle();
+    if (data) setSlugError(`El slug "${slug}" ya está en uso por otro partner.`);
+    else setSlugError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const newSlug = form.slug.trim().toLowerCase();
+
+    // Validación de slug en el submit (para no depender del onBlur)
+    if (newSlug !== partner.slug) {
+      const { data: existing } = await supabase
+        .from('partners')
+        .select('id')
+        .eq('slug', newSlug)
+        .neq('id', partner.id)
+        .maybeSingle();
+      if (existing) {
+        setSlugError(`El slug "${newSlug}" ya está en uso por otro partner.`);
+        setLoading(false);
+        return;
+      }
+    }
+
+    const { error: updateError } = await supabase
+      .from('partners')
+      .update({
+        nombre: form.nombre.trim(),
+        email: form.email.trim().toLowerCase(),
+        slug: newSlug,
+      })
+      .eq('id', partner.id);
+
+    setLoading(false);
+
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+
+    toast({
+      title: 'Partner actualizado',
+      description: slugChanged
+        ? 'Los datos han sido guardados. El enlace de afiliado ha cambiado.'
+        : 'Los datos han sido guardados correctamente.',
+    });
+    onSaved();
+  };
+
+  const referralUrl = `https://procesos.immoralia.es/?ref=${form.slug.trim().toLowerCase() || partner.slug}`;
+
+  return (
+    <Dialog open onOpenChange={onCancel}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Editar partner</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 py-2">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2 col-span-2">
+              <Label>Nombre</Label>
+              <Input
+                placeholder="Maggie García"
+                value={form.nombre}
+                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2 col-span-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                placeholder="maggie@ejemplo.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2 col-span-2">
+              <Label>Slug (URL de referido)</Label>
+              <Input
+                placeholder="maggie-garcia"
+                value={form.slug}
+                onChange={(e) => {
+                  const clean = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                  setForm({ ...form, slug: clean });
+                  setSlugError('');
+                }}
+                onBlur={handleSlugBlur}
+                required
+              />
+              {slugError && <p className="text-xs text-destructive">{slugError}</p>}
+              {form.slug && (
+                <p className="text-xs text-muted-foreground font-mono break-all">{referralUrl}</p>
+              )}
+            </div>
+
+            {slugChanged && (
+              <div className="col-span-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
+                <span className="text-amber-400 text-sm mt-0.5">⚠️</span>
+                <p className="text-xs text-amber-400">
+                  Estás cambiando el slug. El enlace anterior{' '}
+                  <span className="font-mono">/?ref={partner.slug}</span>{' '}
+                  dejará de funcionar. Asegúrate de comunicárselo al partner.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
+            <Button type="submit" disabled={loading || !!slugError}>
+              {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</> : 'Guardar cambios'}
             </Button>
           </DialogFooter>
         </form>
