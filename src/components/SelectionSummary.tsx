@@ -61,7 +61,7 @@ export const SelectionSummary = ({
                 className="flex items-start justify-between gap-2 p-3 bg-muted rounded-md group hover:bg-muted/80 transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
+                  <p className="text-sm font-medium text-foreground leading-snug">
                     {process.nombre}
                   </p>
                   <Badge

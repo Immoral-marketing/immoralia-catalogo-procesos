@@ -66,7 +66,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Portal de Afiliados Immoralia <onboarding@resend.dev>",
+        from: "Portal de Afiliados Immoralia <noreply@immoralia.es>",
         to: [email],
         subject: "Restablece tu contraseña — Portal de Afiliados",
         html: `

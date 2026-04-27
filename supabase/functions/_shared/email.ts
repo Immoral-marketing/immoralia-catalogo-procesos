@@ -54,7 +54,7 @@ export async function sendEmailNewLead({ lead, source, extraContext }: EmailPayl
                 Authorization: `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-                from: "Catálogo de Procesos <onboarding@resend.dev>",
+                from: "Catálogo de Procesos <noreply@immoralia.es>",
                 to: ["team@immoralia.es"],
                 subject: `🚀 Nuevo lead (${sourceLabel}) - ${safeEmpresa}`,
                 html: `
@@ -81,7 +81,7 @@ export async function sendEmailNewLead({ lead, source, extraContext }: EmailPayl
                 Authorization: `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-                from: "Catálogo de Procesos <onboarding@resend.dev>",
+                from: "Catálogo de Procesos <noreply@immoralia.es>",
                 to: [lead.email],
                 subject: "Hemos recibido tu solicitud de automatización",
                 html: `
