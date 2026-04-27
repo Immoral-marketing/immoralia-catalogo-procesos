@@ -762,6 +762,7 @@ function PartnersTab() {
   const [clicksByPartner, setClicksByPartner] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -846,6 +847,9 @@ function PartnersTab() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setEditingPartner(p)}>
+                            <Pencil className="h-4 w-4 mr-2" />Editar
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => toggleActivo(p)}>
                             {p.activo
                               ? <><ToggleRight className="h-4 w-4 mr-2 text-emerald-400" />Desactivar</>
@@ -870,6 +874,14 @@ function PartnersTab() {
         <CreatePartnerModal
           onCreated={() => { setShowCreate(false); load(); }}
           onCancel={() => setShowCreate(false)}
+        />
+      )}
+
+      {editingPartner && (
+        <EditPartnerModal
+          partner={editingPartner}
+          onSaved={() => { setEditingPartner(null); load(); }}
+          onCancel={() => setEditingPartner(null)}
         />
       )}
     </div>
@@ -989,6 +1001,164 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
             <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
             <Button type="submit" disabled={loading || !!slugError || checkingSlug}>
               {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando...</> : 'Crear partner'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Modal: Editar partner
+// ---------------------------------------------------------------------------
+function EditPartnerModal({ partner, onSaved, onCancel }: {
+  partner: Partner;
+  onSaved: () => void;
+  onCancel: () => void;
+}) {
+  const { toast } = useToast();
+  const [form, setForm] = useState({
+    nombre: partner.nombre,
+    email: partner.email,
+    slug: partner.slug,
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [slugError, setSlugError] = useState('');
+
+  const slugChanged = form.slug.trim().toLowerCase() !== partner.slug;
+
+  // Feedback inline al salir del campo (no bloquea el botón)
+  const handleSlugBlur = async () => {
+    const slug = form.slug.trim().toLowerCase();
+    if (!slug || slug === partner.slug) { setSlugError(''); return; }
+    const { data } = await supabase
+      .from('partners')
+      .select('id')
+      .eq('slug', slug)
+      .neq('id', partner.id)
+      .maybeSingle();
+    if (data) setSlugError(`El slug "${slug}" ya está en uso por otro partner.`);
+    else setSlugError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const newSlug = form.slug.trim().toLowerCase();
+
+    // Validación de slug en el submit (para no depender del onBlur)
+    if (newSlug !== partner.slug) {
+      const { data: existing } = await supabase
+        .from('partners')
+        .select('id')
+        .eq('slug', newSlug)
+        .neq('id', partner.id)
+        .maybeSingle();
+      if (existing) {
+        setSlugError(`El slug "${newSlug}" ya está en uso por otro partner.`);
+        setLoading(false);
+        return;
+      }
+    }
+
+    const { error: updateError } = await supabase
+      .from('partners')
+      .update({
+        nombre: form.nombre.trim(),
+        email: form.email.trim().toLowerCase(),
+        slug: newSlug,
+      })
+      .eq('id', partner.id);
+
+    setLoading(false);
+
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+
+    toast({
+      title: 'Partner actualizado',
+      description: slugChanged
+        ? 'Los datos han sido guardados. El enlace de afiliado ha cambiado.'
+        : 'Los datos han sido guardados correctamente.',
+    });
+    onSaved();
+  };
+
+  const referralUrl = `https://procesos.immoralia.es/?ref=${form.slug.trim().toLowerCase() || partner.slug}`;
+
+  return (
+    <Dialog open onOpenChange={onCancel}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Editar partner</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 py-2">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2 col-span-2">
+              <Label>Nombre</Label>
+              <Input
+                placeholder="Maggie García"
+                value={form.nombre}
+                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2 col-span-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                placeholder="maggie@ejemplo.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2 col-span-2">
+              <Label>Slug (URL de referido)</Label>
+              <Input
+                placeholder="maggie-garcia"
+                value={form.slug}
+                onChange={(e) => {
+                  const clean = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                  setForm({ ...form, slug: clean });
+                  setSlugError('');
+                }}
+                onBlur={handleSlugBlur}
+                required
+              />
+              {slugError && <p className="text-xs text-destructive">{slugError}</p>}
+              {form.slug && (
+                <p className="text-xs text-muted-foreground font-mono break-all">{referralUrl}</p>
+              )}
+            </div>
+
+            {slugChanged && (
+              <div className="col-span-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
+                <span className="text-amber-400 text-sm mt-0.5">⚠️</span>
+                <p className="text-xs text-amber-400">
+                  Estás cambiando el slug. El enlace anterior{' '}
+                  <span className="font-mono">/?ref={partner.slug}</span>{' '}
+                  dejará de funcionar. Asegúrate de comunicárselo al partner.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
+            <Button type="submit" disabled={loading || !!slugError}>
+              {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Guardando...</> : 'Guardar cambios'}
             </Button>
           </DialogFooter>
         </form>
