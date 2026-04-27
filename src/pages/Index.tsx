@@ -8,7 +8,7 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Filter, Sparkles, Settings2, RotateCcw, HelpCircle } from "lucide-react";
+import { Filter, Sparkles, Settings2, RotateCcw, HelpCircle, LayoutGrid, CreditCard, Calendar, Building2, MessageSquare, Search } from "lucide-react";
 import { 
   Tooltip, 
   TooltipContent, 
@@ -19,6 +19,16 @@ import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, Onboardin
 import { useSelection } from "@/lib/SelectionContext";
 import { GuidanceMessage } from "@/components/GuidanceMessage";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { StepIndicator } from "@/components/StepIndicator";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+
+const categoryIconMap = {
+  "Facturación y Finanzas": CreditCard,
+  "Horarios y Proyectos": Calendar,
+  "Gestión Interna": Building2,
+  "Atención y Ventas": MessageSquare,
+  "Auditoría tecnológica": Search,
+};
 
 const Index = () => {
   const { selectedProcessIds, toggleProcess, clearSelection, n8nHosting, setN8nHosting } = useSelection();
@@ -108,8 +118,15 @@ const Index = () => {
   const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
+
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-900/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/10 blur-[120px] rounded-full" />
+      </div>
+
+      <header className="border-b border-white/5 bg-black/95 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 py-6">
           <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
             <div className="flex flex-col pl-2">
@@ -118,32 +135,89 @@ const Index = () => {
               </Link>
             </div>
 
-            <div className="flex items-center gap-2">
-
-              
+            <div className="flex items-center gap-3">
               {onboardingAnswers ? (
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-white/10 text-white/80 hover:text-white hover:bg-white/5">
                     <Settings2 className="w-4 h-4" /> Editar respuestas
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleReset} className="text-muted-foreground hover:text-destructive">
-                    <RotateCcw className="w-4 h-4" /> Restablecer
+                  <Button variant="ghost" size="sm" onClick={handleReset} className="text-white/40 hover:text-red-400 hover:bg-transparent">
+                    <RotateCcw className="w-4 h-4" />
                   </Button>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setOnboardingOpen(true)} className="gap-2 border-primary/50 text-primary hover:bg-primary/5">
+                  <Button onClick={() => setOnboardingOpen(true)} className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm shadow-primary/20">
                     <Sparkles className="w-4 h-4" /> Personalizar catálogo
                   </Button>
                 </div>
               )}
+
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button className={`relative h-10 px-4 gap-2 border transition-all ${
+                    selectedProcessIds.size > 0
+                      ? "bg-cyan-600 hover:bg-cyan-500 text-white border-cyan-600 shadow-[0_0_20px_rgba(8,145,178,0.2)]"
+                      : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}>
+                    <LayoutGrid className="w-4 h-4" />
+                    <span className="hidden sm:inline">Mi Selección</span>
+                    {selectedProcessIds.size > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-white text-cyan-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                        {selectedProcessIds.size}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white">
+                  <div className="h-full flex flex-col p-6 overflow-hidden">
+                    <SheetHeader className="mb-2 text-left">
+                      <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
+                        <LayoutGrid className="w-6 h-6 text-cyan-400" />
+                        Mi Selección
+                      </SheetTitle>
+                    </SheetHeader>
+                    <SelectionSummary
+                      variant="drawer"
+                      onContact={() => setShowContactForm(true)}
+                      onShare={() => setShowShareModal(true)}
+                      n8nHosting={n8nHosting}
+                      onHostingChange={setN8nHosting}
+                      className="flex-1 overflow-hidden"
+                      accentColor="#0891b2"
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
-      </header >
+      </header>
+
+      <StepIndicator currentStep={2} />
 
       <div className="container mx-auto px-6 md:px-8 lg:px-12 py-8">
         <div className="max-w-[1440px] mx-auto">
+
+          {/* Page header */}
+          <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">Catálogo completo</p>
+              <h1 className="text-2xl font-bold tracking-tight text-white">{processes.length} automatizaciones listas para tu negocio</h1>
+              <p className="text-sm text-gray-400 mt-1">Selecciona los procesos que necesitas y recibe una propuesta a medida.</p>
+            </div>
+            {!onboardingAnswers && (
+              <Button
+                onClick={handleOnboardingOpen}
+                variant="outline"
+                className="gap-2 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/5 hover:border-cyan-500/50 shrink-0"
+              >
+                <Sparkles className="w-4 h-4" />
+                ¿No sabes por dónde empezar?
+              </Button>
+            )}
+          </div>
+
           {/* Onboarding Summary / Recommendations */}
           {recommendedProcesses.length > 0 && (
             <section className="mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -165,52 +239,50 @@ const Index = () => {
             </section>
           )}
 
-          <div className="grid lg:grid-cols-[240px,1fr,320px] gap-6 pb-24 lg:pb-8">
+          <div className="grid lg:grid-cols-[240px,1fr] gap-6 pb-24 lg:pb-8">
             <aside className="space-y-4">
-              <div className="bg-card border border-border rounded-lg p-4 sticky top-24">
+              <div className="bg-black/40 backdrop-blur-xl border border-white/5 rounded-xl p-4 sticky top-24">
                 <div className="flex items-center gap-2 mb-4">
-                  <Filter className="w-4 h-4 text-secondary" />
-                  <h3 className="font-semibold text-foreground">Filtros</h3>
+                  <Filter className="w-4 h-4 text-cyan-400" />
+                  <h3 className="font-semibold text-white">Filtros</h3>
                 </div>
 
                 <div className="space-y-[8px] mb-4">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 px-1">
                     Categoría
                   </p>
-                  <Button
-                    variant={selectedCategory === null ? "secondary" : "ghost"}
-                    className={`w-full justify-start h-[42px] px-4 gap-[11px] font-medium text-[14px] ${selectedCategory === null ? 'bg-secondary/10 border border-secondary/20' : ''}`}
+                  <button
+                    className={`w-full flex items-center gap-[11px] h-[42px] px-4 rounded-lg text-[14px] font-medium transition-all duration-200 ${selectedCategory === null ? 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-400' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     onClick={() => setSelectedCategory(null)}
                   >
-                    <div className="w-[10px] h-[20px] rounded-[10px] bg-primary shrink-0" />
-                    <span className="truncate">Todas</span>
-                  </Button>
+                    <LayoutGrid className="w-4 h-4 shrink-0" />
+                    <span>Todas</span>
+                  </button>
                   {categories.map(cat => {
                     const isActive = selectedCategory === cat.id;
+                    const CategoryIcon = categoryIconMap[cat.id as keyof typeof categoryIconMap];
                     return (
-                      <Button
+                      <button
                         key={cat.id}
-                        variant={isActive ? "secondary" : "ghost"}
-                        className={`w-full justify-start text-left h-[42px] px-4 gap-[11px] font-medium text-[14px] ${isActive ? 'bg-secondary/10 border border-secondary/20' : ''}`}
+                        className={`w-full flex items-center gap-[11px] h-[42px] px-4 rounded-lg text-[14px] font-medium transition-all duration-200 text-left ${isActive ? 'bg-cyan-500/10 border border-cyan-500/20 text-cyan-400' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                         onClick={() => setSelectedCategory(isActive ? null : cat.id)}
                       >
-                        <div className="w-[10px] h-[20px] rounded-[10px] bg-primary shrink-0" />
-                        <span className="truncate">{cat.name}</span>
-                      </Button>
+                        {CategoryIcon ? <CategoryIcon className="w-4 h-4 shrink-0" /> : <div className="w-4 h-4 shrink-0" />}
+                        <span>{cat.name}</span>
+                      </button>
                     );
                   })}
 
-                  <div className="pt-2 border-t border-border mt-2">
+                  <div className="pt-2 border-t border-white/5 mt-2">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full justify-start h-[42px] px-4 gap-[11px] font-bold text-[14px] hover:bg-secondary/10 text-secondary"
+                        <button
+                          className="w-full flex items-center gap-[11px] h-[42px] px-4 rounded-lg text-[14px] font-bold text-cyan-400 hover:bg-cyan-500/10 transition-all duration-200"
                           onClick={() => setShowCalendlyModal(true)}
                         >
                           <HelpCircle className="w-5 h-5 shrink-0" />
                           <span className="truncate">Agendar llamada</span>
-                        </Button>
+                        </button>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" sideOffset={10} className="max-w-[280px] p-4">
                         <p className="text-sm leading-relaxed">
@@ -220,8 +292,6 @@ const Index = () => {
                     </Tooltip>
                   </div>
                 </div>
-
-
               </div>
             </aside>
 
@@ -246,7 +316,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2 min-[1440px]:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProcesses.map(process => {
                   const isSpecialized = recommendedProcesses.some(rp => rp.id === process.id);
                   return (
@@ -258,18 +328,18 @@ const Index = () => {
                   );
                 })}
 
-                {/* Optional: Add "Can't find your process?" card at the end of the grid */}
-                <div className="bg-card/30 border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:border-primary/50 transition-colors group cursor-pointer" onClick={() => setShowCalendlyModal(true)}>
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-8 h-8 text-primary" />
+                {/* Can't find your process? */}
+                <div className="bg-transparent border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:border-cyan-500/30 transition-colors group cursor-pointer" onClick={() => setShowCalendlyModal(true)}>
+                  <div className="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-8 h-8 text-cyan-400" />
                   </div>
                   <div className="space-y-2 flex flex-col items-center">
-                    <h3 className="text-xl font-bold">¿No encuentras tu proceso?</h3>
-                    <p className="text-muted-foreground text-sm max-w-[200px] mx-auto">
+                    <h3 className="text-xl font-bold text-white">¿No encuentras tu proceso?</h3>
+                    <p className="text-gray-400 text-sm max-w-[200px] mx-auto">
                       Cuéntanos tu caso y agendamos una llamada de 15-30 min para ayudarte.
                     </p>
                   </div>
-                  <Button variant="outline" className="mt-2 border-primary/30 group-hover:border-primary group-hover:bg-primary/5">
+                  <Button variant="outline" className="mt-2 border-cyan-500/30 text-cyan-400 group-hover:border-cyan-500 group-hover:bg-cyan-500/5">
                     Cuéntanos tu caso
                   </Button>
                 </div>
@@ -284,15 +354,6 @@ const Index = () => {
               )}
             </main>
 
-            <aside className="hidden lg:block">
-              <SelectionSummary
-                onContact={() => setShowContactForm(true)}
-                onOpenCalendly={() => setShowCalendlyModal(true)}
-                n8nHosting={n8nHosting}
-                onHostingChange={setN8nHosting}
-                onShare={() => setShowShareModal(true)}
-              />
-            </aside>
           </div>
         </div>
       </div>
@@ -300,13 +361,13 @@ const Index = () => {
       {/* Mobile Sticky Selection Bar */}
       {selectedProcesses.length > 0 && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-4 animate-in slide-in-from-bottom-full duration-300">
-          <div className="bg-card/80 backdrop-blur-lg border border-primary/20 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-4">
+          <div className="bg-black/80 backdrop-blur-lg border border-white/10 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-4">
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Tu selección</span>
-              <span className="text-lg font-bold text-primary">{selectedProcesses.length} procesos</span>
+              <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Tu selección</span>
+              <span className="text-lg font-bold text-cyan-400">{selectedProcesses.length} procesos</span>
             </div>
             <div className="flex flex-col gap-2 shrink-0">
-              <Button 
+              <Button
                 onClick={() => setShowContactForm(true)}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 shadow-lg shadow-primary/20 w-full"
               >
@@ -315,7 +376,7 @@ const Index = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowShareModal(true)}
-                className="border-primary/20 text-foreground hover:bg-primary/5 hover:text-primary w-full h-8 px-4 py-1 text-xs"
+                className="border-white/10 text-white/70 hover:bg-white/5 hover:text-white w-full h-8 px-4 py-1 text-xs"
               >
                 Compartir
               </Button>

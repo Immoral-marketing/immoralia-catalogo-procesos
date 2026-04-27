@@ -1,20 +1,24 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Plus, Check, LayoutGrid, Zap, Clock, MessageSquare, Info, Star, Settings2, ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ChevronLeft, ChevronRight, Plus, Check, ArrowRight, LayoutGrid, Calendar, Bell, BarChart2, Zap, Settings2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
+import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
-import { ProcessCard } from "@/components/ProcessCard";
+import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { Input } from "@/components/ui/input";
 import { getCategoryColorClass } from "@/lib/category-colors";
+
+const BENEFIT_ICONS = [Calendar, Bell, BarChart2, Zap, Settings2, Clock];
 
 const ProcessDetail = () => {
     const { slug } = useParams();
@@ -24,45 +28,27 @@ const ProcessDetail = () => {
     const process = processes.find((p) => p.slug === slug);
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
+    const [showContactForm, setShowContactForm] = useState(false);
+    const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [onboardingOpen, setOnboardingOpen] = useState(false);
+    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+    const [carouselStep, setCarouselStep] = useState(0);
+
     useEffect(() => {
         window.scrollTo(0, 0);
+        setCarouselStep(0);
         if (process) {
             document.title = `Immoralia - ${process.nombre}`;
         }
     }, [slug, process]);
 
-    const [showContactForm, setShowContactForm] = useState(false);
-    const [showCalendlyModal, setShowCalendlyModal] = useState(false);
-    const [onboardingOpen, setOnboardingOpen] = useState(false);
-    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
-    const [activeSection, setActiveSection] = useState("resumen");
-
-    const tabsContainerRef = useRef<HTMLDivElement>(null);
-    const [showLeftScroll, setShowLeftScroll] = useState(false);
-    const [showRightScroll, setShowRightScroll] = useState(false);
-
-    const checkScroll = () => {
-        if (tabsContainerRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
-            setShowLeftScroll(scrollLeft > 0);
-            setShowRightScroll(Math.ceil(scrollLeft) < scrollWidth - clientWidth - 2);
-        }
-    };
-
-    useEffect(() => {
-        setTimeout(checkScroll, 100);
-        window.addEventListener("resize", checkScroll);
-        return () => window.removeEventListener("resize", checkScroll);
-    }, [process]);
-
-    // Customization State Handling
     const processCustomization = process && customizations[process.id] ? customizations[process.id] : { selectedOptions: {}, customInputs: {} };
     const [localOptions, setLocalOptions] = useState<Record<string, string[]>>(processCustomization.selectedOptions || {});
     const [localInputs, setLocalInputs] = useState<Record<string, string>>(processCustomization.customInputs || {});
     const [localNeedsInput, setLocalNeedsInput] = useState((processCustomization.customInputs && processCustomization.customInputs["needs"]) || "");
 
     useEffect(() => {
-        // Only update context if we have changes and it's initialized
         if (process) {
             updateCustomization(process.id, localOptions, { ...localInputs, needs: localNeedsInput });
         }
@@ -76,14 +62,12 @@ const ProcessDetail = () => {
     const handleOptionSelect = (blockLabel: string, option: string) => {
         setLocalOptions(prev => {
             const currentSelected = prev[blockLabel] || [];
-            let newSelected;
+            let newSelected: string[];
             if (currentSelected.includes(option)) {
-                newSelected = currentSelected.filter(o => o !== option);
+                newSelected = currentSelected.filter((o: string) => o !== option);
             } else {
                 newSelected = [...currentSelected, option];
             }
-
-            // Reset the custom input for this block if none of the newly selected options require it
             if (!newSelected.some(o => requiresCustomInput(o))) {
                 setLocalInputs(prevInputs => {
                     const next = { ...prevInputs };
@@ -91,11 +75,7 @@ const ProcessDetail = () => {
                     return next;
                 });
             }
-
-            return {
-                ...prev,
-                [blockLabel]: newSelected
-            };
+            return { ...prev, [blockLabel]: newSelected };
         });
     };
 
@@ -110,86 +90,18 @@ const ProcessDetail = () => {
         return Array.from(all);
     }, [onboardingAnswers]);
 
-    useEffect(() => {
-        if (!process) return;
-        const sections = ["resumen", "funcionamiento", "personalizacion", "faqs", "relacionados"];
-        const observers = sections.map(id => {
-            const element = document.getElementById(id);
-            if (!element) return null;
-
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            setActiveSection(id);
-                        }
-                    });
-                },
-                {
-                    rootMargin: "-15% 0px -65% 0px",
-                    threshold: 0
-                }
-            );
-
-            observer.observe(element);
-            return observer;
-        });
-
-        // Special observer for the last visible section to highlight when near bottom
-        const presentSections = sections.filter(id => !!document.getElementById(id));
-        const lastSectionId = presentSections[presentSections.length - 1];
-        const lastElement = lastSectionId ? document.getElementById(lastSectionId) : null;
-        let bottomObserver: IntersectionObserver | null = null;
-
-        if (lastElement) {
-            bottomObserver = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach(entry => {
-                        // If we are at the bottom of the page, the last present section should be active
-                        // Use a slightly larger margin for detections at the bottom
-                        if (entry.isIntersecting && window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-                            setActiveSection(lastSectionId);
-                        }
-                    });
-                },
-                { threshold: 0.1 }
-            );
-            bottomObserver.observe(lastElement);
-        }
-
-        return () => {
-            observers.forEach(o => o?.disconnect());
-            bottomObserver?.disconnect();
-        };
-    }, [process]);
-
-    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-        e.preventDefault();
-        const element = document.getElementById(id);
-        if (element) {
-            setActiveSection(id);
-            const offset = 150; // Sticky header + tabs offset
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = element.getBoundingClientRect().top;
-            const elementPosition = elementRect - bodyRect;
-            const offsetPosition = elementPosition - offset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-        }
-    };
-
     const toggleSelect = () => {
-        if (process) {
-            toggleProcess(process.id);
-        }
+        if (process) toggleProcess(process.id);
     };
 
     const relatedProcesses = (process?.related_processes || [])
-        .map(slug => processes.find(p => p.slug === slug))
-        .filter((p): p is typeof processes[0] => !!p);
+        .map(s => processes.find(p => p.slug === s))
+        .filter((p): p is typeof processes[0] => !!p)
+        .slice(0, 2);
+
+    const steps = process
+        ? (process.how_it_works_steps || process.pasos.map((p: string) => ({ title: p, short: p }))) as any[]
+        : [];
 
     if (!process) {
         return (
@@ -201,343 +113,442 @@ const ProcessDetail = () => {
         );
     }
 
-    return (
-        <div className="min-h-screen bg-background text-foreground pb-20 md:pb-0">
-            {/* Header */}
-            <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-                <div className="container mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-6">
-                    <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-2 text-muted-foreground hover:text-foreground">
-                                <ChevronLeft className="w-4 h-4" /> Volver al catálogo
-                            </Button>
-                            <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10 pl-2" />
-                        </div>
+    const benefits = process.benefits || process.pasos.slice(0, 3);
 
-                        <div className="flex md:hidden">
-                            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-                                <LayoutGrid className="w-6 h-6" />
+    return (
+        <div className="min-h-screen bg-background text-foreground">
+
+            {/* Nav */}
+            <header className="border-b border-border bg-background sticky top-0 z-40">
+                <div className="mx-auto max-w-[860px] px-4 md:px-6 py-4 flex items-center justify-between gap-6">
+                    <img
+                        src={immoraliaLogo}
+                        alt="Immoralia"
+                        className="h-8 cursor-pointer"
+                        onClick={() => navigate("/")}
+                    />
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button
+                                className={`relative h-10 px-4 gap-2 border transition-all ${
+                                    selectedProcessIds.size > 0
+                                        ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-[0_0_20px_rgba(0,200,220,0.2)]"
+                                        : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-accent"
+                                }`}
+                            >
+                                <LayoutGrid className="w-4 h-4" />
+                                <span className="hidden sm:inline">Mi Selección</span>
+                                {selectedProcessIds.size > 0 && (
+                                    <span className="absolute -top-1.5 -right-1.5 bg-background text-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-primary">
+                                        {selectedProcessIds.size}
+                                    </span>
+                                )}
                             </Button>
-                        </div>
-                    </div>
+                        </SheetTrigger>
+                        <SheetContent side="right" className="bg-background border-border w-full sm:max-w-md p-0 overflow-hidden">
+                            <div className="h-full flex flex-col p-6 overflow-hidden">
+                                <SheetHeader className="mb-2 text-left">
+                                    <SheetTitle className="text-foreground text-2xl font-bold flex items-center gap-2">
+                                        <LayoutGrid className="w-6 h-6 text-primary" />
+                                        Mi Selección
+                                    </SheetTitle>
+                                </SheetHeader>
+                                <SelectionSummary
+                                    variant="drawer"
+                                    onContact={() => setShowContactForm(true)}
+                                    onShare={() => setShowShareModal(true)}
+                                    n8nHosting={n8nHosting}
+                                    onHostingChange={setN8nHosting}
+                                    className="flex-1 overflow-hidden"
+                                />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
+                <div className="mx-auto max-w-[860px] px-4 md:px-6 pb-3">
+                    <ol className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <li className="hover:text-foreground cursor-pointer transition-colors" onClick={() => navigate("/")}>
+                            Catálogo
+                        </li>
+                        <li>/</li>
+                        <li>{process.categoriaNombre}</li>
+                        <li>/</li>
+                        <li className="text-foreground">{process.nombre}</li>
+                    </ol>
                 </div>
             </header>
 
-            <main className="container mx-auto px-6 md:px-8 lg:px-12 py-8 pb-[80vh]">
-                <div className="max-w-[1440px] mx-auto">
-                    {/* Breadcrumb (Desktop) */}
-                    <nav className="mb-8 hidden md:block">
-                        <ol className="flex text-sm text-muted-foreground gap-2">
-                            <li className="hover:text-foreground cursor-pointer" onClick={() => navigate("/")}>Catálogo</li>
-                            <li>/</li>
-                            <li>{process.categoriaNombre}</li>
-                            <li>/</li>
-                            <li className="text-foreground font-medium">{process.nombre}</li>
-                        </ol>
-                    </nav>
+            <main className="mx-auto max-w-[860px] px-4 md:px-6 py-16 pb-32 space-y-20">
 
-                    <div className="grid lg:grid-cols-[1fr,350px] gap-12">
-                        {/* Left Column: Content */}
-                        <div className="space-y-12">
-                            {/* HERO SECTION */}
-                            <section className="space-y-6">
-                                <div className="flex flex-wrap gap-2">
-                                    <span className={cn("px-3 py-1 rounded-full text-xs font-semibold border", getCategoryColorClass(process.categoriaNombre))}>
-                                        {process.categoriaNombre}
-                                    </span>
-                                    {process.badges?.map(badge => (
-                                        <span key={badge} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20 flex items-center gap-1">
-                                            <Star className="w-3 h-3 fill-primary" /> {badge}
-                                        </span>
-                                    ))}
-                                </div>
+                {/* HERO */}
+                <section className="space-y-6">
+                    <button
+                        onClick={() => navigate("/")}
+                        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                        Volver al catálogo
+                    </button>
 
-                                <h1 className="text-4xl md:text-6xl font-bold tracking-tight">{process.nombre}</h1>
-                                <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-                                    {process.one_liner || process.tagline}
-                                </p>
+                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight leading-tight">
+                        {process.nombre}
+                    </h1>
 
-                                <ul className="grid gap-3 pt-4">
-                                    {(process.benefits || process.pasos.slice(0, 3)).map((benefit, i) => (
-                                        <li key={i} className="flex items-start gap-3 text-lg text-muted-foreground italic">
-                                            <div className="mt-1.5 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                                                <Check className="w-3 h-3 text-primary" />
-                                            </div>
-                                            {benefit}
-                                        </li>
-                                    ))}
-                                </ul>
+                    {(process.one_liner || process.tagline) && (
+                        <p className="text-xl text-muted-foreground leading-relaxed">
+                            {process.one_liner || process.tagline}
+                        </p>
+                    )}
 
-                                <div className="flex flex-wrap gap-4 pt-4 md:hidden">
-                                    <Button onClick={toggleSelect} size="lg" className={`flex - 1 ${isSelected ? 'bg-secondary hover:bg-secondary/90' : 'bg-primary hover:bg-primary/90'} `}>
-                                        {isSelected ? <Check className="mr-2 h-5 w-5" /> : <Plus className="mr-2 h-5 w-5" />}
-                                        {isSelected ? "Añadido" : "Añadir a mi selección"}
-                                    </Button>
-                                </div>
-                            </section>
+                    <span className={cn(
+                        "inline-flex px-3 py-1 rounded-full text-xs font-medium border",
+                        getCategoryColorClass(process.categoriaNombre)
+                    )}>
+                        {process.categoriaNombre}
+                    </span>
 
-                            {/* TABS NAVIGATION (Sticky) */}
-                            <div className="sticky top-24 z-30 bg-background/80 backdrop-blur-md border-b border-border -mx-6 md:-mx-8 lg:-mx-4 relative">
-                                <div 
-                                    className={cn(
-                                        "absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10 transition-opacity duration-300 md:hidden",
-                                        showLeftScroll ? "opacity-100" : "opacity-0"
-                                    )}
-                                />
-                                <div 
-                                    className={cn(
-                                        "absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10 transition-opacity duration-300 md:hidden",
-                                        showRightScroll ? "opacity-100" : "opacity-0"
-                                    )}
-                                />
-                                <div 
-                                    ref={tabsContainerRef}
-                                    onScroll={checkScroll}
-                                    className="flex gap-8 whitespace-nowrap overflow-x-auto px-6 md:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                                >
-                                    {[
-                                        { id: "resumen", label: "Resumen" },
-                                        { id: "funcionamiento", label: "Cómo funciona" },
-                                        { id: "personalizacion", label: "Personalización", show: process.customization?.options_blocks && process.customization.options_blocks.length > 0 },
-{ id: "faqs", label: "FAQs", show: process.faqs && process.faqs.length > 0 },
-                                        { id: "relacionados", label: "Relacionados", show: relatedProcesses.length > 0 },
-                                    ].map((tab) => (
-                                        (tab.show !== false) && (
-                                            <a
-                                                key={tab.id}
-                                                href={`#${tab.id} `}
-                                                onClick={(e) => scrollToSection(e, tab.id)}
-                                                className={cn(
-                                                    "py-4 border-b-2 transition-all duration-200",
-                                                    activeSection === tab.id
-                                                        ? "border-primary text-foreground font-medium"
-                                                        : "border-transparent text-muted-foreground hover:text-foreground"
-                                                )}
-                                            >
-                                                {tab.label}
-                                            </a>
-                                        )
-                                    ))}
-                                </div>
+                    {/* Video mockup */}
+                    <div className="relative w-full rounded-2xl overflow-hidden border border-border bg-card aspect-video flex items-center justify-center group cursor-pointer my-4">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/5" />
+                        <div
+                            className="absolute inset-0 opacity-10"
+                            style={{
+                                backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+                                backgroundSize: "40px 40px"
+                            }}
+                        />
+                        <div className="relative z-10 flex flex-col items-center gap-4">
+                            <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(0,200,220,0.2)]">
+                                <svg className="w-8 h-8 text-primary ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
                             </div>
+                            <p className="text-sm text-muted-foreground font-medium tracking-wide uppercase">
+                                Próximamente · Video explicativo
+                            </p>
+                        </div>
+                        <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm border border-border rounded-md px-2.5 py-1 text-xs text-muted-foreground font-mono">
+                            2:30
+                        </div>
+                    </div>
 
-                            {/* SECTION: Resumen */}
-                            <section id="resumen" className="scroll-mt-48 space-y-8">
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="space-y-4">
-                                        <h3 className="text-2xl font-bold">Qué hace</h3>
-                                        <p className="text-muted-foreground leading-relaxed">
-                                            {process.summary?.what_it_is || process.descripcionDetallada}
-                                        </p>
-                                    </div>
-                                    <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-                                        <h3 className="text-xl font-bold flex items-center gap-2">
-                                            <Zap className="w-5 h-5 text-secondary" /> Resultado final
-                                        </h3>
-                                        <div className="p-4 rounded-xl bg-background/50 border border-primary/10">
-                                            <p className="text-sm font-medium text-foreground">{process.summary?.output || "Automatización completa del proceso."}</p>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2 text-xs">
-                                            {process.indicators?.integrations.map(tool => (
-                                                <span key={tool} className="px-2 py-1 rounded-md bg-muted text-muted-foreground">{tool}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="grid sm:grid-cols-3 gap-6">
-                                    <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
-                                        <Clock className="w-6 h-6 text-primary" />
-                                        <span className="text-sm text-muted-foreground">Implementación</span>
-                                        <span className="font-semibold">{finalComplexity.timeEstimate}</span>
-                                    </div>
-                                    {(finalComplexity.complexity as any) !== "N/A" && (
-                                        <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
-                                            <Settings2 className="w-6 h-6 text-primary" />
-                                            <span className="text-sm text-muted-foreground">Complejidad</span>
-                                            <span className="font-semibold">{finalComplexity.complexity}</span>
-                                        </div>
-                                    )}
-                                    {(process.indicators?.integrations && process.indicators.integrations.length > 0 && process.id !== "F25") && (
-                                        <div className="bg-card/50 border border-border rounded-xl p-4 flex flex-col items-center text-center gap-2">
-                                            <MessageSquare className="w-6 h-6 text-primary" />
-                                            <span className="text-sm text-muted-foreground">Integraciones</span>
-                                            <span className="font-semibold">{process.indicators.integrations.length} herramientas</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </section>
-
-                            {/* SECTION: Funcionamiento */}
-                            <section id="funcionamiento" className="scroll-mt-48 space-y-8">
-                                <h3 className="text-3xl font-bold">Cómo funciona</h3>
-                                <div className="relative space-y-8 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-                                    {(process.how_it_works_steps || process.pasos.map(p => ({ title: p, short: p }))).map((step: any, i) => (
-                                        <div key={i} className="relative pl-12 group">
-                                            <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center font-bold text-sm z-10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                                                {i + 1}
-                                            </div>
-                                            <div className="space-y-2">
-                                                <h4 className="text-xl font-bold">{step.title}</h4>
-                                                <p className="text-muted-foreground">{step.detail || step.short}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-
-                            {/* SECTION: Personalizacion */}
-                            {process.customization?.options_blocks && process.customization.options_blocks.length > 0 && (
-                                <section id="personalizacion" className="scroll-mt-48 space-y-8">
-                                    <h3 className="text-3xl font-bold">Personalización</h3>
-                                    <div className="bg-card border border-border rounded-2xl p-8 space-y-8">
-                                        <div className="grid md:grid-cols-2 gap-12">
-                                            {process.customization.options_blocks.map((block, i) => {
-                                                const isCanalBlock = block.label.toLowerCase().includes("canal");
-                                                const optionsToRender = (isCanalBlock && onboardingChannels.length > 0)
-                                                    ? [...onboardingChannels, "Tu vía de comunicación preferida"]
-                                                    : block.options;
-
-                                                return (
-                                                    <div key={i} className="space-y-4">
-                                                        <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{block.label}</label>
-                                                        <div className="grid gap-2">
-                                                            {optionsToRender.map((opt: string) => {
-                                                                const isOptSelected = (localOptions[block.label] || []).includes(opt);
-                                                                return (
-                                                                    <div key={opt} className="space-y-2">
-                                                                        <div
-                                                                            onClick={() => handleOptionSelect(block.label, opt)}
-                                                                            className={cn(
-                                                                                "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
-                                                                                isOptSelected
-                                                                                    ? "border-primary bg-primary/5 shadow-[0_0_15px_-3px_rgba(var(--primary),0.2)]"
-                                                                                    : "border-border hover:border-primary/50 bg-background/50"
-                                                                            )}
-                                                                        >
-                                                                            <div className={cn(
-                                                                                "w-4 h-4 rounded-md border-2 flex items-center justify-center transition-colors",
-                                                                                isOptSelected ? "border-primary bg-primary" : "border-muted-foreground"
-                                                                            )}>
-                                                                                {isOptSelected && <Check className="w-3 h-3 text-primary-foreground stroke-[3]" />}
-                                                                            </div>
-                                                                            <span className={cn("text-sm transition-colors", isOptSelected ? "font-bold text-primary" : "font-medium text-foreground")}>{opt}</span>
-                                                                        </div>
-                                                                        {isOptSelected && requiresCustomInput(opt) && (
-                                                                            <div className="pl-8 anim-slide-down">
-                                                                                <Input
-                                                                                    placeholder="Especificar detalladamente..."
-                                                                                    value={localInputs[block.label] || ""}
-                                                                                    onChange={(e) => setLocalInputs(prev => ({ ...prev, [block.label]: e.target.value }))}
-                                                                                    className="border-primary/30 focus-visible:ring-primary/50"
-                                                                                    autoFocus
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Necesidades específicas</label>
-                                            <textarea
-                                                value={localNeedsInput}
-                                                onChange={(e) => setLocalNeedsInput(e.target.value)}
-                                                placeholder={process.customization.free_text_placeholder || "Describe aquí cualquier particularidad de tu negocio..."}
-                                                className="w-full h-32 bg-background border border-border rounded-xl p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50"
-                                            />
-                                        </div>
-                                    </div>
-                                </section>
+                    {/* CTA debajo del video */}
+                    <div className="flex justify-center">
+                        <Button
+                            onClick={toggleSelect}
+                            size="lg"
+                            className={cn(
+                                "font-medium px-8 transition-all duration-200",
+                                isSelected
+                                    ? "bg-secondary hover:bg-secondary/90 text-white"
+                                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
                             )}
+                        >
+                            {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                            {isSelected ? "Proceso seleccionado" : "Seleccionar proceso"}
+                        </Button>
+                    </div>
 
-                            {/* SECTION: FAQs */}
-                            {process.faqs && process.faqs.length > 0 && (
-                                <section id="faqs" className="scroll-mt-48 space-y-8">
-                                    <h3 className="text-3xl font-bold">Preguntas frecuentes</h3>
-                                    <div className="space-y-4">
-                                        {process.faqs.map((faq, i) => (
-                                            <div key={i} className="bg-card border border-border rounded-xl p-6 space-y-3">
-                                                <h4 className="font-bold text-lg flex items-center gap-2">
-                                                    <Info className="w-5 h-5 text-primary" /> {faq.q}
-                                                </h4>
-                                                <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </section>
-                            )}
+                    {/* Pain identification */}
+                    {process.dolores && process.dolores.length > 0 && (
+                        <div className="space-y-6 py-2">
+                            <div className="text-center space-y-2">
+                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                                    ¿Te reconoces?
+                                </h2>
+                                <p className="text-muted-foreground text-base">
+                                    Esto pasa en la mayoría de empresas antes de automatizarlo
+                                </p>
+                            </div>
+                            <ul className="space-y-3 pt-2">
+                                {process.dolores.map((dolor: string, i: number) => (
+                                    <li key={i} className="rounded-xl border border-red-900/40 border-l-4 border-l-red-500/70 bg-red-950/20 px-6 py-4 transition-all duration-200 hover:border-l-red-400 hover:bg-red-950/30">
+                                        <p className="text-sm font-medium text-foreground">{dolor}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
-                            {/* SECTION: Related Processes */}
-                            {relatedProcesses.length > 0 && (
-                                <section id="relacionados" className="scroll-mt-48 space-y-8 pb-12">
-                                    <h3 className="text-3xl font-bold">Procesos relacionados</h3>
-                                    <div className="grid md:grid-cols-2 gap-6">
-                                        {relatedProcesses.map((p) => (
-                                            <ProcessCard key={p.id} process={p} />
-                                        ))}
+                    {/* Benefits */}
+                    <div className="space-y-6 py-2">
+                        <div className="text-center space-y-2">
+                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                                Lo que conseguirás con Immoralia
+                            </h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {benefits.slice(0, 3).map((benefit: string, i: number) => {
+                                const Icon = BENEFIT_ICONS[i % BENEFIT_ICONS.length];
+                                return (
+                                    <div key={i} className="rounded-xl border border-border bg-transparent p-6 space-y-4 hover:border-primary/40 transition-colors duration-200">
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                            <Icon className="w-5 h-5 text-primary" />
+                                        </div>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{benefit}</p>
                                     </div>
-                                </section>
-                            )}
+                                );
+                            })}
                         </div>
 
-                        {/* Right Column: Sticky Sidebar (Desktop) */}
-                        <aside className="hidden lg:block relative">
-                            <div className="sticky top-32 space-y-6">
-                                <div className="bg-card border border-border rounded-2xl p-8 space-y-6 shadow-xl">
-                                    <div className="space-y-2">
-                                        <h3 className="text-2xl font-bold">Tu selección</h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            Añade este proceso a tu selección para solicitar una oferta personalizada sin compromiso.
-                                        </p>
-                                    </div>
+                        {/* Métricas */}
+                        <div className="grid grid-cols-3 divide-x divide-border/50 rounded-xl border border-border/50 bg-muted/30">
+                            {[
+                                { value: finalComplexity.timeEstimate, label: "de implementación" },
+                                { value: finalComplexity.complexity as string, label: "complejidad" },
+                                { value: process.indicators?.integrations?.length?.toString() ?? "—", label: "herramientas conectadas" },
+                            ].map(({ value, label }, i) => (
+                                <div key={i} className="flex flex-col items-center justify-center px-4 py-5 text-center">
+                                    <span className="text-xl md:text-2xl font-bold text-primary leading-none">{value}</span>
+                                    <span className="text-xs text-muted-foreground/70 mt-1.5 leading-snug">{label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-                                    <div className="space-y-4">
-                                        <Button
-                                            onClick={toggleSelect}
-                                            size="lg"
-                                            className={`w-full py-8 text-lg font-bold transition-all duration-300 ${isSelected
-                                                ? 'bg-secondary hover:bg-secondary/90 shadow-secondary/20 shadow-lg'
-                                                : 'bg-primary hover:bg-primary/90 shadow-primary/20 shadow-lg'
-                                                }`}
-                                        >
-                                            {isSelected ? <Check className="mr-2 h-6 w-6" /> : <Plus className="mr-2 h-6 w-6" />}
-                                            {isSelected ? "Seleccionado" : "Añadir a mi selección"}
-                                        </Button>
+                {/* Cómo funciona — Carrusel */}
+                {steps.length > 0 && (
+                    <section className="space-y-4">
+                        <h2 className="text-2xl font-medium">Cómo funciona</h2>
 
-                                        <Button
-                                            variant="outline"
-                                            className="w-full py-6"
-                                            onClick={() => setShowContactForm(true)}
-                                            disabled={selectedProcessIds.size === 0 && !isSelected}
-                                        >
-                                            Solicitar oferta
-                                        </Button>
-                                    </div>
+                        <div className="flex items-center gap-3">
+                            <div className="flex-1 flex gap-1.5">
+                                {steps.map((_: any, i: number) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setCarouselStep(i)}
+                                        className="h-1 flex-1 rounded-full overflow-hidden bg-border transition-all duration-300"
+                                    >
+                                        <div
+                                            className={cn(
+                                                "h-full bg-primary rounded-full transition-all duration-500",
+                                                i < carouselStep ? "w-full" : i === carouselStep ? "w-full opacity-100" : "w-0"
+                                            )}
+                                            style={{ opacity: i < carouselStep ? 0.4 : i === carouselStep ? 1 : 0 }}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                            <span className="text-xs text-muted-foreground shrink-0 tabular-nums">
+                                {carouselStep + 1} / {steps.length}
+                            </span>
+                            <div className="flex gap-1.5 shrink-0">
+                                <button
+                                    onClick={() => setCarouselStep(s => Math.max(0, s - 1))}
+                                    disabled={carouselStep === 0}
+                                    className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setCarouselStep(s => Math.min(steps.length - 1, s + 1))}
+                                    disabled={carouselStep === steps.length - 1}
+                                    className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
+                                >
+                                    <ChevronRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
 
-                                    <div className="pt-6 border-t border-border space-y-4">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Procesos en tu lista:</span>
-                                            <span className="font-bold">{selectedProcessIds.size}</span>
+                        {(() => {
+                            const step = steps[carouselStep];
+                            return (
+                                <div className="rounded-2xl border border-border overflow-hidden">
+                                    <div className="relative w-full bg-card aspect-video flex items-center justify-center">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+                                        <div
+                                            className="absolute inset-0 opacity-10"
+                                            style={{
+                                                backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+                                                backgroundSize: "40px 40px"
+                                            }}
+                                        />
+                                        <div className="relative z-10 flex flex-col items-center gap-3">
+                                            <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                                <svg className="w-7 h-7 text-primary/50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                                                    <rect x="3" y="3" width="18" height="14" rx="2" />
+                                                    <path d="M3 17h18M9 21h6" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
                                         </div>
                                     </div>
+                                    <div className="p-6 space-y-2 border-t border-border bg-card/30">
+                                        <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{step.detail || step.short}</p>
+                                    </div>
                                 </div>
+                            );
+                        })()}
+                    </section>
+                )}
 
-                                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 text-center space-y-4">
-                                    <h4 className="font-bold">¿No es exactamente lo que buscas?</h4>
-                                    <p className="text-sm text-muted-foreground">Personalizamos cada flujo a tus necesidades reales.</p>
-                                    <Button variant="link" className="text-primary font-bold" onClick={() => setShowCalendlyModal(true)}>Agendar llamada ←</Button>
-                                </div>
+                {/* Personalización */}
+                {process.customization?.options_blocks && process.customization.options_blocks.length > 0 && (
+                    <section className="space-y-6">
+                        <h2 className="text-2xl font-medium">Personalización</h2>
+                        <div className="space-y-8">
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {process.customization.options_blocks.map((block, i) => {
+                                    const isCanalBlock = block.label.toLowerCase().includes("canal");
+                                    const optionsToRender = (isCanalBlock && onboardingChannels.length > 0)
+                                        ? [...onboardingChannels, "Tu vía de comunicación preferida"]
+                                        : block.options;
+
+                                    return (
+                                        <div key={i} className="space-y-4">
+                                            <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{block.label}</label>
+                                            <div className="grid gap-2">
+                                                {optionsToRender.map((opt: string) => {
+                                                    const isOptSelected = (localOptions[block.label] || []).includes(opt);
+                                                    return (
+                                                        <div key={opt} className="space-y-2">
+                                                            <div
+                                                                onClick={() => handleOptionSelect(block.label, opt)}
+                                                                className={cn(
+                                                                    "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                                                                    isOptSelected
+                                                                        ? "border-primary bg-primary/5 shadow-[0_0_15px_-3px_rgba(var(--primary),0.2)]"
+                                                                        : "border-border hover:border-primary/50 bg-background/50"
+                                                                )}
+                                                            >
+                                                                <div className={cn(
+                                                                    "w-4 h-4 rounded-md border-2 flex items-center justify-center transition-colors",
+                                                                    isOptSelected ? "border-primary bg-primary" : "border-muted-foreground"
+                                                                )}>
+                                                                    {isOptSelected && <Check className="w-3 h-3 text-primary-foreground stroke-[3]" />}
+                                                                </div>
+                                                                <span className={cn("text-sm transition-colors", isOptSelected ? "font-bold text-primary" : "font-medium text-foreground")}>{opt}</span>
+                                                            </div>
+                                                            {isOptSelected && requiresCustomInput(opt) && (
+                                                                <div className="pl-8 anim-slide-down">
+                                                                    <Input
+                                                                        placeholder="Especificar detalladamente..."
+                                                                        value={localInputs[block.label] || ""}
+                                                                        onChange={(e) => setLocalInputs(prev => ({ ...prev, [block.label]: e.target.value }))}
+                                                                        className="border-primary/30 focus-visible:ring-primary/50"
+                                                                        autoFocus
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        </aside>
-                    </div>
-                </div>
+                            <div className="space-y-4">
+                                <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Necesidades específicas</label>
+                                <textarea
+                                    value={localNeedsInput}
+                                    onChange={(e) => setLocalNeedsInput(e.target.value)}
+                                    placeholder={process.customization.free_text_placeholder || "Describe aquí cualquier particularidad de tu negocio..."}
+                                    className="w-full h-32 bg-background border border-border rounded-xl p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* FAQs */}
+                {process.faqs && process.faqs.length > 0 && (
+                    <section className="space-y-6">
+                        <h2 className="text-2xl font-medium">Preguntas frecuentes</h2>
+                        <Accordion type="single" collapsible className="space-y-2">
+                            {process.faqs.map((faq, i) => (
+                                <AccordionItem
+                                    key={i}
+                                    value={`faq-${i}`}
+                                    className="rounded-xl border border-border px-5 transition-colors duration-200 hover:border-primary/40 data-[state=open]:border-primary/50"
+                                >
+                                    <AccordionTrigger className="text-sm font-medium text-foreground py-4 hover:no-underline [&>svg]:text-primary [&>svg]:w-4 [&>svg]:h-4">
+                                        {faq.q}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
+                                        {faq.a}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </section>
+                )}
+
+                {/* Procesos relacionados */}
+                {relatedProcesses.length > 0 && (
+                    <section className="space-y-8">
+                        <h2 className="text-2xl font-medium">Procesos relacionados</h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {relatedProcesses.map((p) => (
+                                <div
+                                    key={p.id}
+                                    className="group border border-border rounded-xl p-5 space-y-3 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer"
+                                    onClick={() => navigate(`/catalogo/procesos/${p.slug}`)}
+                                >
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <span className={cn(
+                                            "px-2.5 py-0.5 rounded-full text-xs font-medium border",
+                                            getCategoryColorClass(p.categoriaNombre)
+                                        )}>
+                                            {p.categoriaNombre}
+                                        </span>
+                                        {p.recomendado && (
+                                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                                                Recomendado
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 className="text-base font-medium">{p.nombre}</h3>
+                                    <p className="text-sm text-muted-foreground font-normal">{p.tagline}</p>
+                                    <div className="flex items-center justify-between pt-1">
+                                        <span className="text-sm text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                                            Más información <ArrowRight className="w-3.5 h-3.5" />
+                                        </span>
+                                        <Button
+                                            size="sm"
+                                            onClick={(e) => { e.stopPropagation(); toggleProcess(p.id); }}
+                                            className={cn(
+                                                "text-xs font-medium h-7 px-3",
+                                                selectedProcessIds.has(p.id)
+                                                    ? "bg-secondary hover:bg-secondary/90 text-white"
+                                                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                                            )}
+                                        >
+                                            {selectedProcessIds.has(p.id) ? <Check className="mr-1 h-3 w-3" /> : <Plus className="mr-1 h-3 w-3" />}
+                                            {selectedProcessIds.has(p.id) ? "Añadido" : "Añadir"}
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </main>
+
+            {/* Sticky CTA bar */}
+            <div className="fixed bottom-0 left-0 right-0 z-50 bg-primary border-t border-primary/80">
+                <div className="mx-auto max-w-[860px] px-4 md:px-6 py-3 flex gap-3 justify-center">
+                    <Button
+                        variant="ghost"
+                        size="lg"
+                        className="font-medium text-black/70 hover:text-black hover:bg-white/20"
+                        onClick={() => setShowCalendlyModal(true)}
+                    >
+                        Agendar llamada
+                    </Button>
+                    <Button
+                        onClick={toggleSelect}
+                        size="lg"
+                        className="bg-black/90 hover:bg-black text-white font-medium border-0"
+                    >
+                        {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                        {isSelected ? "Añadido a mi selección" : "Añadir a mi selección"}
+                    </Button>
+                </div>
+            </div>
+
 
             {/* Modals */}
             <ContactForm
@@ -565,26 +576,11 @@ const ProcessDetail = () => {
                 onClose={() => setShowCalendlyModal(false)}
             />
 
-            {/* Sticky Mobile Floating CTA */}
-            <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 md:hidden w-auto min-w-[280px]">
-                <div className="bg-background/90 backdrop-blur-lg border border-border/50 rounded-full p-2 px-3 shadow-2xl flex gap-3 items-center">
-                    <div className="flex-1 pl-3 text-left">
-                        <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider leading-none">Estado</p>
-                        <p className="text-xs font-bold whitespace-nowrap">{isSelected ? "Añadido" : "No añadido"}</p>
-                    </div>
-                    <Button 
-                        onClick={toggleSelect} 
-                        className={cn(
-                            "rounded-full font-bold px-6 h-9 text-xs transition-all duration-300 shadow-lg",
-                            isSelected 
-                                ? "bg-secondary hover:bg-secondary/90 text-white shadow-secondary/20" 
-                                : "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
-                        )}
-                    >
-                        {isSelected ? "Quitar" : "Añadir"}
-                    </Button>
-                </div>
-            </div>
+            <ShareSelectionModal
+                isOpen={showShareModal}
+                onClose={() => setShowShareModal(false)}
+                selectedProcesses={processes.filter(p => selectedProcessIds.has(p.id))}
+            />
         </div>
     );
 };
