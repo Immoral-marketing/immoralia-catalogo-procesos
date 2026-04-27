@@ -140,7 +140,7 @@ export default function AdminPage() {
   }
 
   if (authState === 'password_recovery') {
-    return <AdminPasswordReset onDone={() => { supabase.auth.signOut(); setAuthState('unauthenticated'); }} />;
+    return <AdminPasswordReset recoverySession={session} onDone={() => { supabase.auth.signOut(); setAuthState('unauthenticated'); }} />;
   }
 
   if (authState === 'not_admin') {
@@ -325,12 +325,23 @@ function AdminForgotPassword({ onBack }: { onBack: () => void }) {
 // ---------------------------------------------------------------------------
 // Recuperar contraseña — paso 2: establecer nueva contraseña
 // ---------------------------------------------------------------------------
-function AdminPasswordReset({ onDone }: { onDone: () => void }) {
+function AdminPasswordReset({ recoverySession, onDone }: { recoverySession: Session | null; onDone: () => void }) {
   const { toast } = useToast();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Al montar el formulario, fijamos inmediatamente la sesión de recovery en el cliente.
+  // Esto evita que autoRefreshToken la invalide antes de que el usuario haga submit.
+  useEffect(() => {
+    if (recoverySession?.access_token && recoverySession?.refresh_token) {
+      supabase.auth.setSession({
+        access_token: recoverySession.access_token,
+        refresh_token: recoverySession.refresh_token,
+      });
+    }
+  }, [recoverySession]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
