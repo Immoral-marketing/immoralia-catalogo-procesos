@@ -79,6 +79,8 @@ const sectors = [
   },
   {
     id: "food",
+    title: "Gastronomía y Hotelería",
+    description: "Restaurantes, bares, cafeterías, hoteles y negocios de hostelería.",
     icon: Utensils,
     path: "/landing/restauracion",
     status: "active",
