@@ -565,7 +565,7 @@ export const processes: Process[] = [
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
-    integration_domains: ["ERP"]
+    integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
 
   },
@@ -1149,7 +1149,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
     landing_slug: "centros-deportivos",
 
   },
@@ -2734,7 +2734,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Google Drive/Dropbox", "Make", "Slack/Email"],
     dolores: ["Tengo el email colapsado de adjuntos de clientes y pierdo horas descargando", "Nunca sé si el cliente me ha enviado ya lo que le pedí"],
-    integration_domains: ["DOCS", "OTHER"]
+    integration_domains: ["DOCS", "OTHER"],
     landing_slug: "centros-deportivos",
 
   },
