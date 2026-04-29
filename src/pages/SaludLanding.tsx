@@ -60,7 +60,7 @@ const SaludLanding = () => {
 
   // Filtrar procesos para Salud
   const saludProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "salud" || p.sectores?.includes("Clínicas / Salud / Dental / Veterinaria")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "salud" || p.sectores?.includes("Clínicas / Salud / Dental / Veterinaria"))),
     []
   );
 

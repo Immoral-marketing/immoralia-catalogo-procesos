@@ -65,7 +65,7 @@ const ConstruccionLanding = () => {
 
   // Filtrar procesos para Construcción & Reformas
   const construccionProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "construccion" || p.sectores?.includes("Construcción & Reformas")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "construccion" || p.sectores?.includes("Construcción & Reformas"))),
     []
   );
 

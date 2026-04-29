@@ -62,7 +62,7 @@ const InmobiliariaLanding = () => {
 
   // Filtrar procesos para Inmobiliaria
   const inmobiliariaProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "inmobiliaria" || p.sectores?.includes("Inmobiliaria") || p.sectores?.includes("Inmobiliarias")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "inmobiliaria" || p.sectores?.includes("Inmobiliaria") || p.sectores?.includes("Inmobiliarias"))),
     []
   );
 

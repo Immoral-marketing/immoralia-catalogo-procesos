@@ -131,8 +131,10 @@ const SectorSelector = () => {
   const sectorCounts = useMemo(() => {
     return sectors.reduce((acc, sector) => {
       acc[sector.id] = processes.filter(p =>
-        p.landing_slug === sector.landingSlug ||
-        (sector.sectorNames.some(name => p.sectores?.includes(name)))
+        !p.hidden && (
+          p.landing_slug === sector.landingSlug ||
+          sector.sectorNames.some(name => p.sectores?.includes(name))
+        )
       ).length;
       return acc;
     }, {} as Record<string, number>);

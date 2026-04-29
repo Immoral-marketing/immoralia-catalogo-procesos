@@ -59,7 +59,7 @@ const SportsLanding = () => {
 
   // Filtrar procesos para Centros Deportivos
   const sportsProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "centros-deportivos"),
+    processes.filter(p => !p.hidden && p.landing_slug === "centros-deportivos"),
     []
   );
 

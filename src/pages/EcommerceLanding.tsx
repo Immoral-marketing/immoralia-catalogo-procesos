@@ -62,7 +62,7 @@ const EcommerceLanding = () => {
 
   // Filtrar procesos para E-commerce / Retail
   const ecommerceProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "ecommerce" || p.sectores?.includes("E-commerce") || p.sectores?.includes("Retail")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "ecommerce" || p.sectores?.includes("E-commerce") || p.sectores?.includes("Retail"))),
     []
   );
 
