@@ -140,7 +140,7 @@ const SectorSelector = () => {
     }, {} as Record<string, number>);
   }, []);
 
-  const totalCount = processes.length;
+  const totalCount = processes.filter(p => !p.hidden).length;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
