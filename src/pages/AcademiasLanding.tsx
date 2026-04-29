@@ -61,7 +61,7 @@ const AcademiasLanding = () => {
 
   // Filtrar procesos para Academias / Formación
   const academiasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "academias" || p.sectores?.includes("Academias / Formación")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "academias" || p.sectores?.includes("Academias / Formación"))),
     []
   );
 

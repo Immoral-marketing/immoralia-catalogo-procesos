@@ -63,7 +63,7 @@ const AgenciasLanding = () => {
 
   // Filtrar procesos para Consultoría / Agencias
   const agenciasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "agencias" || p.sectores?.includes("Agencia/marketing") || p.sectores?.includes("Consultoría")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "agencias" || p.sectores?.includes("Agencia/marketing") || p.sectores?.includes("Consultoría"))),
     []
   );
 

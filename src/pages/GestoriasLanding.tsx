@@ -60,7 +60,7 @@ const GestoriasLanding = () => {
 
   // Filtrar procesos para Gestorías
   const gestoriasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "gestorias" || (p.sectores?.includes("Gestoria") && !p.landing_slug)),
+    processes.filter(p => !p.hidden && (p.landing_slug === "gestorias" || (p.sectores?.includes("Gestoria") && !p.landing_slug))),
     []
   );
 

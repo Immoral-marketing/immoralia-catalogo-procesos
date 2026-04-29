@@ -63,9 +63,12 @@ const RestauracionLanding = () => {
   const restauracionProcesses = useMemo(() => {
     const deprioritized = ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"];
     const all = processes.filter(p =>
-      p.landing_slug === "restauracion" ||
-      p.sectores?.includes("Hostelería") ||
-      p.sectores?.includes("Restaurantes")
+      !p.hidden && (
+        p.landing_slug === "restauracion" ||
+        p.sectores?.includes("Restauración") ||
+        p.sectores?.includes("Hostelería") ||
+        p.sectores?.includes("Restaurantes")
+      )
     );
     return [
       ...all.filter(p => !deprioritized.includes(p.slug)),
