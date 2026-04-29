@@ -241,7 +241,6 @@ const SectorSelector = () => {
                 <LayoutGrid className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-cyan-400/60 uppercase tracking-widest font-semibold mb-0.5">{totalCount} automatizaciones disponibles</p>
                 <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">¿No encuentras tu sector? Explora el catálogo completo</h3>
                 <p className="text-sm text-gray-500 mt-0.5">Sin filtros de industria. Todos los procesos en un solo lugar.</p>
               </div>
