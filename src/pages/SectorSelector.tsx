@@ -9,10 +9,8 @@ import {
   Home,
   Users,
   ChevronRight,
-  ArrowRight,
   HardHat,
   GraduationCap,
-  LayoutGrid,
 } from "lucide-react";
 import { StepIndicator } from "@/components/StepIndicator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -140,8 +138,6 @@ const SectorSelector = () => {
     }, {} as Record<string, number>);
   }, []);
 
-  const totalCount = processes.length;
-
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
       {/* Background Decor */}
@@ -230,30 +226,6 @@ const SectorSelector = () => {
 
         </div>
 
-        {/* Banner "Ver catálogo completo" */}
-        <Link to="/catalogo/completo" className="group block mt-6">
-          <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-r from-cyan-950/50 via-black/70 to-blue-950/50 px-8 py-7 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_40px_rgba(8,145,178,0.12)]">
-            {/* Subtle animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            <div className="relative z-10 flex items-center gap-5">
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 shrink-0 transition-all duration-300 group-hover:bg-cyan-500/15 group-hover:border-cyan-500/30 group-hover:text-cyan-400">
-                <LayoutGrid className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs text-cyan-400/60 uppercase tracking-widest font-semibold mb-0.5">{totalCount} automatizaciones disponibles</p>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">¿No encuentras tu sector? Explora el catálogo completo</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Sin filtros de industria. Todos los procesos en un solo lugar.</p>
-              </div>
-            </div>
-
-            <div className="relative z-10 shrink-0">
-              <span className="inline-flex items-center gap-2 bg-white text-black font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 group-hover:bg-cyan-400 group-hover:gap-3">
-                Ver catálogo completo <ArrowRight className="w-4 h-4" />
-              </span>
-            </div>
-          </div>
-        </Link>
       </main>
 
       <footer className="container mx-auto px-6 py-12 text-center border-t border-white/5 mt-12 bg-black/50 overflow-hidden relative">

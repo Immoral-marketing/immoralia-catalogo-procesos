@@ -267,9 +267,6 @@ const RestauracionLanding = () => {
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
               </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
-              </Button>
             </div>
           </div>
         </div>
