@@ -22,9 +22,10 @@ interface ProcessCardProps {
   process: Process;
   isSpecialized?: boolean;
   accentColor?: string;
+  sectorSlug?: string;
 }
 
-export const ProcessCard = ({ process, isSpecialized, accentColor }: ProcessCardProps) => {
+export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }: ProcessCardProps) => {
   const navigate = useNavigate();
   const { selectedProcessIds, toggleProcess } = useSelection();
   const isSelected = selectedProcessIds.has(process.id);
@@ -37,7 +38,10 @@ export const ProcessCard = ({ process, isSpecialized, accentColor }: ProcessCard
   const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
 
   const handleViewDetails = () => {
-    navigate(`/catalogo/procesos/${process.slug}`);
+    const url = sectorSlug
+      ? `/catalogo/procesos/${process.slug}?sector=${sectorSlug}`
+      : `/catalogo/procesos/${process.slug}`;
+    navigate(url);
   };
 
   const handleToggleSelect = () => {

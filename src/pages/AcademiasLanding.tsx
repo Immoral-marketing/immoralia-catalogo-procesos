@@ -211,6 +211,7 @@ const AcademiasLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#7c3aed"
+                    sectorSlug="academias"
                     />
                   ))}
                 </div>
@@ -225,6 +226,7 @@ const AcademiasLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#7c3aed"
+                    sectorSlug="academias"
                         />
                       ))}
                   </div>

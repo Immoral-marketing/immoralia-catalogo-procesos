@@ -212,6 +212,7 @@ const EcommerceLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#2563eb"
+                    sectorSlug="ecommerce"
                     />
                   ))}
                 </div>
@@ -226,6 +227,7 @@ const EcommerceLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#2563eb"
+                    sectorSlug="ecommerce"
                         />
                       ))}
                   </div>

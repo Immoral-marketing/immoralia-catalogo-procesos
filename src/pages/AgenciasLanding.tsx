@@ -213,6 +213,7 @@ const AgenciasLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#e11d48"
+                    sectorSlug="agencias"
                     />
                   ))}
                 </div>
@@ -227,6 +228,7 @@ const AgenciasLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#e11d48"
+                    sectorSlug="agencias"
                         />
                       ))}
                   </div>
