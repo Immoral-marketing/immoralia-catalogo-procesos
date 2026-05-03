@@ -60,7 +60,7 @@ const GestoriasLanding = () => {
 
   // Filtrar procesos para Gestorías
   const gestoriasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "gestorias" || (p.sectores?.includes("Gestoria") && !p.landing_slug)),
+    processes.filter(p => !p.hidden && (p.landing_slug === "gestorias" || (p.sectores?.includes("Gestoria") && !p.landing_slug))),
     []
   );
 
@@ -212,6 +212,7 @@ const GestoriasLanding = () => {
                     key={process.id}
                     process={process}
                     accentColor="#14b8a6"
+                    sectorSlug="gestorias"
                   />
                 ))}
               </div>
@@ -226,6 +227,7 @@ const GestoriasLanding = () => {
                         key={process.id}
                         process={process}
                         accentColor="#14b8a6"
+                    sectorSlug="gestorias"
                       />
                     ))}
                 </div>
@@ -255,9 +257,6 @@ const GestoriasLanding = () => {
                 className="text-sm text-teal-400 hover:text-teal-300 hover:bg-teal-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

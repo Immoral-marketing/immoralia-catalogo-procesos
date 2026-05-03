@@ -9,10 +9,8 @@ import {
   Home,
   Users,
   ChevronRight,
-  ArrowRight,
   HardHat,
   GraduationCap,
-  LayoutGrid,
 } from "lucide-react";
 import { StepIndicator } from "@/components/StepIndicator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +25,7 @@ const sectors = [
     title: "Centros Deportivos",
     description: "Gimnasios, centros de yoga, crossfit y academias deportivas.",
     icon: Dumbbell,
-    path: "/landing/centros-deportivos",
+    path: "/sector/centros-deportivos",
     status: "active",
     accent: "from-cyan-500/20 to-blue-500/20",
     landingSlug: "centros-deportivos",
@@ -38,7 +36,7 @@ const sectors = [
     title: "Gestorías",
     description: "Despachos profesionales, asesorías fiscales y laborales.",
     icon: Briefcase,
-    path: "/landing/gestorias",
+    path: "/sector/gestorias",
     status: "active",
     accent: "from-teal-500/20 to-cyan-600/20",
     landingSlug: "gestorias",
@@ -49,7 +47,7 @@ const sectors = [
     title: "Centros de Salud",
     description: "Centros de fisioterapia, estética, consultas médicas, clínicas dentales y centros veterinarios.",
     icon: Stethoscope,
-    path: "/landing/salud",
+    path: "/sector/salud",
     status: "active",
     accent: "from-blue-500/20 to-indigo-500/20",
     landingSlug: "salud",
@@ -60,7 +58,7 @@ const sectors = [
     title: "Construcción & Reformas",
     description: "Constructoras, estudios de arquitectura, empresas de reformas y mantenimiento.",
     icon: HardHat,
-    path: "/landing/construccion",
+    path: "/sector/construccion",
     status: "active",
     accent: "from-orange-500/10 to-amber-500/20",
     landingSlug: "construccion",
@@ -71,7 +69,7 @@ const sectors = [
     title: "Academias / Formación",
     description: "Academias de idiomas, centros de formación, autoescuelas y formación profesional.",
     icon: GraduationCap,
-    path: "/landing/academias",
+    path: "/sector/academias",
     status: "active",
     accent: "from-violet-500/20 to-purple-500/20",
     landingSlug: "academias",
@@ -82,7 +80,7 @@ const sectors = [
     title: "Gastronomía y Hotelería",
     description: "Restaurantes, bares, cafeterías, hoteles y negocios de hostelería.",
     icon: Utensils,
-    path: "/landing/restauracion",
+    path: "/sector/restauracion",
     status: "active",
     accent: "from-orange-500/20 to-red-500/20",
     landingSlug: "restauracion",
@@ -93,7 +91,7 @@ const sectors = [
     title: "Tienda Online / Retail",
     description: "Tiendas online, moda y comercio minorista.",
     icon: ShoppingBag,
-    path: "/landing/ecommerce",
+    path: "/sector/ecommerce",
     status: "active",
     accent: "from-blue-500/20 to-cyan-500/20",
     landingSlug: "ecommerce",
@@ -104,7 +102,7 @@ const sectors = [
     title: "Inmobiliarias",
     description: "Agencias inmobiliarias y gestión de propiedades.",
     icon: Home,
-    path: "/landing/inmobiliaria",
+    path: "/sector/inmobiliaria",
     status: "active",
     accent: "from-emerald-500/20 to-green-600/20",
     landingSlug: "inmobiliaria",
@@ -115,7 +113,7 @@ const sectors = [
     title: "Consultoría / Agencias",
     description: "Agencias de marketing, consultoras y servicios B2B.",
     icon: Users,
-    path: "/landing/agencias",
+    path: "/sector/agencias",
     status: "active",
     accent: "from-rose-500/20 to-pink-500/20",
     landingSlug: "agencias",
@@ -131,14 +129,14 @@ const SectorSelector = () => {
   const sectorCounts = useMemo(() => {
     return sectors.reduce((acc, sector) => {
       acc[sector.id] = processes.filter(p =>
-        p.landing_slug === sector.landingSlug ||
-        (sector.sectorNames.some(name => p.sectores?.includes(name)))
+        !p.hidden && (
+          p.landing_slug === sector.landingSlug ||
+          sector.sectorNames.some(name => p.sectores?.includes(name))
+        )
       ).length;
       return acc;
     }, {} as Record<string, number>);
   }, []);
-
-  const totalCount = processes.length;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
@@ -228,30 +226,6 @@ const SectorSelector = () => {
 
         </div>
 
-        {/* Banner "Ver catálogo completo" */}
-        <Link to="/catalogo/completo" className="group block mt-6">
-          <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-r from-cyan-950/50 via-black/70 to-blue-950/50 px-8 py-7 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_40px_rgba(8,145,178,0.12)]">
-            {/* Subtle animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            <div className="relative z-10 flex items-center gap-5">
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 shrink-0 transition-all duration-300 group-hover:bg-cyan-500/15 group-hover:border-cyan-500/30 group-hover:text-cyan-400">
-                <LayoutGrid className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs text-cyan-400/60 uppercase tracking-widest font-semibold mb-0.5">{totalCount} automatizaciones disponibles</p>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">¿No encuentras tu sector? Explora el catálogo completo</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Sin filtros de industria. Todos los procesos en un solo lugar.</p>
-              </div>
-            </div>
-
-            <div className="relative z-10 shrink-0">
-              <span className="inline-flex items-center gap-2 bg-white text-black font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 group-hover:bg-cyan-400 group-hover:gap-3">
-                Ver catálogo completo <ArrowRight className="w-4 h-4" />
-              </span>
-            </div>
-          </div>
-        </Link>
       </main>
 
       <footer className="container mx-auto px-6 py-12 text-center border-t border-white/5 mt-12 bg-black/50 overflow-hidden relative">

@@ -111,6 +111,7 @@ const Index = () => {
   }, [onboardingAnswers]);
 
   const filteredProcesses = processes.filter(process => {
+    if (process.hidden) return false;
     if (selectedCategory && process.categoriaNombre !== selectedCategory) return false;
     return true;
   });

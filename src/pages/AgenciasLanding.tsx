@@ -63,7 +63,7 @@ const AgenciasLanding = () => {
 
   // Filtrar procesos para Consultoría / Agencias
   const agenciasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "agencias" || p.sectores?.includes("Agencia/marketing") || p.sectores?.includes("Consultoría")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "agencias" || p.sectores?.includes("Agencia/marketing") || p.sectores?.includes("Consultoría"))),
     []
   );
 
@@ -213,6 +213,7 @@ const AgenciasLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#e11d48"
+                    sectorSlug="agencias"
                     />
                   ))}
                 </div>
@@ -227,6 +228,7 @@ const AgenciasLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#e11d48"
+                    sectorSlug="agencias"
                         />
                       ))}
                   </div>
@@ -257,9 +259,6 @@ const AgenciasLanding = () => {
                 className="text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

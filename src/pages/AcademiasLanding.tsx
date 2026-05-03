@@ -61,7 +61,7 @@ const AcademiasLanding = () => {
 
   // Filtrar procesos para Academias / Formación
   const academiasProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "academias" || p.sectores?.includes("Academias / Formación")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "academias" || p.sectores?.includes("Academias / Formación"))),
     []
   );
 
@@ -211,6 +211,7 @@ const AcademiasLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#7c3aed"
+                    sectorSlug="academias"
                     />
                   ))}
                 </div>
@@ -225,6 +226,7 @@ const AcademiasLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#7c3aed"
+                    sectorSlug="academias"
                         />
                       ))}
                   </div>
@@ -255,9 +257,6 @@ const AcademiasLanding = () => {
                 className="text-sm text-violet-400 hover:text-violet-300 hover:bg-violet-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

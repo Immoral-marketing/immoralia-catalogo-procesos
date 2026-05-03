@@ -63,9 +63,12 @@ const RestauracionLanding = () => {
   const restauracionProcesses = useMemo(() => {
     const deprioritized = ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"];
     const all = processes.filter(p =>
-      p.landing_slug === "restauracion" ||
-      p.sectores?.includes("Hostelería") ||
-      p.sectores?.includes("Restaurantes")
+      !p.hidden && (
+        p.landing_slug === "restauracion" ||
+        p.sectores?.includes("Restauración") ||
+        p.sectores?.includes("Hostelería") ||
+        p.sectores?.includes("Restaurantes")
+      )
     );
     return [
       ...all.filter(p => !deprioritized.includes(p.slug)),
@@ -219,6 +222,7 @@ const RestauracionLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#ea580c"
+                    sectorSlug="restauracion"
                     />
                   ))}
                 </div>
@@ -233,6 +237,7 @@ const RestauracionLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#ea580c"
+                    sectorSlug="restauracion"
                         />
                       ))}
                   </div>
@@ -263,9 +268,6 @@ const RestauracionLanding = () => {
                 className="text-sm text-orange-400 hover:text-orange-300 hover:bg-orange-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

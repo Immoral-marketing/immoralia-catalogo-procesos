@@ -62,7 +62,7 @@ const InmobiliariaLanding = () => {
 
   // Filtrar procesos para Inmobiliaria
   const inmobiliariaProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "inmobiliaria" || p.sectores?.includes("Inmobiliaria") || p.sectores?.includes("Inmobiliarias")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "inmobiliaria" || p.sectores?.includes("Inmobiliaria") || p.sectores?.includes("Inmobiliarias"))),
     []
   );
 
@@ -212,6 +212,7 @@ const InmobiliariaLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#059669"
+                    sectorSlug="inmobiliaria"
                     />
                   ))}
                 </div>
@@ -226,6 +227,7 @@ const InmobiliariaLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#059669"
+                    sectorSlug="inmobiliaria"
                         />
                       ))}
                   </div>
@@ -256,9 +258,6 @@ const InmobiliariaLanding = () => {
                 className="text-sm text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

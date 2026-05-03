@@ -59,7 +59,7 @@ const SportsLanding = () => {
 
   // Filtrar procesos para Centros Deportivos
   const sportsProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "centros-deportivos"),
+    processes.filter(p => !p.hidden && p.landing_slug === "centros-deportivos"),
     []
   );
 
@@ -209,6 +209,7 @@ const SportsLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#0891b2"
+                    sectorSlug="centros-deportivos"
                     />
                   ))}
                 </div>
@@ -223,6 +224,7 @@ const SportsLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#0891b2"
+                    sectorSlug="centros-deportivos"
                         />
                       ))}
                   </div>
@@ -253,9 +255,6 @@ const SportsLanding = () => {
                 className="text-sm text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

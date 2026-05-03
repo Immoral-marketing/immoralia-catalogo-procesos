@@ -51,6 +51,26 @@ export interface Process {
   dolores?: string[];
   integration_domains?: ("ERP" | "CRM" | "COMMS" | "DOCS" | "OTHER")[];
   landing_slug?: string;
+  hidden?: boolean;
+  sector_variants?: Record<string, {
+    tagline?: string;
+    one_liner?: string;
+    descripcionDetallada?: string;
+    dolores?: string[];
+    pasos?: string[];
+    personalizacion?: string;
+    summary?: {
+      what_it_is?: string;
+      for_who?: string[];
+      requirements?: string[];
+      output?: string;
+    };
+    how_it_works_steps?: {
+      title: string;
+      short: string;
+      detail?: string;
+    }[];
+  }>;
 }
 
 
@@ -111,11 +131,11 @@ export const processes: Process[] = [
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "E-commerce", "Gestoria", "Construcción & Reformas", "Academias / Formación"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     integration_domains: ["ERP"],
-    landing_slug: "salud"
+    landing_slug: "centros-deportivos",
   },
 
   {
@@ -169,7 +189,7 @@ export const processes: Process[] = [
       "Generamos un informe automático"
     ],
     personalizacion: "Decide cuándo recibes el informe y por qué canal (tu vía de comunicación preferida, mensajería, etc.).",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Gestoria"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
@@ -218,12 +238,12 @@ export const processes: Process[] = [
       "Notificamos al responsable para envío o revisión"
     ],
     personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.",
-    sectores: ["Servicios profesionales", "Agencia/marketing", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
     integration_domains: ["ERP"],
-    landing_slug: "construccion"
+    landing_slug: "gestorias",
   },
 
   {
@@ -268,7 +288,7 @@ export const processes: Process[] = [
       "Disparamos alerta o mensaje de seguimiento"
     ],
     personalizacion: "Elige el canal del aviso y los días sin respuesta.",
-    sectores: ["Agencia/marketing", "Inmobiliaria", "Retail", "Servicios profesionales"],
+    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Inmobiliaria"],
     herramientas: ["ERP/CRM", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["presupuestos-automaticos", "recordatorios-pagos"],
@@ -319,12 +339,122 @@ export const processes: Process[] = [
       "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Retail", "E-commerce", "Servicios profesionales", "Agencia/marketing", "Gestoria", "Academias / Formación", "Hostelería"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
-    landing_slug: "salud"
+    landing_slug: "centros-deportivos",
+    sector_variants: {
+      "centros-deportivos": {
+        tagline: "Cobra las cuotas de tus socios sin perseguirlos cada mes.",
+        one_liner: "Detecta socios con cuota vencida y envíales un recordatorio automático antes de que el impago se cronifique.",
+        descripcionDetallada: "Cada día el sistema revisa qué socios tienen la cuota vencida y les envía un recordatorio progresivo: amable al principio, más directo si pasan los días. Tú no tienes que hacer nada. Los socios que no responden escalan a una alerta para que puedas actuar antes de que cancelen.",
+        dolores: ["Socios que no pagan pero siguen usando las instalaciones", "Vergüenza o incomodidad de reclamar dinero en persona", "Perder socios por no hacer seguimiento a tiempo"],
+        pasos: ["Detectamos socios con cuota vencida en tu software de gestión", "Enviamos recordatorio automático y personalizado al canal del socio", "Escalamos el aviso si pasan 5/10/15 días sin respuesta", "Alertamos al equipo si el impago persiste para intervención manual"],
+        personalizacion: "Elige el tono del mensaje (amable, neutro, firme), el canal (WhatsApp, email, SMS) y si quieres excluir a socios VIP del proceso automático.",
+        summary: {
+          what_it_is: "Sistema que detecta socios con cuota vencida y gestiona los recordatorios de pago de forma automática y progresiva.",
+          for_who: ["Gestores de gimnasios", "Coordinadores de centros deportivos", "Dueños de estudios de yoga o crossfit"],
+        },
+      },
+      "gestorias": {
+        tagline: "Recuerda automáticamente a tus clientes los honorarios pendientes.",
+        one_liner: "Cobra tus honorarios sin perseguir a cada cliente: el sistema detecta la factura vencida y actúa por ti.",
+        descripcionDetallada: "Cuando un cliente de tu despacho tiene una factura vencida, el sistema le envía un recordatorio profesional y escalonado. Tú mantienes la relación intacta mientras la automatización hace el trabajo sucio. Si el impago se alarga, recibes una alerta para decidir cómo actuar.",
+        dolores: ["Clientes que pagan tarde y bloquean la tesorería del despacho", "Incomodidad de reclamar dinero a clientes con los que tienes trato diario", "Pérdida de tiempo gestionando impagos manualmente"],
+        pasos: ["Identificamos facturas vencidas en tu ERP o software de facturación", "Generamos un recordatorio profesional con el detalle de la factura", "Lo enviamos por el canal del cliente (email o WhatsApp)", "Escalamos el tono si pasan 5/10/15 días sin pago"],
+        personalizacion: "Ajusta el tono del recordatorio, elige si quieres incluir el desglose de la factura en el mensaje y configura excepciones para clientes clave.",
+        summary: {
+          what_it_is: "Automatización que gestiona la reclamación de honorarios pendientes sin comprometer la relación con el cliente.",
+          for_who: ["Gestores y asesores", "Administración de despachos", "Dueños de gestorías y asesorías"],
+        },
+      },
+      "salud": {
+        tagline: "Cobra tus sesiones y tratamientos sin incómodos recordatorios manuales.",
+        one_liner: "La relación con tu paciente es lo primero. El sistema cobra por ti sin que tengas que pedirlo tú.",
+        descripcionDetallada: "En centros de salud, reclamar dinero a un paciente puede sentirse incómodo. Esta automatización lo hace por ti: detecta facturas o sesiones impagadas y envía un recordatorio discreto y profesional al paciente, sin que tengas que intervenir. Si el impago se prolonga, recibes una alerta para decidir cómo gestionarlo.",
+        dolores: ["La relación personal con el paciente hace difícil reclamar dinero directamente", "Sesiones o tratamientos que se facturan tarde o no se cobran", "Tiempo del personal dedicado a hacer seguimiento de impagos"],
+        pasos: ["Detectamos sesiones o facturas sin cobrar en tu software de gestión", "Enviamos un recordatorio discreto y profesional al paciente", "Escalamos el aviso según los días de retraso", "Alertamos al equipo si el impago supera el umbral definido"],
+        personalizacion: "Elige el tono y la frecuencia de los recordatorios, el canal de envío y si quieres excluir a determinados pacientes o tipos de tratamiento.",
+        summary: {
+          what_it_is: "Sistema que gestiona el cobro de sesiones y tratamientos pendientes de forma automática, preservando la relación clínica con el paciente.",
+          for_who: ["Fisioterapeutas", "Clínicas dentales", "Centros de estética y bienestar", "Clínicas veterinarias"],
+        },
+      },
+      "construccion": {
+        tagline: "Reclama automáticamente los hitos de pago de cada obra.",
+        one_liner: "Con varias obras en marcha y múltiples hitos de facturación, ningún pago vuelve a caer en el olvido.",
+        descripcionDetallada: "En construcción los pagos se estructuran por hitos: proyecto aprobado, obra iniciada, certificación, entrega. Esta automatización vigila cada hito y, cuando la factura asociada vence sin pago, envía un recordatorio al cliente o promotor de forma automática. El sistema escala la urgencia si el retraso se acumula.",
+        dolores: ["Múltiples obras con hitos de pago distintos, imposibles de rastrear manualmente", "Clientes o promotores que retrasan pagos por desorganización, no por mala fe", "Tesorería tensa por obra avanzada sin cobrar"],
+        pasos: ["Sincronizamos los hitos de facturación de cada obra desde tu ERP", "Detectamos facturas vencidas asociadas a cada hito", "Enviamos recordatorio automático al contacto del cliente o promotor", "Escalamos el aviso y alertamos al responsable de obra si el retraso supera el umbral"],
+        personalizacion: "Configura los hitos de pago por tipo de obra, el tono del recordatorio y las excepciones por cliente o proyecto.",
+        summary: {
+          what_it_is: "Automatización que vigila los hitos de pago de cada obra y gestiona los recordatorios a clientes y promotores sin intervención manual.",
+          for_who: ["Jefes de obra", "Administración de constructoras", "Estudios de arquitectura", "Empresas de reformas"],
+        },
+      },
+      "academias": {
+        tagline: "Cobra las mensualidades sin perseguir a los padres cada mes.",
+        one_liner: "Automatiza el cobro de cuotas y mensualidades para que tu equipo dedique el tiempo a enseñar, no a reclamar.",
+        descripcionDetallada: "Cada mes hay alumnos cuyo pago no llega a tiempo. Esta automatización detecta los impagos y envía un recordatorio a los padres o al propio alumno de forma automática y escalonada. Así tu equipo administrativo no tiene que hacer llamadas ni enviar correos manualmente.",
+        dolores: ["Padres que olvidan el pago mensual y hay que recordarles uno a uno", "Tiempo administrativo dedicado a seguimiento de cobros", "Alumnos que continúan asistiendo con mensualidades sin pagar"],
+        pasos: ["Identificamos alumnos con mensualidad vencida en tu plataforma de gestión", "Enviamos recordatorio automático a los padres o alumnos", "Escalamos el tono si pasan 5/10/15 días sin pago", "Alertamos al equipo administrativo para intervención si es necesario"],
+        personalizacion: "Elige el canal de comunicación (WhatsApp, email), el tono según los días de retraso y si quieres excluir a alumnos con beca o acuerdo especial.",
+        summary: {
+          what_it_is: "Sistema automatizado de recordatorio de cuotas y mensualidades para academias y centros de formación.",
+          for_who: ["Directores de academia", "Administración de centros de formación", "Autoescuelas"],
+        },
+      },
+      "restauracion": {
+        tagline: "Recupera el dinero de tus eventos y reservas corporativas sin perseguir a nadie.",
+        one_liner: "Eventos, catering y reservas corporativas que no pagan a tiempo: el sistema los reclama por ti.",
+        descripcionDetallada: "Los restaurantes y hoteles suelen emitir facturas a clientes corporativos con pago diferido. Esta automatización monitoriza esas facturas y envía recordatorios automáticos cuando se acerca o supera la fecha de vencimiento, para que no tengas que hacer seguimiento manual de cada evento o reserva.",
+        dolores: ["Clientes corporativos que pagan a 30/60 días y se olvidan de la factura", "Eventos pasados con dinero sin cobrar que bloquean la liquidez", "Equipo dedicando tiempo a llamadas de cobro en vez de atender el negocio"],
+        pasos: ["Detectamos facturas de eventos o reservas corporativas vencidas", "Enviamos recordatorio automático con el detalle del evento y la factura", "Escalamos la urgencia según los días de retraso", "Alertamos al responsable comercial si el impago se prolonga"],
+        personalizacion: "Configura qué tipos de reserva o eventos entran en el proceso, el canal de comunicación y el tono según el perfil del cliente.",
+        summary: {
+          what_it_is: "Automatización de cobro para eventos, catering y reservas corporativas con pago diferido.",
+          for_who: ["Propietarios de restaurante", "Coordinadores de eventos", "Gestores de hotel"],
+        },
+      },
+      "ecommerce": {
+        tagline: "Recupera cobros fallidos de suscripciones y pedidos automáticamente.",
+        one_liner: "Cada pago fallido no detectado es un cliente perdido. El sistema lo identifica y actúa antes de que cancele.",
+        descripcionDetallada: "En e-commerce y tiendas con suscripción, los pagos fallidos son silenciosos: la tarjeta caduca, los fondos son insuficientes y el cliente ni se entera. Esta automatización detecta esos fallos en tiempo real y envía un recordatorio con enlace directo para actualizar el método de pago, antes de que el cliente se dé de baja sin quererlo.",
+        dolores: ["Pagos de suscripción que fallan silenciosamente sin que el cliente lo sepa", "Churn involuntario por no detectar pagos fallidos a tiempo", "Tiempo del equipo revisando manualmente el estado de cada pedido"],
+        pasos: ["Detectamos pagos fallidos o pedidos con cobro pendiente en tu plataforma", "Enviamos notificación automática al cliente con enlace para resolver el pago", "Reintentamos el cobro tras un periodo configurable", "Alertamos al equipo si el cliente no responde tras varios intentos"],
+        personalizacion: "Elige el número de reintentos, el intervalo entre ellos, el canal de notificación y si quieres aplicar un descuento de retención.",
+        summary: {
+          what_it_is: "Sistema de recuperación de pagos fallidos y cobros pendientes para tiendas online y negocios con suscripción.",
+          for_who: ["Gestores de tienda online", "Responsables de e-commerce", "Negocios con modelo de suscripción"],
+        },
+      },
+      "inmobiliaria": {
+        tagline: "Reclama rentas y honorarios pendientes sin tensionar la relación con propietarios ni inquilinos.",
+        one_liner: "Gestiona el cobro de rentas, honorarios y comisiones de forma automática y profesional.",
+        descripcionDetallada: "Las agencias inmobiliarias gestionan rentas de alquiler, honorarios de gestión y comisiones de venta. Esta automatización detecta los pagos vencidos y envía recordatorios automáticos a propietarios, inquilinos o compradores según corresponda, manteniendo el tono profesional que requiere el sector.",
+        dolores: ["Inquilinos que retrasan el pago de la renta y hay que recordarles cada mes", "Honorarios de gestión o comisiones de venta cobradas tarde", "Propietarios que presionan cuando el cobro se demora"],
+        pasos: ["Detectamos rentas, honorarios o comisiones vencidas en tu sistema de gestión", "Enviamos recordatorio automático al contacto correspondiente", "Escalamos según los días de retraso con el tono adecuado", "Notificamos al agente responsable si el impago se cronifica"],
+        personalizacion: "Configura por tipo de cobro (renta, honorario, comisión), el canal de comunicación y el tono por perfil de cliente.",
+        summary: {
+          what_it_is: "Automatización de cobro de rentas, honorarios y comisiones para agencias inmobiliarias.",
+          for_who: ["Agentes inmobiliarios", "Gestores de alquiler", "Administradores de fincas"],
+        },
+      },
+      "agencias": {
+        tagline: "Recuerda los honorarios de campaña a tus clientes sin dañar la relación.",
+        one_liner: "Cobra lo que te deben sin tener que pedirlo tú directamente: el sistema mantiene la presión sin la incomodidad.",
+        descripcionDetallada: "En agencias de marketing y consultoría la relación con el cliente es el activo más valioso. Reclamar dinero directamente puede tensar esa relación. Esta automatización envía recordatorios de pago en nombre de la agencia de forma profesional y escalonada, manteniendo el tono adecuado mientras tú te centras en el trabajo.",
+        dolores: ["Clientes con presupuestos variables que pagan en plazos erráticos", "Incomodidad de reclamar honorarios a clientes con los que tienes relación estrecha", "Tesorería de agencia tensa por proyectos cerrados sin cobrar"],
+        pasos: ["Detectamos facturas de proyectos o retainers vencidos en tu sistema de facturación", "Enviamos recordatorio profesional con el detalle del proyecto y la factura", "Escalamos el tono según los días de retraso", "Alertamos al account manager para intervención personalizada si es necesario"],
+        personalizacion: "Ajusta el tono (profesional, cercano, formal), elige si el recordatorio va firmado por la agencia o por el account, y configura excepciones por cliente estratégico.",
+        summary: {
+          what_it_is: "Automatización de cobro de honorarios y retainers para agencias y consultoras que cuidan la relación con el cliente.",
+          for_who: ["Account managers", "Directores de agencia", "Consultores independientes"],
+        },
+      },
+    },
   },
   {
     id: "B6",
@@ -371,7 +501,7 @@ export const processes: Process[] = [
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
     related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"],
     integration_domains: ["OTHER"],
-    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Academias / Formación", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria", "Hostelería"]
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -419,7 +549,7 @@ export const processes: Process[] = [
     personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
     related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"],
     integration_domains: ["OTHER"],
-    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria"]
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -467,7 +597,7 @@ export const processes: Process[] = [
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
     related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"],
     integration_domains: ["OTHER"],
-    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Retail", "Agencia/marketing", "Consultoría", "Inmobiliaria"]
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -515,8 +645,8 @@ export const processes: Process[] = [
     personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"],
-    landing_slug: "salud",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Construcción & Reformas"]
+    landing_slug: "centros-deportivos",
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -563,7 +693,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
-    integration_domains: ["ERP"]
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    integration_domains: ["ERP"],
+    landing_slug: "centros-deportivos",
+
   },
   {
     id: "C11",
@@ -609,6 +742,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
     related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP", "CRM"]
   },
 
@@ -656,8 +790,9 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (tu vía de comunicación preferida, mensajería o nube).",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
-    landing_slug: "salud"
+    landing_slug: "centros-deportivos",
   },
 
   {
@@ -706,11 +841,12 @@ export const processes: Process[] = [
     personalizacion: "Elige tu carpeta de archivos en la nube.",
     related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
-    landing_slug: "salud",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Construcción & Reformas"]
+    landing_slug: "gestorias",
+    sectores: ["Gestoria", "Construcción & Reformas", "Restauración", "Inmobiliaria"],
   },
   {
     id: "D14",
+    hidden: true,
     codigo: "D14",
     slug: "creacion-metas-clickup",
     categoria: "D",
@@ -798,6 +934,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define tarifas por freelance y si quieres aprobación antes de crear la factura.",
     related_processes: ["gestion-automatica-retenciones-freelance", "analisis-incidencias-horarios"],
+    sectores: ["Agencia/marketing"],
     integration_domains: ["ERP"]
   },
 
@@ -845,6 +982,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige periodicidad del cálculo y cómo quieres recibir el aviso.",
     related_processes: ["facturacion-automatica-horas-freelance", "traspasos-automaticos-iva"],
+    sectores: ["Agencia/marketing"],
     integration_domains: ["ERP"]
   },
 
@@ -941,13 +1079,14 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Clínicas / Salud / Dental / Veterinaria", "Centros de estética", "Peluquería/estética", "Restaurantes", "Servicios profesionales", "Gestoria", "Academias / Formación", "Hostelería"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "Inmobiliaria", "Agencia/marketing"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
-    landing_slug: "academias"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "E19",
+    hidden: true,
     codigo: "E19",
     slug: "captura-organizacion-solicitudes",
     categoria: "E",
@@ -997,6 +1136,7 @@ export const processes: Process[] = [
   },
   {
     id: "E20",
+    hidden: true,
     codigo: "E20",
     slug: "seguimiento-automatico-solicitudes",
     categoria: "E",
@@ -1087,10 +1227,10 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Restaurantes", "Clínicas / Salud / Dental / Veterinaria", "Peluquería/estética", "Retail", "Gestoria", "Academias / Formación", "Hostelería"],
+    sectores: ["Centros Deportivos", "Academias / Formación", "Restauración", "E-commerce"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"],
-    landing_slug: "restauracion"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "E22",
@@ -1135,13 +1275,16 @@ export const processes: Process[] = [
       "Notificamos al equipo sobre las interacciones más relevantes"
     ],
     personalizacion: "Define el tono de respuesta, qué tipo de interacciones priorizar y qué información enviar (enlaces, catálogos, etc.).",
-    sectores: ["Agencia/marketing", "Retail", "E-commerce", "Servicios profesionales"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"]
+    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
+    landing_slug: "centros-deportivos",
+
   },
   {
     id: "E23",
+    hidden: true,
     codigo: "E23",
     slug: "reduccion-ausencias-citas",
     categoria: "E",
@@ -1234,11 +1377,11 @@ export const processes: Process[] = [
       "Enviamos el mensaje de bienvenida con los acceso"
     ],
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Inmobiliaria", "Gestoria", "Construcción & Reformas"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
-    landing_slug: "salud"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "F25",
@@ -1284,10 +1427,10 @@ export const processes: Process[] = [
       "Roadmap por fases + backlog priorizado"
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
-    sectores: ["Agencia/marketing", "Servicios profesionales", "Retail", "Inmobiliaria", "E-commerce", "Clínicas / Salud / Dental / Veterinaria", "Hostelería", "Construcción & Reformas", "Academias / Formación"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: [],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
-    landing_slug: "salud"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "CM1",
@@ -1309,10 +1452,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de lead desde formulario/RRSS","Sincronización con CRM","Activación de secuencia de email/notificación"],
     personalizacion: "Define los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","HubSpot","ActiveCampaign","Make"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió","Pierdo solicitudes entre WhatsApp/Instagram/email"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "CM2",
@@ -1334,10 +1477,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por nuevo lead","Envío de secuencia temporizada","Detección de conversión para parada automática"],
     personalizacion: "Elige el canal (Email/WhatsApp) y el número de impactos.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce"],
     herramientas: ["ActiveCampaign","Brevo","WhatsApp Business API"],
     dolores: ["Tardamos en responder y perdemos clientes"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "CM3",
@@ -1359,10 +1502,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtro de ex-socios (baja > 3 meses)","Envío de oferta vía Email/WhatsApp","Seguimiento de respuesta"],
     personalizacion: "Define el tiempo de inactividad y las fechas de lanzamiento.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV4",
@@ -1384,10 +1527,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Monitorización de fechas de vencimiento","Avisos automáticos T-7 y T-2","Link de pago directo"],
     personalizacion: "Elige los días de antelación y el tono del mensaje.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","WhatsApp Business API","Stripe"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV5",
@@ -1409,10 +1552,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de 'Prueba sin Alta'","Secuencia 15/30/60 días","Aviso a equipo si hay respuesta"],
     personalizacion: "Define los incentivos y el número de recordatorios.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV6",
@@ -1434,10 +1577,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger a los 30 días del alta","Envío de link único de referido","Atribución automática de premio"],
     personalizacion: "Elige el premio (mes gratis, descuento, etc.).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV7",
@@ -1459,10 +1602,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Análisis de frecuencia de asistencia","Detección de 'riesgo de abandono'","Mensaje preventivo personalizado"],
     personalizacion: "Ajusta los días de inactividad según la intensidad del centro.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV8",
@@ -1487,7 +1630,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","ActiveCampaign","Shopify"],
     dolores: ["Quiero automatizar presupuestos y respuestas"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GV9",
@@ -1512,7 +1655,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA10",
@@ -1537,7 +1680,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","Virtuagym","Mindbody","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA11",
@@ -1562,10 +1705,11 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Mindbody","Virtuagym","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA12",
+    hidden: true,
     codigo: "OA12",
     slug: "control-aforo-alertas-ocupacion",
     categoria: "B",
@@ -1612,10 +1756,11 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","Google Sheets","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA14",
+    hidden: true,
     codigo: "OA14",
     slug: "gestion-incidencias-equipamiento",
     categoria: "B",
@@ -1662,7 +1807,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","Google Sheets","Gmail","WhatsApp Business API"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA16",
@@ -1687,7 +1832,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA17",
@@ -1709,10 +1854,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Generación de contrato dinámico","Envío para firma digital","Archivo automático en la nube"],
     personalizacion: "Incluye tus propias plantillas de contrato.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Docusign","SignNow","Make","Google Drive"],
     dolores: ["Necesito centralizar la información de clientes"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA18",
@@ -1734,10 +1879,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Segmentación Alumno vs Tutor","Alertas de asistencia en tiempo real","Recordatorios de eventos infantiles"],
     personalizacion: "Elige qué avisos enviar a los padres y por qué canal.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","WhatsApp Business API","ActiveCampaign"],
     dolores: ["Tardamos en responder y perdemos clientes"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OA19",
@@ -1759,10 +1904,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Agregación de actividad mensual","Generación de reporte visual","Envío personalizado automatizado"],
     personalizacion: "Define qué hitos celebrar (ej. '10 clases este mes').",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC20",
@@ -1784,10 +1929,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de intención (NLP)","Respuesta desde base de conocimiento","Escalado inteligente con contexto"],
     personalizacion: "Entrena al bot con tus horarios y tarifas específicas.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["WhatsApp Business API","Make","ChatGPT"],
     dolores: ["Me escriben mucho y no doy abasto","Tengo muchas preguntas repetidas"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC21",
@@ -1809,10 +1954,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger post-asistencia","Envío de micro-encuesta","Alertas por malas valoraciones"],
     personalizacion: "Elige las preguntas y el tiempo de espera post-clase.",
-    sectores: ["Centros Deportivos", "Gestoria"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC22",
@@ -1834,10 +1979,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de queja vía formulario","Creación de ticket prioritario","Notificación y seguimiento de SLA"],
     personalizacion: "Define tus tiempos de respuesta por tipo de queja.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","ClickUp","Make"],
     dolores: ["Los socios se van sin avisar"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC23",
@@ -1859,10 +2004,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por fecha de natalicio","Envío de mensaje festivo","Inclusión de cupón/oferta"],
     personalizacion: "Elige qué regalo hacer a cada tipo de socio.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "E-commerce"],
     herramientas: ["ActiveCampaign","Make","WhatsApp Business API"],
     dolores: ["Los socios se van sin avisar"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC24",
@@ -1884,10 +2029,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Chequeo diario de inactividad","Multicanalidad de contacto (Email/WA)","Oferta de rescate personalizada"],
     personalizacion: "Define el umbral de 'riesgo' (14, 20 o 30 días).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Software de gestión","Make","ActiveCampaign","WhatsApp"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC25",
@@ -1934,8 +2079,9 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige el canal, el tono del mensaje y si quieres incluir propuesta de nueva fecha.",
     related_processes: ["control-asistencia-alertas-faltas", "matricula-asignacion-nivel-automatica"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     integration_domains: ["OTHER"],
-    landing_slug: "academias"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC26",
@@ -1982,11 +2128,13 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el umbral de faltas, a quién avisar y el tono del mensaje (recordatorio amable o formal).",
     related_processes: ["notificacion-cambios-cancelaciones-clase", "matricula-asignacion-nivel-automatica"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     integration_domains: ["OTHER"],
-    landing_slug: "academias"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "AC27",
+    hidden: true,
     codigo: "AC27",
     slug: "matricula-asignacion-nivel-automatica",
     categoria: "B",
@@ -2053,13 +2201,14 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lanzamiento de workflow por nuevo contrato","Distribución de kit de bienvenida digital","Seguimiento de tareas de onboarding"],
     personalizacion: "Adapta el checklist por rol (staff, instructor, alumno).",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Make","Notion","Gmail"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "RO26",
+    hidden: true,
     codigo: "RO26",
     slug: "gestion-turnos-disponibilidad-instructores",
     categoria: "D",
@@ -2103,10 +2252,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Ejecución de remesa/cobro tarjeta","Lógica de reintentos automática","Comunicación de deuda instantánea"],
     personalizacion: "Define el número de reintentos y los plazos de aviso.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
     herramientas: ["Stripe","GoCardless","Make","WhatsApp Business API"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "FF28",
@@ -2128,10 +2277,10 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lectura de fechas de vencimiento de compra","Consolidación semanal de pagos","Avisos internos de tesorería"],
     personalizacion: "Elige el día de la semana para el resumen de pagos.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
     herramientas: ["Airtable","Make","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "OE29",
@@ -2153,13 +2302,14 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Actualización de horario en sistema","Identificación de socios afectados","Aviso masivo multicanal"],
     personalizacion: "Define el margen de tiempo para avisar de cancelaciones.",
-    sectores: ["Centros Deportivos"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Software de gestión","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
   },
   {
     id: "GS1",
+    hidden: true,
     codigo: "GS1",
     slug: "recopilacion-mensual-documentos",
     categoria: "F",
@@ -2206,6 +2356,7 @@ export const processes: Process[] = [
   },
   {
     id: "GS2",
+    hidden: true,
     codigo: "GS2",
     slug: "alertas-vencimientos-fiscales",
     categoria: "C",
@@ -2252,6 +2403,7 @@ export const processes: Process[] = [
   },
   {
     id: "GS3",
+    hidden: true,
     codigo: "GS3",
     slug: "seguimiento-expedientes",
     categoria: "B",
@@ -2303,7 +2455,7 @@ export const processes: Process[] = [
     slug: "informes-mensuales-clientes",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    landing_slug: "gestorias",
+    landing_slug: "agencias",
     nombre: "Informes mensuales automáticos para el cliente",
     tagline: "Entrega valor cada mes con un resumen automático de la situación de tu cliente.",
     benefits: [
@@ -2338,7 +2490,7 @@ export const processes: Process[] = [
       "Configuramos alertas de variaciones bruscas para el gestor"
     ],
     personalizacion: "Elige los KPIs que quieres mostrar (Margen, IVA, Cashflow) y la marca de agua con tu logo.",
-    sectores: ["Gestoria", "Servicios profesionales"],
+    sectores: ["Agencia/marketing"],
     herramientas: ["ERP contable", "Make", "Hojas de cálculo"],
     dolores: ["El cliente solo tiene noticias mías para pedir papeles o pagar impuestos", "Tardo mucho en preparar informes para los clientes VIP"],
     integration_domains: ["ERP", "DOCS"]
@@ -2349,7 +2501,7 @@ export const processes: Process[] = [
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    landing_slug: "gestorias",
+    landing_slug: "centros-deportivos",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -2384,13 +2536,14 @@ export const processes: Process[] = [
       "Sincronizamos los estados de pago con tu software contable"
     ],
     personalizacion: "Define el umbral de tolerancia para descuadres de céntimos y reglas por palabras clave.",
-    sectores: ["Gestoria", "Servicios profesionales", "E-commerce"],
+    sectores: ["Centros Deportivos", "Gestoria", "Academias / Formación", "E-commerce"],
     herramientas: ["Pasarela bancaria", "ERP", "Make"],
     dolores: ["Dedico demasiadas horas a puntear el banco con las facturas", "No sé quién me debe dinero hasta que no reviso el banco a mano"],
     integration_domains: ["ERP", "OTHER"]
   },
   {
     id: "GS6",
+    hidden: true,
     codigo: "GS6",
     slug: "gestion-altas-empleados",
     categoria: "D",
@@ -2437,6 +2590,7 @@ export const processes: Process[] = [
   },
   {
     id: "GS7",
+    hidden: true,
     codigo: "GS7",
     slug: "vencimientos-contratos-laborales",
     categoria: "B",
@@ -2522,7 +2676,7 @@ export const processes: Process[] = [
       "Activamos el registro de 'entregado/leído' para control interno"
     ],
     personalizacion: "Elige si quieres proteger el PDF con contraseña (ej. últimos dígitos del DNI) y el diseño del cuerpo del email.",
-    sectores: ["Gestoria", "Servicios profesionales"],
+    sectores: ["Gestoria"],
     herramientas: ["PDF.co", "Make", "SendGrid/Gmail"],
     dolores: ["Tardo una mañana entera en enviar las nóminas de mis clientes", "A veces nos equivocamos y enviamos la nómina de uno a otro por error"],
     integration_domains: ["DOCS", "OTHER"]
@@ -2533,7 +2687,7 @@ export const processes: Process[] = [
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
-    landing_slug: "gestorias",
+    landing_slug: "centros-deportivos",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2568,7 +2722,7 @@ export const processes: Process[] = [
       "Configuramos el repositorio de adjuntos (partes de baja, facturas de gastos)"
     ],
     personalizacion: "Define qué tipos de incidencias quieres permitir y si necesitan validación del gestor jefe.",
-    sectores: ["Gestoria", "Servicios profesionales"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Tally/JotForm", "Make", "Notion/ClickUp"],
     dolores: ["Me llegan las bajas médicas por fotos borrosas de WhatsApp", "A final de mes siempre falta algún variable que el cliente olvidó decirme"],
     integration_domains: ["OTHER"]
@@ -2579,7 +2733,7 @@ export const processes: Process[] = [
     slug: "comunicaciones-calendario-fiscal",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    landing_slug: "gestorias",
+    landing_slug: "centros-deportivos",
     nombre: "Comunicaciones estacionales por calendario fiscal",
     tagline: "Mantén a tus clientes informados y tranquilos con avisos automáticos útiles.",
     benefits: [
@@ -2614,13 +2768,14 @@ export const processes: Process[] = [
       "Integramos el link de reserva de citas para consultas especiales"
     ],
     personalizacion: "Elige el tono de la comunicación y añade vídeos cortos explicativos propios si lo deseas.",
-    sectores: ["Gestoria", "Servicios profesionales"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Mailchimp/ActiveCampaign", "Make", "Calendly"],
     dolores: ["Los clientes me colapsan a llamadas cuando empieza la campaña de Renta", " Siento que no aporto valor más allá de meter facturas"],
     integration_domains: ["CRM", "OTHER"]
   },
   {
     id: "GS11",
+    hidden: true,
     codigo: "GS11",
     slug: "alertas-caducidad-documentos",
     categoria: "F",
@@ -2705,13 +2860,16 @@ export const processes: Process[] = [
       "Activamos el historial de versiones para evitar pérdida de datos"
     ],
     personalizacion: "Decide si prefieres un portal web propio o usar carpetas compartidas de Google Drive/Dropbox personalizadas.",
-    sectores: ["Gestoria", "Servicios profesionales", "Inmobiliaria"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Google Drive/Dropbox", "Make", "Slack/Email"],
     dolores: ["Tengo el email colapsado de adjuntos de clientes y pierdo horas descargando", "Nunca sé si el cliente me ha enviado ya lo que le pedí"],
-    integration_domains: ["DOCS", "OTHER"]
+    integration_domains: ["DOCS", "OTHER"],
+    landing_slug: "centros-deportivos",
+
   },
   {
     id: "GS13",
+    hidden: true,
     codigo: "GS13",
     slug: "archivo-automatico-expedientes",
     categoria: "D",
@@ -2761,7 +2919,7 @@ export const processes: Process[] = [
     slug: "clasificacion-automatica-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
-    landing_slug: "gestorias",
+    landing_slug: "centros-deportivos",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -2796,7 +2954,7 @@ export const processes: Process[] = [
       "Activamos un canal de revisión para casos dudosos"
     ],
     personalizacion: "Define qué tipos de documentos quieres que se clasifiquen solos y cuáles prefieres revisar tú.",
-    sectores: ["Gestoria", "Servicios profesionales", "Real Estate"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["OpenAI/OCR", "Make", "Gestores de archivos"],
     dolores: ["Recibo cientos de documentos al día y pierdo horas clasificándolos", "Muchas veces archivamos mal los documentos y luego no aparecen"],
     integration_domains: ["DOCS"]
@@ -2807,7 +2965,7 @@ export const processes: Process[] = [
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    landing_slug: "gestorias",
+    landing_slug: "centros-deportivos",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
@@ -2842,13 +3000,14 @@ export const processes: Process[] = [
       "Configuramos la automatización de envío y el registro de respuestas"
     ],
     personalizacion: "Define el tiempo de espera por segmento y el canal de contacto preferido por cada cliente.",
-    sectores: ["Gestoria", "Servicios profesionales"],
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["ActiveCampaign/Brevo", "Make", "CRM"],
     dolores: ["Solo hablo con mis clientes cuando hay problemas o toca pagar", "Se me olvidan clientes que solían traerme trámites y ya no vienen"],
     integration_domains: ["CRM", "OTHER"]
   },
   {
     id: "GS16",
+    hidden: true,
     codigo: "GS16",
     slug: "alta-automatizada-nuevos-clientes-gestoria",
     categoria: "D",
@@ -2946,10 +3105,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Ajusta las variables determinantes (presupuesto, urgencia) que definirán quién es un 'lead caliente'.",
     related_processes: ["dashboard-comercial-tiempo-real", "seguimiento-multicanal-inteligente"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "E-commerce", "Inmobiliaria"],
     herramientas: ["CRM", "IA"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN2",
@@ -3004,13 +3163,14 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define de qué canales de comunicación quieres extraer el sentimiento (email, WhatsApp, transcripciones).",
     related_processes: ["resumen-llamadas-crm", "calificacion-inteligente-leads"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "IA", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN3",
+    hidden: true,
     codigo: "CN3",
     slug: "dashboard-comercial-tiempo-real",
     categoria: "B",
@@ -3120,10 +3280,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige la base de conocimiento de la obra: le daremos a leer todos tus PDFs para que aprenda el proyecto perfecto.",
     related_processes: ["calificacion-inteligente-leads", "seguimiento-multicanal-inteligente"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["Web", "CRM", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN5",
@@ -3178,10 +3338,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define de antemano el mix de beneficios que quieres atar a cada perfil (Rentabilidad vs Calidad de vida).",
     related_processes: ["generador-dossier-unidad", "asistente-digital-precualificacion"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "PDF Factory"],
     integration_domains: ["CRM", "DOCS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN6",
@@ -3236,10 +3396,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Incluye el nombre de tu cliente en cada página para darle exclusividad (y proteger tus planos).",
     related_processes: ["motor-presentacion-perfil", "resumen-llamadas-crm"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "DOCS"],
     integration_domains: ["CRM", "DOCS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN7",
@@ -3294,10 +3454,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define qué campos del CRM se rellenarán automáticamente con lo interpretado en las notas (Ej. Campo Presupuesto).",
     related_processes: ["analisis-sentimiento-riesgo", "calificacion-inteligente-leads"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["CRM", "IA", "Telefonía"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "gestorias",
   },
   {
     id: "CN8",
@@ -3351,9 +3511,11 @@ export const processes: Process[] = [
     ],
     personalizacion: "Cárgalo no sólo de datos aburridos, sino de 'Técnicas de rebote a objeciones' para empoderar de verdad al agente.",
     related_processes: ["generador-dossier-unidad", "resumen-llamadas-crm"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["Chat", "Knowledge Base", "IA"],
     integration_domains: ["OTHER"],
+    landing_slug: "gestorias",
+
   },
   {
     id: "CN9",
@@ -3407,10 +3569,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define cómo calibrar los mensajes, más agresivos o más sutiles según la etapa y el termómetro comercial.",
     related_processes: ["identificacion-reactivacion-unidades", "calificacion-inteligente-leads"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "Mailing / WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN10",
@@ -3464,10 +3626,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Incluye las instrucciones de parqueo exactas o fotos de la entrada en los avisos preventivos para evitar la fricción.",
     related_processes: ["seguimiento-post-visita", "asistente-digital-precualificacion"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["Agenda", "CRM", "WhatsApp SMS"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN11",
@@ -3521,10 +3683,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el momento y qué incentivo puedes dar por la encuesta (el regalo de 'los planos detallados en HD' a su correo si rellenan).",
     related_processes: ["automatizacion-agendado-visitas", "seguimiento-multicanal-inteligente"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "Surveys"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN12",
@@ -3578,13 +3740,14 @@ export const processes: Process[] = [
     ],
     personalizacion: "Nos amoldamos a vuestras plantillas blindadas de la propiedad, respetando todos y cada uno de los anexos (memoria, SEPA, RGPD).",
     related_processes: ["proceso-post-reserva", "resumen-llamadas-crm"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "DOCS", "Firma Digital"],
     integration_domains: ["CRM", "DOCS"],
-    landing_slug: "construccion"
+    landing_slug: "gestorias",
   },
   {
     id: "CN13",
+    hidden: true,
     codigo: "CN13",
     slug: "proceso-post-reserva",
     categoria: "E",
@@ -3692,10 +3855,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Integra manuales de la aerotermia y el termostato a la inteligencia de la app para que te reboten el 90% de excusas de 'no funciona'.",
     related_processes: ["proceso-post-reserva", "resumen-llamadas-crm"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["Portal Web", "Ticketing", "IA"],
     integration_domains: ["OTHER", "COMMS"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
   {
     id: "CN15",
@@ -3749,14 +3912,15 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define cómo calibrar la rotación o en qué momento y con qué agresividad sugieren incentivar su venta priorizada a tus propios agentes.",
     related_processes: ["dashboard-comercial-tiempo-real", "seguimiento-multicanal-inteligente"],
-    sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
   },
 
   {
     id: "AG1",
+    hidden: true,
     codigo: "AG1",
     slug: "recordatorio-horas-no-registradas",
     categoria: "A",
@@ -3863,10 +4027,11 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige qué canales conectar, dónde centralizar las fichas y las reglas de asignación por tipo de solicitud.",
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
     dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "agencias"
+    landing_slug: "centros-deportivos",
   },
 ];
 

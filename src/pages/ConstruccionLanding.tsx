@@ -65,7 +65,7 @@ const ConstruccionLanding = () => {
 
   // Filtrar procesos para Construcción & Reformas
   const construccionProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "construccion" || p.sectores?.includes("Construcción & Reformas")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "construccion" || p.sectores?.includes("Construcción & Reformas"))),
     []
   );
 
@@ -243,6 +243,7 @@ const ConstruccionLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#d97706"
+                    sectorSlug="construccion"
                         />
                       ))}
                     </div>
@@ -321,9 +322,6 @@ const ConstruccionLanding = () => {
                 className="text-sm text-amber-400 hover:text-amber-300 hover:bg-amber-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>

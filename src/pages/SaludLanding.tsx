@@ -60,7 +60,7 @@ const SaludLanding = () => {
 
   // Filtrar procesos para Salud
   const saludProcesses = useMemo(() => 
-    processes.filter(p => p.landing_slug === "salud" || p.sectores?.includes("Clínicas / Salud / Dental / Veterinaria")),
+    processes.filter(p => !p.hidden && (p.landing_slug === "salud" || p.sectores?.includes("Clínicas / Salud / Dental / Veterinaria"))),
     []
   );
 
@@ -210,6 +210,7 @@ const SaludLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#2563eb"
+                    sectorSlug="salud"
                     />
                   ))}
                 </div>
@@ -224,6 +225,7 @@ const SaludLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#2563eb"
+                    sectorSlug="salud"
                         />
                       ))}
                   </div>
@@ -254,9 +256,6 @@ const SaludLanding = () => {
                 className="text-sm text-blue-400 hover:text-blue-300 hover:bg-blue-500/5 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-              <Button asChild variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
-                <Link to="/catalogo/completo">Ver Catálogo Completo</Link>
               </Button>
             </div>
           </div>
