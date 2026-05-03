@@ -209,6 +209,7 @@ const SportsLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#0891b2"
+                    sectorSlug="centros-deportivos"
                     />
                   ))}
                 </div>
@@ -223,6 +224,7 @@ const SportsLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#0891b2"
+                    sectorSlug="centros-deportivos"
                         />
                       ))}
                   </div>

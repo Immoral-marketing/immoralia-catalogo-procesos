@@ -243,6 +243,7 @@ const ConstruccionLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#d97706"
+                    sectorSlug="construccion"
                         />
                       ))}
                     </div>

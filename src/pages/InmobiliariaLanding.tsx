@@ -212,6 +212,7 @@ const InmobiliariaLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#059669"
+                    sectorSlug="inmobiliaria"
                     />
                   ))}
                 </div>
@@ -226,6 +227,7 @@ const InmobiliariaLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#059669"
+                    sectorSlug="inmobiliaria"
                         />
                       ))}
                   </div>

@@ -210,6 +210,7 @@ const SaludLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#2563eb"
+                    sectorSlug="salud"
                     />
                   ))}
                 </div>
@@ -224,6 +225,7 @@ const SaludLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#2563eb"
+                    sectorSlug="salud"
                         />
                       ))}
                   </div>

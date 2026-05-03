@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -23,9 +23,32 @@ const BENEFIT_ICONS = [Calendar, Bell, BarChart2, Zap, Settings2, Clock];
 const ProcessDetail = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting, customizations, updateCustomization } = useSelection();
 
-    const process = processes.find((p) => p.slug === slug);
+    const baseProcess = processes.find((p) => p.slug === slug);
+
+    // Aplicar variante de sector si existe
+    const sectorSlug = searchParams.get("sector") ?? undefined;
+    const process = useMemo(() => {
+        if (!baseProcess) return undefined;
+        const variant = sectorSlug ? baseProcess.sector_variants?.[sectorSlug] : undefined;
+        if (!variant) return baseProcess;
+        return {
+            ...baseProcess,
+            ...(variant.tagline           && { tagline: variant.tagline }),
+            ...(variant.one_liner         && { one_liner: variant.one_liner }),
+            ...(variant.descripcionDetallada && { descripcionDetallada: variant.descripcionDetallada }),
+            ...(variant.dolores           && { dolores: variant.dolores }),
+            ...(variant.pasos             && { pasos: variant.pasos }),
+            ...(variant.personalizacion   && { personalizacion: variant.personalizacion }),
+            ...(variant.how_it_works_steps && { how_it_works_steps: variant.how_it_works_steps }),
+            ...(variant.summary && {
+                summary: { ...baseProcess.summary, ...variant.summary },
+            }),
+        };
+    }, [baseProcess, sectorSlug]);
+
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
     const [showContactForm, setShowContactForm] = useState(false);

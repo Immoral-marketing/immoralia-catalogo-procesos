@@ -52,6 +52,25 @@ export interface Process {
   integration_domains?: ("ERP" | "CRM" | "COMMS" | "DOCS" | "OTHER")[];
   landing_slug?: string;
   hidden?: boolean;
+  sector_variants?: Record<string, {
+    tagline?: string;
+    one_liner?: string;
+    descripcionDetallada?: string;
+    dolores?: string[];
+    pasos?: string[];
+    personalizacion?: string;
+    summary?: {
+      what_it_is?: string;
+      for_who?: string[];
+      requirements?: string[];
+      output?: string;
+    };
+    how_it_works_steps?: {
+      title: string;
+      short: string;
+      detail?: string;
+    }[];
+  }>;
 }
 
 
@@ -326,6 +345,116 @@ export const processes: Process[] = [
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
+    sector_variants: {
+      "centros-deportivos": {
+        tagline: "Cobra las cuotas de tus socios sin perseguirlos cada mes.",
+        one_liner: "Detecta socios con cuota vencida y envíales un recordatorio automático antes de que el impago se cronifique.",
+        descripcionDetallada: "Cada día el sistema revisa qué socios tienen la cuota vencida y les envía un recordatorio progresivo: amable al principio, más directo si pasan los días. Tú no tienes que hacer nada. Los socios que no responden escalan a una alerta para que puedas actuar antes de que cancelen.",
+        dolores: ["Socios que no pagan pero siguen usando las instalaciones", "Vergüenza o incomodidad de reclamar dinero en persona", "Perder socios por no hacer seguimiento a tiempo"],
+        pasos: ["Detectamos socios con cuota vencida en tu software de gestión", "Enviamos recordatorio automático y personalizado al canal del socio", "Escalamos el aviso si pasan 5/10/15 días sin respuesta", "Alertamos al equipo si el impago persiste para intervención manual"],
+        personalizacion: "Elige el tono del mensaje (amable, neutro, firme), el canal (WhatsApp, email, SMS) y si quieres excluir a socios VIP del proceso automático.",
+        summary: {
+          what_it_is: "Sistema que detecta socios con cuota vencida y gestiona los recordatorios de pago de forma automática y progresiva.",
+          for_who: ["Gestores de gimnasios", "Coordinadores de centros deportivos", "Dueños de estudios de yoga o crossfit"],
+        },
+      },
+      "gestorias": {
+        tagline: "Recuerda automáticamente a tus clientes los honorarios pendientes.",
+        one_liner: "Cobra tus honorarios sin perseguir a cada cliente: el sistema detecta la factura vencida y actúa por ti.",
+        descripcionDetallada: "Cuando un cliente de tu despacho tiene una factura vencida, el sistema le envía un recordatorio profesional y escalonado. Tú mantienes la relación intacta mientras la automatización hace el trabajo sucio. Si el impago se alarga, recibes una alerta para decidir cómo actuar.",
+        dolores: ["Clientes que pagan tarde y bloquean la tesorería del despacho", "Incomodidad de reclamar dinero a clientes con los que tienes trato diario", "Pérdida de tiempo gestionando impagos manualmente"],
+        pasos: ["Identificamos facturas vencidas en tu ERP o software de facturación", "Generamos un recordatorio profesional con el detalle de la factura", "Lo enviamos por el canal del cliente (email o WhatsApp)", "Escalamos el tono si pasan 5/10/15 días sin pago"],
+        personalizacion: "Ajusta el tono del recordatorio, elige si quieres incluir el desglose de la factura en el mensaje y configura excepciones para clientes clave.",
+        summary: {
+          what_it_is: "Automatización que gestiona la reclamación de honorarios pendientes sin comprometer la relación con el cliente.",
+          for_who: ["Gestores y asesores", "Administración de despachos", "Dueños de gestorías y asesorías"],
+        },
+      },
+      "salud": {
+        tagline: "Cobra tus sesiones y tratamientos sin incómodos recordatorios manuales.",
+        one_liner: "La relación con tu paciente es lo primero. El sistema cobra por ti sin que tengas que pedirlo tú.",
+        descripcionDetallada: "En centros de salud, reclamar dinero a un paciente puede sentirse incómodo. Esta automatización lo hace por ti: detecta facturas o sesiones impagadas y envía un recordatorio discreto y profesional al paciente, sin que tengas que intervenir. Si el impago se prolonga, recibes una alerta para decidir cómo gestionarlo.",
+        dolores: ["La relación personal con el paciente hace difícil reclamar dinero directamente", "Sesiones o tratamientos que se facturan tarde o no se cobran", "Tiempo del personal dedicado a hacer seguimiento de impagos"],
+        pasos: ["Detectamos sesiones o facturas sin cobrar en tu software de gestión", "Enviamos un recordatorio discreto y profesional al paciente", "Escalamos el aviso según los días de retraso", "Alertamos al equipo si el impago supera el umbral definido"],
+        personalizacion: "Elige el tono y la frecuencia de los recordatorios, el canal de envío y si quieres excluir a determinados pacientes o tipos de tratamiento.",
+        summary: {
+          what_it_is: "Sistema que gestiona el cobro de sesiones y tratamientos pendientes de forma automática, preservando la relación clínica con el paciente.",
+          for_who: ["Fisioterapeutas", "Clínicas dentales", "Centros de estética y bienestar", "Clínicas veterinarias"],
+        },
+      },
+      "construccion": {
+        tagline: "Reclama automáticamente los hitos de pago de cada obra.",
+        one_liner: "Con varias obras en marcha y múltiples hitos de facturación, ningún pago vuelve a caer en el olvido.",
+        descripcionDetallada: "En construcción los pagos se estructuran por hitos: proyecto aprobado, obra iniciada, certificación, entrega. Esta automatización vigila cada hito y, cuando la factura asociada vence sin pago, envía un recordatorio al cliente o promotor de forma automática. El sistema escala la urgencia si el retraso se acumula.",
+        dolores: ["Múltiples obras con hitos de pago distintos, imposibles de rastrear manualmente", "Clientes o promotores que retrasan pagos por desorganización, no por mala fe", "Tesorería tensa por obra avanzada sin cobrar"],
+        pasos: ["Sincronizamos los hitos de facturación de cada obra desde tu ERP", "Detectamos facturas vencidas asociadas a cada hito", "Enviamos recordatorio automático al contacto del cliente o promotor", "Escalamos el aviso y alertamos al responsable de obra si el retraso supera el umbral"],
+        personalizacion: "Configura los hitos de pago por tipo de obra, el tono del recordatorio y las excepciones por cliente o proyecto.",
+        summary: {
+          what_it_is: "Automatización que vigila los hitos de pago de cada obra y gestiona los recordatorios a clientes y promotores sin intervención manual.",
+          for_who: ["Jefes de obra", "Administración de constructoras", "Estudios de arquitectura", "Empresas de reformas"],
+        },
+      },
+      "academias": {
+        tagline: "Cobra las mensualidades sin perseguir a los padres cada mes.",
+        one_liner: "Automatiza el cobro de cuotas y mensualidades para que tu equipo dedique el tiempo a enseñar, no a reclamar.",
+        descripcionDetallada: "Cada mes hay alumnos cuyo pago no llega a tiempo. Esta automatización detecta los impagos y envía un recordatorio a los padres o al propio alumno de forma automática y escalonada. Así tu equipo administrativo no tiene que hacer llamadas ni enviar correos manualmente.",
+        dolores: ["Padres que olvidan el pago mensual y hay que recordarles uno a uno", "Tiempo administrativo dedicado a seguimiento de cobros", "Alumnos que continúan asistiendo con mensualidades sin pagar"],
+        pasos: ["Identificamos alumnos con mensualidad vencida en tu plataforma de gestión", "Enviamos recordatorio automático a los padres o alumnos", "Escalamos el tono si pasan 5/10/15 días sin pago", "Alertamos al equipo administrativo para intervención si es necesario"],
+        personalizacion: "Elige el canal de comunicación (WhatsApp, email), el tono según los días de retraso y si quieres excluir a alumnos con beca o acuerdo especial.",
+        summary: {
+          what_it_is: "Sistema automatizado de recordatorio de cuotas y mensualidades para academias y centros de formación.",
+          for_who: ["Directores de academia", "Administración de centros de formación", "Autoescuelas"],
+        },
+      },
+      "restauracion": {
+        tagline: "Recupera el dinero de tus eventos y reservas corporativas sin perseguir a nadie.",
+        one_liner: "Eventos, catering y reservas corporativas que no pagan a tiempo: el sistema los reclama por ti.",
+        descripcionDetallada: "Los restaurantes y hoteles suelen emitir facturas a clientes corporativos con pago diferido. Esta automatización monitoriza esas facturas y envía recordatorios automáticos cuando se acerca o supera la fecha de vencimiento, para que no tengas que hacer seguimiento manual de cada evento o reserva.",
+        dolores: ["Clientes corporativos que pagan a 30/60 días y se olvidan de la factura", "Eventos pasados con dinero sin cobrar que bloquean la liquidez", "Equipo dedicando tiempo a llamadas de cobro en vez de atender el negocio"],
+        pasos: ["Detectamos facturas de eventos o reservas corporativas vencidas", "Enviamos recordatorio automático con el detalle del evento y la factura", "Escalamos la urgencia según los días de retraso", "Alertamos al responsable comercial si el impago se prolonga"],
+        personalizacion: "Configura qué tipos de reserva o eventos entran en el proceso, el canal de comunicación y el tono según el perfil del cliente.",
+        summary: {
+          what_it_is: "Automatización de cobro para eventos, catering y reservas corporativas con pago diferido.",
+          for_who: ["Propietarios de restaurante", "Coordinadores de eventos", "Gestores de hotel"],
+        },
+      },
+      "ecommerce": {
+        tagline: "Recupera cobros fallidos de suscripciones y pedidos automáticamente.",
+        one_liner: "Cada pago fallido no detectado es un cliente perdido. El sistema lo identifica y actúa antes de que cancele.",
+        descripcionDetallada: "En e-commerce y tiendas con suscripción, los pagos fallidos son silenciosos: la tarjeta caduca, los fondos son insuficientes y el cliente ni se entera. Esta automatización detecta esos fallos en tiempo real y envía un recordatorio con enlace directo para actualizar el método de pago, antes de que el cliente se dé de baja sin quererlo.",
+        dolores: ["Pagos de suscripción que fallan silenciosamente sin que el cliente lo sepa", "Churn involuntario por no detectar pagos fallidos a tiempo", "Tiempo del equipo revisando manualmente el estado de cada pedido"],
+        pasos: ["Detectamos pagos fallidos o pedidos con cobro pendiente en tu plataforma", "Enviamos notificación automática al cliente con enlace para resolver el pago", "Reintentamos el cobro tras un periodo configurable", "Alertamos al equipo si el cliente no responde tras varios intentos"],
+        personalizacion: "Elige el número de reintentos, el intervalo entre ellos, el canal de notificación y si quieres aplicar un descuento de retención.",
+        summary: {
+          what_it_is: "Sistema de recuperación de pagos fallidos y cobros pendientes para tiendas online y negocios con suscripción.",
+          for_who: ["Gestores de tienda online", "Responsables de e-commerce", "Negocios con modelo de suscripción"],
+        },
+      },
+      "inmobiliaria": {
+        tagline: "Reclama rentas y honorarios pendientes sin tensionar la relación con propietarios ni inquilinos.",
+        one_liner: "Gestiona el cobro de rentas, honorarios y comisiones de forma automática y profesional.",
+        descripcionDetallada: "Las agencias inmobiliarias gestionan rentas de alquiler, honorarios de gestión y comisiones de venta. Esta automatización detecta los pagos vencidos y envía recordatorios automáticos a propietarios, inquilinos o compradores según corresponda, manteniendo el tono profesional que requiere el sector.",
+        dolores: ["Inquilinos que retrasan el pago de la renta y hay que recordarles cada mes", "Honorarios de gestión o comisiones de venta cobradas tarde", "Propietarios que presionan cuando el cobro se demora"],
+        pasos: ["Detectamos rentas, honorarios o comisiones vencidas en tu sistema de gestión", "Enviamos recordatorio automático al contacto correspondiente", "Escalamos según los días de retraso con el tono adecuado", "Notificamos al agente responsable si el impago se cronifica"],
+        personalizacion: "Configura por tipo de cobro (renta, honorario, comisión), el canal de comunicación y el tono por perfil de cliente.",
+        summary: {
+          what_it_is: "Automatización de cobro de rentas, honorarios y comisiones para agencias inmobiliarias.",
+          for_who: ["Agentes inmobiliarios", "Gestores de alquiler", "Administradores de fincas"],
+        },
+      },
+      "agencias": {
+        tagline: "Recuerda los honorarios de campaña a tus clientes sin dañar la relación.",
+        one_liner: "Cobra lo que te deben sin tener que pedirlo tú directamente: el sistema mantiene la presión sin la incomodidad.",
+        descripcionDetallada: "En agencias de marketing y consultoría la relación con el cliente es el activo más valioso. Reclamar dinero directamente puede tensar esa relación. Esta automatización envía recordatorios de pago en nombre de la agencia de forma profesional y escalonada, manteniendo el tono adecuado mientras tú te centras en el trabajo.",
+        dolores: ["Clientes con presupuestos variables que pagan en plazos erráticos", "Incomodidad de reclamar honorarios a clientes con los que tienes relación estrecha", "Tesorería de agencia tensa por proyectos cerrados sin cobrar"],
+        pasos: ["Detectamos facturas de proyectos o retainers vencidos en tu sistema de facturación", "Enviamos recordatorio profesional con el detalle del proyecto y la factura", "Escalamos el tono según los días de retraso", "Alertamos al account manager para intervención personalizada si es necesario"],
+        personalizacion: "Ajusta el tono (profesional, cercano, formal), elige si el recordatorio va firmado por la agencia o por el account, y configura excepciones por cliente estratégico.",
+        summary: {
+          what_it_is: "Automatización de cobro de honorarios y retainers para agencias y consultoras que cuidan la relación con el cliente.",
+          for_who: ["Account managers", "Directores de agencia", "Consultores independientes"],
+        },
+      },
+    },
   },
   {
     id: "B6",

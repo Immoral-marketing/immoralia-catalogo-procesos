@@ -212,6 +212,7 @@ const GestoriasLanding = () => {
                     key={process.id}
                     process={process}
                     accentColor="#14b8a6"
+                    sectorSlug="gestorias"
                   />
                 ))}
               </div>
@@ -226,6 +227,7 @@ const GestoriasLanding = () => {
                         key={process.id}
                         process={process}
                         accentColor="#14b8a6"
+                    sectorSlug="gestorias"
                       />
                     ))}
                 </div>

@@ -222,6 +222,7 @@ const RestauracionLanding = () => {
                       key={process.id}
                       process={process}
                       accentColor="#ea580c"
+                    sectorSlug="restauracion"
                     />
                   ))}
                 </div>
@@ -236,6 +237,7 @@ const RestauracionLanding = () => {
                           key={process.id}
                           process={process}
                           accentColor="#ea580c"
+                    sectorSlug="restauracion"
                         />
                       ))}
                   </div>
