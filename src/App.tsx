@@ -38,15 +38,15 @@ const App = () => (
             <Route path="/catalogo/completo" element={<Index />} />
             <Route path="/catalogo/procesos/informe-semanal-facturas-vencidas" element={<ProcessDetailFacturasVencidas />} />
             <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
-            <Route path="/landing/centros-deportivos" element={<SportsLanding />} />
-            <Route path="/landing/gestorias" element={<GestoriasLanding />} />
-            <Route path="/landing/salud" element={<SaludLanding />} />
-            <Route path="/landing/construccion" element={<ConstruccionLanding />} />
-            <Route path="/landing/academias" element={<AcademiasLanding />} />
-            <Route path="/landing/restauracion" element={<RestauracionLanding />} />
-            <Route path="/landing/ecommerce" element={<EcommerceLanding />} />
-            <Route path="/landing/inmobiliaria" element={<InmobiliariaLanding />} />
-            <Route path="/landing/agencias" element={<AgenciasLanding />} />
+            <Route path="/sector/centros-deportivos" element={<SportsLanding />} />
+            <Route path="/sector/gestorias" element={<GestoriasLanding />} />
+            <Route path="/sector/salud" element={<SaludLanding />} />
+            <Route path="/sector/construccion" element={<ConstruccionLanding />} />
+            <Route path="/sector/academias" element={<AcademiasLanding />} />
+            <Route path="/sector/restauracion" element={<RestauracionLanding />} />
+            <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
+            <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
+            <Route path="/sector/agencias" element={<AgenciasLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
             <Route path="/admin" element={<AdminPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
