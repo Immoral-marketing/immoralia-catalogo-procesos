@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#ea580c";
 const AUDIT_URL = "https://lead-magnet-auditoria-restaurantes.vercel.app/";
@@ -57,6 +58,7 @@ const RestauracionLanding = () => {
   const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<BlockId>("B1");
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [flippedBlock, setFlippedBlock] = useState<BlockId | null>(null);
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -223,7 +225,7 @@ const RestauracionLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => window.open("https://calendly.com/david-immoral/30min", "_blank")}
+                onClick={() => setShowCalendlyModal(true)}
                 className="text-sm text-gray-400 hover:text-orange-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -860,7 +862,7 @@ const RestauracionLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => window.open("https://calendly.com/david-immoral/30min", "_blank")}
+              onClick={() => setShowCalendlyModal(true)}
             >
               Agendar llamada
             </Button>
@@ -915,6 +917,11 @@ const RestauracionLanding = () => {
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
         accentColor={ACCENT}
+      />
+
+      <CalendlyLeadModal
+        isOpen={showCalendlyModal}
+        onClose={() => setShowCalendlyModal(false)}
       />
     </div>
   );

@@ -40,12 +40,14 @@ import { useSelection } from "@/lib/SelectionContext";
 import { isOnboardingCompleted } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { StepIndicator } from "@/components/StepIndicator";
+import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const GestoriasLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -163,7 +165,7 @@ const GestoriasLanding = () => {
             <Button size="lg" onClick={scrollToProcesses} className="bg-teal-600 hover:bg-teal-500 text-white h-14 px-8 text-lg gap-2 shadow-[0_0_30px_rgba(20,184,166,0.3)]">
               Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
+            <Button size="lg" variant="outline" onClick={() => setShowCalendlyModal(true)} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
               Agendar llamada
             </Button>
           </div>
@@ -378,7 +380,7 @@ const GestoriasLanding = () => {
             <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-teal-600 hover:bg-teal-500 h-16 px-10 text-xl shadow-[0_0_40px_rgba(20,184,166,0.3)] transition-all hover:scale-105">
               Solicitar Oferta Ahora
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => setShowCalendlyModal(true)}>
               Agendar llamada
             </Button>
           </div>
@@ -417,6 +419,11 @@ const GestoriasLanding = () => {
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
         accentColor="#14b8a6"
+      />
+
+      <CalendlyLeadModal
+        isOpen={showCalendlyModal}
+        onClose={() => setShowCalendlyModal(false)}
       />
     </div>
   );

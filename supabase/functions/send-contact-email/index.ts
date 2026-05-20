@@ -12,6 +12,11 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
+const GHL_API_KEY = Deno.env.get("GHL_API_KEY");
+const GHL_LOCATION_ID = "oAgj6wUxweXdbWMvz0Gn";
+const GHL_CATALOG_PIPELINE_ID = "j9WpjWFG6LKRRJ5ti84W";
+const GHL_STAGE_NEW_LEAD_ID = "67c9e715-c68a-47fa-94d5-196c559e6407";
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const corsHeaders = {
@@ -442,6 +447,83 @@ ${processesText}`;
         console.error("Error processing emails:", err);
       }
     }
+
+    // --- GHL INTEGRATION (fire-and-forget) ---
+    const createGHLLead = async () => {
+      if (!GHL_API_KEY) return;
+      try {
+        const sector = (validationResult.data.onboardingAnswers?.sector as string) || "";
+        const nameParts = nombre.trim().split(" ");
+
+        const contactPayload: Record<string, unknown> = {
+          locationId: GHL_LOCATION_ID,
+          firstName: nameParts[0],
+          lastName: nameParts.slice(1).join(" "),
+          email,
+          tags: [
+            "catalogo",
+            ...(sector ? [`catalogo-${sector.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}`] : []),
+          ],
+          customFields: [
+            { id: "EWJ5rM0kf0Tgoz5hAP8H", field_value: sector }, // vertical__immoralia
+          ],
+        };
+        if (telefono) contactPayload.phone = telefono;
+        if (empresa) contactPayload.companyName = empresa;
+
+        const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/upsert", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${GHL_API_KEY}`,
+            "Content-Type": "application/json",
+            "Version": "2021-07-28",
+          },
+          body: JSON.stringify(contactPayload),
+        });
+
+        if (!contactRes.ok) {
+          console.error("GHL contact upsert failed:", await contactRes.text());
+          return;
+        }
+
+        const contactData = await contactRes.json();
+        const ghlContactId = contactData?.contact?.id;
+        if (!ghlContactId) return;
+
+        const processCount = selectedProcesses.length;
+        const opportunityName = `${empresa || nombre} · ${sector || "Catálogo"} · ${processCount} proceso${processCount !== 1 ? "s" : ""}`;
+
+        const oppRes = await fetch("https://services.leadconnectorhq.com/opportunities/", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${GHL_API_KEY}`,
+            "Content-Type": "application/json",
+            "Version": "2021-07-28",
+          },
+          body: JSON.stringify({
+            pipelineId: GHL_CATALOG_PIPELINE_ID,
+            locationId: GHL_LOCATION_ID,
+            name: opportunityName,
+            pipelineStageId: GHL_STAGE_NEW_LEAD_ID,
+            status: "open",
+            contactId: ghlContactId,
+            customFields: [
+              { id: "MhkvGexEEC6qG3n5V8eA", field_value: "Frío" },
+              { id: "SRLOeaEci8xgRHTd53ge", field_value: new Date().toISOString().split("T")[0] },
+            ],
+          }),
+        });
+
+        if (!oppRes.ok) {
+          console.error("GHL opportunity create failed:", await oppRes.text());
+        } else {
+          console.log("GHL lead created successfully for:", email);
+        }
+      } catch (ghlError) {
+        console.error("GHL integration error:", ghlError);
+      }
+    };
+    createGHLLead().catch(err => console.error("GHL integration fatal:", err));
 
     // --- SLACK NOTIFICATION (fire-and-forget, no await) ---
     if (clickupTaskId) {
