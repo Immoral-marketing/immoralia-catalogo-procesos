@@ -52,6 +52,8 @@ export interface Process {
   integration_domains?: ("ERP" | "CRM" | "COMMS" | "DOCS" | "OTHER")[];
   landing_slug?: string;
   hidden?: boolean;
+  bloque_negocio?: "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
+  modulo_codigo?: string;
   sector_variants?: Record<string, {
     tagline?: string;
     one_liner?: string;
@@ -1083,6 +1085,8 @@ export const processes: Process[] = [
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3",
   },
   {
     id: "E19",
@@ -1231,6 +1235,8 @@ export const processes: Process[] = [
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
   },
   {
     id: "E22",
