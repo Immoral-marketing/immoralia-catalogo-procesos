@@ -3122,6 +3122,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B1",
   },
   {
     id: "CN2",
@@ -3180,6 +3181,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B1",
   },
   {
     id: "CN3",
@@ -3238,7 +3240,8 @@ export const processes: Process[] = [
     sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
     herramientas: ["CRM", "BI"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
+    bloque_negocio: "B1",
   },
   {
     id: "CN4",
@@ -3297,6 +3300,7 @@ export const processes: Process[] = [
     herramientas: ["Web", "CRM", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
   },
   {
     id: "CN5",
@@ -3355,6 +3359,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "PDF Factory"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
   },
   {
     id: "CN6",
@@ -3413,6 +3418,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
   },
   {
     id: "CN7",
@@ -3471,6 +3477,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Telefonía"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
   },
   {
     id: "CN8",
@@ -3528,7 +3535,7 @@ export const processes: Process[] = [
     herramientas: ["Chat", "Knowledge Base", "IA"],
     integration_domains: ["OTHER"],
     landing_slug: "gestorias",
-
+    bloque_negocio: "B2",
   },
   {
     id: "CN9",
@@ -3586,6 +3593,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Mailing / WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
   },
   {
     id: "CN10",
@@ -3643,6 +3651,7 @@ export const processes: Process[] = [
     herramientas: ["Agenda", "CRM", "WhatsApp SMS"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
   },
   {
     id: "CN11",
@@ -3700,6 +3709,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Surveys"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
   },
   {
     id: "CN12",
@@ -3757,6 +3767,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS", "Firma Digital"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
   },
   {
     id: "CN13",
@@ -3814,7 +3825,8 @@ export const processes: Process[] = [
     sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
     herramientas: ["CRM", "Automatización"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
+    bloque_negocio: "B4",
   },
   {
     id: "CN14",
@@ -3872,6 +3884,7 @@ export const processes: Process[] = [
     herramientas: ["Portal Web", "Ticketing", "IA"],
     integration_domains: ["OTHER", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B5",
   },
   {
     id: "CN15",
@@ -3929,6 +3942,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B6",
   },
 
   {
