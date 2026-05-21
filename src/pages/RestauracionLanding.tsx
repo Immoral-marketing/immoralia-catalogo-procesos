@@ -48,6 +48,9 @@ import immoraliaLogo from "@/assets/immoralia_logo.png";
 const ACCENT = "#ea580c";
 const AUDIT_URL = "https://lead-magnet-auditoria-restaurantes.vercel.app/";
 
+// Sector exclusivo: los procesos gastro tienen landing_slug propio
+const GASTRO_LANDING_SLUG = "gastronomia-hosteleria";
+
 const RestauracionLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
@@ -73,21 +76,14 @@ const RestauracionLanding = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Procesos del catálogo "completo" (los horizontales tagueados con Restauración)
   const restauracionProcesses = useMemo(() => {
-    const deprioritized = ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"];
-    const all = processes.filter(
-      (p) =>
-        !p.hidden &&
-        (p.landing_slug === "restauracion" ||
-          p.sectores?.includes("Restauración") ||
-          p.sectores?.includes("Hostelería") ||
-          p.sectores?.includes("Restaurantes"))
-    );
-    return [
-      ...all.filter((p) => !deprioritized.includes(p.slug)),
-      ...all.filter((p) => deprioritized.includes(p.slug)),
-    ];
+    return processes
+      .filter((p) => !p.hidden && p.landing_slug === GASTRO_LANDING_SLUG)
+      .map((p) => {
+        if (!p.bloque_negocio) return p;
+        const block = restauracionBlocks.find((b) => b.id === p.bloque_negocio);
+        return block ? { ...p, categoriaNombre: block.title } : p;
+      });
   }, []);
 
   const filteredCatalog = useMemo(() => {
@@ -121,8 +117,8 @@ const RestauracionLanding = () => {
           descripcionDetallada: m.descripcion,
           pasos: [],
           personalizacion: "",
-          landing_slug: "restauracion",
-          sectores: ["Restauración"],
+          landing_slug: "gastronomia-hosteleria",
+          sectores: ["Gastronomía / Hostelería"],
           bloque_negocio: m.bloque,
           modulo_codigo: m.codigo,
         };
@@ -726,9 +722,22 @@ const RestauracionLanding = () => {
                           </div>
                           {isOpen && (
                             <div className="pl-[52px] pr-2 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto">
+                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto mb-3">
                                 {m.descripcion}
                               </p>
+                              {m.linkedProcessSlug && (
+                                <Link
+                                  to={`/catalogo/procesos/${m.linkedProcessSlug}`}
+                                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3.5 py-1.5 rounded-lg border transition-all hover:translate-x-0.5"
+                                  style={{
+                                    borderColor: `${b.accent}50`,
+                                    color: b.accent,
+                                    backgroundColor: `${b.accent}10`,
+                                  }}
+                                >
+                                  Ver ficha completa <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                              )}
                             </div>
                           )}
                         </div>
@@ -764,18 +773,11 @@ const RestauracionLanding = () => {
           <div className="max-w-[1440px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
               <div className="max-w-2xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <LayoutGrid className="w-5 h-5 text-orange-400" />
-                  <span className="text-orange-400 font-medium tracking-widest uppercase text-xs">
-                    Catálogo completo
-                  </span>
-                </div>
                 <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-                  Procesos adicionales
+                  Catálogo completo
                 </h2>
                 <p className="text-gray-400 leading-relaxed text-justify hyphens-auto">
-                  Más allá de los módulos core, estos procesos horizontales también pueden encajar en tu
-                  restaurante. Filtra por módulo o busca por nombre.
+                  Las 16 fichas detalladas de cada proceso, agrupadas por bloque. Filtra por bloque o busca por nombre para abrir la ficha completa.
                 </p>
               </div>
               <div className="relative w-full md:w-72">

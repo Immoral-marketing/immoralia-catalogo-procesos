@@ -80,11 +80,11 @@ const sectors = [
     title: "Gastronomía y Hotelería",
     description: "Restaurantes, bares, cafeterías, hoteles y negocios de hostelería.",
     icon: Utensils,
-    path: "/sector/restauracion",
+    path: "/sector/gastronomia-hosteleria",
     status: "active",
     accent: "from-orange-500/20 to-red-500/20",
     landingSlug: "restauracion",
-    sectorNames: ["Restauración", "Restaurantes"],
+    sectorNames: ["Gastronomía / Hostelería"],
   },
   {
     id: "ecommerce",

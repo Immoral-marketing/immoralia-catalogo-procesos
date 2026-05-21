@@ -19,6 +19,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Una voz natural atiende las llamadas fuera de horario, pregunta fecha, hora, comensales y alergias, y deja la reserva confirmada en el sistema. Si el restaurante está lleno, ofrece alternativas o lista de espera.",
     badge: "Impacto inmediato",
+    linkedProcessSlug: "gastro-voz-reservas-247",
     highlights: [
       "Atiende 24/7 incluso con sala llena",
       "Voz natural en castellano",
@@ -32,6 +33,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "El cliente reserva desde donde te encuentre — un DM, un mensaje de WhatsApp, un botón en la web. Todo cae al mismo sitio sin duplicados ni llamadas perdidas.",
     badge: "Más canales",
+    linkedProcessSlug: "gastro-reservas-multicanal",
     highlights: [
       "Un único panel para todos los canales",
       "Sin duplicados ni reservas perdidas",
@@ -45,11 +47,25 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Un mensaje previo a la reserva pide confirmación. Si el cliente cancela, esa mesa se libera y se ofrece a la lista de espera en tiempo real.",
     badge: "–No shows",
-    linkedProcessSlug: "asistente-reservas-recordatorios",
+    linkedProcessSlug: "gastro-recordatorios-noshows",
     highlights: [
       "Confirmación por WhatsApp/SMS antes del servicio",
       "Lista de espera activa que recupera mesas canceladas",
       "Caída de no-shows del 30-50%",
+    ],
+  },
+  {
+    codigo: "1.4",
+    bloque: "B1",
+    nombre: "Chatbot con toda la información del restaurante",
+    descripcion:
+      "Un asistente que conoce la carta, los horarios, alérgenos, ubicación, eventos y precio medio. Responde 24/7 en WhatsApp, Instagram y la web — y, cuando hay intención de reservar, lo cierra.",
+    badge: "Atención instantánea",
+    linkedProcessSlug: "gastro-chatbot-info",
+    highlights: [
+      "Carta, horarios, alérgenos y eventos siempre actualizados",
+      "Responde al instante en WhatsApp, Instagram y web",
+      "Convierte conversaciones en reservas",
     ],
   },
 
@@ -61,7 +77,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Al día siguiente de la visita, los clientes con buena experiencia reciben un mensaje breve invitándoles a dejar reseña. Si la experiencia fue mala, el sistema lo detecta antes y lo deriva al responsable para gestionarlo en privado.",
     badge: "Más reseñas 5★",
-    linkedProcessSlug: "solicitud-automatica-resenas",
+    linkedProcessSlug: "gastro-solicitud-resenas",
     highlights: [
       "Solicitud en el momento de máxima satisfacción",
       "Filtro de descontentos a canal privado",
@@ -75,6 +91,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Cuando alguien deja una valoración baja en Google o TripAdvisor, el responsable recibe un aviso con la reseña y un borrador de respuesta listo para revisar y publicar.",
     badge: "Protege reputación",
+    linkedProcessSlug: "gastro-alertas-resenas-negativas",
     highlights: [
       "Alerta inmediata cuando publican una reseña <3★",
       "Borrador de respuesta generado con IA en el tono del local",
@@ -90,6 +107,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Cada cliente que reserva queda registrado: nombre, contacto, fecha de visita, preferencias, alergias. Sin pedir nada extra ni rellenar fichas a mano.",
     badge: "Activo a largo plazo",
+    linkedProcessSlug: "gastro-base-datos-comensales",
     highlights: [
       "Se llena sola con cada reserva, sin fichas manuales",
       "Preferencias y alergias guardadas en la ficha del comensal",
@@ -103,6 +121,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Si un cliente habitual lleva meses sin reservar, el sistema lo detecta y le envía un mensaje personal — una invitación, una novedad, una mención al plato de su última visita.",
     badge: "Recupera habituales",
+    linkedProcessSlug: "gastro-reactivacion-inactivos",
     highlights: [
       "Detección automática de habituales que se enfrían",
       "Mensaje personal, no campaña masiva",
@@ -116,6 +135,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Cuando organizas un evento o noche especial, avisas solo a los clientes que ya han venido a algo parecido. Sin spam, sin pagar publicidad para llegar a desconocidos.",
     badge: "Más ocupación",
+    linkedProcessSlug: "gastro-segmentacion-eventos",
     highlights: [
       "Segmentación por histórico de visitas y preferencias",
       "Cero coste publicitario para llenar eventos",
@@ -131,6 +151,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Cada mañana, un resumen de cómo fue el día anterior en cada local: cubiertos, ocupación, ticket medio, reseñas nuevas, no-shows. En un mensaje, no en varias hojas de cálculo.",
     badge: "Visibilidad total",
+    linkedProcessSlug: "gastro-reporte-diario",
     highlights: [
       "Llega por WhatsApp o email a primera hora",
       "Multi-local en un único parte consolidado",
@@ -140,14 +161,29 @@ export const restauracionModules: RestauracionModule[] = [
   {
     codigo: "4.2",
     bloque: "B4",
-    nombre: "Alertas de anomalías en tiempo real",
+    nombre: "Seguimiento de facturas próximas a vencer",
     descripcion:
-      "Si hay más cancelaciones de lo habitual, reseñas malas seguidas o un pico de reservas para el finde, llega un aviso sin que nadie tenga que mirarlo activamente.",
-    badge: "Reacción rápida",
+      "Aviso anticipado de cada factura de proveedor antes de su vencimiento. Agrupadas por proveedor, priorizadas por urgencia, listas para pagar sin recargos.",
+    badge: "–Recargos",
+    linkedProcessSlug: "gastro-seguimiento-facturas",
     highlights: [
-      "Detección automática de desviaciones vs. patrón histórico",
-      "Aviso al responsable sin tener que mirar nada",
-      "Permite actuar antes de que el problema escale",
+      "Cero recargos por facturas vencidas",
+      "Lista agrupada por proveedor, lista para pagar de una",
+      "Visibilidad anticipada del cash-flow operativo",
+    ],
+  },
+  {
+    codigo: "4.3",
+    bloque: "B4",
+    nombre: "Registro automático de gastos",
+    descripcion:
+      "Cada ticket o factura de gasto se captura, clasifica y archiva sin que nadie pegue papeles. Foto al ticket o reenvío del email — el resto se hace solo.",
+    badge: "Cierre en horas",
+    linkedProcessSlug: "gastro-registro-gastos",
+    highlights: [
+      "Cero tickets perdidos",
+      "Cierre de mes en horas, no en días",
+      "Trazabilidad total de cada gasto",
     ],
   },
 
@@ -155,27 +191,29 @@ export const restauracionModules: RestauracionModule[] = [
   {
     codigo: "5.1",
     bloque: "B5",
-    nombre: "Comunicación automática de turnos",
+    nombre: "Onboarding automático de personal nuevo",
     descripcion:
-      "Los horarios llegan a cada persona por WhatsApp con confirmación de lectura. Los cambios se notifican al momento. Sin grupos caóticos ni llamadas de última hora.",
-    badge: "Menos caos",
+      "Cuando entra alguien nuevo, recibe automáticamente documentos, protocolos y la información básica del restaurante. Sin que el encargado lo explique desde cero cada vez.",
+    badge: "Incorporación rápida",
+    linkedProcessSlug: "gastro-onboarding-personal",
     highlights: [
-      "Turnos individuales con confirmación de lectura",
-      "Cambios notificados al instante a quien afectan",
-      "Fin de los grupos de WhatsApp ingobernables",
+      "Documentos, protocolos y vídeos enviados al instante",
+      "Encargado deja de repetir lo mismo 30 veces al año",
+      "Persona nueva operativa en el primer turno",
     ],
   },
   {
     codigo: "5.2",
     bloque: "B5",
-    nombre: "Onboarding automático de personal nuevo",
+    nombre: "Gestión automática de personal",
     descripcion:
-      "Cuando entra alguien nuevo, recibe automáticamente documentos, protocolos y la información básica del restaurante. Sin que el encargado lo explique desde cero cada vez.",
-    badge: "Incorporación rápida",
+      "Turnos individuales por WhatsApp con confirmación de lectura, cambios notificados solo a quien afecta y sustituciones inteligentes cuando alguien falla. Fin del grupo de WhatsApp ingobernable.",
+    badge: "Menos caos",
+    linkedProcessSlug: "gastro-gestion-personal",
     highlights: [
-      "Documentos, protocolos y vídeos enviados al instante",
-      "Encargado deja de repetir lo mismo 30 veces al año",
-      "Persona nueva operativa en el primer turno",
+      "Turnos individuales con confirmación de lectura",
+      "Cambios notificados al instante a quien afectan",
+      "Sustituciones inteligentes cuando alguien falta",
     ],
   },
 
@@ -187,6 +225,7 @@ export const restauracionModules: RestauracionModule[] = [
     descripcion:
       "Cuando se programa un concierto, una noche especial o un nuevo plato, el contenido se genera y se publica en Instagram y Facebook en el momento adecuado.",
     badge: "Presencia sin esfuerzo",
+    linkedProcessSlug: "gastro-publicaciones-eventos",
     highlights: [
       "Generación de copy + imagen en la identidad del local",
       "Publicación programada al horario óptimo",
@@ -198,8 +237,9 @@ export const restauracionModules: RestauracionModule[] = [
     bloque: "B6",
     nombre: "Campañas de temporada hacia base propia",
     descripcion:
-      "Antes de los picos (Semana Santa, verano, Navidad), se activan campañas hacia la base de clientes existente. Sin agencia, sin briefings, sin semanas de espera.",
+      "Antes de los picos (San Valentín, Semana Santa, verano, Navidad), se activan campañas hacia la base de clientes existente. Sin agencia, sin briefings, sin semanas de espera.",
     badge: "Ocupación antes del pico",
+    linkedProcessSlug: "gastro-campanas-temporada",
     highlights: [
       "Calendario de campañas ligado al calendario gastronómico",
       "Sin agencia, sin briefings, sin coste publicitario",

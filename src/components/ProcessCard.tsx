@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search } from "lucide-react";
+import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search, PhoneCall, Heart, BarChart3, Users, Megaphone } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -16,7 +16,24 @@ const categoryIcons: Record<string, React.ElementType> = {
   "Gestión Interna": Building2,
   "Atención y Ventas": MessageSquare,
   "Auditoría tecnológica": Search,
+  // Bloques Gastronomía / Hostelería
+  "Reservas y atención 24/7": PhoneCall,
+  "Reputación y reseñas": Star,
+  "Fidelización y vuelta del cliente": Heart,
+  "Operativa diaria y visibilidad": BarChart3,
+  "Gestión de personal y equipo": Users,
+  "Marketing y contenido digital": Megaphone,
 };
+
+// Bloques que llevan acento naranja en su icono (sector gastronomía)
+const GASTRO_BLOCK_LABELS = new Set([
+  "Reservas y atención 24/7",
+  "Reputación y reseñas",
+  "Fidelización y vuelta del cliente",
+  "Operativa diaria y visibilidad",
+  "Gestión de personal y equipo",
+  "Marketing y contenido digital",
+]);
 
 interface ProcessCardProps {
   process: Process;
@@ -49,6 +66,7 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
   };
 
   const CategoryIcon = categoryIcons[process.categoriaNombre];
+  const isGastroBlock = GASTRO_BLOCK_LABELS.has(process.categoriaNombre);
 
   // Estilos dinámicos según accentColor del sector
   const cardHoverStyle = accentColor && isCardHovered && !isSelected
@@ -89,10 +107,19 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
       onMouseLeave={() => setIsCardHovered(false)}
     >
       {/* Icon + Category Badge */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 text-gray-400 shrink-0">
-          {CategoryIcon && <CategoryIcon className="w-5 h-5" />}
-        </div>
+      <div className={cn("flex items-start mb-4", CategoryIcon ? "justify-between" : "justify-end")}>
+        {CategoryIcon && (
+          <div
+            className={cn(
+              "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+              isGastroBlock
+                ? "bg-orange-500/10 border border-orange-500/30 text-orange-400"
+                : "bg-white/5 border border-white/10 text-gray-400"
+            )}
+          >
+            <CategoryIcon className="w-5 h-5" />
+          </div>
+        )}
 
         <div className="flex items-start gap-2 flex-wrap justify-end">
           <Badge variant="outline" className={cn("text-xs font-medium", getCategoryColorClass(process.categoriaNombre))}>
