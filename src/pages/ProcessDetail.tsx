@@ -155,8 +155,19 @@ const ProcessDetail = () => {
 
     const benefits = process.benefits || process.pasos.slice(0, 3);
 
+    // Sector gastro → repinta el tema "primary" a naranja sin tocar las 29 clases existentes
+    const isGastro = process.landing_slug === "gastronomia-hosteleria";
+    const themeStyle = isGastro
+        ? ({
+            "--primary": "21 90% 48%",
+            "--primary-foreground": "0 0% 100%",
+            "--accent": "21 90% 48%",
+            "--accent-foreground": "0 0% 100%",
+        } as React.CSSProperties)
+        : undefined;
+
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground" style={themeStyle}>
 
             {/* Nav */}
             <header className="border-b border-border bg-background sticky top-0 z-40">
@@ -172,7 +183,7 @@ const ProcessDetail = () => {
                             <Button
                                 className={`relative h-10 px-4 gap-2 border transition-all ${
                                     selectedProcessIds.size > 0
-                                        ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-[0_0_20px_rgba(0,200,220,0.2)]"
+                                        ? cn("bg-primary hover:bg-primary/90 text-primary-foreground border-primary", isGastro ? "shadow-[0_0_20px_rgba(234,88,12,0.25)]" : "shadow-[0_0_20px_rgba(0,200,220,0.2)]")
                                         : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-accent"
                                 }`}
                             >
@@ -258,7 +269,7 @@ const ProcessDetail = () => {
                             }}
                         />
                         <div className="relative z-10 flex flex-col items-center gap-4">
-                            <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(0,200,220,0.2)]">
+                            <div className={cn("w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300", isGastro ? "shadow-[0_0_30px_rgba(234,88,12,0.25)]" : "shadow-[0_0_30px_rgba(0,200,220,0.2)]")}>
                                 <svg className="w-8 h-8 text-primary ml-1" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z" />
                                 </svg>
