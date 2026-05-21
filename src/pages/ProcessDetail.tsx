@@ -29,14 +29,21 @@ const ProcessDetail = () => {
 
     const baseProcess = processes.find((p) => p.slug === slug);
 
+    // Fallback a Supabase para procesos no definidos en el archivo estático
+    const [dbProcess, setDbProcess] = useState<any>(null);
+    const [dbFetchedSlug, setDbFetchedSlug] = useState<string | null>(null);
+    // Loading = hay que buscar en Supabase y todavía no ha llegado la respuesta
+    const dbLoading = !baseProcess && dbFetchedSlug !== slug;
+
     // Aplicar variante de sector si existe
     const sectorSlug = searchParams.get("sector") ?? undefined;
     const process = useMemo(() => {
-        if (!baseProcess) return undefined;
-        const variant = sectorSlug ? baseProcess.sector_variants?.[sectorSlug] : undefined;
-        if (!variant) return baseProcess;
+        const bp = baseProcess || dbProcess;
+        if (!bp) return undefined;
+        const variant = sectorSlug ? bp.sector_variants?.[sectorSlug] : undefined;
+        if (!variant) return bp;
         return {
-            ...baseProcess,
+            ...bp,
             ...(variant.tagline           && { tagline: variant.tagline }),
             ...(variant.one_liner         && { one_liner: variant.one_liner }),
             ...(variant.descripcionDetallada && { descripcionDetallada: variant.descripcionDetallada }),
@@ -45,10 +52,10 @@ const ProcessDetail = () => {
             ...(variant.personalizacion   && { personalizacion: variant.personalizacion }),
             ...(variant.how_it_works_steps && { how_it_works_steps: variant.how_it_works_steps }),
             ...(variant.summary && {
-                summary: { ...baseProcess.summary, ...variant.summary },
+                summary: { ...bp.summary, ...variant.summary },
             }),
         };
-    }, [baseProcess, sectorSlug]);
+    }, [baseProcess, dbProcess, sectorSlug]);
 
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
@@ -60,20 +67,74 @@ const ProcessDetail = () => {
     const [carouselStep, setCarouselStep] = useState(0);
     const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
 
+    // Cargar imágenes desde Supabase (solo para procesos del archivo estático)
     useEffect(() => {
-        if (process?.codigo) {
-            supabase
-                .from('processes')
-                .select('image_url_1, image_url_2, image_url_3')
-                .eq('codigo', process.codigo)
-                .single()
-                .then(({ data }) => {
-                    if (data) {
-                        setStepImages([data.image_url_1 ?? null, data.image_url_2 ?? null, data.image_url_3 ?? null]);
-                    }
-                });
-        }
-    }, [process?.codigo]);
+        if (!process?.codigo || dbProcess) return;
+        supabase
+            .from('processes')
+            .select('image_url_1, image_url_2, image_url_3')
+            .eq('codigo', process.codigo)
+            .single()
+            .then(({ data }) => {
+                if (data) {
+                    setStepImages([data.image_url_1 ?? null, data.image_url_2 ?? null, data.image_url_3 ?? null]);
+                }
+            });
+    }, [process?.codigo, dbProcess]);
+
+    // Fallback: si el slug no está en el archivo estático, cargar desde Supabase
+    useEffect(() => {
+        if (!slug || baseProcess) return;
+        setDbProcess(null);
+        setDbFetchedSlug(null); // reset → dbLoading pasa a true
+        supabase
+            .from('processes')
+            .select('*')
+            .eq('slug', slug)
+            .limit(1)
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error('[ProcessDetail] Error cargando proceso desde Supabase:', error);
+                }
+                const row = Array.isArray(data) ? data[0] : null;
+                if (row) {
+                    // Construir exactamente 3 pasos para el carrusel (uno por imagen)
+                    const rawPasos: string[] = Array.isArray(row.pasos) ? row.pasos : [];
+                    const len = rawPasos.length;
+                    const threeSteps = [
+                        { title: rawPasos[0] ?? 'Paso 1', short: rawPasos[0] ?? '' },
+                        { title: rawPasos[Math.floor(len / 2)] ?? 'Paso 2', short: rawPasos[Math.floor(len / 2)] ?? '' },
+                        { title: rawPasos[len - 1] ?? 'Paso 3', short: rawPasos[len - 1] ?? '' },
+                    ];
+                    setDbProcess({
+                        id: row.id,
+                        codigo: row.codigo,
+                        slug: row.slug,
+                        nombre: row.nombre,
+                        tagline: row.tagline ?? '',
+                        descripcionDetallada: row.descripcion_detallada ?? '',
+                        categoria: row.categoria ?? 'A',
+                        categoriaNombre: row.categoria_nombre ?? 'Automatización',
+                        recomendado: row.recomendado ?? false,
+                        pasos: rawPasos,
+                        how_it_works_steps: threeSteps,
+                        personalizacion: row.personalizacion ?? '',
+                        dolores: row.dolores ?? [],
+                        benefits: row.benefits ?? [],
+                        sectores: row.sectores ?? [],
+                        herramientas: row.herramientas ?? [],
+                        landing_slug: row.landing_slug,
+                        integration_domains: row.integration_domains ?? [],
+                    });
+                    setStepImages([
+                        row.image_url_1 ?? null,
+                        row.image_url_2 ?? null,
+                        row.image_url_3 ?? null,
+                    ]);
+                }
+                setDbFetchedSlug(slug); // marca fetch completo → dbLoading pasa a false
+            });
+    }, [slug, baseProcess]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -144,6 +205,14 @@ const ProcessDetail = () => {
         : [];
 
     if (!process) {
+        if (dbLoading) {
+            return (
+                <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 gap-4">
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm text-muted-foreground">Cargando proceso...</p>
+                </div>
+            );
+        }
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
                 <h1 className="text-4xl font-bold mb-4">Proceso no encontrado</h1>
