@@ -17,6 +17,7 @@ import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { Input } from "@/components/ui/input";
 import { getCategoryColorClass } from "@/lib/category-colors";
+import { supabase } from "@/lib/supabase";
 
 const BENEFIT_ICONS = [Calendar, Bell, BarChart2, Zap, Settings2, Clock];
 
@@ -57,6 +58,22 @@ const ProcessDetail = () => {
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [carouselStep, setCarouselStep] = useState(0);
+    const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
+
+    useEffect(() => {
+        if (process?.codigo) {
+            supabase
+                .from('processes')
+                .select('image_url_1, image_url_2, image_url_3')
+                .eq('codigo', process.codigo)
+                .single()
+                .then(({ data }) => {
+                    if (data) {
+                        setStepImages([data.image_url_1 ?? null, data.image_url_2 ?? null, data.image_url_3 ?? null]);
+                    }
+                });
+        }
+    }, [process?.codigo]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -378,24 +395,34 @@ const ProcessDetail = () => {
                             const step = steps[carouselStep];
                             return (
                                 <div className="rounded-2xl border border-border overflow-hidden">
-                                    <div className="relative w-full bg-card aspect-video flex items-center justify-center">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
-                                        <div
-                                            className="absolute inset-0 opacity-10"
-                                            style={{
-                                                backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-                                                backgroundSize: "40px 40px"
-                                            }}
-                                        />
-                                        <div className="relative z-10 flex flex-col items-center gap-3">
-                                            <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                                <svg className="w-7 h-7 text-primary/50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                                                    <rect x="3" y="3" width="18" height="14" rx="2" />
-                                                    <path d="M3 17h18M9 21h6" />
-                                                </svg>
-                                            </div>
-                                            <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
-                                        </div>
+                                    <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
+                                        {stepImages[carouselStep] ? (
+                                            <img
+                                                src={stepImages[carouselStep]!}
+                                                alt={`Paso ${carouselStep + 1}`}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+                                                <div
+                                                    className="absolute inset-0 opacity-10"
+                                                    style={{
+                                                        backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+                                                        backgroundSize: "40px 40px"
+                                                    }}
+                                                />
+                                                <div className="relative z-10 flex flex-col items-center gap-3">
+                                                    <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                                        <svg className="w-7 h-7 text-primary/50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                                                            <rect x="3" y="3" width="18" height="14" rx="2" />
+                                                            <path d="M3 17h18M9 21h6" />
+                                                        </svg>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                     <div className="p-6 space-y-2 border-t border-border bg-card/30">
                                         <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
