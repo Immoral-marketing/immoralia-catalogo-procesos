@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import ProcessDetail from "./pages/ProcessDetail";
 import ProcessDetailFacturasVencidas from "./pages/ProcessDetailFacturasVencidas";
@@ -43,7 +43,8 @@ const App = () => (
             <Route path="/sector/salud" element={<SaludLanding />} />
             <Route path="/sector/construccion" element={<ConstruccionLanding />} />
             <Route path="/sector/academias" element={<AcademiasLanding />} />
-            <Route path="/sector/restauracion" element={<RestauracionLanding />} />
+            <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
+            <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
             <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
             <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />

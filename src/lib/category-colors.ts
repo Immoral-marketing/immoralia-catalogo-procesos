@@ -10,6 +10,14 @@ export const getCategoryColorClass = (categoriaNombre: string): string => {
       return "bg-indigo-500/10 text-indigo-400 border-indigo-500/30";
     case "Gestión Interna":
       return "bg-orange-500/10 text-orange-400 border-orange-500/30";
+    // Bloques Gastronomía / Hostelería
+    case "Reservas y atención 24/7":
+    case "Reputación y reseñas":
+    case "Fidelización y vuelta del cliente":
+    case "Operativa diaria y visibilidad":
+    case "Gestión de personal y equipo":
+    case "Marketing y contenido digital":
+      return "bg-orange-500/10 text-orange-400 border-orange-500/30";
     default:
       return "bg-secondary/10 text-secondary border-secondary/30";
   }

@@ -133,7 +133,7 @@ export const processes: Process[] = [
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     integration_domains: ["ERP"],
@@ -191,7 +191,7 @@ export const processes: Process[] = [
       "Generamos un informe automático"
     ],
     personalizacion: "Decide cuándo recibes el informe y por qué canal (tu vía de comunicación preferida, mensajería, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
@@ -341,7 +341,7 @@ export const processes: Process[] = [
       "Envío automático al contacto del cliente"
     ],
     personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
@@ -503,7 +503,8 @@ export const processes: Process[] = [
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
     related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    bloque_negocio: "B4",
   },
 
   {
@@ -551,7 +552,7 @@ export const processes: Process[] = [
     personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
     related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -599,7 +600,7 @@ export const processes: Process[] = [
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
     related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
@@ -648,7 +649,8 @@ export const processes: Process[] = [
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    bloque_negocio: "B4",
   },
 
   {
@@ -695,10 +697,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
-
+    bloque_negocio: "B4",
   },
   {
     id: "C11",
@@ -744,7 +746,7 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
     related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP", "CRM"]
   },
 
@@ -792,9 +794,10 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (tu vía de comunicación preferida, mensajería o nube).",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
   },
 
   {
@@ -844,7 +847,8 @@ export const processes: Process[] = [
     related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
-    sectores: ["Gestoria", "Construcción & Reformas", "Restauración", "Inmobiliaria"],
+    sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
+    bloque_negocio: "B4",
   },
   {
     id: "D14",
@@ -1035,7 +1039,8 @@ export const processes: Process[] = [
     sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Academias / Formación", "Hostelería"],
     related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
     integration_domains: ["OTHER"],
-    landing_slug: "salud"
+    landing_slug: "salud",
+    bloque_negocio: "B1",
   },
   {
     id: "E18",
@@ -1081,7 +1086,7 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Inmobiliaria", "Agencia/marketing"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
@@ -1231,7 +1236,7 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Centros Deportivos", "Academias / Formación", "Restauración", "E-commerce"],
+    sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
     related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
@@ -1281,7 +1286,7 @@ export const processes: Process[] = [
       "Notificamos al equipo sobre las interacciones más relevantes"
     ],
     personalizacion: "Define el tono de respuesta, qué tipo de interacciones priorizar y qué información enviar (enlaces, catálogos, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
@@ -1383,7 +1388,7 @@ export const processes: Process[] = [
       "Enviamos el mensaje de bienvenida con los acceso"
     ],
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
@@ -1433,10 +1438,11 @@ export const processes: Process[] = [
       "Roadmap por fases + backlog priorizado"
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: [],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
   },
   {
     id: "CM1",
@@ -1458,7 +1464,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de lead desde formulario/RRSS","Sincronización con CRM","Activación de secuencia de email/notificación"],
     personalizacion: "Define los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","HubSpot","ActiveCampaign","Make"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió","Pierdo solicitudes entre WhatsApp/Instagram/email"],
     landing_slug: "centros-deportivos",
@@ -1483,7 +1489,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por nuevo lead","Envío de secuencia temporizada","Detección de conversión para parada automática"],
     personalizacion: "Elige el canal (Email/WhatsApp) y el número de impactos.",
-    sectores: ["Centros Deportivos", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce"],
+    sectores: ["Centros Deportivos", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce"],
     herramientas: ["ActiveCampaign","Brevo","WhatsApp Business API"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos",
@@ -1860,7 +1866,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Generación de contrato dinámico","Envío para firma digital","Archivo automático en la nube"],
     personalizacion: "Incluye tus propias plantillas de contrato.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Docusign","SignNow","Make","Google Drive"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
@@ -1935,7 +1941,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de intención (NLP)","Respuesta desde base de conocimiento","Escalado inteligente con contexto"],
     personalizacion: "Entrena al bot con tus horarios y tarifas específicas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["WhatsApp Business API","Make","ChatGPT"],
     dolores: ["Me escriben mucho y no doy abasto","Tengo muchas preguntas repetidas"],
     landing_slug: "centros-deportivos",
@@ -1985,7 +1991,7 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de queja vía formulario","Creación de ticket prioritario","Notificación y seguimiento de SLA"],
     personalizacion: "Define tus tiempos de respuesta por tipo de queja.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","ClickUp","Make"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
@@ -2728,7 +2734,7 @@ export const processes: Process[] = [
       "Configuramos el repositorio de adjuntos (partes de baja, facturas de gastos)"
     ],
     personalizacion: "Define qué tipos de incidencias quieres permitir y si necesitan validación del gestor jefe.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Tally/JotForm", "Make", "Notion/ClickUp"],
     dolores: ["Me llegan las bajas médicas por fotos borrosas de WhatsApp", "A final de mes siempre falta algún variable que el cliente olvidó decirme"],
     integration_domains: ["OTHER"]
@@ -2740,24 +2746,24 @@ export const processes: Process[] = [
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     landing_slug: "centros-deportivos",
-    nombre: "Comunicaciones estacionales por calendario fiscal",
-    tagline: "Mantén a tus clientes informados y tranquilos con avisos automáticos útiles.",
+    nombre: "Comunicaciones estacionales por calendario gastronómico",
+    tagline: "Llena tu sala antes de cada pico de temporada con campañas automáticas al momento justo.",
     benefits: [
-      "Posicionamiento como expertos proactivos ante el cliente",
-      "Aumento de la confianza y reducción de la incertidumbre",
-      "Oportunidad de ofrecer servicios adicionales en momentos clave"
+      "Sala llena antes de los picos sin pagar publicidad externa",
+      "Comunicación personalizada para cada segmento de tu base de comensales",
+      "Calendario gastronómico automatizado que trabaja sin supervisión"
     ],
     recomendado: false,
-    descripcionDetallada: "No esperes a que el cliente te pregunte. En los momentos clave del año (apertura de la Renta, cierres trimestrales, fin de año fiscal), el sistema envía automáticamente contenidos útiles, recordatorios de plazos y recomendaciones de ahorro fiscal. Automatiza la comunicación masiva pero personalizada, derivando a cita solo a los clientes con dudas complejas.",
+    descripcionDetallada: "Tu restaurante tiene sus propios picos: San Valentín, Semana Santa, la comunión de mayo, el verano, el menú de Navidad. Antes de cada uno, el sistema activa una campaña personalizada hacia tu base de comensales — mensaje adecuado, canal adecuado, sin agencia y sin coste publicitario. Los que ya te conocen son los más fáciles de llenar.",
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
       integrations: ["Email Marketing", "CRM", "Calendario"]
     },
     how_it_works_steps: [
-      { title: "Trigger estacional", short: "Detectamos el hito fiscal.", detail: "El sistema se activa al llegar fechas clave (ej. 1 de abril para la Renta)." },
-      { title: "Envío didáctico", short: "Educamos al cliente.", detail: "Enviamos una guía o checklist automático sobre qué debe preparar este mes." },
-      { title: "Llamada a la acción", short: "Convertimos dudas en trámites.", detail: "Ofrecemos un link para agendar consulta o subir los documentos específicos." }
+      { title: "Calendario gastronómico", short: "Definimos los picos del restaurante.", detail: "Mapeamos las fechas clave del año para tu tipo de local: festivos, temporada alta, eventos especiales y noches temáticas." },
+      { title: "Segmentación de comensales", short: "Avisamos a quien ya te conoce.", detail: "Filtramos la base de clientes por historial de visitas, preferencias y frecuencia para enviar el mensaje más relevante a cada persona." },
+      { title: "Activación automática", short: "Las campañas se lanzan solas.", detail: "El sistema dispara cada campaña en el momento óptimo — sin que nadie tenga que acordarse ni preparar nada." }
     ],
     customization: {
       options_blocks: [
@@ -2768,16 +2774,17 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     pasos: [
-      "Redactamos las plantillas de comunicación para cada hito del año",
-      "Segmentamos tu base de datos (Autónomos vs Sociedades)",
-      "Configuramos los disparadores por fecha en tu herramienta de email",
-      "Integramos el link de reserva de citas para consultas especiales"
+      "Definimos el calendario de picos del restaurante (festivos, temporada, eventos propios)",
+      "Segmentamos la base de comensales por historial de visita, preferencias y frecuencia",
+      "Configuramos los disparadores por fecha y activamos las campañas de forma automática",
+      "Medimos la ocupación antes y después de cada campaña para optimizar la siguiente"
     ],
-    personalizacion: "Elige el tono de la comunicación y añade vídeos cortos explicativos propios si lo deseas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
-    herramientas: ["Mailchimp/ActiveCampaign", "Make", "Calendly"],
-    dolores: ["Los clientes me colapsan a llamadas cuando empieza la campaña de Renta", " Siento que no aporto valor más allá de meter facturas"],
-    integration_domains: ["CRM", "OTHER"]
+    personalizacion: "Elige el tono del local, los canales preferidos (WhatsApp o email) y las festividades que quieres activar. Si tienes eventos propios del restaurante, los añadimos al calendario.",
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    herramientas: ["Mailchimp/ActiveCampaign", "Make", "WhatsApp Business"],
+    dolores: ["El restaurante no aparece en los picos más rentables del año", "Las campañas de temporada llegan tarde o no llegan"],
+    integration_domains: ["CRM", "OTHER"],
+    bloque_negocio: "B6",
   },
   {
     id: "GS11",
@@ -2866,7 +2873,7 @@ export const processes: Process[] = [
       "Activamos el historial de versiones para evitar pérdida de datos"
     ],
     personalizacion: "Decide si prefieres un portal web propio o usar carpetas compartidas de Google Drive/Dropbox personalizadas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Google Drive/Dropbox", "Make", "Slack/Email"],
     dolores: ["Tengo el email colapsado de adjuntos de clientes y pierdo horas descargando", "Nunca sé si el cliente me ha enviado ya lo que le pedí"],
     integration_domains: ["DOCS", "OTHER"],
@@ -2960,7 +2967,7 @@ export const processes: Process[] = [
       "Activamos un canal de revisión para casos dudosos"
     ],
     personalizacion: "Define qué tipos de documentos quieres que se clasifiquen solos y cuáles prefieres revisar tú.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["OpenAI/OCR", "Make", "Gestores de archivos"],
     dolores: ["Recibo cientos de documentos al día y pierdo horas clasificándolos", "Muchas veces archivamos mal los documentos y luego no aparecen"],
     integration_domains: ["DOCS"]
@@ -4033,11 +4040,876 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige qué canales conectar, dónde centralizar las fichas y las reglas de asignación por tipo de solicitud.",
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
     dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "centros-deportivos",
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SECTOR GASTRONOMÍA / HOSTELERÍA — 16 procesos · 6 bloques
+  // Cada proceso es exclusivo de este sector (no se reutiliza)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── BLOQUE B1 · Reservas y atención 24/7 ────────────────────────────────
+  {
+    id: "GAST-1.1",
+    codigo: "1.1",
+    slug: "gastro-voz-reservas-247",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Asistente de voz para reservas 24/7",
+    tagline: "Una voz natural atiende cada llamada — incluso a las 23h — y deja la reserva confirmada en tu sistema.",
+    recomendado: true,
+    descripcionDetallada: "Una voz IA atiende las llamadas que entran fuera de horario, en hora punta o cuando la sala está hasta arriba. Pregunta fecha, hora, comensales y alergias, comprueba disponibilidad en tu sistema de reservas y deja la mesa confirmada. Si el restaurante está lleno, ofrece alternativas o anota al cliente en lista de espera. Atiende en castellano natural y maneja interrupciones del cliente sin perder el hilo.",
+    summary: {
+      what_it_is: "Recepcionista IA por voz, conectado a tu sistema de reservas, que atiende 24/7 sin perder ni una sola llamada.",
+      for_who: ["Restaurantes con alto volumen de llamadas", "Locales con horario partido", "Grupos con varios locales"],
+      requirements: ["Sistema de reservas (Covermanager, Tock, The Fork…) o agenda propia", "Línea telefónica derivable a la IA"],
+      output: "Reserva confirmada en el sistema + confirmación al cliente (SMS/WhatsApp) sin que nadie del equipo descuelgue el teléfono."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Telefonía", "Sistema de reservas", "WhatsApp/SMS"]
+    },
+    how_it_works_steps: [
+      { title: "Atiende la llamada", short: "Voz natural, no robótica.", detail: "El asistente responde con la voz y el tono del local, identifica que el cliente quiere reservar y se presenta como parte del restaurante." },
+      { title: "Recoge datos", short: "Fecha, hora, comensales, alergias.", detail: "Pregunta lo justo, confirma cada dato y maneja correcciones sobre la marcha (\"perdón, mejor a las 22h\")." },
+      { title: "Comprueba disponibilidad", short: "En tiempo real contra tu sistema.", detail: "Consulta Covermanager/Tock al instante. Si no hay hueco a esa hora, propone alternativas cercanas o lista de espera." },
+      { title: "Confirma y registra", short: "Reserva creada + confirmación al cliente.", detail: "Crea la reserva en el sistema, envía WhatsApp/SMS de confirmación y deja la llamada cerrada con todos los datos." }
+    ],
+    benefits: [
+      "Cero llamadas perdidas — el teléfono nunca queda sin atender",
+      "Voz natural en castellano, no suena robot",
+      "Sincronización directa con Covermanager, Tock o tu sistema actual"
+    ],
+    pasos: [
+      "La llamada entra al número del restaurante (o se desvía a la IA fuera de horario)",
+      "El asistente saluda con el nombre del local y pregunta en qué puede ayudar",
+      "Si es una reserva: recoge fecha, hora, comensales, nombre y alergias",
+      "Comprueba disponibilidad en tu sistema de reservas en tiempo real",
+      "Crea la reserva o propone alternativas si no hay hueco",
+      "Envía confirmación al cliente por el canal elegido (WhatsApp/SMS)"
+    ],
+    personalizacion: "Define el tono de voz, qué datos pedir, qué hacer en lleno (lista de espera, alternativas, derivar a humano), horarios de cobertura IA vs. humanos y el canal de confirmación.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Vapi", "ElevenLabs", "Covermanager / Tock / TheFork", "Twilio", "WhatsApp Business API"],
+    canales: ["Voz / Teléfono"],
+    dolores: [
+      "Perdemos reservas porque no podemos atender el teléfono en hora punta",
+      "Fuera de horario el contestador no recoge nada útil",
+      "Una persona dedicada solo al teléfono cuesta lo mismo que un cocinero"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
+    related_processes: ["gastro-reservas-multicanal", "gastro-recordatorios-noshows"]
+  },
+  {
+    id: "GAST-1.2",
+    codigo: "1.2",
+    slug: "gastro-reservas-multicanal",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Reservas desde WhatsApp, Instagram y web",
+    tagline: "El cliente reserva desde donde te encuentre — un DM, un WhatsApp, un botón en la web — sin duplicados ni mesas perdidas.",
+    recomendado: true,
+    descripcionDetallada: "Unificamos todos los canales de reserva entrantes en una única bandeja. El cliente pide mesa desde Instagram DM, WhatsApp o el botón de la web y la reserva cae al mismo sistema, sin duplicados y sin que el equipo tenga que copiar datos a mano. Si la disponibilidad cambia (cancelación, hueco abierto), se refleja al instante en todos los canales.",
+    summary: {
+      what_it_is: "Un panel único de reservas que recoge entradas desde redes sociales, WhatsApp y la web, eliminando saltos manuales entre apps.",
+      for_who: ["Restaurantes con presencia activa en Instagram", "Locales que reciben DMs pidiendo mesa", "Negocios que no quieren depender solo del teléfono"],
+      requirements: ["Cuenta Instagram Business", "WhatsApp Business API", "Sistema de reservas con webhook (o agenda compartida)"],
+      output: "Todas las reservas en una sola vista, con el canal de origen marcado y sin duplicados."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Instagram", "WhatsApp", "Web", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Escucha multicanal", short: "DMs, WhatsApp y web a la vez.", detail: "El sistema monitoriza cada canal en paralelo y detecta intención de reserva incluso en mensajes informales." },
+      { title: "Conversa y recoge", short: "Pide solo lo necesario.", detail: "Pregunta fecha, hora, comensales y alergias en el mismo canal donde escribe el cliente — sin obligarle a saltar a otra app." },
+      { title: "Confirma y centraliza", short: "Una sola bandeja, sin duplicados.", detail: "Crea la reserva en tu sistema único, marca el canal de origen y avisa al equipo si requiere atención humana." }
+    ],
+    benefits: [
+      "Un único panel para todos los canales — adiós a saltar entre apps",
+      "Sin duplicados ni reservas perdidas",
+      "El cliente reserva donde ya está, no donde tú quieres"
+    ],
+    pasos: [
+      "Conectamos Instagram DM, WhatsApp Business y un widget de la web",
+      "Detectamos automáticamente cuándo un mensaje es petición de reserva",
+      "Recogemos los datos en el propio canal sin obligar a cambiar de app",
+      "Creamos la reserva en tu sistema único y marcamos el canal de origen",
+      "Notificamos al equipo si hay algo fuera de lo previsto (grupos grandes, peticiones especiales)"
+    ],
+    personalizacion: "Elige qué canales activar, el tono de cada uno, qué datos pedir y qué se considera 'caso especial' para escalar al equipo (grupos >8 personas, peticiones VIP, eventos).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Instagram Business API", "WhatsApp Business API", "Make/n8n", "Covermanager / Tock"],
+    canales: ["Instagram", "WhatsApp", "Web"],
+    dolores: [
+      "Los DMs de Instagram pidiendo mesa se nos pasan",
+      "El equipo está copiando datos de WhatsApp al sistema de reservas a mano",
+      "Tenemos reservas duplicadas por venir del mismo cliente por dos canales"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2",
+    related_processes: ["gastro-voz-reservas-247", "gastro-recordatorios-noshows", "gastro-chatbot-info"]
+  },
+  {
+    id: "GAST-1.3",
+    codigo: "1.3",
+    slug: "gastro-recordatorios-noshows",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Recordatorios y confirmación anti no-shows",
+    tagline: "Un mensaje previo pide confirmación. Si el cliente cancela, esa mesa se ofrece al instante a la lista de espera.",
+    recomendado: true,
+    descripcionDetallada: "Antes del servicio, el sistema envía un mensaje al cliente pidiendo confirmación de la reserva. Si responde 'sí', mesa segura. Si dice que no puede, esa mesa se libera y se ofrece automáticamente a quien estaba en lista de espera. Resultado: caída del 30-50% en no-shows y mejor ocupación real de sala.",
+    summary: {
+      what_it_is: "Sistema automático de confirmación pre-servicio que reduce no-shows y rescata mesas para la lista de espera.",
+      for_who: ["Restaurantes con problema de no-shows", "Locales con lista de espera frecuente", "Restaurantes con menú degustación o producto de coste alto"],
+      requirements: ["Sistema de reservas con datos de contacto", "WhatsApp Business o SMS"],
+      output: "Tasa de no-show baja del 15-20% típico al 5-8%, con mesas canceladas rescatadas en tiempo real."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/SMS", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Mensaje pre-servicio", short: "24h y 2h antes.", detail: "Enviamos un mensaje amable pidiendo confirmación. El cliente solo tiene que responder un emoji o un 'sí/no'." },
+      { title: "Liberación automática", short: "Si cancela, la mesa vuela.", detail: "Si el cliente no puede venir, su mesa se libera al instante y se ofrece al primero de la lista de espera." },
+      { title: "Rescate de mesa", short: "Lista de espera activa.", detail: "Ofrecemos automáticamente la mesa libre al siguiente cliente en lista de espera vía WhatsApp con respuesta directa." }
+    ],
+    benefits: [
+      "Caída del 30-50% en no-shows",
+      "Mesas canceladas se rescatan al instante",
+      "Lista de espera funcional, no decorativa"
+    ],
+    pasos: [
+      "Detectamos las reservas del día siguiente (24h antes) o del turno (2h antes)",
+      "Enviamos confirmación amable por el canal del cliente (WhatsApp o SMS)",
+      "Si confirma → mesa lista. Si cancela → mesa libre",
+      "Notificamos al primero de la lista de espera con el hueco liberado",
+      "Si nadie responde a la confirmación, alertamos al equipo en sala"
+    ],
+    personalizacion: "Define cuándo se envía el mensaje (24h, 2h, ambos), el tono del recordatorio y las reglas de lista de espera (orden, tiempo de respuesta, etc.).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Twilio", "Covermanager / Tock", "Make/n8n"],
+    canales: ["WhatsApp", "SMS"],
+    dolores: [
+      "Cada noche tenemos 2-3 mesas que no aparecen sin avisar",
+      "Tenemos lista de espera pero cuando alguien cancela no le ofrecemos la mesa a nadie",
+      "Las pérdidas por no-shows en menú degustación son enormes"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3",
+    related_processes: ["gastro-voz-reservas-247", "gastro-reservas-multicanal"]
+  },
+  {
+    id: "GAST-1.4",
+    codigo: "1.4",
+    slug: "gastro-chatbot-info",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Chatbot con toda la información del restaurante",
+    tagline: "Un asistente que conoce la carta, horarios, alérgenos, ubicación, precio medio y eventos — y lo cuenta cuando se lo pregunten.",
+    recomendado: true,
+    descripcionDetallada: "Un asistente conversacional disponible en WhatsApp, Instagram DM y el chat de la web que tiene en la cabeza toda la información del restaurante: carta y precios, horarios, alérgenos y opciones especiales (sin gluten, vegano), ubicación y cómo llegar, eventos próximos, política de grupos, parking, terraza, mascotas, etc. Responde al instante 24/7 con la información actualizada y, cuando la conversación llega a 'quiero reservar', deriva o gestiona la reserva directamente.",
+    summary: {
+      what_it_is: "Base de conocimiento conversacional del restaurante accesible por chat. Respuestas instantáneas a todas las preguntas frecuentes que ahogan al equipo.",
+      for_who: ["Restaurantes con muchas preguntas repetidas", "Locales con carta amplia o cambiante", "Negocios con eventos o programación variable"],
+      requirements: ["Carta y datos del local actualizados", "WhatsApp Business o widget web", "Cuenta Instagram Business (opcional)"],
+      output: "Cliente informado al instante 24/7. Ahorras al equipo 1-2 horas al día de preguntas repetidas."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["WhatsApp", "Instagram", "Web", "IA / Base de conocimiento"]
+    },
+    how_it_works_steps: [
+      { title: "Carga la información", short: "Carta, horarios, todo.", detail: "Subimos carta con precios, alérgenos, horarios por día, ubicación, política de grupos, eventos. Se actualiza cuando tú la actualizas." },
+      { title: "Responde 24/7", short: "Instantáneo, en el canal del cliente.", detail: "Da respuestas precisas a las preguntas habituales: '¿tenéis terraza?', '¿abrís el lunes?', '¿tenéis opciones sin gluten?', '¿precio medio?'." },
+      { title: "Deriva a venta", short: "Cuando hay intención de reservar.", detail: "Si la conversación se orienta a reservar, conecta con tu sistema de reservas o pasa el contacto al humano con todo el contexto." }
+    ],
+    benefits: [
+      "Cero preguntas repetidas para el equipo",
+      "Información correcta y actualizada 24/7",
+      "Conversaciones que terminan en reserva, no en silencio"
+    ],
+    pasos: [
+      "Recopilamos toda la información del restaurante (carta, horarios, datos)",
+      "Entrenamos al asistente para responder en el tono del local",
+      "Lo conectamos a los canales donde te escriben los clientes",
+      "Responde dudas al instante con información actualizada",
+      "Cuando detecta intención de reservar, gestiona o deriva con contexto"
+    ],
+    personalizacion: "Define el tono del asistente, qué información incluir, qué preguntas escalar siempre a humano y cuándo proponer activamente reservar.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["OpenAI / Claude", "WhatsApp Business API", "Instagram Business", "Make/n8n"],
+    canales: ["WhatsApp", "Instagram", "Web"],
+    dolores: [
+      "Todos los días respondemos las mismas 10 preguntas (horarios, sin gluten, terraza)",
+      "El equipo está atendiendo el móvil en vez de la sala",
+      "Damos información incorrecta o desactualizada por las prisas"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4",
+    related_processes: ["gastro-reservas-multicanal", "gastro-voz-reservas-247"]
+  },
+
+  // ── BLOQUE B2 · Reputación y reseñas ────────────────────────────────────
+  {
+    id: "GAST-2.1",
+    codigo: "2.1",
+    slug: "gastro-solicitud-resenas",
+    categoria: "B2",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Solicitud automática de reseñas",
+    tagline: "Al día siguiente de la visita, los clientes contentos reciben un mensaje pidiendo reseña. Los descontentos van a canal privado.",
+    recomendado: true,
+    descripcionDetallada: "Después de cada servicio, el sistema detecta cuándo es el momento óptimo para pedir reseña (típicamente al día siguiente, no en caliente). Envía un mensaje breve y personal al cliente. Si la experiencia fue positiva, lo guía a dejar reseña en Google o TripAdvisor. Si detecta señales de descontento, deriva la conversación al responsable en privado para que pueda gestionarlo antes de que se convierta en una reseña pública negativa.",
+    summary: {
+      what_it_is: "Sistema automático de solicitud de reseñas con filtro de descontento — más reseñas reales, menos sorpresas públicas.",
+      for_who: ["Restaurantes que quieren crecer en Google Maps", "Locales que necesitan reseñas frescas para posicionar", "Negocios que ya tienen buen producto pero pocas reseñas"],
+      requirements: ["Sistema de reservas con datos de contacto", "WhatsApp/Email", "Ficha en Google Business activa"],
+      output: "Crecimiento orgánico de reseñas reales en Google + ratio mejor de positivas vs. negativas públicas."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Business", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el momento", short: "Día siguiente, no en caliente.", detail: "Tras el servicio, esperamos al momento de mayor satisfacción procesada (típicamente 18-24h después) para pedir reseña." },
+      { title: "Pregunta breve", short: "Una sola pregunta sencilla.", detail: "Mensaje corto y personal: '¿Cómo te trataron ayer?'. Si responde bien → enlace a Google. Si responde mal → conversación privada." },
+      { title: "Gestión de descontentos", short: "En privado, no en público.", detail: "Si el cliente menciona algo negativo, derivamos al responsable con todo el contexto para gestionar antes de que sea reseña pública." }
+    ],
+    benefits: [
+      "Más reseñas 5★ pidiendo en el momento de máxima satisfacción",
+      "Filtro de descontentos a canal privado — protege reputación",
+      "Crecimiento orgánico de reseñas reales en Google Maps"
+    ],
+    pasos: [
+      "Detectamos las reservas servidas del día anterior",
+      "Enviamos mensaje breve de seguimiento al cliente",
+      "Si la respuesta es positiva → enlace directo a reseña Google",
+      "Si la respuesta es negativa o tibia → conversación privada con el responsable",
+      "Registramos la interacción para análisis de tendencias"
+    ],
+    personalizacion: "Define cuándo se envía (24h, 48h), el tono, el canal (WhatsApp/email), qué responsable recibe los descontentos y si quieres añadir incentivo (descuento próxima visita).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Resend/SendGrid", "Google Business API", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Tenemos clientes contentos pero pocas reseñas en Google",
+      "Las únicas reseñas que dejan son las quejas",
+      "La competencia tiene 800 reseñas y nosotros 80"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
+    related_processes: ["gastro-alertas-resenas-negativas"]
+  },
+  {
+    id: "GAST-2.2",
+    codigo: "2.2",
+    slug: "gastro-alertas-resenas-negativas",
+    categoria: "B2",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Alertas de reseñas negativas en tiempo real",
+    tagline: "Cuando alguien deja una reseña <3★, recibes el aviso al instante con borrador de respuesta listo para revisar.",
+    recomendado: false,
+    descripcionDetallada: "Monitorizamos Google, TripAdvisor, TheFork y otras plataformas. Cuando alguien publica una reseña por debajo de 3 estrellas, el responsable recibe una notificación inmediata por WhatsApp o email con la reseña, el contexto del cliente (si reservó, qué tomó), y un borrador de respuesta generado por IA en el tono del local. Solo tienes que revisar, ajustar si quieres y publicar. Cero reseñas malas sin responder, cero respuestas tardías.",
+    summary: {
+      what_it_is: "Sistema de monitorización + alerta + asistencia de respuesta para reseñas negativas en todas las plataformas relevantes.",
+      for_who: ["Restaurantes presentes en Google + TripAdvisor + TheFork", "Locales que cuidan reputación online", "Grupos con varios locales que necesitan visibilidad consolidada"],
+      requirements: ["Acceso a Google Business", "Cuenta TripAdvisor/TheFork (opcional)"],
+      output: "100% de las reseñas <3★ con respuesta en menos de 24h, redactadas en el tono del local."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Google Business", "TripAdvisor", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza 24/7", short: "Todas las plataformas, en tiempo real.", detail: "Vigilamos Google, TripAdvisor, TheFork y cualquier otra plataforma donde estés presente." },
+      { title: "Alerta inmediata", short: "Aviso con contexto y borrador.", detail: "Si aparece una reseña <3★, el responsable recibe notificación con la reseña, el contexto del cliente y un borrador de respuesta IA." },
+      { title: "Respuesta humana asistida", short: "Tú revisas y publicas.", detail: "El borrador respeta el tono del local. Solo revisas, ajustas si quieres, y publicas. Cero reseñas malas sin responder." }
+    ],
+    benefits: [
+      "Alerta inmediata cuando publican una reseña <3★",
+      "Borrador de respuesta generado con IA en el tono del local",
+      "Cero reseñas malas sin responder ni respuestas tardías"
+    ],
+    pasos: [
+      "Monitorizamos las plataformas de reseñas en tiempo real",
+      "Detectamos reseñas por debajo del umbral definido (por defecto 3★)",
+      "Buscamos contexto del cliente en tu sistema (si reservó, fecha, mesa)",
+      "Generamos borrador de respuesta personalizado en el tono del local",
+      "Te enviamos alerta con todo + opción de aprobar/editar/rechazar"
+    ],
+    personalizacion: "Define el umbral de estrellas que activa la alerta, plataformas a monitorizar, tono de la respuesta IA y quién recibe la alerta.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Google Business API", "TripAdvisor", "OpenAI", "WhatsApp Business / Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Nos enteramos de las reseñas malas días después",
+      "No sabemos qué responder ni con qué tono",
+      "Cuando respondemos, ya nadie las ve"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
+    related_processes: ["gastro-solicitud-resenas"]
+  },
+
+  // ── BLOQUE B3 · Fidelización y vuelta del cliente ───────────────────────
+  {
+    id: "GAST-3.1",
+    codigo: "3.1",
+    slug: "gastro-base-datos-comensales",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Base de datos automática de comensales",
+    tagline: "Cada cliente que reserva queda registrado con preferencias, alergias y visitas — sin fichas manuales.",
+    recomendado: true,
+    descripcionDetallada: "Cada reserva crea o actualiza la ficha del comensal en tu base de datos: nombre, contacto, fechas de visita, qué pidió (si lo registramos), alergias, preferencias y observaciones. Sin pedirle nada extra al cliente y sin que nadie del equipo rellene fichas. Es el activo más valioso a 5 años: una base de habituales conocida que puedes segmentar para campañas, eventos y reactivación.",
+    summary: {
+      what_it_is: "CRM automatizado de comensales que se llena solo con cada reserva, sin trabajo manual.",
+      for_who: ["Restaurantes que quieren conocer a sus habituales", "Grupos con varios locales que comparten clientes", "Negocios que planean campañas a base propia"],
+      requirements: ["Sistema de reservas o entrada de datos consistente", "CRM ligero (Airtable, HubSpot o Notion)"],
+      output: "Base de datos limpia, segmentable y útil para campañas, eventos y análisis de visitas."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["Sistema de reservas", "CRM"]
+    },
+    how_it_works_steps: [
+      { title: "Captura en cada reserva", short: "Sin pedir nada extra.", detail: "Cada reserva (por cualquier canal) crea o actualiza la ficha del comensal con todos los datos disponibles." },
+      { title: "Enriquece automáticamente", short: "Preferencias y alergias guardadas.", detail: "Si el cliente menciona alergias, preferencias o aniversario, queda registrado en su ficha para próximas visitas." },
+      { title: "Segmenta para campañas", short: "Habituales, ocasionales, dormidos.", detail: "La base se segmenta sola por frecuencia, ticket medio, preferencias y antigüedad — lista para usar en campañas." }
+    ],
+    benefits: [
+      "Se llena sola con cada reserva, sin fichas manuales",
+      "Preferencias y alergias guardadas en la ficha del comensal",
+      "Tu activo más valioso a 5 años vista"
+    ],
+    pasos: [
+      "Conectamos tu sistema de reservas al CRM",
+      "Cada reserva crea/actualiza la ficha del comensal con todos los datos",
+      "Detectamos preferencias y alergias mencionadas en mensajes",
+      "Segmentamos automáticamente por frecuencia y ticket",
+      "Te damos un panel para consultar y exportar la base"
+    ],
+    personalizacion: "Define qué campos quieres registrar, qué cuenta como 'habitual' (frecuencia), cómo gestionar duplicados y qué consentimiento marketing pides al cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable", "HubSpot", "Notion", "Covermanager / Tock", "Make/n8n"],
+    dolores: [
+      "No sabemos quiénes son nuestros habituales",
+      "Tenemos clientes desde hace años y no les podemos avisar de nada porque no tenemos sus datos",
+      "Cada vez que viene un cliente VIP el equipo se entera tarde"
+    ],
+    integration_domains: ["CRM"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
+    related_processes: ["gastro-reactivacion-inactivos", "gastro-segmentacion-eventos"]
+  },
+  {
+    id: "GAST-3.2",
+    codigo: "3.2",
+    slug: "gastro-reactivacion-inactivos",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Reactivación de clientes inactivos",
+    tagline: "Si un habitual lleva meses sin venir, el sistema lo detecta y le envía un mensaje personal con un motivo para volver.",
+    recomendado: false,
+    descripcionDetallada: "El sistema detecta automáticamente cuándo un cliente habitual lleva más tiempo del normal sin reservar. En ese momento, le envía un mensaje personal — no campaña masiva — con un motivo concreto para volver: una novedad de carta, una mención al plato que pidió la última vez, una invitación a un evento o simplemente un saludo. Recupera entre el 15% y el 25% de la base inactiva sin coste publicitario.",
+    summary: {
+      what_it_is: "Sistema de detección de habituales que se enfrían + envío de mensajes personales de reactivación.",
+      for_who: ["Restaurantes con base de habituales identificada", "Negocios maduros con historial de clientes", "Locales con ticket medio alto donde un cliente perdido cuesta caro"],
+      requirements: ["Base de datos de comensales (módulo 3.1)", "WhatsApp/Email", "Carta o eventos actualizados"],
+      output: "Recuperación del 15-25% de clientes inactivos con mensajes personales, sin agencia ni publicidad."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta habituales fríos", short: "Más tiempo del normal sin venir.", detail: "Calcula para cada cliente su frecuencia habitual y detecta cuándo se está saliendo del patrón." },
+      { title: "Mensaje personal", short: "Con motivo concreto, no spam.", detail: "Genera un mensaje individual con un gancho real: plato nuevo, evento, mención a su última visita." },
+      { title: "Mide la respuesta", short: "Qué funciona, qué no.", detail: "Trackea quién vuelve, quién no responde, qué tipo de mensaje convierte mejor. Aprende y mejora." }
+    ],
+    benefits: [
+      "Detección automática de habituales que se enfrían",
+      "Mensaje personal, no campaña masiva",
+      "Recupera entre el 15% y el 25% de la base inactiva"
+    ],
+    pasos: [
+      "Calculamos la frecuencia normal de cada cliente",
+      "Detectamos cuándo alguien se está saliendo del patrón",
+      "Generamos un mensaje personal con motivo concreto",
+      "Lo enviamos por el canal preferido del cliente",
+      "Medimos la respuesta y mejoramos el mensaje en cada ciclo"
+    ],
+    personalizacion: "Define qué cuenta como 'inactivo' (umbral de tiempo), el canal preferido, tipos de gancho a usar (carta, eventos, descuentos) y la frecuencia máxima de contacto.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Email", "OpenAI", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Teníamos clientes habituales que han dejado de venir y no sabemos por qué",
+      "Cuando alguien deja de venir, no hacemos nada activo para recuperarlo",
+      "Pagamos publicidad para captar nuevos en vez de recuperar los que ya tuvimos"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
+    related_processes: ["gastro-base-datos-comensales", "gastro-segmentacion-eventos"]
+  },
+  {
+    id: "GAST-3.3",
+    codigo: "3.3",
+    slug: "gastro-segmentacion-eventos",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Comunicaciones segmentadas para eventos",
+    tagline: "Si organizas un evento, avisas solo a los clientes que ya han venido a algo parecido. Cero spam, cero publicidad.",
+    recomendado: false,
+    descripcionDetallada: "Cuando programas un evento (cena con maridaje, noche temática, concierto, brunch especial), el sistema te ayuda a identificar exactamente qué clientes de tu base ya han venido a eventos similares o tienen perfil afín. Envías el aviso solo a ellos. La tasa de apertura y conversión es muy superior a campañas masivas, y llenas el evento sin pagar publicidad a desconocidos.",
+    summary: {
+      what_it_is: "Sistema de segmentación + comunicación dirigida a clientes propios para llenar eventos sin coste publicitario.",
+      for_who: ["Restaurantes que organizan eventos regulares", "Locales con base segmentada por preferencias", "Negocios con producto premium o experiencias diferenciadas"],
+      requirements: ["Base de datos de comensales con histórico", "WhatsApp/Email"],
+      output: "Eventos llenos con clientes ya cualificados, tasa de apertura >40% vs 15% típico de email frío."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Define el evento", short: "Qué es, qué perfil encaja.", detail: "Describes el evento y el sistema identifica los criterios de perfil que mejor encajan (han venido a maridajes, prefieren vino, vienen en parejas, etc.)." },
+      { title: "Segmenta la base", short: "Solo los que encajan.", detail: "Filtra automáticamente la base de comensales por criterios de afinidad y propone una lista de destinatarios." },
+      { title: "Envía y mide", short: "Mensaje personalizado por canal.", detail: "Envía la invitación por el canal preferido de cada uno. Mide aperturas, respuestas y conversiones para mejorar la próxima vez." }
+    ],
+    benefits: [
+      "Segmentación por histórico de visitas y preferencias",
+      "Cero coste publicitario para llenar eventos",
+      "Tasa de apertura muy superior al email frío"
+    ],
+    pasos: [
+      "Defines el evento y sus criterios ideales de público",
+      "El sistema filtra la base de comensales por afinidad",
+      "Te propone la lista de destinatarios y el mensaje",
+      "Envías por el canal preferido de cada cliente",
+      "Mides resultados y aprendes para el siguiente evento"
+    ],
+    personalizacion: "Define los criterios de afinidad por tipo de evento, los canales preferidos por defecto y la frecuencia máxima de invitaciones por cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Resend", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Organizamos eventos y nos cuesta llenarlos",
+      "Tenemos clientes ideales en la base pero no sabemos quiénes son para cada evento",
+      "Pagamos publicidad para llenar eventos cuando ya tenemos a la gente en casa"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
+    related_processes: ["gastro-base-datos-comensales", "gastro-campanas-temporada"]
+  },
+
+  // ── BLOQUE B4 · Operativa diaria y visibilidad ──────────────────────────
+  {
+    id: "GAST-4.1",
+    codigo: "4.1",
+    slug: "gastro-reporte-diario",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Reporte diario por restaurante",
+    tagline: "Cada mañana, un parte único con cubiertos, ocupación, ticket medio, reseñas nuevas y no-shows del día anterior.",
+    recomendado: true,
+    descripcionDetallada: "Cada mañana a la hora que decidas, recibes un resumen consolidado de cómo fue el día anterior en cada uno de tus locales: cubiertos servidos, ocupación por turno, ticket medio, reseñas nuevas y su valoración, no-shows e incidencias destacables. Todo en un único mensaje por WhatsApp o email, no en cinco hojas de cálculo distintas. Para grupos con varios locales, llega un parte consolidado del grupo y opcionalmente uno por local.",
+    summary: {
+      what_it_is: "Informe diario operativo consolidado que llega antes de que abras el ordenador.",
+      for_who: ["Restauradores que llevan varios turnos", "Grupos con múltiples locales", "Propietarios que no quieren depender del encargado para enterarse"],
+      requirements: ["Sistema de reservas con datos de cubiertos", "TPV/POS con ticket medio (opcional)", "Acceso a Google Business para reseñas"],
+      output: "Un mensaje matutino con todos los KPIs clave del día anterior por local y consolidado."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Sistema de reservas", "TPV", "Google Business", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Recopila datos overnight", short: "De todas las fuentes.", detail: "Durante la noche el sistema recoge cubiertos, ticket medio, reseñas, no-shows e incidencias de todas las fuentes." },
+      { title: "Consolida por local", short: "Un solo mensaje, no cinco.", detail: "Une todos los datos en un parte claro por local y un consolidado del grupo si tienes varios." },
+      { title: "Envía al equipo directivo", short: "WhatsApp o email, a primera hora.", detail: "Llega al canal y a la hora que defines, sin que nadie tenga que prepararlo manualmente." }
+    ],
+    benefits: [
+      "Llega por WhatsApp o email a primera hora",
+      "Multi-local en un único parte consolidado",
+      "Sin esperar a que el encargado pase el cierre"
+    ],
+    pasos: [
+      "Conectamos sistema de reservas, TPV y plataformas de reseñas",
+      "Definimos el horario y el formato del parte",
+      "Cada mañana se generan los datos del día anterior",
+      "Se consolidan en un mensaje único (o uno por local + consolidado)",
+      "Se envía por WhatsApp o email al equipo definido"
+    ],
+    personalizacion: "Define qué KPIs incluir, formato (texto, tabla, gráfico), hora de envío, destinatarios por local y por grupo, y nivel de detalle.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Covermanager / Tock", "TPV (Glop, Camarero10, etc.)", "Google Business API", "Make/n8n", "WhatsApp/Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Cada mañana llamo al encargado para saber cómo fue el día anterior",
+      "Tengo varios locales y no consigo una visión consolidada",
+      "Los informes que pido tardan semanas en llegar"
+    ],
+    integration_domains: ["ERP", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
+    related_processes: ["gastro-seguimiento-facturas", "gastro-registro-gastos"]
+  },
+  {
+    id: "GAST-4.2",
+    codigo: "4.2",
+    slug: "gastro-seguimiento-facturas",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Seguimiento de facturas próximas a vencer",
+    tagline: "Aviso anticipado de cada factura de proveedor antes de su vencimiento, agrupada por proveedor y prioridad.",
+    recomendado: false,
+    descripcionDetallada: "El sistema vigila tus facturas de compra (proveedores de género, bebida, suministros, alquileres). Con la antelación que tú decidas, te avisa antes de cada vencimiento con la lista priorizada: cuáles vencen mañana, esta semana, el próximo lunes, agrupadas por proveedor. Adiós a recargos por olvidar pagar a tiempo y adiós a llamadas incómodas de proveedores.",
+    summary: {
+      what_it_is: "Sistema de vigilancia y aviso anticipado de vencimiento de facturas de compra de un restaurante.",
+      for_who: ["Restaurantes con muchos proveedores recurrentes", "Grupos con compras descentralizadas", "Negocios que pagan recargos por olvidar facturas"],
+      requirements: ["Software de gestión / ERP / hojas de control de facturas", "Email o WhatsApp del responsable"],
+      output: "Cero facturas vencidas sin pagar a tiempo. Aviso anticipado con priorización."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["ERP / Software de gestión", "Email/WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Vigila los vencimientos", short: "Todas las facturas, todos los días.", detail: "Cada noche revisa las facturas pendientes y calcula cuáles vencen en los próximos días según tu umbral." },
+      { title: "Agrupa y prioriza", short: "Por proveedor y urgencia.", detail: "Agrupa las facturas por proveedor para pagar de una sola vez y prioriza por urgencia y por importe." },
+      { title: "Avisa al responsable", short: "Con todo listo para pagar.", detail: "Envía aviso con la lista, el importe total y los datos necesarios para hacer las transferencias." }
+    ],
+    benefits: [
+      "Cero recargos por facturas vencidas",
+      "Lista agrupada por proveedor, lista para pagar de una",
+      "Visibilidad anticipada del cash-flow operativo"
+    ],
+    pasos: [
+      "Conectamos tu sistema de gestión de facturas",
+      "Definimos el umbral de aviso (2 días, 5 días, 1 semana)",
+      "Cada día el sistema revisa los vencimientos próximos",
+      "Genera la lista agrupada por proveedor y priorizada",
+      "Te llega el aviso por el canal que prefieras"
+    ],
+    personalizacion: "Define el umbral de anticipación (cuándo avisar), si agrupar por proveedor o no, el canal y la frecuencia (diaria, semanal).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["ERP / Holded / Anfix / Sage", "Make/n8n", "Email/WhatsApp"],
+    canales: ["Email", "WhatsApp"],
+    dolores: [
+      "Olvidamos pagar facturas y nos clavan recargos",
+      "Las facturas de proveedores se acumulan y nadie las revisa hasta que llaman",
+      "No tenemos visibilidad de qué tenemos que pagar la próxima semana"
+    ],
+    integration_domains: ["ERP"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
+    related_processes: ["gastro-reporte-diario", "gastro-registro-gastos"]
+  },
+  {
+    id: "GAST-4.3",
+    codigo: "4.3",
+    slug: "gastro-registro-gastos",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Registro automático de gastos",
+    tagline: "Cada ticket o factura de gasto se captura, clasifica y archiva sin que nadie pegue papeles ni teclee importes.",
+    recomendado: false,
+    descripcionDetallada: "El equipo hace foto a un ticket o reenvía una factura por email — el sistema extrae proveedor, importe, fecha, IVA y partida de gasto (género, bebida, suministros, etc.), lo registra en el ERP y archiva el justificante en la nube. Adiós a cajas de zapatos llenas de tickets, adiós a buscar a fin de mes qué se compró y dónde.",
+    summary: {
+      what_it_is: "Captura automatizada de tickets y facturas de gasto + clasificación contable + archivo en la nube.",
+      for_who: ["Restaurantes que pierden tickets de compra", "Grupos con compras descentralizadas (varios encargados compran)", "Negocios que quieren cerrar mes en horas, no días"],
+      requirements: ["Móvil del equipo (foto del ticket) o email", "ERP / Software contable", "Almacenamiento en la nube"],
+      output: "Todos los gastos registrados y clasificados al día, con justificante archivado y trazable."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["OCR / IA", "ERP", "Google Drive / Dropbox"]
+    },
+    how_it_works_steps: [
+      { title: "Captura el justificante", short: "Foto del ticket o reenvío email.", detail: "Cualquiera del equipo hace foto al ticket o reenvía la factura electrónica. No hace falta app especial." },
+      { title: "Extrae los datos", short: "OCR + IA leen todo.", detail: "El sistema extrae proveedor, importe, fecha, IVA y propone partida de gasto según el histórico." },
+      { title: "Registra y archiva", short: "ERP + nube.", detail: "Anota el gasto en el ERP con la clasificación correcta y guarda el justificante en la carpeta de la nube." }
+    ],
+    benefits: [
+      "Cero tickets perdidos",
+      "Cierre de mes en horas, no en días",
+      "Trazabilidad total de cada gasto"
+    ],
+    pasos: [
+      "El equipo hace foto al ticket o reenvía la factura por email",
+      "El sistema extrae proveedor, importe, fecha, IVA",
+      "Clasifica el gasto por partida (género, bebida, suministros...)",
+      "Registra en el ERP/software de gestión",
+      "Archiva el justificante en la carpeta de la nube correspondiente"
+    ],
+    personalizacion: "Define las partidas de gasto a usar, el sistema de archivo en la nube, qué emails de proveedor conectar y reglas de aprobación si las hay.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Mindee / OCR", "Holded / Anfix", "Google Drive / Dropbox", "Make/n8n"],
+    dolores: [
+      "Los tickets de proveedores se pierden o se acumulan sin registrar",
+      "El cierre de mes es una pesadilla de buscar justificantes",
+      "No sabemos cuánto gastamos en cada partida hasta meses después"
+    ],
+    integration_domains: ["ERP", "DOCS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
+    related_processes: ["gastro-reporte-diario", "gastro-seguimiento-facturas"]
+  },
+
+  // ── BLOQUE B5 · Gestión de personal y equipo ────────────────────────────
+  {
+    id: "GAST-5.1",
+    codigo: "5.1",
+    slug: "gastro-onboarding-personal",
+    categoria: "B5",
+    categoriaNombre: "Gestión de personal y equipo",
+    nombre: "Onboarding automático de personal nuevo",
+    tagline: "Cuando entra alguien nuevo, recibe automáticamente documentos, protocolos y vídeos para estar operativo el primer turno.",
+    recomendado: false,
+    descripcionDetallada: "Cuando se incorpora una persona nueva al equipo, recibe automáticamente toda la información que necesita: contrato y documentación, protocolos del local (apertura, cierre, COVID, alergenos), vídeos de la carta y los platos clave, listado de proveedores, contactos del equipo y normas de uso de cocina/sala. Sin que el encargado se siente a explicar lo mismo 30 veces al año. El nuevo entra ya con contexto y arranca el primer turno operativo.",
+    summary: {
+      what_it_is: "Sistema automático de onboarding de personal con documentos, protocolos y vídeos enviados al instante.",
+      for_who: ["Restaurantes con rotación alta de personal", "Grupos con muchos locales que contratan en paralelo", "Negocios donde el encargado pierde tiempo explicando lo mismo"],
+      requirements: ["Carpeta con protocolos y documentos del local", "WhatsApp/Email del nuevo", "Vídeos de carta (opcional)"],
+      output: "Persona nueva operativa desde el primer turno, sin saturar al encargado."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Drive / Notion"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el alta", short: "Nueva persona, arranca onboarding.", detail: "Al registrar al nuevo en el sistema (o al añadirlo manualmente), arranca el flujo de onboarding." },
+      { title: "Envía paquete inicial", short: "Documentos, protocolos, vídeos.", detail: "Le llega un mensaje organizado con todo: contrato, protocolos, vídeos de carta, contactos del equipo y normas." },
+      { title: "Hace seguimiento", short: "¿Ha leído? ¿Tiene dudas?", detail: "Pregunta a los pocos días si todo está claro y deriva al encargado si hay dudas concretas." }
+    ],
+    benefits: [
+      "Documentos, protocolos y vídeos enviados al instante",
+      "Encargado deja de repetir lo mismo 30 veces al año",
+      "Persona nueva operativa en el primer turno"
+    ],
+    pasos: [
+      "Se detecta el alta de personal nuevo",
+      "Se le envía el paquete de onboarding por WhatsApp/email",
+      "Recibe documentos, protocolos, vídeos de carta",
+      "Se hace seguimiento a los pocos días para detectar dudas",
+      "Se notifica al encargado si hay puntos pendientes"
+    ],
+    personalizacion: "Define qué materiales incluir, en qué orden, canal de envío, días de seguimiento y a quién escalar dudas.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Google Drive / Notion", "WhatsApp Business", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Cada vez que entra alguien nuevo el encargado pierde un día entero",
+      "El personal nuevo empieza sin saber dónde está nada",
+      "Repetimos la misma explicación de carta 50 veces al año"
+    ],
+    integration_domains: ["DOCS", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
+    related_processes: ["gastro-gestion-personal"]
+  },
+  {
+    id: "GAST-5.2",
+    codigo: "5.2",
+    slug: "gastro-gestion-personal",
+    categoria: "B5",
+    categoriaNombre: "Gestión de personal y equipo",
+    nombre: "Gestión automática de personal",
+    tagline: "Turnos, comunicaciones, sustituciones y confirmaciones — sin grupos de WhatsApp caóticos ni llamadas de última hora.",
+    recomendado: true,
+    descripcionDetallada: "El sistema gestiona la comunicación operativa del equipo: cada persona recibe su turno semanal por WhatsApp con confirmación de lectura. Los cambios y sustituciones se notifican al instante solo a quien afecta. Si alguien no puede venir, propone automáticamente a quién avisar para cubrir según disponibilidad. Y guarda histórico para análisis de cobertura. Fin del grupo de WhatsApp ingobernable donde nadie sabe quién entra mañana.",
+    summary: {
+      what_it_is: "Sistema integral de comunicación de turnos, sustituciones y cambios para equipos de sala y cocina.",
+      for_who: ["Restaurantes con equipos de 5+ personas", "Grupos con plantilla rotativa", "Locales con turnos cambiantes"],
+      requirements: ["Cuadrante de turnos (Excel, Sesame, Factorial)", "WhatsApp del equipo", "Lista de personal con disponibilidad"],
+      output: "Cero malentendidos de turnos. Sustituciones cubiertas en minutos, no en horas."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["WhatsApp Business", "Software de turnos / Excel", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Envía turnos individuales", short: "A cada persona el suyo.", detail: "Cada lunes (o el día que decidas), cada persona recibe su turno semanal por WhatsApp con confirmación de lectura." },
+      { title: "Gestiona cambios", short: "Solo a quien afecta.", detail: "Si hay un cambio, se notifica al instante solo a las personas afectadas. Nada de spam al grupo entero." },
+      { title: "Sustituciones inteligentes", short: "Propone quién puede cubrir.", detail: "Si alguien no puede venir, el sistema propone candidatos según disponibilidad y experiencia, y gestiona el aviso." }
+    ],
+    benefits: [
+      "Turnos individuales con confirmación de lectura",
+      "Cambios notificados al instante a quien afectan",
+      "Fin de los grupos de WhatsApp ingobernables"
+    ],
+    pasos: [
+      "Conectamos tu cuadrante de turnos (Excel, Sesame, Factorial)",
+      "Enviamos a cada persona su turno individual por WhatsApp",
+      "Detectamos confirmación de lectura y respuesta",
+      "Gestionamos cambios y sustituciones notificando solo a quien afecta",
+      "Si alguien falta, proponemos candidatos para cubrir"
+    ],
+    personalizacion: "Define el día y hora de envío del cuadrante, los criterios de sustitución, qué confirmaciones pedir y cómo escalar imprevistos.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Sesame / Factorial / Excel", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Los grupos de WhatsApp del equipo son ingobernables",
+      "Cada cambio de turno requiere 20 llamadas",
+      "Cuando alguien falta, perdemos una hora buscando sustituto"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2",
+    related_processes: ["gastro-onboarding-personal"]
+  },
+
+  // ── BLOQUE B6 · Marketing y contenido digital ───────────────────────────
+  {
+    id: "GAST-6.1",
+    codigo: "6.1",
+    slug: "gastro-publicaciones-eventos",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Publicaciones automáticas de eventos y novedades",
+    tagline: "Cuando programas un evento o plato nuevo, el contenido se genera y publica en Instagram y Facebook en el momento óptimo.",
+    recomendado: false,
+    descripcionDetallada: "Cuando se programa un evento, una noche especial, un nuevo plato o una promoción, el sistema genera automáticamente el contenido (copy + imagen en la identidad visual del local) y lo publica en Instagram y Facebook al horario óptimo de tu audiencia. Tu Instagram deja de depender de quien tenga rato un martes a las once de la noche.",
+    summary: {
+      what_it_is: "Sistema de generación + publicación automática de contenido en redes sociales para restaurantes.",
+      for_who: ["Restaurantes con presencia en Instagram/Facebook", "Negocios que descuidan redes por falta de tiempo", "Locales con programación cambiante (eventos, carta de temporada)"],
+      requirements: ["Cuenta Instagram Business", "Identidad visual del local (logo, colores, tipografías)", "Calendario de eventos/cambios"],
+      output: "Instagram y Facebook actualizados sin esfuerzo, con contenido coherente y publicado en horario óptimo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Instagram Business API", "IA generativa", "Banco de imágenes"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge la novedad", short: "Evento, plato, oferta.", detail: "Detectas un evento o cambio (en calendario, agenda compartida o formulario simple) y arranca el flujo." },
+      { title: "Genera el contenido", short: "Copy + imagen en tu identidad.", detail: "La IA crea texto en el tono del local y una imagen siguiendo la guía visual (colores, tipografías, plantillas)." },
+      { title: "Publica al horario óptimo", short: "Cuando tu audiencia está activa.", detail: "Programa la publicación al horario de mayor engagement de tu cuenta, sin que tengas que pensar en ello." }
+    ],
+    benefits: [
+      "Generación de copy + imagen en la identidad del local",
+      "Publicación programada al horario óptimo",
+      "Tu Instagram deja de depender de quien tenga rato"
+    ],
+    pasos: [
+      "Detectamos novedades (evento, plato nuevo, oferta) en tu calendario o formulario",
+      "La IA genera el copy en el tono del local",
+      "Se crea la imagen siguiendo tu identidad visual",
+      "Se programa la publicación al horario óptimo",
+      "Publicamos en Instagram, Facebook y opcionalmente otros canales"
+    ],
+    personalizacion: "Define el tono de la marca, la identidad visual (plantillas, colores, tipografías), los canales a publicar, la frecuencia máxima y si quieres aprobación humana antes de cada post.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Instagram Business API", "OpenAI / DALL-E", "Canva API", "Make/n8n"],
+    canales: ["Instagram", "Facebook"],
+    dolores: [
+      "Nuestro Instagram lleva semanas sin publicar nada",
+      "Las publicaciones que hacemos son inconsistentes en estética",
+      "No tenemos tiempo de pensar el contenido encima de servir mesas"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    related_processes: ["gastro-campanas-temporada"]
+  },
+  {
+    id: "GAST-6.2",
+    codigo: "6.2",
+    slug: "gastro-campanas-temporada",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Campañas de temporada hacia base propia",
+    tagline: "Antes de los picos (San Valentín, Semana Santa, verano, Navidad), se activan campañas a tu base de clientes. Sin agencia.",
+    recomendado: true,
+    descripcionDetallada: "El sistema sigue un calendario gastronómico de picos del año: San Valentín, Día de la Madre/Padre, Semana Santa, comuniones, verano, vuelta al cole, Navidades, Nochevieja. Antes de cada uno, activa una campaña automática a tu base de clientes — los que ya han venido — con el mensaje y la oferta adecuada. Llenado anticipado del pico sin agencia, sin briefings y sin coste publicitario.",
+    summary: {
+      what_it_is: "Calendario automatizado de campañas de temporada dirigidas a base propia, sin agencia ni publicidad.",
+      for_who: ["Restaurantes con producto adaptable a temporadas", "Locales con base de habituales identificada", "Negocios que quieren llenar picos con clientes ya cualificados"],
+      requirements: ["Base de datos de comensales (módulo 3.1)", "WhatsApp/Email", "Calendario de oferta por temporada"],
+      output: "Picos del año llenados con clientes propios, sin coste publicitario, con anticipación suficiente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email", "Calendario gastronómico"]
+    },
+    how_it_works_steps: [
+      { title: "Calendario gastronómico", short: "Picos del año marcados.", detail: "Definimos juntos los picos relevantes para tu local (San Valentín, comuniones, eventos locales, etc.)." },
+      { title: "Activa anticipación", short: "3-4 semanas antes del pico.", detail: "Con tiempo suficiente, arranca la campaña: mensaje a la base segmentada, oferta de reserva anticipada." },
+      { title: "Mide y ajusta", short: "Qué pico funciona mejor.", detail: "Cada campaña deja datos: aperturas, reservas generadas, ticket medio. Aprendes para el siguiente año." }
+    ],
+    benefits: [
+      "Calendario de campañas ligado al calendario gastronómico",
+      "Sin agencia, sin briefings, sin coste publicitario",
+      "Llenado anticipado de los picos del año"
+    ],
+    pasos: [
+      "Definimos juntos el calendario gastronómico del local",
+      "Para cada pico, configuramos audiencia, mensaje y oferta",
+      "3-4 semanas antes, se activa la campaña automáticamente",
+      "El mensaje sale por el canal preferido de cada cliente",
+      "Medimos resultados y mejoramos para el siguiente ciclo"
+    ],
+    personalizacion: "Define qué picos del año son relevantes, el tono y oferta de cada uno, los canales preferidos y la frecuencia máxima de contacto por cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Resend", "Make/n8n", "OpenAI"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Llegamos tarde a campañas de Navidad / San Valentín",
+      "Pagamos publicidad para llenar fechas cuando ya tenemos clientes que vendrían",
+      "Las agencias tardan semanas en preparar una campaña simple"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
+    related_processes: ["gastro-segmentacion-eventos", "gastro-base-datos-comensales", "gastro-publicaciones-eventos"]
   },
 ];
 
