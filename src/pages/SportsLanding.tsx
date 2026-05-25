@@ -1,32 +1,37 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { processes, categories } from "@/data/processes";
+import { processes, type Process } from "@/data/processes";
+import { centrosDeportivosBlocks, type CentrosDeportivosBlockId } from "@/data/centrosDeportivosBlocks";
+import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/data/centrosDeportivosModules";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
-import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { 
-  ChevronRight, 
-  Target, 
-  Users, 
-  Zap, 
-  MessageSquare, 
-  ShieldCheck, 
+import { Input } from "@/components/ui/input";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  ChevronRight,
   ArrowRight,
-  TrendingDown,
-  Clock,
-  CheckCircle2,
   LayoutGrid,
-  Sparkles
+  Sparkles,
+  Search,
+  CheckCircle2,
+  ChevronDown,
+  Plus,
+  Check,
 } from "lucide-react";
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle, 
-  SheetTrigger 
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Tabs,
@@ -35,61 +40,127 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
-import { isOnboardingCompleted, getOnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
-import { StepIndicator } from "@/components/StepIndicator";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
+
+const ACCENT = "#0891b2";
+
+// Mapeo local slug → bloque para este sector.
+// No modifica bloque_negocio en processes.ts para no afectar a otros sectores.
+const SLUG_TO_BLOQUE: Record<string, CentrosDeportivosBlockId> = {
+  // B1 — Reservas y acceso 24/7
+  "asistente-reservas-recordatorios": "B1",
+  "gestion-automatizada-reservas": "B1",
+  "control-aforo-alertas-ocupacion": "B1",
+  "whatsapp-automata-faq": "B1",
+  "notificacion-cambios-cancelaciones-clase": "B1",
+  "comunicacion-cambios-horario": "B1",
+  // B2 — Captación y conversión
+  "lead-capture-crm": "B2",
+  "secuencia-bienvenida-leads-frios": "B2",
+  "reactivacion-leads-no-convirtieron": "B2",
+  "programa-referidos-automatizado": "B2",
+  "alta-automatica-clientes-solicitudes": "B2",
+  "alta-socio-accesos-auto": "B2",
+  // B3 — Fidelización y retención
+  "seguimiento-alumnos-riesgo-baja": "B3",
+  "deteccion-socios-churn-riesgo": "B3",
+  "cobro-recurrente-gestion-impagos": "B3",
+  "notificacion-renovacion-cuota": "B3",
+  "gestion-bonos-packs-clases": "B3",
+  "campana-reactivacion-ex-socios": "B3",
+  "felicitacion-cumpleanos-oferta": "B3",
+  "informe-mensual-progreso-alumno": "B3",
+  "registro-seguimiento-lesiones": "B3",
+  "control-asistencia-alertas-faltas": "B3",
+  // B4 — Operativa y personal
+  "gestion-turnos-disponibilidad-instructores": "B4",
+  "onboarding-empleado-entrenador": "B4",
+  "gestion-incidencias-equipamiento": "B4",
+  "gestion-contratos-firma-digital": "B4",
+  "informe-semanal-kpis-operativos": "B4",
+  "automatizacion-comunicacion-padres": "B4",
+  // B5 — Reputación y comunidad
+  "solicitud-automatica-resenas": "B5",
+  "encuesta-satisfaccion-post-clase": "B5",
+  "gestion-quejas-reclamaciones": "B5",
+  // B6 — Marketing y contenido (sin procesos existentes aún)
+};
 
 const SportsLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeBlockTab, setActiveBlockTab] = useState<"todos" | CentrosDeportivosBlockId>("todos");
+  const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<CentrosDeportivosBlockId>("B1");
+  const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "Immoralia - Catálogo de Procesos - Centros Deportivos";
-    // Popup after 15 seconds if onboarding not completed
-    const timer = setTimeout(() => {
-      if (!isOnboardingCompleted()) {
-        setShowOnboarding(true);
-      }
-    }, 60000);
-    return () => clearTimeout(timer);
+    document.title = "Immoralia · Catálogo para Centros Deportivos";
   }, []);
 
-  // Filtrar procesos para Centros Deportivos
-  const sportsProcesses = useMemo(() => 
-    processes.filter(p => !p.hidden && p.landing_slug === "centros-deportivos"),
+  // Procesos del sector centros deportivos
+  const sportsProcesses = useMemo(() =>
+    processes.filter((p) => !p.hidden && p.landing_slug === "centros-deportivos"),
     []
   );
 
-  const sportsCategories = useMemo(() => {
-    const catsMap = new Map();
-    sportsProcesses.forEach(p => {
-      if (!catsMap.has(p.categoriaNombre)) {
-        catsMap.set(p.categoriaNombre, p.categoriaNombre);
+  const filteredCatalog = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return sportsProcesses.filter((p) => {
+      if (activeBlockTab !== "todos") {
+        const bloque = SLUG_TO_BLOQUE[p.slug];
+        if (bloque !== activeBlockTab) return false;
       }
+      if (!q) return true;
+      return (
+        p.nombre.toLowerCase().includes(q) ||
+        p.tagline.toLowerCase().includes(q) ||
+        p.categoriaNombre.toLowerCase().includes(q)
+      );
     });
-    return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
-  }, [sportsProcesses]);
+  }, [sportsProcesses, activeBlockTab, searchQuery]);
 
-  const [activeCategory, setActiveCategory] = useState("todos");
-
-  const selectedProcesses = useMemo(() => {
-    return processes.filter(p => selectedProcessIds.has(p.id));
+  const selectedProcesses = useMemo((): Process[] => {
+    const real = processes.filter((p) => selectedProcessIds.has(p.id));
+    const modEntries = centrosDeportivosModules
+      .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
+      .map((m): Process => {
+        const block = centrosDeportivosBlocks.find((b) => b.id === m.bloque)!;
+        return {
+          id: `mod-${m.codigo}`,
+          codigo: m.codigo,
+          slug: `mod-${m.codigo}`,
+          categoria: "centros-deportivos",
+          categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
+          nombre: m.nombre,
+          tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
+          recomendado: false,
+          descripcionDetallada: m.descripcion,
+          pasos: [],
+          personalizacion: "",
+          landing_slug: "centros-deportivos",
+          sectores: ["Centros Deportivos"],
+          bloque_negocio: m.bloque,
+          modulo_codigo: m.codigo,
+        };
+      });
+    return [...real, ...modEntries];
   }, [selectedProcessIds]);
 
-  const scrollToProcesses = () => {
-    const el = document.getElementById("procesos-grid");
-    el?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const activeBlock = centrosDeportivosBlocks.find((b) => b.id === activeShowcaseBlock)!;
+
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30">
-      {/* Navigation / Header */}
-      <nav className="border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-sky-500/30 font-sans">
+      {/* ───────────────────── NAV ───────────────────── */}
+      <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link to="/">
             <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
@@ -100,24 +171,27 @@ const SportsLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-cyan-600 hover:bg-cyan-500 text-white border-cyan-600 shadow-[0_0_20px_rgba(8,145,178,0.2)]"
+                      ? "bg-sky-600 hover:bg-sky-500 text-white border-sky-600 shadow-[0_0_20px_rgba(14,165,233,0.2)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Mi Selección</span>
                   {selectedProcessIds.size > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-white text-cyan-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-white text-sky-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {selectedProcessIds.size}
                     </span>
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white">
-                <div className="h-full flex flex-col p-6 overflow-hidden">
+              <SheetContent
+                side="right"
+                className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white"
+              >
+                <div className="h-full flex flex-col p-6">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
-                      <LayoutGrid className="w-6 h-6 text-cyan-400" />
+                      <LayoutGrid className="w-6 h-6 text-sky-400" />
                       Mi Selección
                     </SheetTitle>
                   </SheetHeader>
@@ -127,8 +201,9 @@ const SportsLanding = () => {
                     onShare={() => setShowShareModal(true)}
                     n8nHosting={n8nHosting}
                     onHostingChange={setN8nHosting}
-                    className="flex-1 overflow-hidden"
-                    accentColor="#0891b2"
+                    className="flex-1 min-h-0"
+                    accentColor={ACCENT}
+                    selectedProcesses={selectedProcesses}
                   />
                 </div>
               </SheetContent>
@@ -137,283 +212,547 @@ const SportsLanding = () => {
         </div>
       </nav>
 
-      <StepIndicator currentStep={2} />
-
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
+      {/* ───────────────────── HERO ───────────────────── */}
+      <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1920&q=80')" }}
+          style={{ backgroundImage: "url('/centros-deportivos/hero.png')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/75 to-[#0d0d0d]/30" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-cyan-900/10 blur-[120px] rounded-full" />
-        <div className="relative z-10 container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
-            De gestionar tu centro deportivo, <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-              a liderar tu negocio
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-sky-900/10 blur-[120px] rounded-full" />
+
+        <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
+            De apagar fuegos en recepción, <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-500">
+              a liderar un centro que funciona solo
             </span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Automatizamos la captación, las reservas y el seguimiento de tus alumnos para que tú te centres en lo que importa: su progreso.
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            Vamos a recorrer juntos las áreas de tu centro donde la automatización
+            tiene más impacto. Sin tecnicismos, sin presión.{" "}
+            <span className="text-white">Tú decides por dónde empezar.</span>
           </p>
-          <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            <Button size="lg" onClick={scrollToProcesses} className="bg-cyan-600 hover:bg-cyan-500 text-white h-14 px-8 text-lg gap-2">
-              Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
+
+          <div className="flex flex-col items-center gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            <Button
+              size="lg"
+              onClick={() => scrollTo("modulos")}
+              className="bg-sky-600 hover:bg-sky-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-sky-900/30 transition-all hover:scale-[1.02]"
+            >
+              Empezar el recorrido <ChevronRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => setShowCalendlyModal(true)} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
-              Agendar llamada
-            </Button>
+            <div className="flex items-center gap-5">
+              <button
+                onClick={() => setShowCalendlyModal(true)}
+                className="text-sm text-gray-400 hover:text-sky-300 transition-colors underline-offset-4 hover:underline"
+              >
+                Agendar una llamada
+              </button>
+              <span className="text-white/15 text-xs">·</span>
+              <button
+                onClick={() => setShowContactForm(true)}
+                className="text-sm text-gray-400 hover:text-sky-300 transition-colors underline-offset-4 hover:underline"
+              >
+                Contáctanos
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-16 flex flex-col items-center gap-2 text-gray-500 animate-bounce">
+            <span className="text-[11px] tracking-widest uppercase">Sigue bajando</span>
+            <ChevronDown className="w-4 h-4" />
           </div>
         </div>
       </section>
 
-      {/* Processes Grid Section */}
-      <section id="procesos-grid" className="pt-10 pb-24">
+      {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
+      <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-30 pointer-events-none transition-all duration-700"
+          style={{
+            background: `radial-gradient(ellipse at 70% 50%, ${activeBlock.accent}25 0%, transparent 60%)`,
+          }}
+        />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-5 tracking-tight">
+              Las áreas donde un centro deportivo{" "}
+              <span className="text-sky-400">puede funcionar solo</span>
+            </h2>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              Seis áreas, cada una con un propósito claro. Pasa por encima de cada una para ver de qué va.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto items-start">
+            {/* Lista vertical izquierda */}
+            <div className="lg:col-span-5 space-y-2">
+              {centrosDeportivosBlocks.map((b) => {
+                const Icon = b.icon;
+                const isActive = b.id === activeShowcaseBlock;
+                return (
+                  <button
+                    key={b.id}
+                    onMouseEnter={() => setActiveShowcaseBlock(b.id)}
+                    onClick={() => {
+                      setActiveShowcaseBlock(b.id);
+                      scrollTo(`block-${b.id}`);
+                    }}
+                    className={`group relative w-full text-left rounded-2xl border transition-all duration-300 overflow-hidden ${
+                      isActive
+                        ? `${b.accentBorder} bg-gradient-to-r ${b.accentGradient}`
+                        : "border-white/8 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <div
+                      className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 ${
+                        isActive ? "opacity-100" : "opacity-0"
+                      }`}
+                      style={{ backgroundColor: b.accent }}
+                    />
+                    <div className="flex items-center gap-5 p-5 pl-6">
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 ${
+                          isActive ? `${b.accentBg} border ${b.accentBorder}` : "bg-white/5 border border-white/10"
+                        }`}
+                      >
+                        <Icon
+                          className={`w-6 h-6 transition-colors duration-300 ${
+                            isActive ? b.accentText : "text-gray-500 group-hover:text-gray-300"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span
+                            className={`text-[11px] tracking-widest transition-colors ${
+                              isActive ? b.accentText : "text-gray-500"
+                            }`}
+                          >
+                            MÓDULO {b.number}
+                          </span>
+                        </div>
+                        <h3
+                          className={`font-bold text-base md:text-lg transition-colors ${
+                            isActive ? "text-white" : "text-gray-300 group-hover:text-white"
+                          }`}
+                        >
+                          {b.title}
+                        </h3>
+                      </div>
+                      <ArrowRight
+                        className={`w-4 h-4 transition-all duration-300 shrink-0 ${
+                          isActive
+                            ? `${b.accentText} translate-x-1`
+                            : "text-gray-600 group-hover:text-gray-400 group-hover:translate-x-0.5"
+                        }`}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Preview lateral derecha */}
+            <div className="lg:col-span-7 lg:sticky lg:top-24">
+              <div
+                key={activeBlock.id}
+                className="relative animate-in fade-in slide-in-from-right-4 duration-500"
+              >
+                <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/3] lg:aspect-[5/4]">
+                  <img
+                    src={activeBlock.image}
+                    alt={activeBlock.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 mix-blend-overlay opacity-30"
+                    style={{ backgroundColor: activeBlock.accent }}
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+
+                  <div className="absolute top-5 left-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15">
+                    <span className={`text-xs font-light ${activeBlock.accentText}`}>
+                      {activeBlock.id}
+                    </span>
+                    <span className="text-xs text-gray-300">Módulo {activeBlock.number}</span>
+                  </div>
+
+                  <div className="absolute inset-x-0 bottom-0 p-7 md:p-9">
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
+                      {activeBlock.title}
+                    </h3>
+                    <p className="text-sm md:text-base text-gray-300 italic">{activeBlock.sub}</p>
+                  </div>
+                </div>
+
+                <p className="mt-6 text-gray-300 leading-relaxed text-justify hyphens-auto">
+                  {activeBlock.teaser}
+                </p>
+
+                <button
+                  onClick={() => scrollTo(`block-${activeBlock.id}`)}
+                  className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${activeBlock.accentText} hover:underline`}
+                >
+                  Conocer en profundidad <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────────────── ZOOM POR MÓDULO ───────────────────── */}
+      {centrosDeportivosBlocks.map((b, idx) => {
+        const Icon = b.icon;
+        const modules = getCentrosDeportivosModulesByBlock(b.id);
+        const reverse = idx % 2 === 1;
+        return (
+          <section
+            key={b.id}
+            id={`block-${b.id}`}
+            className="py-28 border-t border-white/5 scroll-mt-20 relative overflow-hidden"
+          >
+            <div
+              className="absolute inset-0 opacity-40 pointer-events-none"
+              style={{
+                background: reverse
+                  ? `radial-gradient(ellipse at 15% 50%, ${b.accent}20 0%, transparent 55%)`
+                  : `radial-gradient(ellipse at 85% 50%, ${b.accent}20 0%, transparent 55%)`,
+              }}
+            />
+
+            <div className="container mx-auto px-6 relative z-10">
+              <div
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
+                  reverse ? "lg:[&>div:first-child]:order-2" : ""
+                }`}
+              >
+                {/* Imagen */}
+                <div className="relative px-4">
+                  <div className="relative aspect-[4/5]">
+                    <div className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 group">
+                      <img
+                        src={b.image}
+                        alt={b.title}
+                        className="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-105"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
+                        }}
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-t ${b.accentGradient} mix-blend-soft-light`} />
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                      <div
+                        className="absolute bottom-4 right-5 font-bold text-[120px] leading-none opacity-15 select-none"
+                        style={{ color: b.accent }}
+                      >
+                        {b.number}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="absolute -inset-10 -z-10 rounded-3xl blur-3xl opacity-20"
+                    style={{ backgroundColor: b.accent }}
+                  />
+                </div>
+
+                {/* Texto + módulos */}
+                <div>
+                  <div className="inline-flex items-center gap-2 mb-5">
+                    <div
+                      className={`w-10 h-10 rounded-xl ${b.accentBg} border ${b.accentBorder} flex items-center justify-center`}
+                    >
+                      <Icon className={`w-5 h-5 ${b.accentText}`} />
+                    </div>
+                    <span className={`${b.accentText} font-medium tracking-widest uppercase text-xs`}>
+                      Módulo {b.number}
+                    </span>
+                  </div>
+                  <h2
+                    className="text-3xl md:text-5xl font-bold mb-4 tracking-tight bg-clip-text text-transparent leading-tight pb-2"
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, #fff 0%, #fff 60%, ${b.accent} 130%)`,
+                    }}
+                  >
+                    {b.title}
+                  </h2>
+                  <p className="text-base md:text-lg text-gray-400 mb-7 italic">{b.sub}</p>
+                  <p className="text-gray-300 leading-relaxed mb-7 text-justify hyphens-auto">
+                    {b.paragraph}
+                  </p>
+
+                  {/* Beneficios */}
+                  <Accordion
+                    type="single"
+                    collapsible
+                    defaultValue="benefits"
+                    className="mb-8"
+                  >
+                    <AccordionItem
+                      value="benefits"
+                      className={`rounded-2xl border ${b.accentBorder} bg-white/[0.02] px-5 data-[state=open]:bg-white/[0.04]`}
+                    >
+                      <AccordionTrigger className="hover:no-underline py-4">
+                        <span className="flex items-center gap-2.5 text-sm font-semibold">
+                          <Sparkles className={`w-4 h-4 ${b.accentText}`} />
+                          Lo que cambia en tu negocio
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <ul className="space-y-3 pb-2">
+                          {b.benefits.map((bn, i) => (
+                            <li
+                              key={i}
+                              className="flex gap-3 text-gray-300 animate-in fade-in slide-in-from-left-2 duration-500"
+                              style={{ animationDelay: `${i * 80}ms` }}
+                            >
+                              <CheckCircle2 className={`w-5 h-5 ${b.accentText} shrink-0 mt-0.5`} />
+                              <span className="leading-relaxed">{bn}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+
+                  {/* Lista de módulos con toggle */}
+                  <div className="mb-8 border-t border-white/8">
+                    {modules.map((m, i) => {
+                      const isOpen = expandedModule === m.codigo;
+                      const isModuleSelected = selectedProcessIds.has(`mod-${m.codigo}`);
+                      return (
+                        <div
+                          key={m.codigo}
+                          className="border-b border-white/8 animate-in fade-in duration-500"
+                          style={{ animationDelay: `${i * 50}ms` }}
+                        >
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => setExpandedModule(isOpen ? null : m.codigo)}
+                              className="flex-1 flex items-baseline gap-4 py-3.5 hover:bg-white/[0.02] transition-colors text-left group min-w-0"
+                            >
+                              <span
+                                className="text-sm font-light tabular-nums tracking-tight shrink-0 w-9"
+                                style={{ color: b.accent, opacity: 0.75 }}
+                              >
+                                {m.codigo}
+                              </span>
+                              <span className="flex-1 text-[15px] text-white font-medium leading-snug">
+                                {m.nombre}
+                              </span>
+                              <ChevronDown
+                                className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-300 mr-2 ${
+                                  isOpen ? "rotate-180" : ""
+                                } group-hover:text-gray-300`}
+                              />
+                            </button>
+                            <button
+                              onClick={() => toggleProcess(`mod-${m.codigo}`)}
+                              className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all mr-1 ${
+                                isModuleSelected
+                                  ? "bg-sky-500/20 border-sky-500/60 text-sky-400"
+                                  : "border-white/15 text-gray-600 hover:border-white/35 hover:text-gray-300"
+                              }`}
+                            >
+                              {isModuleSelected ? (
+                                <Check className="w-3.5 h-3.5" />
+                              ) : (
+                                <Plus className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+                          </div>
+                          {isOpen && (
+                            <div className="pl-[52px] pr-2 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto">
+                                {m.descripcion}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* Módulo 6: aviso de que los procesos están en construcción */}
+                    {b.id === "B6" && modules.length === 0 && (
+                      <div className="py-6 text-center text-gray-500 text-sm italic border-b border-white/8">
+                        Los procesos de este módulo están en construcción. Estarán disponibles próximamente.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* ───────────────────── CATÁLOGO COMPLETO ───────────────────── */}
+      <section id="catalogo-completo" className="py-28 border-t border-white/5 bg-white/[0.02]">
         <div className="container mx-auto px-6">
           <div className="max-w-[1440px] mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
               <div className="max-w-2xl">
                 <div className="flex items-center gap-2 mb-4">
-                  <LayoutGrid className="w-5 h-5 text-cyan-400" />
-                  <span className="text-cyan-400 font-medium">CATÁLOGO ESPECIALIZADO</span>
+                  <LayoutGrid className="w-5 h-5 text-sky-400" />
+                  <span className="text-sky-400 font-medium tracking-widest uppercase text-xs">
+                    Catálogo completo
+                  </span>
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold mb-4">Selecciona tus Soluciones</h2>
-                <p className="text-gray-400">Elige los procesos que quieres automatizar en tu centro. Añade tantos como necesites a tu selección.</p>
+                <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
+                  Todos los procesos del sector
+                </h2>
+                <p className="text-gray-400 leading-relaxed text-justify hyphens-auto">
+                  Explora el catálogo completo filtrado por módulo o busca por nombre. Añade los que te interesen a tu selección.
+                </p>
+              </div>
+              <div className="relative w-full md:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar proceso..."
+                  className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                />
               </div>
             </div>
 
-            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-              <div className="flex justify-center mb-12">
+            <Tabs
+              value={activeBlockTab}
+              onValueChange={(v) => setActiveBlockTab(v as "todos" | CentrosDeportivosBlockId)}
+              className="w-full"
+            >
+              <div className="flex justify-center mb-10">
                 <TabsList className="bg-white/5 border border-white/5 p-1 h-auto flex flex-wrap justify-center gap-1 sm:gap-2">
                   <TabsTrigger
                     value="todos"
-                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-sky-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
                   >
                     Todos
                   </TabsTrigger>
-                  {sportsCategories.map((cat) => (
+                  {centrosDeportivosBlocks.map((b) => (
                     <TabsTrigger
-                      key={cat.id}
-                      value={cat.id}
-                      className="px-4 py-2.5 rounded-lg data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                      key={b.id}
+                      value={b.id}
+                      className="px-4 py-2.5 rounded-lg data-[state=active]:bg-sky-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
                     >
-                      {cat.name}
+                      <span className="text-xs opacity-70 mr-1.5 font-light">
+                        M{parseInt(b.number, 10)}
+                      </span>
+                      <span className="hidden sm:inline">{b.title}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
               </div>
 
-              <TabsContent value="todos" className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {sportsProcesses.map((process) => (
-                    <ProcessCard
-                      key={process.id}
-                      process={process}
-                      accentColor="#0891b2"
-                    sectorSlug="centros-deportivos"
-                    />
-                  ))}
-                </div>
-              </TabsContent>
-              {sportsCategories.map((cat) => (
-                <TabsContent key={cat.id} value={cat.id} className="mt-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {sportsProcesses
-                      .filter(p => p.categoriaNombre === cat.id)
-                      .map((process) => (
-                        <ProcessCard
-                          key={process.id}
-                          process={process}
-                          accentColor="#0891b2"
-                    sectorSlug="centros-deportivos"
-                        />
-                      ))}
+              <TabsContent value={activeBlockTab} className="mt-0">
+                {filteredCatalog.length === 0 ? (
+                  <div className="text-center py-16 text-gray-500">
+                    {activeBlockTab === "B6"
+                      ? "Los procesos de este módulo están en construcción. Estarán disponibles próximamente."
+                      : "No hay procesos que coincidan con tu búsqueda en este módulo."}
                   </div>
-                </TabsContent>
-              ))}
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredCatalog.map((process) => (
+                      <ProcessCard
+                        key={process.id}
+                        process={process}
+                        accentColor={ACCENT}
+                        sectorSlug="centros-deportivos"
+                      />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
             </Tabs>
           </div>
         </div>
       </section>
 
-      {/* Catalog Footer Bar */}
-      <section className="py-12">
-        <div className="container mx-auto px-6">
-          <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-r from-white/[0.04] to-black/20 px-8 py-7 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 shrink-0">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white mb-0.5">¿No encuentras lo que buscas?</p>
-                <p className="text-sm text-gray-500">Personaliza el catálogo según tu negocio o explora todas las automatizaciones.</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 shrink-0">
-              <Button
-                variant="ghost"
-                onClick={() => setShowOnboarding(true)}
-                className="text-sm text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/5 flex items-center gap-2"
-              >
-                <Sparkles className="w-4 h-4" /> Personalizar Catálogo
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pain Points Section */}
-      <section className="py-24 bg-white/5">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-12 text-center">¿Te Resulta Familiar?</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                "Atender WhatsApps a deshoras por reservas y cancelaciones.",
-                "Socios que no aparecen por el centro y acaban dándose de baja.",
-                "Perder posibles socios de clases de prueba por no hacer seguimiento.",
-                "Gestionar cobros e impagos manualmente cada principio de mes.",
-                "Invertir horas en Excel para saber cuántas clases se han dado.",
-                "Informar a todos los alumnos de un cambio de horario/profesor."
-              ].map((pain, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-2xl bg-black/40 border border-white/5 hover:border-cyan-500/20 transition-colors group">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <TrendingDown className="w-5 h-5 text-red-400" />
-                  </div>
-                  <p className="text-gray-300">{pain}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Prop Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Lo que Conseguirás con Immoralia</h2>
-            <p className="text-gray-400">Transformamos tu operativa para que sea una ventaja competitiva.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-12">
-            {[
-              {
-                icon: <Users className="w-8 h-8 text-cyan-400" />,
-                title: "Nuevos socios a cualquier hora",
-                desc: "Tus formularios y redes sociales trabajan solos. Cada persona interesada recibe respuesta automática al instante, sin que nadie tenga que hacer nada."
-              },
-              {
-                icon: <Clock className="w-8 h-8 text-cyan-400" />,
-                title: "Ahorro del 80% de Tiempo",
-                desc: "Las tareas repetitivas desaparecen. Reservas, cancelaciones y recordatorios se gestionan solos, sin que nadie tenga que tocarlos."
-              },
-              {
-                icon: <ShieldCheck className="w-8 h-8 text-cyan-400" />,
-                title: "Menos bajas de socios",
-                desc: "Detectamos cuando un alumno deja de asistir y le mandamos un mensaje personalizado antes de que decida darse de baja."
-              }
-            ].map((prop, i) => (
-              <div key={i} className="text-center space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
-                  {prop.icon}
-                </div>
-                <h3 className="text-xl font-bold">{prop.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{prop.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <h2 className="text-3xl font-bold mb-12 text-center text-cyan-400">Preguntas Frecuentes</h2>
-          <div className="space-y-6">
-            {[
-              {
-                q: "¿Es necesario cambiar mi software actual (Mindbody, Virtuagym, etc)?",
-                a: "No. Nos conectamos con lo que ya usas sin que tengas que cambiar nada. Nuestro objetivo es potenciar lo que ya tienes, no sustituirlo."
-              },
-              {
-                q: "¿Cuánto tiempo se tarda en poner esto en marcha?",
-                a: "Depende de lo que necesites, pero cosas como responder automáticamente a interesados o enviar recordatorios de reserva pueden estar funcionando en menos de 7 días."
-              },
-              {
-                q: "¿Necesito contratar algún programa o aplicación nueva?",
-                a: "Te recomendamos solo lo necesario según el tamaño de tu centro. Te ayudamos a elegir las opciones más baratas y sencillas, y a optimizar lo que ya tienes."
-              },
-              {
-                q: "¿Cómo sabemos si está funcionando?",
-                a: "Lo medimos con cosas concretas: horas que deja de hacer tu equipo a mano, cuántas bajas se evitan y cuántos nuevos socios entran cada mes."
-              }
-            ].map((faq, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
-                <h3 className="text-lg font-bold mb-2 flex gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  {faq.q}
-                </h3>
-                <p className="text-gray-400 ml-8 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-cyan-600/10 -z-10" />
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
-            ¿Listo para llevar tu centro <br /> al siguiente nivel?
+      {/* ───────────────────── FINAL CTA ───────────────────── */}
+      <section className="py-32 relative overflow-hidden text-center">
+        <div className="absolute inset-0 bg-sky-600/5 -z-10" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-sky-500/10 blur-[100px] rounded-full" />
+        <div className="container mx-auto px-6 text-center max-w-3xl">
+          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
+            ¿Listo para que tu centro <br /> funcione solo?
           </h2>
-          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
-            Deja de apagar fuegos y empieza a construir un negocio que funcione solo. Pide tu presupuesto personalizado sin compromiso.
+          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Solicita una propuesta personalizada con los módulos que te interesan, el orden recomendado de
+            implementación y el coste de cada fase.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-cyan-600 hover:bg-cyan-500 h-16 px-10 text-xl shadow-[0_0_40px_rgba(8,145,178,0.3)]">
-              Solicitar Oferta Ahora
+            <Button
+              size="lg"
+              onClick={() => setShowContactForm(true)}
+              className="bg-sky-600 hover:bg-sky-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(14,165,233,0.3)] transition-all hover:scale-105"
+            >
+              Solicitar propuesta
             </Button>
-            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => setShowCalendlyModal(true)}>
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
+              onClick={() => setShowCalendlyModal(true)}
+            >
               Agendar llamada
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Footnote */}
+      {/* ───────────────────── FOOTER ───────────────────── */}
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
           <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
-          <p className="text-gray-600 text-sm">© 2026 Immoralia. Catálogo de Procesos para Centros Deportivos.</p>
+          <p className="text-xs text-gray-600">
+            immoralia · Automatización & IA · Parte de Immoral Group · www.immoral.es
+          </p>
         </div>
       </footer>
 
-      {/* Overlays / Modals */}
-      
+      {/* ───────────────────── FLOATING BAR ───────────────────── */}
+      {selectedProcessIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300 px-4 w-full max-w-lg">
+          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-sky-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
+            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+              <div className="w-2 h-2 rounded-full bg-sky-500 shrink-0 animate-pulse" />
+              <span className="text-sm text-white font-semibold truncate">
+                {selectedProcessIds.size} proceso{selectedProcessIds.size > 1 ? "s" : ""} seleccionado{selectedProcessIds.size > 1 ? "s" : ""}
+              </span>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setShowContactForm(true)}
+              className="bg-sky-600 hover:bg-sky-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
+            >
+              Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ───────────────────── MODALES ───────────────────── */}
       {showContactForm && (
-        <ContactForm 
+        <ContactForm
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor="#0891b2"
+          accentColor={ACCENT}
         />
       )}
-
-      <OnboardingModal
-        isOpen={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
-        prefilledSector="Centros Deportivos"
-        accentColor="#0891b2"
-      />
 
       <ShareSelectionModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
-        accentColor="#0891b2"
+        accentColor={ACCENT}
       />
 
       <CalendlyLeadModal
