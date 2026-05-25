@@ -137,7 +137,6 @@ export const processes: Process[] = [
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
   },
 
   {
@@ -346,7 +345,6 @@ export const processes: Process[] = [
     dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
     related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
     sector_variants: {
       "centros-deportivos": {
         tagline: "Cobra las cuotas de tus socios sin perseguirlos cada mes.",
@@ -648,7 +646,6 @@ export const processes: Process[] = [
     personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     bloque_negocio: "B4",
   },
@@ -659,15 +656,15 @@ export const processes: Process[] = [
     slug: "informes-financieros-direccion",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    nombre: "Informes financieros para dirección",
-    tagline: "Claridad financiera directa en tu inbox, cada mes.",
+    nombre: "Resumen financiero mensual del centro deportivo",
+    tagline: "Saber cómo va el centro sin esperar a que nadie prepare un informe.",
     recomendado: true,
-    descripcionDetallada: "Cierre mensual → Informe con facturación, margen, costes. Consolidamos datos de ingresos, gastos y estructura. Calculamos KPIs clave. Enviamos informe por tu vía de comunicación preferida.",
+    descripcionDetallada: "Al cierre de cada mes, el sistema consolida automáticamente los ingresos por cuotas, bonos y servicios, los gastos operativos y los KPIs clave del centro. El responsable recibe un resumen ejecutivo sin tener que abrir el software de gestión ni preparar nada.",
     summary: {
-      what_it_is: "Fotografía financiera automatizada del negocio para facilitar la toma de decisiones estratégicas.",
-      for_who: ["Directores Generales", "CFOs", "Socios de agencias"],
-      requirements: ["ERP/Software de gestión", "Hoja de cálculo de costes fijos"],
-      output: "Informe PDF/hoja de cálculo con Margen Bruto, EBITDA y Punto de Equilibrio mensual."
+      what_it_is: "Fotografía financiera automatizada del centro deportivo para tomar decisiones con datos reales cada mes.",
+      for_who: ["Propietarios de centros deportivos", "Gerentes de instalaciones", "Responsables de área"],
+      requirements: ["Software de gestión del centro", "Hoja de costes fijos"],
+      output: "Resumen mensual con ingresos por cuotas, ocupación, bajas y margen — entregado automáticamente."
     },
     indicators: {
       time_estimate: "2 semanas",
@@ -796,7 +793,6 @@ export const processes: Process[] = [
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
   },
 
@@ -1048,15 +1044,15 @@ export const processes: Process[] = [
     slug: "asistente-reservas-recordatorios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Asistente de reservas y recordatorios",
-    tagline: "Gestiona reservas de forma ágil y reduce ausencias con confirmaciones y recordatorios.",
+    nombre: "Reservas de sesiones y pistas con recordatorios automáticos",
+    tagline: "Los socios reservan, el sistema confirma y avisa. Tú no tienes que hacer nada.",
     recomendado: true,
-    descripcionDetallada: "Facilitamos que los clientes reserven sin esperas: el asistente recopila la información necesaria, confirma la reserva y envía recordatorios. También permite cambios o reprogramaciones con un flujo guiado para evitar pérdidas de tiempo y reducir las ausencias a citas.",
+    descripcionDetallada: "El socio reserva su sesión o pista desde donde prefiera — WhatsApp, web o app. El sistema confirma la plaza al instante, envía un recordatorio antes de la cita y gestiona los cambios o cancelaciones con un flujo guiado. Sin llamadas, sin papel, sin malentendidos.",
     summary: {
-      what_it_is: "Secretaria virtual que coordina tu agenda y asegura que tus citas lleguen a tiempo.",
-      for_who: ["Clínicas", "Centros de estética", "Consultoras", "Restaurantes"],
-      requirements: ["Sistema de calendario corporativo", "Canal de comunicación directa"],
-      output: "Citas confirmadas en agenda + Reducción de 'No-Shows' hasta un 80%."
+      what_it_is: "Asistente de reservas automático para centros deportivos que elimina la gestión manual de sesiones, pistas y actividades.",
+      for_who: ["Centros deportivos", "Clubs de pádel", "Gimnasios boutique", "Estudios de yoga y fitness"],
+      requirements: ["Canal de comunicación del centro (WhatsApp, web o app)", "Calendario de actividades o pistas"],
+      output: "Reservas confirmadas al instante + recordatorios automáticos + reducción de ausencias."
     },
     indicators: {
       time_estimate: "1-2 semanas",
@@ -1290,7 +1286,6 @@ export const processes: Process[] = [
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
-    landing_slug: "centros-deportivos",
 
   },
   {
@@ -1392,7 +1387,6 @@ export const processes: Process[] = [
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "F25",
@@ -1441,7 +1435,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: [],
     related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
-    landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
   },
   {
@@ -1492,7 +1485,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce"],
     herramientas: ["ActiveCampaign","Brevo","WhatsApp Business API"],
     dolores: ["Tardamos en responder y perdemos clientes"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "CM3",
@@ -1642,7 +1634,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","ActiveCampaign","Shopify"],
     dolores: ["Quiero automatizar presupuestos y respuestas"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "GV9",
@@ -1717,7 +1708,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Mindbody","Virtuagym","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "OA12",
@@ -1794,7 +1784,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Slack","ClickUp","Make"],
     dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email"],
-    landing_slug: "centros-deportivos"
   },
   {
     id: "OA15",
@@ -1819,7 +1808,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","Google Sheets","Gmail","WhatsApp Business API"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "OA16",
@@ -1952,10 +1940,10 @@ export const processes: Process[] = [
     slug: "encuesta-satisfaccion-post-clase",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Encuesta rápida automática a tus alumnos justo después de cada clase",
-    tagline: "Escucha a tus alumnos en caliente.",
+    nombre: "Encuesta de satisfacción periódica a socios: detecta problemas antes de que se vayan",
+    tagline: "Saber cómo están tus socios sin preguntarles cada día.",
     recomendado: false,
-    descripcionDetallada: "2 horas después de la clase, el asistente recibe una encuesta de 1-2 preguntas. Las valoraciones bajas generan una alerta inmediata al responsable.",
+    descripcionDetallada: "Una vez al mes, o tras un número configurable de sesiones, el sistema envía una encuesta breve de 1-2 preguntas a una muestra de socios. No es un bombardeo — es una escucha inteligente. Si alguien valora mal, el responsable recibe una alerta inmediata para actuar antes de que ese socio decida irse.",
     customization: {
       options_blocks: [
         { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
@@ -1964,8 +1952,8 @@ export const processes: Process[] = [
       free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
     },
     demo: { video_url: "PENDING" },
-    pasos: ["Trigger post-asistencia","Envío de micro-encuesta","Alertas por malas valoraciones"],
-    personalizacion: "Elige las preguntas y el tiempo de espera post-clase.",
+    pasos: ["Trigger periódico configurable (mensual o cada X sesiones)","Envío de micro-encuesta a muestra de socios","Alerta inmediata al responsable si la valoración es baja"],
+    personalizacion: "Elige la frecuencia (mensual, quincenal, cada 5 sesiones), las preguntas y el umbral de alerta.",
     sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
@@ -2044,7 +2032,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Software de gestión","Make","ActiveCampaign","WhatsApp"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "AC25",
@@ -2292,7 +2279,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
     herramientas: ["Airtable","Make","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "OE29",
@@ -2317,7 +2303,6 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Software de gestión","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "GS1",
@@ -2513,7 +2498,6 @@ export const processes: Process[] = [
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    landing_slug: "centros-deportivos",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -2699,7 +2683,6 @@ export const processes: Process[] = [
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
-    landing_slug: "centros-deportivos",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2746,23 +2729,23 @@ export const processes: Process[] = [
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     landing_slug: "centros-deportivos",
-    nombre: "Comunicaciones estacionales por calendario gastronómico",
-    tagline: "Llena tu sala antes de cada pico de temporada con campañas automáticas al momento justo.",
+    nombre: "Campañas de captación estacional para centros deportivos",
+    tagline: "Enero, septiembre, verano — los picos del año activados solos, en el momento exacto.",
     benefits: [
-      "Sala llena antes de los picos sin pagar publicidad externa",
-      "Comunicación personalizada para cada segmento de tu base de comensales",
-      "Calendario gastronómico automatizado que trabaja sin supervisión"
+      "Centro lleno antes de los picos de temporada sin pagar publicidad externa",
+      "Comunicación personalizada para socios actuales, ex-socios e interesados",
+      "Campañas que se lanzan solas en la fecha correcta, sin que nadie tenga que recordarlo"
     ],
     recomendado: false,
-    descripcionDetallada: "Tu restaurante tiene sus propios picos: San Valentín, Semana Santa, la comunión de mayo, el verano, el menú de Navidad. Antes de cada uno, el sistema activa una campaña personalizada hacia tu base de comensales — mensaje adecuado, canal adecuado, sin agencia y sin coste publicitario. Los que ya te conocen son los más fáciles de llenar.",
+    descripcionDetallada: "Los centros deportivos tienen sus propios picos de captación: la vuelta al cole de septiembre, el propósito de año nuevo de enero, el «voy a ponerme en forma antes del verano» de marzo. Antes de cada uno, el sistema activa una campaña hacia socios actuales, ex-socios e interesados — mensaje adecuado, canal adecuado, sin agencia y sin briefings de última hora.",
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
       integrations: ["Email Marketing", "CRM", "Calendario"]
     },
     how_it_works_steps: [
-      { title: "Calendario gastronómico", short: "Definimos los picos del restaurante.", detail: "Mapeamos las fechas clave del año para tu tipo de local: festivos, temporada alta, eventos especiales y noches temáticas." },
-      { title: "Segmentación de comensales", short: "Avisamos a quien ya te conoce.", detail: "Filtramos la base de clientes por historial de visitas, preferencias y frecuencia para enviar el mensaje más relevante a cada persona." },
+      { title: "Calendario deportivo", short: "Definimos los picos del centro.", detail: "Mapeamos las fechas clave del año: vuelta al cole, enero, verano, eventos propios del centro y temporadas de mayor intención de apuntarse." },
+      { title: "Segmentación de socios", short: "Avisamos a quien ya te conoce.", detail: "Filtramos la base por socios activos, ex-socios y leads fríos para enviar el mensaje más relevante a cada segmento." },
       { title: "Activación automática", short: "Las campañas se lanzan solas.", detail: "El sistema dispara cada campaña en el momento óptimo — sin que nadie tenga que acordarse ni preparar nada." }
     ],
     customization: {
@@ -2774,17 +2757,73 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     pasos: [
-      "Definimos el calendario de picos del restaurante (festivos, temporada, eventos propios)",
-      "Segmentamos la base de comensales por historial de visita, preferencias y frecuencia",
+      "Definimos el calendario de picos del centro deportivo (enero, septiembre, verano, eventos propios)",
+      "Segmentamos la base por socios activos, ex-socios e interesados según historial y frecuencia",
       "Configuramos los disparadores por fecha y activamos las campañas de forma automática",
       "Medimos la ocupación antes y después de cada campaña para optimizar la siguiente"
     ],
-    personalizacion: "Elige el tono del local, los canales preferidos (WhatsApp o email) y las festividades que quieres activar. Si tienes eventos propios del restaurante, los añadimos al calendario.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    personalizacion: "Elige los canales preferidos (WhatsApp o email), los picos del año que quieres activar y el tono de los mensajes. Si tienes eventos propios del centro, los añadimos al calendario.",
+    sectores: ["Centros Deportivos", "Academias / Formación"],
     herramientas: ["Mailchimp/ActiveCampaign", "Make", "WhatsApp Business"],
-    dolores: ["El restaurante no aparece en los picos más rentables del año", "Las campañas de temporada llegan tarde o no llegan"],
+    dolores: ["El centro no aprovecha los picos más rentables del año", "Las campañas de temporada llegan tarde o no llegan"],
     integration_domains: ["CRM", "OTHER"],
     bloque_negocio: "B6",
+  },
+  {
+    id: "DEP-6.1",
+    codigo: "DEP-6.1",
+    slug: "publicacion-novedades-redes-centro-deportivo",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Publica novedades, horarios y promociones del centro sin tocar el móvil",
+    tagline: "Nuevas clases, cambios de horario, retos y promos — publicados solos en Instagram, Facebook y Google Business.",
+    recomendado: false,
+    descripcionDetallada: "Cuando hay algo nuevo en el centro — una clase nueva, un cambio de horario, un reto de temporada, una promo de captación — el sistema lo detecta y publica automáticamente en tus canales: Instagram, Facebook y Google Business. Con el copy en el tono del centro y en el horario de mayor engagement de tu audiencia. Tu perfil deja de depender de que alguien tenga un rato.",
+    summary: {
+      what_it_is: "Sistema de publicación automática en redes sociales y Google Business para centros deportivos: clases, horarios, promos y eventos publicados sin esfuerzo.",
+      for_who: [
+        "Gimnasios, boxes y centros con Instagram activo que no tienen tiempo de gestionar el contenido",
+        "Centros con programación cambiante (clases nuevas, eventos, retos de temporada)",
+        "Centros que quieren presencia digital constante sin contratar a un community manager"
+      ],
+      requirements: ["Cuenta Instagram Business", "Identidad visual del centro (logo, colores)", "Acceso a Google Business Profile"],
+      output: "Perfil actualizado y activo de forma continua con contenido relevante, sin trabajo manual del equipo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Instagram Business API", "Google Business Profile", "IA generativa"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la novedad", short: "Clase nueva, cambio, promo.", detail: "El flujo se activa cuando registras un cambio en el calendario, una oferta nueva o un evento — vía formulario, Notion o el sistema que uses." },
+      { title: "Genera el contenido", short: "Copy + imagen en tu identidad.", detail: "La IA redacta el texto en el tono del centro y crea una imagen que sigue tu guía visual (colores, tipografías, logotipo)." },
+      { title: "Publica al momento óptimo", short: "Cuando tu audiencia está activa.", detail: "El post se programa al horario de mayor engagement de tu cuenta — sin que nadie tenga que pensar en ello ni recordarlo." }
+    ],
+    benefits: [
+      "Perfil de Instagram y Google Business siempre actualizado sin esfuerzo del equipo",
+      "Contenido con identidad visual consistente en todos los canales",
+      "Publicaciones en el horario de mayor alcance, sin planificación manual"
+    ],
+    pasos: [
+      "Registras la novedad (nueva clase, horario, promo) en tu sistema o formulario",
+      "La IA genera el copy adaptado al tono del centro",
+      "Se crea la imagen siguiendo la identidad visual",
+      "Se publica automáticamente en Instagram, Facebook y Google Business al horario óptimo"
+    ],
+    personalizacion: "Define el tono de la marca, la identidad visual (plantillas, colores, tipografías), los canales donde publicar y si quieres aprobación manual antes de cada post.",
+    sectores: ["Centros Deportivos"],
+    herramientas: ["Instagram Business API", "Google Business API", "OpenAI / DALL-E", "Make/n8n"],
+    canales: ["Instagram", "Facebook", "Google Business"],
+    dolores: [
+      "Nuestro Instagram lleva semanas sin publicar nada",
+      "Las publicaciones que hacemos son inconsistentes en estética",
+      "No tenemos tiempo de gestionar las redes encima de gestionar el centro"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    related_processes: ["comunicaciones-calendario-fiscal"]
   },
   {
     id: "GS11",
@@ -2877,7 +2916,6 @@ export const processes: Process[] = [
     herramientas: ["Google Drive/Dropbox", "Make", "Slack/Email"],
     dolores: ["Tengo el email colapsado de adjuntos de clientes y pierdo horas descargando", "Nunca sé si el cliente me ha enviado ya lo que le pedí"],
     integration_domains: ["DOCS", "OTHER"],
-    landing_slug: "centros-deportivos",
 
   },
   {
@@ -2932,7 +2970,6 @@ export const processes: Process[] = [
     slug: "clasificacion-automatica-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
-    landing_slug: "centros-deportivos",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -2978,7 +3015,6 @@ export const processes: Process[] = [
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    landing_slug: "centros-deportivos",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
@@ -4058,7 +4094,6 @@ export const processes: Process[] = [
     herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
     dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "centros-deportivos",
   },
 
   // ══════════════════════════════════════════════════════════════════════════

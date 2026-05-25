@@ -66,18 +66,20 @@ const ProcessDetail = () => {
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [carouselStep, setCarouselStep] = useState(0);
     const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
+    const [stepSubtitles, setStepSubtitles] = useState<(string | null)[]>([null, null, null]);
 
     // Cargar imágenes desde Supabase (solo para procesos del archivo estático)
     useEffect(() => {
         if (!process?.codigo || dbProcess) return;
         supabase
             .from('processes')
-            .select('image_url_1, image_url_2, image_url_3')
+            .select('image_url_1, image_url_2, image_url_3, image_subtitle_1, image_subtitle_2, image_subtitle_3')
             .eq('codigo', process.codigo)
             .single()
             .then(({ data }) => {
                 if (data) {
                     setStepImages([data.image_url_1 ?? null, data.image_url_2 ?? null, data.image_url_3 ?? null]);
+                    setStepSubtitles([data.image_subtitle_1 ?? null, data.image_subtitle_2 ?? null, data.image_subtitle_3 ?? null]);
                 }
             });
     }, [process?.codigo, dbProcess]);
@@ -130,6 +132,11 @@ const ProcessDetail = () => {
                         row.image_url_1 ?? null,
                         row.image_url_2 ?? null,
                         row.image_url_3 ?? null,
+                    ]);
+                    setStepSubtitles([
+                        row.image_subtitle_1 ?? null,
+                        row.image_subtitle_2 ?? null,
+                        row.image_subtitle_3 ?? null,
                     ]);
                 }
                 setDbFetchedSlug(slug); // marca fetch completo → dbLoading pasa a false
@@ -477,11 +484,22 @@ const ProcessDetail = () => {
                                 <div className="rounded-2xl border border-border overflow-hidden">
                                     <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
                                         {stepImages[carouselStep] ? (
-                                            <img
-                                                src={stepImages[carouselStep]!}
-                                                alt={`Paso ${carouselStep + 1}`}
-                                                className="absolute inset-0 w-full h-full object-cover"
-                                            />
+                                            <>
+                                                <img
+                                                    src={stepImages[carouselStep]!}
+                                                    alt={`Paso ${carouselStep + 1}`}
+                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                />
+                                                {/* Robot compositeado directamente en la imagen — no overlay CSS */}
+                                                {stepSubtitles[carouselStep] && (
+                                                    <div className="absolute bottom-0 left-0 right-0 h-[22%] flex items-center justify-center pointer-events-none" style={{ zIndex: 6 }}>
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+                                                        <span className="relative z-10 text-white font-bold tracking-[0.2em] uppercase text-[clamp(1rem,3vw,1.5rem)] drop-shadow-lg">
+                                                            {stepSubtitles[carouselStep]}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </>
                                         ) : (
                                             <>
                                                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
