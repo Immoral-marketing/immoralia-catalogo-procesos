@@ -25,6 +25,9 @@ import {
   ChevronDown,
   Plus,
   Check,
+  FileText,
+  Clock,
+  ListChecks,
 } from "lucide-react";
 import {
   Sheet,
@@ -50,21 +53,18 @@ const ACCENT = "#0891b2";
 const SLUG_TO_BLOQUE: Record<string, CentrosDeportivosBlockId> = {
   // B1 — Reservas y acceso 24/7
   "asistente-reservas-recordatorios": "B1",
-  "gestion-automatizada-reservas": "B1",
   "control-aforo-alertas-ocupacion": "B1",
   "whatsapp-automata-faq": "B1",
   "notificacion-cambios-cancelaciones-clase": "B1",
   "comunicacion-cambios-horario": "B1",
   // B2 — Captación y conversión
   "lead-capture-crm": "B2",
-  "secuencia-bienvenida-leads-frios": "B2",
   "reactivacion-leads-no-convirtieron": "B2",
   "programa-referidos-automatizado": "B2",
   "alta-automatica-clientes-solicitudes": "B2",
   "alta-socio-accesos-auto": "B2",
   // B3 — Fidelización y retención
   "seguimiento-alumnos-riesgo-baja": "B3",
-  "deteccion-socios-churn-riesgo": "B3",
   "cobro-recurrente-gestion-impagos": "B3",
   "notificacion-renovacion-cuota": "B3",
   "gestion-bonos-packs-clases": "B3",
@@ -76,10 +76,13 @@ const SLUG_TO_BLOQUE: Record<string, CentrosDeportivosBlockId> = {
   // B4 — Operativa y personal
   "gestion-turnos-disponibilidad-instructores": "B4",
   "onboarding-empleado-entrenador": "B4",
-  "gestion-incidencias-equipamiento": "B4",
   "gestion-contratos-firma-digital": "B4",
   "informe-semanal-kpis-operativos": "B4",
+  "informes-financieros-direccion": "B4",
   "automatizacion-comunicacion-padres": "B4",
+  // B6 — Marketing y contenido
+  "publicacion-novedades-redes-centro-deportivo": "B6",
+  "comunicaciones-calendario-fiscal": "B6",
   // B5 — Reputación y comunidad
   "solicitud-automatica-resenas": "B5",
   "encuesta-satisfaccion-post-clase": "B5",
@@ -407,6 +410,143 @@ const SportsLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── AUDITORÍA / LEAD MAGNET ───────────────────── */}
+      <section id="auditoria" className="py-28 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-sky-500/5 pointer-events-none" />
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 blur-[140px] rounded-full pointer-events-none" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Texto izquierda */}
+            <div>
+              <div className="inline-flex items-center gap-2 mb-4">
+                <FileText className="w-5 h-5 text-cyan-400" />
+                <span className="text-cyan-400 font-medium tracking-widest uppercase text-xs">
+                  Diagnóstico gratuito · 6 min
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
+                ¿No sabes por dónde <br className="hidden md:block" />
+                empezar? <span className="text-cyan-400">Te lo decimos nosotros.</span>
+              </h2>
+              <p className="text-gray-300 leading-relaxed mb-5 text-justify hyphens-auto">
+                Responde unas preguntas sobre cómo opera tu centro hoy y te enviamos un{" "}
+                <span className="text-white font-semibold">informe personalizado</span> con tu
+                nivel de madurez operativa, los módulos donde se está escapando más tiempo y socios, y
+                los procesos que recomendamos activar primero.
+              </p>
+              <p className="text-gray-400 leading-relaxed mb-8 text-sm text-justify hyphens-auto">
+                Sin compromiso, sin tarjeta y sin que nadie llame al día siguiente para venderte nada que
+                no necesites. Si después quieres una conversación, tú la pides.
+              </p>
+
+              <div className="flex flex-wrap gap-3 mb-8">
+                {[
+                  { icon: Clock, label: "6 minutos" },
+                  { icon: ListChecks, label: "15 preguntas" },
+                  { icon: FileText, label: "Informe PDF" },
+                  { icon: CheckCircle2, label: "Confidencial" },
+                ].map((it, i) => {
+                  const Icon = it.icon;
+                  return (
+                    <div
+                      key={i}
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
+                    >
+                      <Icon className="w-3.5 h-3.5 text-cyan-400" /> {it.label}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  size="lg"
+                  disabled
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-cyan-900/30 transition-all hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  Empezar mi diagnóstico <ArrowRight className="w-4 h-4" />
+                </Button>
+                <p className="self-center text-xs text-gray-500 sm:pl-1">Disponible próximamente</p>
+              </div>
+            </div>
+
+            {/* Preview del informe (derecha) */}
+            <div className="relative">
+              <div className="relative aspect-[4/5] max-w-sm mx-auto">
+                {/* Capas apiladas tipo PDF stack */}
+                <div
+                  className="absolute inset-0 rounded-2xl border border-white/10 bg-[#0a2a35] rotate-3 translate-x-3 translate-y-3 opacity-40"
+                  aria-hidden
+                />
+                <div
+                  className="absolute inset-0 rounded-2xl border border-white/15 bg-[#0a2a35] rotate-1 translate-x-1 translate-y-1 opacity-70"
+                  aria-hidden
+                />
+                <div className="relative rounded-2xl border border-white/20 bg-[#0a2a35] overflow-hidden shadow-2xl shadow-black/60">
+                  <div className="p-6 md:p-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="font-bold text-lg">
+                        <span className="text-white">im</span>
+                        <span className="text-cyan-400">moralia</span>
+                      </div>
+                      <span className="text-[10px] tracking-widest text-cyan-300/80 uppercase">
+                        Confidencial
+                      </span>
+                    </div>
+                    <div className="text-xs tracking-widest text-cyan-300/80 mb-3 uppercase">
+                      Diagnóstico · Centros Deportivos · 2026
+                    </div>
+                    <h4 className="text-xl font-bold mb-4 text-white leading-tight">
+                      Diagnóstico de madurez operativa
+                    </h4>
+                    {/* Score circle */}
+                    <div className="flex items-center gap-5 mb-6 py-4 border-y border-white/10">
+                      <div className="relative w-20 h-20 rounded-full bg-[#051a22] border-2 border-cyan-400/30 flex flex-col items-center justify-center">
+                        <span className="text-3xl font-bold text-cyan-400 leading-none">58</span>
+                        <span className="text-[8px] tracking-widest text-gray-400 mt-0.5">DE 100</span>
+                      </div>
+                      <div>
+                        <div className="text-[10px] tracking-widest text-gray-400 uppercase mb-0.5">
+                          Tu nivel
+                        </div>
+                        <div className="font-bold text-white">En transición</div>
+                      </div>
+                    </div>
+                    {/* Bloques con barra */}
+                    <div className="space-y-2.5">
+                      {[
+                        { id: "B1", v: 75, c: "bg-emerald-400" },
+                        { id: "B2", v: 40, c: "bg-amber-400" },
+                        { id: "B3", v: 30, c: "bg-red-400" },
+                        { id: "B4", v: 70, c: "bg-emerald-400" },
+                        { id: "B5", v: 25, c: "bg-red-400" },
+                        { id: "B6", v: 50, c: "bg-amber-400" },
+                      ].map((b) => (
+                        <div key={b.id} className="flex items-center gap-3">
+                          <span className="text-[10px] text-gray-400 w-5">{b.id}</span>
+                          <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                            <div className={`h-full ${b.c}`} style={{ width: `${b.v}%` }} />
+                          </div>
+                          <span className="text-[10px] text-gray-300 w-6 text-right tabular-nums">
+                            {b.v}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="text-center text-xs text-gray-500 mt-6">
+                Vista previa · El informe completo incluye módulos prioritarios y hoja de ruta personalizada.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ───────────────────── ZOOM POR MÓDULO ───────────────────── */}
       {centrosDeportivosBlocks.map((b, idx) => {
         const Icon = b.icon;
@@ -568,9 +708,22 @@ const SportsLanding = () => {
                           </div>
                           {isOpen && (
                             <div className="pl-[52px] pr-2 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto">
+                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto mb-3">
                                 {m.descripcion}
                               </p>
+                              {m.linkedProcessSlug && (
+                                <Link
+                                  to={`/catalogo/procesos/${m.linkedProcessSlug}`}
+                                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3.5 py-1.5 rounded-lg border transition-all hover:translate-x-0.5"
+                                  style={{
+                                    borderColor: `${b.accent}50`,
+                                    color: b.accent,
+                                    backgroundColor: `${b.accent}10`,
+                                  }}
+                                >
+                                  Ver ficha completa <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                              )}
                             </div>
                           )}
                         </div>

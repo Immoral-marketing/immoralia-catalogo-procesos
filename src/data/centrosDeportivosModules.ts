@@ -19,7 +19,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     descripcion:
       "El socio reserva desde donde está — un mensaje, la web o la app del centro. Si no hay hueco, entra en lista de espera automáticamente y recibe un aviso en cuanto se libere uno.",
     badge: "Impacto inmediato",
-    linkedProcessSlug: "gestion-automatizada-reservas",
+    linkedProcessSlug: "asistente-reservas-recordatorios",
     highlights: [
       "Reservas desde cualquier canal unificadas en un único panel",
       "Lista de espera que se activa sola cuando alguien cancela",
@@ -87,20 +87,6 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
   {
     codigo: "2.2",
     bloque: "B2",
-    nombre: "Seguimiento de quien preguntó pero no se apuntó",
-    descripcion:
-      "Si alguien muestra interés pero no da el paso, el sistema hace el seguimiento por él: mensajes espaciados en el tiempo, sin presionar, hasta que decide o descarta definitivamente.",
-    badge: "No dejes leads",
-    linkedProcessSlug: "secuencia-bienvenida-leads-frios",
-    highlights: [
-      "Secuencia automática de mensajes sin trabajo manual del equipo",
-      "Para solo cuando el lead convierte o cierra la conversación",
-      "Recupera entre el 10% y el 20% de los leads que parecían perdidos",
-    ],
-  },
-  {
-    codigo: "2.3",
-    bloque: "B2",
     nombre: "Recordatorio para quien vino a probar y no dio el paso",
     descripcion:
       "Las sesiones de prueba son el momento de mayor intención de compra. Si el visitante no se inscribe en los días siguientes, recibe un recordatorio personalizado antes de que el impulso se enfríe.",
@@ -110,6 +96,20 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
       "Mensaje automático a los pocos días de la sesión de prueba",
       "Tono cercano, no comercial — recuerda la experiencia, no el precio",
       "Convierte una parte significativa de visitas de prueba en socios",
+    ],
+  },
+  {
+    codigo: "2.3",
+    bloque: "B2",
+    nombre: "Sistema de referidos: tus socios traen amigos a cambio de un premio",
+    descripcion:
+      "Tus socios actuales son el mejor canal de captación. El sistema automatiza el programa de referidos: genera el enlace único, rastrea las altas que genera cada socio y entrega la recompensa sin que nadie tenga que gestionarlo.",
+    badge: "Captación viral",
+    linkedProcessSlug: "programa-referidos-automatizado",
+    highlights: [
+      "Enlace de referido único por socio generado automáticamente",
+      "Recompensa entregada en cuanto el referido se da de alta",
+      "Sin gestión manual ni Excel para controlar quién trajo a quién",
     ],
   },
   {
@@ -131,15 +131,15 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
   {
     codigo: "3.1",
     bloque: "B3",
-    nombre: "Aviso cuando un socio lleva días sin aparecer por el centro",
+    nombre: "Detecta quién está desapareciendo antes de que se dé de baja",
     descripcion:
-      "El sistema detecta automáticamente cuándo un socio lleva más días de lo normal sin asistir y envía un mensaje cercano antes de que el distanciamiento se convierta en baja.",
+      "El sistema lleva la cuenta de la asistencia de cada socio y detecta los patrones de riesgo: quién acumula faltas seguidas, quién lleva semanas sin aparecer. Cuando el umbral se supera, actúa solo — un mensaje cercano que no agobia pero que demuestra que el centro está pendiente.",
     badge: "Retención preventiva",
     linkedProcessSlug: "seguimiento-alumnos-riesgo-baja",
     highlights: [
-      "Detección automática de ausencia superior al umbral configurado",
-      "Mensaje personalizado, no una campaña masiva de spam",
-      "Actúa antes de que el socio decida darse de baja formalmente",
+      "Registro automático de asistencia sin hojas ni apuntes manuales",
+      "Detección de ausencias inusuales con umbral configurable por perfil",
+      "Mensaje personalizado antes de que el socio decida irse formalmente",
     ],
   },
   {
@@ -185,6 +185,63 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     ],
   },
 
+  {
+    codigo: "3.5",
+    bloque: "B3",
+    nombre: "Control de bonos y packs de sesiones con aviso cuando se agotan",
+    descripcion:
+      "El sistema lleva la cuenta de las sesiones consumidas por cada socio y avisa automáticamente cuando quedan pocas. El socio puede renovar con un clic antes de que el bono se agote y pierda el ritmo.",
+    badge: "Sin interrupciones",
+    linkedProcessSlug: "gestion-bonos-packs-clases",
+    highlights: [
+      "Control en tiempo real del saldo de sesiones por socio",
+      "Aviso automático al socio cuando queda poco bono",
+      "Enlace directo de renovación sin pasar por recepción",
+    ],
+  },
+  {
+    codigo: "3.6",
+    bloque: "B3",
+    nombre: "Mensaje de cumpleaños automático con un detalle o descuento",
+    descripcion:
+      "El día del cumpleaños, cada socio recibe un mensaje personalizado con un descuento, una sesión gratuita o simplemente un mensaje cercano. Un detalle que cuesta cero esfuerzo y que el socio recuerda.",
+    badge: "Vínculo humano",
+    linkedProcessSlug: "felicitacion-cumpleanos-oferta",
+    highlights: [
+      "Mensaje personalizado enviado automáticamente el día correcto",
+      "Configurable: desde un simple saludo hasta un descuento especial",
+      "Refuerza el vínculo emocional con el centro sin trabajo del equipo",
+    ],
+  },
+  {
+    codigo: "3.7",
+    bloque: "B3",
+    nombre: "Seguimiento de socios lesionados hasta que se recuperan",
+    descripcion:
+      "Cuando un socio se lesiona, el sistema lo registra y activa un seguimiento periódico: mensajes de ánimo, información de recuperación y aviso cuando puede volver. Que la lesión no se convierta en baja.",
+    badge: "Retención en pausa",
+    linkedProcessSlug: "registro-seguimiento-lesiones",
+    highlights: [
+      "Registro de la lesión con seguimiento hasta el alta",
+      "Mensajes de apoyo durante el período de recuperación",
+      "Aviso al equipo para dar la bienvenida de vuelta cuando regresa",
+    ],
+  },
+  {
+    codigo: "3.9",
+    bloque: "B3",
+    nombre: "Recuperación de ex-socios que se dieron de baja",
+    descripcion:
+      "Cuando un socio causa baja, no desaparece para siempre. El sistema activa automáticamente una secuencia de reactivación espaciada en el tiempo — sin presionar, recordando el valor del centro — para intentar recuperarlos antes de que se vayan a la competencia.",
+    badge: "Segunda oportunidad",
+    linkedProcessSlug: "campana-reactivacion-ex-socios",
+    highlights: [
+      "Secuencia automática activada al registrar la baja",
+      "Mensajes espaciados que no agobian pero no dejan de estar presentes",
+      "Recupera un porcentaje significativo de bajas antes de los 90 días",
+    ],
+  },
+
   // ── BLOQUE 04 · Operativa del centro y personal ───────────────────────────
   {
     codigo: "4.1",
@@ -217,20 +274,6 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
   {
     codigo: "4.3",
     bloque: "B4",
-    nombre: "Registro de averías con seguimiento hasta que están resueltas",
-    descripcion:
-      "Cuando se detecta una avería en el material o las instalaciones, se registra automáticamente y queda en seguimiento hasta que está reparada. Nada se olvida ni se queda sin resolver.",
-    badge: "Cero olvidos",
-    linkedProcessSlug: "gestion-incidencias-equipamiento",
-    highlights: [
-      "Registro instantáneo desde cualquier dispositivo",
-      "Estado visible para el equipo hasta la resolución",
-      "Historial de incidencias para negociar con proveedores o mantenimiento",
-    ],
-  },
-  {
-    codigo: "4.4",
-    bloque: "B4",
     nombre: "Firma digital de contratos sin papel ni desplazamientos",
     descripcion:
       "Los contratos de socio, acuerdos con proveedores o documentos de autorización se firman digitalmente desde el móvil. Sin imprimir, sin escanear, sin archivar a mano.",
@@ -240,6 +283,49 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
       "Firma desde cualquier dispositivo sin necesidad de presencia física",
       "Archivo automático con trazabilidad completa",
       "Válido legalmente con misma validez que la firma manuscrita",
+    ],
+  },
+
+  {
+    codigo: "4.4",
+    bloque: "B4",
+    nombre: "Lista de tareas automática al incorporar a un nuevo entrenador o empleado",
+    descripcion:
+      "Cuando se incorpora alguien nuevo al equipo, el sistema genera automáticamente su checklist de onboarding: documentación, accesos, formación inicial y presentación al equipo. Nadie se olvida de nada y el nuevo empieza con todo listo.",
+    badge: "Incorporación sin caos",
+    linkedProcessSlug: "onboarding-empleado-entrenador",
+    highlights: [
+      "Checklist personalizado según el rol del nuevo empleado",
+      "Tareas asignadas automáticamente con plazos y responsables",
+      "El nuevo tiene claro qué hacer desde el primer día",
+    ],
+  },
+  {
+    codigo: "4.5",
+    bloque: "B4",
+    nombre: "Avisos automáticos a padres sobre asistencia, pagos y eventos",
+    descripcion:
+      "Los padres de socios menores reciben confirmación de asistencia tras cada sesión, aviso si su hijo no aparece a una clase reservada, y recordatorios de pagos y eventos — todo por el canal que prefieran, sin llamadas.",
+    badge: "Padres informados",
+    linkedProcessSlug: "automatizacion-comunicacion-padres",
+    highlights: [
+      "Confirmación automática de asistencia tras cada sesión",
+      "Alerta inmediata si el menor no aparece a una clase reservada",
+      "Recordatorios de pagos y eventos sin llamadas ni mensajes manuales",
+    ],
+  },
+  {
+    codigo: "4.6",
+    bloque: "B4",
+    nombre: "Resumen financiero mensual del centro: ingresos, gastos y KPIs",
+    descripcion:
+      "Al cierre de cada mes, el responsable recibe automáticamente un resumen con ingresos por cuotas y servicios, gastos operativos, ocupación media y KPIs clave. Sin abrir el software de gestión ni preparar nada.",
+    badge: "Control financiero",
+    linkedProcessSlug: "informes-financieros-direccion",
+    highlights: [
+      "Resumen mensual entregado automáticamente sin trabajo manual",
+      "KPIs clave: ingresos, ocupación, altas, bajas y margen",
+      "Toma de decisiones con datos reales, no con sensaciones",
     ],
   },
 
@@ -261,15 +347,15 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
   {
     codigo: "5.2",
     bloque: "B5",
-    nombre: "Encuesta rápida al terminar una sesión para detectar problemas",
+    nombre: "Encuesta periódica de satisfacción para detectar problemas antes de que escalen",
     descripcion:
-      "Una pregunta rápida justo después de la sesión: ¿cómo ha ido? Si hay insatisfacción, el sistema la captura y avisa al responsable antes de que el socio se vaya sin decir nada.",
+      "Una vez al mes, o cada cierto número de sesiones, el sistema pregunta a una muestra de socios cómo lo están llevando. Sin agobiar. Si alguien valora mal, el responsable recibe un aviso inmediato para actuar antes de que ese socio decida irse.",
     badge: "Detecta antes",
     linkedProcessSlug: "encuesta-satisfaccion-post-clase",
     highlights: [
-      "Encuesta de una pregunta que casi todo el mundo responde",
-      "Alerta al equipo cuando la respuesta es negativa",
-      "Permite actuar antes de que la insatisfacción se convierta en baja",
+      "Frecuencia configurable: mensual, quincenal o por número de sesiones",
+      "Alerta inmediata al equipo cuando la valoración es negativa",
+      "Escucha inteligente sin bombardear al socio con encuestas constantes",
     ],
   },
   {
@@ -295,6 +381,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     descripcion:
       "Cuando hay un cambio de horario, una promoción nueva o un evento en el centro, el contenido se genera y se publica en redes sociales y Google Business en el momento adecuado. Sin que nadie tenga que recordarlo.",
     badge: "Presencia sin esfuerzo",
+    linkedProcessSlug: "publicacion-novedades-redes-centro-deportivo",
     highlights: [
       "Publicaciones automáticas en Instagram, Facebook y Google Business",
       "Tu perfil deja de depender de que alguien tenga un rato",
@@ -308,6 +395,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     descripcion:
       "Enero, septiembre, vuelta al cole — los picos de captación del año se activan solos con campañas preparadas de antemano hacia interesados y ex-socios. Sin briefings ni agencias.",
     badge: "Captación estacional",
+    linkedProcessSlug: "comunicaciones-calendario-fiscal",
     highlights: [
       "Campañas lanzadas automáticamente en el momento de mayor intención",
       "Sin agencia, sin briefings, sin semanas de preparación",
