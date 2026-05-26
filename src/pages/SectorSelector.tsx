@@ -87,17 +87,6 @@ const sectors = [
     sectorNames: ["Gastronomía / Hostelería"],
   },
   {
-    id: "ecommerce",
-    title: "Tienda Online / Retail",
-    description: "Tiendas online, moda y comercio minorista.",
-    icon: ShoppingBag,
-    path: "/sector/ecommerce",
-    status: "active",
-    accent: "from-blue-500/20 to-cyan-500/20",
-    landingSlug: "ecommerce",
-    sectorNames: ["E-commerce", "Retail"],
-  },
-  {
     id: "realestate",
     title: "Inmobiliarias",
     description: "Agencias inmobiliarias y gestión de propiedades.",

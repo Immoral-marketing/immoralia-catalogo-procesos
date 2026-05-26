@@ -12,7 +12,6 @@ import SaludLanding from "./pages/SaludLanding";
 import ConstruccionLanding from "./pages/ConstruccionLanding";
 import AcademiasLanding from "./pages/AcademiasLanding";
 import RestauracionLanding from "./pages/RestauracionLanding";
-import EcommerceLanding from "./pages/EcommerceLanding";
 import InmobiliariaLanding from "./pages/InmobiliariaLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
 import SectorSelector from "./pages/SectorSelector";
@@ -45,7 +44,6 @@ const App = () => (
             <Route path="/sector/academias" element={<AcademiasLanding />} />
             <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
             <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
-            <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
             <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
