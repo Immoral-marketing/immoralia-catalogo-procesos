@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search, PhoneCall, Heart, BarChart3, Users, Megaphone } from "lucide-react";
+import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search, PhoneCall, Heart, BarChart3, Users, Megaphone, CalendarCheck, HeartPulse, ClipboardList, MessageCircle, GraduationCap } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -23,6 +23,19 @@ const categoryIcons: Record<string, React.ElementType> = {
   "Operativa diaria y visibilidad": BarChart3,
   "Gestión de personal y equipo": Users,
   "Marketing y contenido digital": Megaphone,
+  // Bloques Centros de Salud
+  "Captación y primera visita": PhoneCall,
+  "Gestión de citas y ausencias": CalendarCheck,
+  "Seguimiento clínico y fidelización": HeartPulse,
+  "Administración y facturación": CreditCard,
+  "Gestión del equipo clínico": Users,
+  // Bloques Academias / Formación
+  "Captación de alumnos": PhoneCall,
+  "Matriculación y onboarding del alumno": ClipboardList,
+  "Comunicación con padres y alumnos": MessageCircle,
+  "Retención y reactivación": Sparkles,
+  "Administración y finanzas": CreditCard,
+  "Gestión del profesorado": GraduationCap,
 };
 
 // Bloques que llevan acento naranja en su icono (sector gastronomía)
@@ -33,6 +46,26 @@ const GASTRO_BLOCK_LABELS = new Set([
   "Operativa diaria y visibilidad",
   "Gestión de personal y equipo",
   "Marketing y contenido digital",
+]);
+
+// Bloques que llevan acento azul (sky) en su icono (sector salud)
+const SALUD_BLOCK_LABELS = new Set([
+  "Captación y primera visita",
+  "Gestión de citas y ausencias",
+  "Reputación y reseñas",
+  "Seguimiento clínico y fidelización",
+  "Administración y facturación",
+  "Gestión del equipo clínico",
+]);
+
+// Bloques que llevan acento violeta en su icono (sector academias)
+const ACADEMIAS_BLOCK_LABELS = new Set([
+  "Captación de alumnos",
+  "Matriculación y onboarding del alumno",
+  "Comunicación con padres y alumnos",
+  "Retención y reactivación",
+  "Administración y finanzas",
+  "Gestión del profesorado",
 ]);
 
 interface ProcessCardProps {
@@ -66,7 +99,10 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
   };
 
   const CategoryIcon = categoryIcons[process.categoriaNombre];
-  const isGastroBlock = GASTRO_BLOCK_LABELS.has(process.categoriaNombre);
+  // Salud usa también "Reputación y reseñas" pero queremos detectarlo por landing_slug
+  const isSaludBlock = process.landing_slug === "salud" && SALUD_BLOCK_LABELS.has(process.categoriaNombre);
+  const isAcademiasBlock = !isSaludBlock && process.landing_slug === "academias" && ACADEMIAS_BLOCK_LABELS.has(process.categoriaNombre);
+  const isGastroBlock = !isSaludBlock && !isAcademiasBlock && GASTRO_BLOCK_LABELS.has(process.categoriaNombre);
 
   // Estilos dinámicos según accentColor del sector
   const cardHoverStyle = accentColor && isCardHovered && !isSelected
@@ -112,9 +148,10 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
           <div
             className={cn(
               "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
-              isGastroBlock
-                ? "bg-orange-500/10 border border-orange-500/30 text-orange-400"
-                : "bg-white/5 border border-white/10 text-gray-400"
+              isGastroBlock && "bg-orange-500/10 border border-orange-500/30 text-orange-400",
+              isSaludBlock && "bg-sky-500/10 border border-sky-500/30 text-sky-400",
+              isAcademiasBlock && "bg-violet-500/10 border border-violet-500/30 text-violet-400",
+              !isGastroBlock && !isSaludBlock && !isAcademiasBlock && "bg-white/5 border border-white/10 text-gray-400"
             )}
           >
             <CategoryIcon className="w-5 h-5" />
@@ -122,7 +159,17 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
         )}
 
         <div className="flex items-start gap-2 flex-wrap justify-end">
-          <Badge variant="outline" className={cn("text-xs font-medium", getCategoryColorClass(process.categoriaNombre))}>
+          <Badge
+            variant="outline"
+            className={cn(
+              "text-xs font-medium",
+              isSaludBlock
+                ? "bg-sky-500/10 text-sky-400 border-sky-500/30"
+                : isAcademiasBlock
+                ? "bg-violet-500/10 text-violet-400 border-violet-500/30"
+                : getCategoryColorClass(process.categoriaNombre)
+            )}
+          >
             {process.categoriaNombre}
           </Badge>
 

@@ -231,13 +231,30 @@ const ProcessDetail = () => {
 
     const benefits = process.benefits || process.pasos.slice(0, 3);
 
-    // Sector gastro → repinta el tema "primary" a naranja sin tocar las 29 clases existentes
+    // Sector gastro → tema naranja · Sector salud → tema sky (azul claro) · Sector academias → tema violet
+    // Override de CSS variables del design system sin tocar las 29 clases existentes
     const isGastro = process.landing_slug === "gastronomia-hosteleria";
+    const isSalud = process.landing_slug === "salud";
+    const isAcademias = process.landing_slug === "academias";
     const themeStyle = isGastro
         ? ({
             "--primary": "21 90% 48%",
             "--primary-foreground": "0 0% 100%",
             "--accent": "21 90% 48%",
+            "--accent-foreground": "0 0% 100%",
+        } as React.CSSProperties)
+        : isSalud
+        ? ({
+            "--primary": "199 89% 48%",        // sky-500 #0ea5e9
+            "--primary-foreground": "0 0% 100%",
+            "--accent": "199 89% 48%",
+            "--accent-foreground": "0 0% 100%",
+        } as React.CSSProperties)
+        : isAcademias
+        ? ({
+            "--primary": "262 83% 58%",        // violet-500 #8b5cf6
+            "--primary-foreground": "0 0% 100%",
+            "--accent": "262 83% 58%",
             "--accent-foreground": "0 0% 100%",
         } as React.CSSProperties)
         : undefined;
@@ -259,7 +276,7 @@ const ProcessDetail = () => {
                             <Button
                                 className={`relative h-10 px-4 gap-2 border transition-all ${
                                     selectedProcessIds.size > 0
-                                        ? cn("bg-primary hover:bg-primary/90 text-primary-foreground border-primary", isGastro ? "shadow-[0_0_20px_rgba(234,88,12,0.25)]" : "shadow-[0_0_20px_rgba(0,200,220,0.2)]")
+                                        ? cn("bg-primary hover:bg-primary/90 text-primary-foreground border-primary", isGastro ? "shadow-[0_0_20px_rgba(234,88,12,0.25)]" : isSalud ? "shadow-[0_0_20px_rgba(14,165,233,0.25)]" : isAcademias ? "shadow-[0_0_20px_rgba(139,92,246,0.25)]" : "shadow-[0_0_20px_rgba(0,200,220,0.2)]")
                                         : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-accent"
                                 }`}
                             >
@@ -345,7 +362,7 @@ const ProcessDetail = () => {
                             }}
                         />
                         <div className="relative z-10 flex flex-col items-center gap-4">
-                            <div className={cn("w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300", isGastro ? "shadow-[0_0_30px_rgba(234,88,12,0.25)]" : "shadow-[0_0_30px_rgba(0,200,220,0.2)]")}>
+                            <div className={cn("w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300", isGastro ? "shadow-[0_0_30px_rgba(234,88,12,0.25)]" : isSalud ? "shadow-[0_0_30px_rgba(14,165,233,0.25)]" : isAcademias ? "shadow-[0_0_30px_rgba(139,92,246,0.25)]" : "shadow-[0_0_30px_rgba(0,200,220,0.2)]")}>
                                 <svg className="w-8 h-8 text-primary ml-1" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z" />
                                 </svg>
