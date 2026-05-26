@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { processes, type Process } from "@/data/processes";
 import { centrosDeportivosBlocks, type CentrosDeportivosBlockId } from "@/data/centrosDeportivosBlocks";
 import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/data/centrosDeportivosModules";
@@ -99,11 +99,20 @@ const SportsLanding = () => {
   const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<CentrosDeportivosBlockId>("B1");
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     document.title = "Immoralia · Catálogo para Centros Deportivos";
-  }, []);
+    if (location.hash) {
+      // Scroll to anchor — delay to let the page render first
+      setTimeout(() => {
+        const el = document.getElementById(location.hash.replace("#", ""));
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.hash]);
 
   // Procesos del sector centros deportivos
   const sportsProcesses = useMemo(() =>
@@ -555,8 +564,7 @@ const SportsLanding = () => {
         return (
           <section
             key={b.id}
-            id={`block-${b.id}`}
-            className="py-28 border-t border-white/5 scroll-mt-20 relative overflow-hidden"
+            className="py-28 border-t border-white/5 relative overflow-hidden"
           >
             <div
               className="absolute inset-0 opacity-40 pointer-events-none"
@@ -603,7 +611,10 @@ const SportsLanding = () => {
 
                 {/* Texto + módulos */}
                 <div>
-                  <div className="inline-flex items-center gap-2 mb-5">
+                  <div
+                    id={`block-${b.id}`}
+                    className="inline-flex items-center gap-2 mb-5 scroll-mt-[80px]"
+                  >
                     <div
                       className={`w-10 h-10 rounded-xl ${b.accentBg} border ${b.accentBorder} flex items-center justify-center`}
                     >
