@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+﻿import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { processes, type Process } from "@/data/processes";
 import { construccionBlocks, type ConstruccionBlockId } from "@/data/construccionBlocks";
@@ -46,7 +46,7 @@ import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
-const ACCENT = "#22c55e";
+const ACCENT = "#22d3ee";
 
 const CONSTRUCCION_LANDING_SLUG = "construccion";
 
@@ -121,7 +121,7 @@ const ConstruccionLanding = () => {
   const activeBlock = construccionBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-green-500/30 font-sans">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
       {/* ───────────────────── NAVIGATION ───────────────────── */}
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -134,14 +134,14 @@ const ConstruccionLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-green-600 hover:bg-green-500 text-white border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.2)]"
+                      ? "bg-cyan-600 hover:bg-cyan-500 text-white border-cyan-600 shadow-[0_0_20px_rgba(34,197,94,0.2)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Mi Selección</span>
                   {selectedProcessIds.size > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-white text-green-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-white text-cyan-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {selectedProcessIds.size}
                     </span>
                   )}
@@ -154,7 +154,7 @@ const ConstruccionLanding = () => {
                 <div className="h-full flex flex-col p-6">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
-                      <LayoutGrid className="w-6 h-6 text-green-400" />
+                      <LayoutGrid className="w-6 h-6 text-cyan-400" />
                       Mi Selección
                     </SheetTitle>
                   </SheetHeader>
@@ -182,12 +182,12 @@ const ConstruccionLanding = () => {
           style={{ backgroundImage: "url('/constructoras.png')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-green-900/10 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-blue-900/10 blur-[120px] rounded-full" />
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
             De vender sobre plano sin sistema, <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
               a un proceso que construye solo
             </span>
           </h1>
@@ -201,21 +201,21 @@ const ConstruccionLanding = () => {
             <Button
               size="lg"
               onClick={() => scrollTo("modulos")}
-              className="bg-green-600 hover:bg-green-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-green-900/30 transition-all hover:scale-[1.02]"
+              className="bg-cyan-600 hover:bg-cyan-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02]"
             >
               Empezar el recorrido <ChevronRight className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-5">
               <button
                 onClick={() => setShowCalendlyModal(true)}
-                className="text-sm text-gray-400 hover:text-green-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-cyan-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
               </button>
               <span className="text-white/15 text-xs">·</span>
               <button
                 onClick={() => setShowContactForm(true)}
-                className="text-sm text-gray-400 hover:text-green-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-cyan-300 transition-colors underline-offset-4 hover:underline"
               >
                 Contáctanos
               </button>
@@ -244,7 +244,7 @@ const ConstruccionLanding = () => {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-5 tracking-tight">
               Las áreas donde una constructora{" "}
-              <span className="text-green-400">puede vender más, mejor y con menos esfuerzo</span>
+              <span className="text-cyan-400">puede vender más, mejor y con menos esfuerzo</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
               Seis bloques, cada uno con un propósito claro. Pasa por encima de cada uno para ver de qué va.
@@ -379,22 +379,22 @@ const ConstruccionLanding = () => {
 
       {/* ───────────────────── DIAGNÓSTICO COMERCIAL ───────────────────── */}
       <section id="diagnostico" className="py-28 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-green-500/10 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Texto izquierda */}
             <div>
               <div className="inline-flex items-center gap-2 mb-4">
-                <FileText className="w-5 h-5 text-green-400" />
-                <span className="text-green-400 font-medium tracking-widest uppercase text-xs">
+                <FileText className="w-5 h-5 text-cyan-400" />
+                <span className="text-cyan-400 font-medium tracking-widest uppercase text-xs">
                   Diagnóstico gratuito · 8 min
                 </span>
               </div>
               <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
                 ¿No sabes por dónde <br className="hidden md:block" />
-                empezar? <span className="text-green-400">Te lo decimos nosotros.</span>
+                empezar? <span className="text-cyan-400">Te lo decimos nosotros.</span>
               </h2>
               <p className="text-gray-300 leading-relaxed mb-5 text-justify hyphens-auto">
                 Cuéntanos cómo funciona hoy tu proceso comercial y te enviamos un{" "}
@@ -420,7 +420,7 @@ const ConstruccionLanding = () => {
                       key={i}
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
                     >
-                      <Icon className="w-3.5 h-3.5 text-green-400" /> {it.label}
+                      <Icon className="w-3.5 h-3.5 text-cyan-400" /> {it.label}
                     </div>
                   );
                 })}
@@ -430,7 +430,7 @@ const ConstruccionLanding = () => {
                 <Button
                   size="lg"
                   onClick={() => setShowContactForm(true)}
-                  className="bg-green-600 hover:bg-green-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-green-900/30 transition-all hover:scale-[1.02]"
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02]"
                 >
                   Solicitar mi diagnóstico <ArrowRight className="w-4 h-4" />
                 </Button>
@@ -454,13 +454,13 @@ const ConstruccionLanding = () => {
                     <div className="flex items-center justify-between mb-6">
                       <div className="font-bold text-lg">
                         <span className="text-white">im</span>
-                        <span className="text-green-400">moralia</span>
+                        <span className="text-cyan-400">moralia</span>
                       </div>
-                      <span className="text-[10px] tracking-widest text-green-300/80 uppercase">
+                      <span className="text-[10px] tracking-widest text-cyan-300/80 uppercase">
                         Confidencial
                       </span>
                     </div>
-                    <div className="text-xs tracking-widest text-green-300/80 mb-3 uppercase">
+                    <div className="text-xs tracking-widest text-cyan-300/80 mb-3 uppercase">
                       Diagnóstico · Constructoras · 2026
                     </div>
                     <h4 className="text-xl font-bold mb-4 text-white leading-tight">
@@ -468,8 +468,8 @@ const ConstruccionLanding = () => {
                     </h4>
                     {/* Score circle simulado */}
                     <div className="flex items-center gap-5 mb-6 py-4 border-y border-white/10">
-                      <div className="relative w-20 h-20 rounded-full bg-[#0a1f10] border-2 border-green-400/30 flex flex-col items-center justify-center">
-                        <span className="text-3xl font-bold text-green-400 leading-none">68</span>
+                      <div className="relative w-20 h-20 rounded-full bg-[#0a1f10] border-2 border-cyan-400/30 flex flex-col items-center justify-center">
+                        <span className="text-3xl font-bold text-cyan-400 leading-none">68</span>
                         <span className="text-[8px] tracking-widest text-gray-400 mt-0.5">DE 100</span>
                       </div>
                       <div>
@@ -485,7 +485,7 @@ const ConstruccionLanding = () => {
                         { id: "B1", v: 45, c: "bg-red-400" },
                         { id: "B2", v: 72, c: "bg-amber-400" },
                         { id: "B3", v: 38, c: "bg-red-400" },
-                        { id: "B4", v: 85, c: "bg-emerald-400" },
+                        { id: "B4", v: 85, c: "bg-blue-400" },
                         { id: "B5", v: 30, c: "bg-red-400" },
                         { id: "B6", v: 55, c: "bg-amber-400" },
                       ].map((b) => (
@@ -665,7 +665,7 @@ const ConstruccionLanding = () => {
                               onClick={() => toggleProcess(`mod-${m.codigo}`)}
                               className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all mr-1 ${
                                 isModuleSelected
-                                  ? "bg-green-500/20 border-green-500/60 text-green-400"
+                                  ? "bg-cyan-500/20 border-cyan-500/60 text-cyan-400"
                                   : "border-white/15 text-gray-600 hover:border-white/35 hover:text-gray-300"
                               }`}
                             >
@@ -736,7 +736,7 @@ const ConstruccionLanding = () => {
                 <TabsList className="bg-white/5 border border-white/5 p-1 h-auto flex flex-wrap justify-center gap-1 sm:gap-2">
                   <TabsTrigger
                     value="todos"
-                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
                   >
                     Todos
                   </TabsTrigger>
@@ -744,7 +744,7 @@ const ConstruccionLanding = () => {
                     <TabsTrigger
                       key={b.id}
                       value={b.id}
-                      className="px-4 py-2.5 rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
+                      className="px-4 py-2.5 rounded-lg data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
                     >
                       <span className="text-xs opacity-70 mr-1.5 font-light">B{parseInt(b.number, 10)}</span>
                       <span className="hidden sm:inline">{b.title}</span>
@@ -778,8 +778,8 @@ const ConstruccionLanding = () => {
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
-        <div className="absolute inset-0 bg-green-600/5 -z-10" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-green-500/10 blur-[100px] rounded-full" />
+        <div className="absolute inset-0 bg-cyan-600/5 -z-10" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-cyan-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
             ¿Listo para escalar <br /> tu constructora?
@@ -792,7 +792,7 @@ const ConstruccionLanding = () => {
             <Button
               size="lg"
               onClick={() => setShowContactForm(true)}
-              className="bg-green-600 hover:bg-green-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(34,197,94,0.3)] transition-all hover:scale-105"
+              className="bg-cyan-600 hover:bg-cyan-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(34,197,94,0.3)] transition-all hover:scale-105"
             >
               Solicitar propuesta
             </Button>
@@ -821,9 +821,9 @@ const ConstruccionLanding = () => {
       {/* ───────────────────── FLOATING MODULE BAR ───────────────────── */}
       {selectedProcessIds.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300 px-4 w-full max-w-lg">
-          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-green-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
+          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-cyan-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-2 h-2 rounded-full bg-green-500 shrink-0 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-cyan-500 shrink-0 animate-pulse" />
               <span className="text-sm text-white font-semibold truncate">
                 {selectedProcessIds.size} proceso{selectedProcessIds.size > 1 ? "s" : ""} seleccionado{selectedProcessIds.size > 1 ? "s" : ""}
               </span>
@@ -831,7 +831,7 @@ const ConstruccionLanding = () => {
             <Button
               size="sm"
               onClick={() => setShowContactForm(true)}
-              className="bg-green-600 hover:bg-green-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
+              className="bg-cyan-600 hover:bg-cyan-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
             >
               Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
             </Button>
