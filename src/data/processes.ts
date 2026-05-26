@@ -2498,6 +2498,7 @@ export const processes: Process[] = [
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
+    landing_slug: "gestorias",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -2683,6 +2684,7 @@ export const processes: Process[] = [
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
+    landing_slug: "gestorias",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2878,6 +2880,7 @@ export const processes: Process[] = [
     slug: "canal-documental-cliente",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
+    landing_slug: "gestorias",
     nombre: "Canal estructurado de envío de documentos con el cliente",
     tagline: "Un lugar único y ordenado para que tu cliente suba su documentación sin errores.",
     benefits: [
@@ -2970,6 +2973,7 @@ export const processes: Process[] = [
     slug: "clasificacion-automatica-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
+    landing_slug: "gestorias",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -3015,6 +3019,7 @@ export const processes: Process[] = [
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
+    landing_slug: "gestorias",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
