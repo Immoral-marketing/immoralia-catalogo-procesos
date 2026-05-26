@@ -1,4 +1,10 @@
-project_id = "kbonlzmntgvqbseyugut"
+project_id = "oxcjcsyowrlslbeylmih"
 
 [functions.send-contact-email]
+verify_jwt = false
+
+[functions.chat-assistant]
+verify_jwt = false
+
+[functions.analyze-chat-conversation]
 verify_jwt = false

@@ -2,9 +2,26 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
+import ProcessDetail from "./pages/ProcessDetail";
+import ProcessDetailFacturasVencidas from "./pages/ProcessDetailFacturasVencidas";
+import SportsLanding from "./pages/SportsLanding";
+import GestoriasLanding from "./pages/GestoriasLanding";
+import SaludLanding from "./pages/SaludLanding";
+import ConstruccionLanding from "./pages/ConstruccionLanding";
+import AcademiasLanding from "./pages/AcademiasLanding";
+import RestauracionLanding from "./pages/RestauracionLanding";
+import EcommerceLanding from "./pages/EcommerceLanding";
+import InmobiliariaLanding from "./pages/InmobiliariaLanding";
+import AgenciasLanding from "./pages/AgenciasLanding";
+import SectorSelector from "./pages/SectorSelector";
+import AfiliadoPage from "./pages/AfiliadoPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
+import { SelectionProvider } from "./lib/SelectionContext";
+import Chatbot from "./components/Chatbot";
+import { ReferralTracker } from "./components/ReferralTracker";
 
 const queryClient = new QueryClient();
 
@@ -13,13 +30,32 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <SelectionProvider>
+        <BrowserRouter>
+          <ReferralTracker />
+          <Routes>
+            <Route path="/" element={<SectorSelector />} />
+            <Route path="/catalogo/completo" element={<Index />} />
+            <Route path="/catalogo/procesos/informe-semanal-facturas-vencidas" element={<ProcessDetailFacturasVencidas />} />
+            <Route path="/catalogo/procesos/:slug" element={<ProcessDetail />} />
+            <Route path="/sector/centros-deportivos" element={<SportsLanding />} />
+            <Route path="/sector/gestorias" element={<GestoriasLanding />} />
+            <Route path="/sector/salud" element={<SaludLanding />} />
+            <Route path="/sector/construccion" element={<ConstruccionLanding />} />
+            <Route path="/sector/academias" element={<AcademiasLanding />} />
+            <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
+            <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
+            <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
+            <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
+            <Route path="/sector/agencias" element={<AgenciasLanding />} />
+            <Route path="/afiliado" element={<AfiliadoPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Chatbot />
+        </BrowserRouter>
+      </SelectionProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,0 +1,11 @@
+ M scripts/extracted_knowledge.json
+ M scripts/sync_processes_to_supabase.mjs
+ M src/App.tsx
+ M src/pages/GestoriasLanding.tsx
+ M src/pages/Index.tsx
+ M src/pages/SportsLanding.tsx
+ M supabase/migrations/20260401000001_add_gestorias_processes.sql
+?? .gitstatus.txt
+?? diff.txt
+?? src/pages/SectorSelector.tsx
+?? status.txt

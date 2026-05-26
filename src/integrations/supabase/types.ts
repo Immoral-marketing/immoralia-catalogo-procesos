@@ -14,13 +14,131 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      partners: {
+        Row: {
+          id: string
+          user_id: string | null
+          nombre: string
+          email: string
+          slug: string
+          activo: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          nombre: string
+          email: string
+          slug: string
+          activo?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          nombre?: string
+          email?: string
+          slug?: string
+          activo?: boolean
+          created_at?: string
+        }
+      }
+      referral_clicks: {
+        Row: {
+          id: string
+          partner_id: string
+          ip_hash: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          partner_id: string
+          ip_hash?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          partner_id?: string
+          ip_hash?: string | null
+          created_at?: string
+        }
+      }
+      solicitudes: {
+        Row: {
+          id: string
+          partner_id: string | null
+          datos_formulario: Json
+          estado: string
+          importe_cobrado: number | null
+          override_manual: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          partner_id?: string | null
+          datos_formulario?: Json
+          estado?: string
+          importe_cobrado?: number | null
+          override_manual?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          partner_id?: string | null
+          datos_formulario?: Json
+          estado?: string
+          importe_cobrado?: number | null
+          override_manual?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      comisiones: {
+        Row: {
+          id: string
+          solicitud_id: string
+          partner_id: string
+          porcentaje: number
+          importe_base: number
+          importe_comision: number
+          estado: string
+          created_at: string
+          pagada_at: string | null
+        }
+        Insert: {
+          id?: string
+          solicitud_id: string
+          partner_id: string
+          porcentaje?: number
+          importe_base: number
+          importe_comision: number
+          estado?: string
+          created_at?: string
+          pagada_at?: string | null
+        }
+        Update: {
+          id?: string
+          solicitud_id?: string
+          partner_id?: string
+          porcentaje?: number
+          importe_base?: number
+          importe_comision?: number
+          estado?: string
+          created_at?: string
+          pagada_at?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_partner_id_by_slug: {
+        Args: { p_slug: string }
+        Returns: string | null
+      }
     }
     Enums: {
       [_ in never]: never

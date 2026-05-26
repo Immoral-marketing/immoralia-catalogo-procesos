@@ -1,0 +1,6 @@
+{
+  "code": "23502",
+  "details": "Failing row contains (null, null, null, null, null, null, f, null, [], null, 2026-04-07 10:59:48.042879+00, 2026-04-07 10:59:48.042879+00, {}, {}, {}, {}, null, {}).",
+  "hint": null,
+  "message": "null value in column \"id\" of relation \"processes\" violates not-null constraint"
+}

@@ -1,0 +1,9 @@
+
+=== SCENARIO: 500_error ===
+FINAL DESCRIPTION: "Algo ha fallado por nuestra parte. Estamos trabajando en solucionarlo. Puedes intentarlo en unos minutos o contactarnos directamente"
+
+=== SCENARIO: timeout ===
+FINAL DESCRIPTION: "La solicitud está tardando más de lo normal. Por favor, espera un momento o inténtalo de nuevo"
+
+=== SCENARIO: network_error ===
+FINAL DESCRIPTION: "No hemos podido enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo. Si el problema persiste, escríbenos a team@immoral.com"

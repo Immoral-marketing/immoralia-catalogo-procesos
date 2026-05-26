@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Loader2, Server, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getReferralSlug } from "@/lib/referral";
 import {
   Dialog,
   DialogContent,
@@ -15,60 +17,199 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
+import { useSelection } from "@/lib/SelectionContext";
+
+import { OnboardingAnswers, getOnboardingAnswers } from "@/lib/onboarding-utils";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import { computeFinalComplexity } from "@/lib/complexity-utils";
 
 interface ContactFormProps {
   isOpen: boolean;
   onClose: () => void;
   selectedProcesses: Process[];
+  n8nHosting: 'setup' | 'own';
+  onOpenOnboarding?: () => void;
+  source?: 'web' | 'chatbot';
+  chatbotContext?: string[];
+  accentColor?: string;
 }
 
-export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormProps) => {
+export const ContactForm = ({
+  isOpen,
+  onClose,
+  selectedProcesses,
+  n8nHosting,
+  onOpenOnboarding,
+  source = 'web',
+  chatbotContext = [],
+  accentColor = "#0ea5e9"
+}: ContactFormProps) => {
   const { toast } = useToast();
+  const { customizations } = useSelection();
+  const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+
+  const [isSubmitHovered, setIsSubmitHovered] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setOnboardingAnswers(getOnboardingAnswers());
+    }
+  }, [isOpen]);
+
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
     empresa: "",
     comentario: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showUpsell, setShowUpsell] = useState(false);
+
+  const [hoveredField, setHoveredField] = useState<string | null>(null);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const getFieldStyle = (fieldName: string, isError: boolean) => {
+    if (isError) return {};
+    const isActive = hoveredField === fieldName || focusedField === fieldName;
+    return isActive ? {
+      borderColor: accentColor,
+      boxShadow: `0 0 0 1px ${accentColor}`,
+    } : {};
+  };
+
+  const getFieldClass = (isError: boolean) => {
+    const base = "bg-background transition-all duration-200 outline-none focus-visible:ring-0 focus-visible:ring-offset-0";
+    return isError ? `${base} border-destructive shadow-[0_0_0_1px_#ef4444]` : `${base} border-border`;
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = "Escribe tu nombre completo para poder contactarte";
+    } else if (formData.nombre.trim().length < 2) {
+      newErrors.nombre = "El nombre parece incompleto. ¿Puedes verificarlo?";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Necesitamos tu email para enviarte la propuesta";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Este email no parece válido. Revisa que esté bien escrito";
+    }
+
+    if (!formData.empresa.trim()) {
+      newErrors.empresa = "Indícanos el nombre de tu agencia o empresa";
+    }
+
+    if (formData.comentario.length > 2000) {
+      newErrors.comentario = "El comentario es demasiado largo. Intenta resumirlo un poco";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast({
+        title: "Error de validación",
+        description: "Por favor, revisa los campos señalados",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowUpsell(true);
+  };
+
+  const handleFinalSubmit = async (answersFromUpsell: OnboardingAnswers) => {
     setIsSubmitting(true);
+    setShowUpsell(false);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+      const invokePromise = supabase.functions.invoke('send-contact-email', {
         body: {
           nombre: formData.nombre,
           email: formData.email,
           empresa: formData.empresa,
           comentario: formData.comentario,
-          selectedProcesses: selectedProcesses.map(p => ({
-            id: p.id,
-            codigo: p.codigo,
-            nombre: p.nombre,
-            categoriaNombre: p.categoriaNombre,
-            tagline: p.tagline,
-          })),
+          onboardingAnswers: answersFromUpsell,
+          n8nHosting,
+          source,
+          chatbotContext,
+          selectedProcesses: selectedProcesses.map(p => {
+            const adjusted = computeFinalComplexity(p, answersFromUpsell);
+            const processCustomizations = customizations[p.id];
+            return {
+              id: p.id,
+              codigo: p.codigo,
+              nombre: p.nombre,
+              categoriaNombre: p.categoriaNombre,
+              tagline: p.tagline,
+              adjustedComplexity: adjusted.complexity,
+              adjustedTimeEstimate: adjusted.timeEstimate,
+              customizations: processCustomizations
+            };
+          }),
         },
       });
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out')), 30000);
+      });
+
+      const { data, error } = await Promise.race([invokePromise, timeoutPromise]) as any;
 
       if (error) throw error;
 
       console.log("Email sent successfully:", data);
+
+      // Registrar la solicitud en Supabase con atribución al partner (si hay cookie)
+      const referralSlug = getReferralSlug();
+      let partnerId: string | null = null;
+
+      if (referralSlug) {
+        const { data: pid } = await supabase.rpc('get_partner_id_by_slug', { p_slug: referralSlug });
+        partnerId = pid ?? null;
+      }
+
+      await supabase.from('solicitudes').insert({
+        partner_id: partnerId,
+        datos_formulario: {
+          nombre: formData.nombre,
+          email: formData.email,
+          empresa: formData.empresa,
+          comentario: formData.comentario,
+          source,
+          n8nHosting,
+          procesos: selectedProcesses.map((p) => ({ id: p.id, nombre: p.nombre })),
+        },
+      });
+
       setSubmitted(true);
-      
+
       toast({
         title: "¡Solicitud enviada!",
-        description: "Te contactaremos pronto para diseñar tu proyecto de automatización.",
+        description: "Revisa tu email: te hemos enviado una confirmación personalizada. Nos pondremos en contacto contigo en menos de 24 horas.",
       });
     } catch (error: any) {
       console.error("Error sending email:", error);
+      let description = "No hemos podido enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo. Si el problema persiste, escríbenos a team@immoral.com";
+
+      if (error?.status === 500 || error?.code === 500 || error?.message?.includes('500')) {
+        description = "Algo ha fallado por nuestra parte. Estamos trabajando en solucionarlo. Puedes intentarlo en unos minutos o contactarnos directamente";
+      } else if (error?.message === 'Request timed out') {
+        description = "La solicitud está tardando más de lo normal. Por favor, espera un momento o inténtalo de nuevo";
+      }
+
       toast({
         title: "Error al enviar",
-        description: "Hubo un problema al enviar tu solicitud. Por favor, intenta de nuevo.",
+        description,
         variant: "destructive",
       });
     } finally {
@@ -84,12 +225,13 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
       empresa: "",
       comentario: "",
     });
+    setErrors({});
     onClose();
   };
 
   if (submitted) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      <Dialog open={isOpen && !showUpsell && !submitted} onOpenChange={handleClose}>
         <DialogContent className="bg-card border-border max-w-md">
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -107,10 +249,9 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
                 />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-2">¡Gracias!</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-2">¡Solicitud enviada!</h3>
             <p className="text-muted-foreground mb-6">
-              Te contactaremos para diseñar tu proyecto de automatización con la selección que has
-              hecho.
+              Revisa tu email: te hemos enviado una confirmación. Nos pondremos en contacto contigo en menos de 24 horas.
             </p>
             <Button onClick={handleClose} className="bg-primary hover:bg-primary/90">
               Cerrar
@@ -122,96 +263,182 @@ export const ContactForm = ({ isOpen, onClose, selectedProcesses }: ContactFormP
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-card border-border max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Solicitar propuesta</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Completa tus datos y nos pondremos en contacto contigo
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen && !showUpsell && !submitted} onOpenChange={handleClose}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">
+              {source === 'chatbot' ? 'Hablar con un consultor' : 'Solicitar propuesta'}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {source === 'chatbot'
+                ? 'Déjanos tus datos y un consultor humano revisará tu consulta para ayudarte personalmente.'
+                : 'Completa tus datos y nos pondremos en contacto contigo'
+              }
+            </DialogDescription>
+          </DialogHeader>
 
-        <ScrollArea className="max-h-[70vh] pr-4">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Selected Processes Summary */}
-            <div className="bg-muted p-4 rounded-lg">
-              <h4 className="text-sm font-semibold text-foreground mb-2">
-                Procesos seleccionados ({selectedProcesses.length})
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedProcesses.map((process) => (
-                  <Badge
-                    key={process.id}
-                    variant="outline"
-                    className="text-xs border-primary/30 text-primary"
+          <ScrollArea className="max-h-[70vh] pr-4">
+            <div className="space-y-6">
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="bg-muted p-4 rounded-lg space-y-4">
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground mb-2">
+                      Procesos seleccionados ({selectedProcesses.length})
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProcesses.map((process) => (
+                        <Badge
+                          key={process.id}
+                          variant="outline"
+                          className="text-xs border-primary/30"
+                          style={{ borderColor: `${accentColor}4d`, color: accentColor }}
+                        >
+                          {process.nombre}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="nombre" className={errors.nombre ? "text-destructive" : ""}>
+                      Nombre *
+                    </Label>
+                    <Input
+                      id="nombre"
+                      value={formData.nombre}
+                      onChange={(e) => {
+                        setFormData({ ...formData, nombre: e.target.value });
+                        if (errors.nombre) setErrors({ ...errors, nombre: "" });
+                      }}
+                      onMouseEnter={() => setHoveredField('nombre')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('nombre')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('nombre', !!errors.nombre)}
+                      className={getFieldClass(!!errors.nombre)}
+                    />
+                    {errors.nombre && <p className="text-xs text-destructive">{errors.nombre}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
+                      Email *
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
+                      onMouseEnter={() => setHoveredField('email')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('email', !!errors.email)}
+                      className={getFieldClass(!!errors.email)}
+                    />
+                    {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                  </div>
+
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="empresa" className={errors.empresa ? "text-destructive" : ""}>
+                      Empresa *
+                    </Label>
+                    <Input
+                      id="empresa"
+                      value={formData.empresa}
+                      onChange={(e) => {
+                        setFormData({ ...formData, empresa: e.target.value });
+                        if (errors.empresa) setErrors({ ...errors, empresa: "" });
+                      }}
+                      onMouseEnter={() => setHoveredField('empresa')}
+                      onMouseLeave={() => setHoveredField(null)}
+                      onFocus={() => setFocusedField('empresa')}
+                      onBlur={() => setFocusedField(null)}
+                      style={getFieldStyle('empresa', !!errors.empresa)}
+                      className={getFieldClass(!!errors.empresa)}
+                    />
+                    {errors.empresa && <p className="text-xs text-destructive">{errors.empresa}</p>}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="comentario" className={errors.comentario ? "text-destructive" : ""}>
+                    Comentario adicional
+                  </Label>
+                  <Textarea
+                    id="comentario"
+                    rows={4}
+                    value={formData.comentario}
+                    onChange={(e) => {
+                      setFormData({ ...formData, comentario: e.target.value });
+                      if (errors.comentario) setErrors({ ...errors, comentario: "" });
+                    }}
+                    onMouseEnter={() => setHoveredField('comentario')}
+                    onMouseLeave={() => setHoveredField(null)}
+                    onFocus={() => setFocusedField('comentario')}
+                    onBlur={() => setFocusedField(null)}
+                    style={getFieldStyle('comentario', !!errors.comentario)}
+                    className={`${getFieldClass(!!errors.comentario)} resize-none`}
+                    placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
+                  />
+                  {errors.comentario && <p className="text-xs text-destructive">{errors.comentario}</p>}
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t border-border">
+                  <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    onMouseEnter={() => setIsSubmitHovered(true)}
+                    onMouseLeave={() => setIsSubmitHovered(false)}
+                    style={{ 
+                      backgroundColor: isSubmitHovered ? `${accentColor}e6` : accentColor,
+                      borderColor: accentColor,
+                      color: 'white',
+                      boxShadow: isSubmitHovered ? `0 0 20px ${accentColor}4d` : 'none'
+                    }}
+                    className="transition-all duration-300"
                   >
-                    {process.nombre}
-                  </Badge>
-                ))}
-              </div>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Enviando tu solicitud...
+                      </>
+                    ) : (
+                      "Enviar solicitud"
+                    )}
+                  </Button>
+                </div>
+              </form>
             </div>
-
-            {/* Form Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="nombre">Nombre *</Label>
-                <Input
-                  id="nombre"
-                  required
-                  value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                  className="bg-background border-border"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-background border-border"
-                />
-              </div>
-
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="empresa">Empresa *</Label>
-                <Input
-                  id="empresa"
-                  required
-                  value={formData.empresa}
-                  onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                  className="bg-background border-border"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="comentario">Comentario adicional</Label>
-              <Textarea
-                id="comentario"
-                rows={4}
-                value={formData.comentario}
-                onChange={(e) => setFormData({ ...formData, comentario: e.target.value })}
-                className="bg-background border-border resize-none"
-                placeholder="Cuéntanos más sobre tu agencia y tus necesidades..."
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
-                Cancelar
-              </Button>
-              <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isSubmitting}>
-                {isSubmitting ? "Enviando..." : "Enviar solicitud"}
-              </Button>
-            </div>
-          </form>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+      {showUpsell && (
+        <OnboardingModal
+          isOpen={showUpsell}
+          onClose={() => setShowUpsell(false)}
+          initialAnswers={{
+            ...getOnboardingAnswers(),
+            nombre: formData.nombre,
+            email: formData.email
+          }}
+          prefilledSector={selectedProcesses.length > 0 ? selectedProcesses[0].categoriaNombre : undefined}
+          accentColor={accentColor}
+          upsellMode={true}
+          onFinishUpsell={handleFinalSubmit}
+        />
+      )}
+    </>
   );
 };

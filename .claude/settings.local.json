@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "WebSearch",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(supabase --version)",
+      "Bash(where supabase *)",
+      "Read(//c/Users/cande/.npm-global/bin/**)",
+      "Read(//c/Users/cande/AppData/Roaming/npm/**)"
+    ]
+  }
+}
