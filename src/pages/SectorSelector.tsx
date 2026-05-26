@@ -153,12 +153,6 @@ const SectorSelector = () => {
       {/* ── NAV ── */}
       <nav className="absolute top-0 left-0 right-0 z-30 px-6 py-5 flex items-center justify-between">
         <img src={immoraliaLogo} alt="Immoralia" className="h-7 opacity-90" />
-        <Link
-          to="/catalogo/completo"
-          className="text-xs text-gray-400 hover:text-white transition-colors border border-white/10 hover:border-white/25 rounded-full px-4 py-2"
-        >
-          Ver catálogo completo
-        </Link>
       </nav>
 
       {/* ── HERO ── */}
