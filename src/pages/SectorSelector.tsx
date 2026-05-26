@@ -51,7 +51,7 @@ const sectors = [
     status: "active",
     accent: "from-blue-500/20 to-indigo-500/20",
     landingSlug: "salud",
-    sectorNames: ["Clínicas / Salud / Dental / Veterinaria"],
+    sectorNames: ["Centros de Salud"],
   },
   {
     id: "construction",

@@ -18,6 +18,21 @@ export const getCategoryColorClass = (categoriaNombre: string): string => {
     case "Gestión de personal y equipo":
     case "Marketing y contenido digital":
       return "bg-orange-500/10 text-orange-400 border-orange-500/30";
+    // Bloques Centros de Salud
+    case "Captación y primera visita":
+    case "Gestión de citas y ausencias":
+    case "Seguimiento clínico y fidelización":
+    case "Administración y facturación":
+    case "Gestión del equipo clínico":
+      return "bg-sky-500/10 text-sky-400 border-sky-500/30";
+    // Bloques Academias / Formación
+    case "Captación de alumnos":
+    case "Matriculación y onboarding del alumno":
+    case "Comunicación con padres y alumnos":
+    case "Retención y reactivación":
+    case "Administración y finanzas":
+    case "Gestión del profesorado":
+      return "bg-violet-500/10 text-violet-400 border-violet-500/30";
     default:
       return "bg-secondary/10 text-secondary border-secondary/30";
   }
