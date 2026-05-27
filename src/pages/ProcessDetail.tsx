@@ -280,9 +280,9 @@ const ProcessDetail = () => {
         .filter((p): p is typeof processes[0] => !!p)
         .slice(0, 2);
 
-    const steps = process
+    const steps = (process
         ? (process.how_it_works_steps || process.pasos.map((p: string) => ({ title: p, short: p }))) as any[]
-        : [];
+        : []).slice(0, 3);
 
     if (!process) {
         if (dbLoading) {

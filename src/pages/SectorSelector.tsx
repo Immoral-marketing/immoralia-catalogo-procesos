@@ -64,7 +64,7 @@ const sectors = [
   {
     id: "construction",
     number: "04",
-    title: "Constructoras / Reformas / Inmobiliarias",
+    title: "Constructoras e Inmobiliarias",
     description: "Constructoras, empresas de reformas, arquitectura, agencias inmobiliarias y gestión de propiedades.",
     icon: HardHat,
     path: "/sector/construccion",
@@ -149,22 +149,19 @@ const SectorSelector = () => {
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d0d0d]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
+        {/* Glow sutil centrado detrás del contenido */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 50% at 50% 55%, rgba(0,255,255,0.08) 0%, transparent 70%)" }} />
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300 tracking-widest uppercase">
-            <Zap className="w-3 h-3 text-white/60" />
-            Automatización empresarial por sector
-          </div>
-
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-7 animate-in fade-in slide-in-from-bottom-4 duration-700">
             Automatiza tu negocio.<br className="hidden md:block" />
-            <span className="text-white/50"> Empieza por tu sector.</span>
+            <span style={{ color: "rgba(0,255,255,0.80)" }}> Empieza por tu sector.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
             Más de{" "}
-            <span className="text-white font-semibold">{totalProcesses} procesos listos para implementar</span>,
+            <span className="font-semibold" style={{ color: "#00FFFF" }}>{totalProcesses} procesos listos para implementar</span>,
             clasificados por sector y área operativa. Sin tecnicismos. Sin presión.
           </p>
 
@@ -177,7 +174,7 @@ const SectorSelector = () => {
               const Icon = s.icon;
               return (
                 <div key={i} className="flex items-center gap-2.5 text-left">
-                  <Icon className="w-4 h-4 text-white/40 shrink-0" />
+                  <Icon className="w-4 h-4 shrink-0" style={{ color: "rgba(0,255,255,0.65)" }} />
                   <div>
                     <div className="text-sm font-semibold text-white">{s.label}</div>
                     <div className="text-xs text-gray-500">{s.sub}</div>
@@ -189,7 +186,10 @@ const SectorSelector = () => {
 
           {/* Scroll hint */}
           <div
-            className="flex flex-col items-center gap-2 text-gray-500 animate-bounce cursor-pointer hover:text-gray-300 transition-colors"
+            className="flex flex-col items-center gap-2 animate-bounce cursor-pointer transition-colors"
+            style={{ color: "rgba(0,255,255,0.35)" }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "rgba(0,255,255,0.75)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(0,255,255,0.35)"}
             onClick={() => document.getElementById("sectores")?.scrollIntoView({ behavior: "smooth" })}
           >
             <span className="text-[11px] tracking-widest uppercase">Elige tu sector</span>
