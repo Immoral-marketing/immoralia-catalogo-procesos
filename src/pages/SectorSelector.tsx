@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Dumbbell,
@@ -11,9 +11,11 @@ import {
   ChevronDown,
   Zap,
   CheckCircle2,
+  MessageCircle,
 } from "lucide-react";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { processes } from "@/data/processes";
+import { LeadCaptureModal } from "@/components/LeadCaptureModal";
 
 const sectors = [
   {
@@ -130,6 +132,8 @@ const SectorSelector = () => {
     () => processes.filter((p) => !p.hidden).length,
     []
   );
+
+  const [showLeadModal, setShowLeadModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white font-sans selection:bg-white/10">
@@ -303,10 +307,74 @@ const SectorSelector = () => {
                 </Link>
               );
             })}
+
+            {/* ── ¿NO ENCUENTRAS TU SECTOR? ── */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => setShowLeadModal(true)}
+              onKeyDown={(e) => e.key === "Enter" && setShowLeadModal(true)}
+              className="group col-span-1 md:col-span-2 relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 overflow-hidden rounded-2xl border border-white/8 hover:border-white/20 transition-all duration-500 px-8 py-7 cursor-pointer"
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 40px -8px rgba(0,255,255,0.22)`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = `none`;
+              }}
+            >
+              {/* Fondo con glow sutil */}
+              <div
+                className="absolute inset-0"
+                style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.05) 0%, transparent 65%)" }}
+              />
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.09) 0%, transparent 65%)" }}
+              />
+
+              {/* Icono + copy */}
+              <div className="relative z-10 flex items-center gap-5">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border"
+                  style={{
+                    backgroundColor: "rgba(0,255,255,0.07)",
+                    borderColor: "rgba(0,255,255,0.18)",
+                  }}
+                >
+                  <MessageCircle className="w-5 h-5" style={{ color: "rgba(0,255,255,0.75)" }} />
+                </div>
+                <div>
+                  <p className="text-base font-bold text-white mb-1">
+                    ¿Tu sector no está en la lista?
+                  </p>
+                  <p className="text-sm text-gray-400 leading-relaxed max-w-xl">
+                    Trabajamos con cualquier tipo de negocio. Cuéntanos qué haces y analizamos contigo qué procesos tiene sentido automatizar.
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div
+                className="relative z-10 shrink-0 flex items-center gap-2 text-sm font-semibold tracking-wide transition-all duration-300 opacity-55 group-hover:opacity-100 pl-1 sm:pl-0"
+                style={{ color: "rgba(0,255,255,0.9)" }}
+              >
+                <span>Contáctanos</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+
+              {/* Línea de acento inferior */}
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-cyan-400/50" />
+            </div>
           </div>
 
         </div>
       </section>
+
+      {/* ── MODAL LEAD CAPTACIÓN ── */}
+      <LeadCaptureModal
+        isOpen={showLeadModal}
+        onClose={() => setShowLeadModal(false)}
+      />
 
       {/* ── FOOTER ── */}
       <footer className="border-t border-white/5 bg-black/50 py-10">
