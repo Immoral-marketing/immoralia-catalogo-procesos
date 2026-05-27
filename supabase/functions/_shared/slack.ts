@@ -19,7 +19,7 @@ interface SlackPayload {
 }
 
 const SLACK_BOT_TOKEN = Deno.env.get("SLACK_BOT_TOKEN");
-const SLACK_CHANNEL_ID = Deno.env.get("SLACK_CHANNEL_ID") || "C08F24QQFB2";
+const SLACK_CHANNEL_ID = Deno.env.get("SLACK_CHANNEL_ID") || "C09CDUKL560";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
