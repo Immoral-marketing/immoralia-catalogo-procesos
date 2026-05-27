@@ -47,7 +47,7 @@ import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#ea580c";
-const AUDIT_URL = "https://lead-magnet-auditoria-restaurantes.vercel.app/";
+const AUDIT_URL = "/auditorias/restaurantes";
 
 // Sector exclusivo: los procesos gastro tienen landing_slug propio
 const GASTRO_LANDING_SLUG = "gastronomia-hosteleria";
@@ -440,13 +440,12 @@ const RestauracionLanding = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  size="lg"
-                  onClick={() => window.open(AUDIT_URL, "_blank", "noopener,noreferrer")}
-                  className="bg-orange-600 hover:bg-orange-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-orange-900/30 transition-all hover:scale-[1.02]"
+                <Link
+                  to={AUDIT_URL}
+                  className="inline-flex items-center justify-center bg-orange-600 hover:bg-orange-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-orange-900/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
-                </Button>
+                </Link>
               </div>
             </div>
 

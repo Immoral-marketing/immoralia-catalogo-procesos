@@ -112,6 +112,20 @@ export const academiasModules: AcademiasModule[] = [
       "Escalado de impagos sin perseguir a nadie",
     ],
   },
+  {
+    codigo: "2.4",
+    bloque: "B2",
+    nombre: "Asignación automática al grupo según nivel",
+    descripcion:
+      "Cuando el alumno completa la inscripción o la prueba de nivel, el sistema lo asigna al grupo correcto, le envía horario y documentación de bienvenida, y avisa al profesor. Sin intervención del equipo administrativo.",
+    badge: "Del formulario al grupo",
+    linkedProcessSlug: "matricula-asignacion-nivel-automatica",
+    highlights: [
+      "Asignación automática según resultado de nivel o prueba previa",
+      "Alumno recibe horario, profesor y materiales al instante",
+      "El coordinador lo ve en el sistema sin gestión manual",
+    ],
+  },
 
   // ── BLOQUE 03 · Comunicación con padres y alumnos ────────────────────────
   {
