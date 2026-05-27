@@ -101,11 +101,15 @@ const ProcessDetail = () => {
 
     const baseProcess = processes.find((p) => p.slug === slug);
 
+    // Procesos del mismo módulo desde Supabase staging (tiene bloque_negocio, slug, catalog_active)
+    const [dbModuleProcesses, setDbModuleProcesses] = useState<any[]>([]);
+
     // Fallback a Supabase para procesos no definidos en el archivo estático
     const [dbProcess, setDbProcess] = useState<any>(null);
     const [dbFetchedSlug, setDbFetchedSlug] = useState<string | null>(null);
     // Loading = hay que buscar en Supabase y todavía no ha llegado la respuesta
     const dbLoading = !baseProcess && dbFetchedSlug !== slug;
+
 
     // Aplicar variante de sector si existe
     const sectorSlug = searchParams.get("sector") ?? undefined;
@@ -141,13 +145,32 @@ const ProcessDetail = () => {
     const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
     const [stepSubtitles, setStepSubtitles] = useState<(string | null)[]>([null, null, null]);
 
+
+    // Cargar procesos del mismo módulo desde Supabase staging
+    useEffect(() => {
+        if (!process?.landing_slug || !process?.bloque_negocio) {
+            setDbModuleProcesses([]);
+            return;
+        }
+        supabase
+            .from('processes')
+            .select('id, slug, nombre, tagline, codigo, modulo_codigo, bloque_negocio, landing_slug')
+            .eq('landing_slug', process.landing_slug)
+            .eq('bloque_negocio', process.bloque_negocio)
+            .neq('slug', process.slug)
+            .neq('catalog_active', false)
+            .then(({ data }) => {
+                setDbModuleProcesses(data ?? []);
+            });
+    }, [process?.landing_slug, process?.bloque_negocio, process?.slug]);
+
     // Cargar imágenes desde Supabase (solo para procesos del archivo estático)
     useEffect(() => {
-        if (!process?.codigo || dbProcess) return;
+        if (!slug || dbProcess) return;
         supabase
             .from('processes')
             .select('image_url_1, image_url_2, image_url_3, image_subtitle_1, image_subtitle_2, image_subtitle_3')
-            .eq('codigo', process.codigo)
+            .eq('slug', slug)
             .single()
             .then(({ data }) => {
                 if (data) {
@@ -155,7 +178,7 @@ const ProcessDetail = () => {
                     setStepSubtitles([data.image_subtitle_1 ?? null, data.image_subtitle_2 ?? null, data.image_subtitle_3 ?? null]);
                 }
             });
-    }, [process?.codigo, dbProcess]);
+    }, [slug, dbProcess]);
 
     // Fallback: si el slug no está en el archivo estático, cargar desde Supabase
     useEffect(() => {
@@ -310,14 +333,7 @@ const ProcessDetail = () => {
     const moduleName = (process.landing_slug && process.bloque_negocio)
         ? MODULE_MAP[process.landing_slug]?.[process.bloque_negocio]
         : undefined;
-    const moduleProcesses = (process.landing_slug && process.bloque_negocio)
-        ? processes.filter(p =>
-            !p.hidden &&
-            p.slug !== process.slug &&
-            p.landing_slug === process.landing_slug &&
-            p.bloque_negocio === process.bloque_negocio
-          )
-        : [];
+    const moduleProcesses = dbModuleProcesses;
     const isGastro = process.landing_slug === "gastronomia-hosteleria"; // kept for legacy shadow refs
     const isSalud = process.landing_slug === "salud";
     const isAcademias = process.landing_slug === "academias";
@@ -816,21 +832,15 @@ const ProcessDetail = () => {
                     </section>
                 )}
 
-                {/* ── No te quedes a medias ── */}
+                {/* ── Procesos relacionados ── */}
                 {(() => {
-                    // Si estamos en un sector, los complementarios deben ser del mismo sector
-                    const filteredRelated = relatedProcesses.filter(rp =>
-                        !moduleProcesses.some(mp => mp.id === rp.id) &&
-                        (!process.landing_slug || rp.landing_slug === process.landing_slug)
-                    );
-                    const combined = [
-                        ...moduleProcesses,
-                        ...filteredRelated,
-                    ];
+                    const combined = moduleProcesses.length > 0
+                        ? moduleProcesses
+                        : relatedProcesses.filter(rp => !process.landing_slug || rp.landing_slug === process.landing_slug);
                     if (combined.length === 0) return null;
                     const accent = sectorCfg?.accentHex ?? 'hsl(var(--primary))';
                     return (
-                        <section className="space-y-7">
+                        <section className="space-y-5">
                             {/* Cabecera */}
                             <div>
                                 {moduleName && (
@@ -839,96 +849,85 @@ const ProcessDetail = () => {
                                     </p>
                                 )}
                                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-                                    No te quedes a medias
+                                    Procesos relacionados
                                 </h2>
-                                <p className="text-sm text-muted-foreground mt-1.5 max-w-xl">
-                                    Cada proceso resuelve una parte del flujo. Automatiza el módulo completo y nota la diferencia.
-                                </p>
                             </div>
 
-                            {/* Grid de tarjetas */}
-                            <div className="grid sm:grid-cols-2 gap-4">
+                            {/* Lista horizontal */}
+                            <div className="flex flex-col gap-2">
                                 {combined.map((p, idx) => {
                                     const pSelected = selectedProcessIds.has(p.id);
-                                    const isFromModule = moduleProcesses.some(mp => mp.id === p.id);
                                     const dest = `/catalogo/procesos/${p.slug}${process.landing_slug ? `?sector=${process.landing_slug}` : ''}`;
+                                    const displayCode = p.modulo_codigo ? `B${p.modulo_codigo}` : (p.codigo ?? String(idx + 1).padStart(2, '0'));
                                     return (
                                         <div
                                             key={p.id}
-                                            className="group relative cursor-pointer rounded-2xl border overflow-hidden transition-all duration-300"
+                                            className="group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300"
                                             style={{
-                                                background: pSelected ? `${accent}12` : 'hsl(var(--card))',
-                                                borderColor: pSelected ? `${accent}55` : 'hsl(var(--border))',
+                                                background: pSelected ? `${accent}10` : `${accent}06`,
+                                                boxShadow: `0 0 0 1px ${accent}30, 0 4px 20px ${accent}12`,
                                             }}
                                             onClick={() => navigate(dest)}
                                             onMouseEnter={e => {
-                                                e.currentTarget.style.borderColor = accent;
-                                                e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}70, 0 20px 60px ${accent}35, 0 4px 20px ${accent}20`;
-                                                e.currentTarget.style.transform = 'translateY(-5px) scale(1.015)';
-                                                e.currentTarget.style.background = `linear-gradient(145deg, ${accent}22 0%, ${accent}0a 55%, hsl(var(--card)) 100%)`;
+                                                e.currentTarget.style.background = `linear-gradient(to right, ${accent}20, ${accent}0a, ${accent}06)`;
+                                                e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}80, 0 0 24px ${accent}35, 0 8px 32px ${accent}20`;
+                                                e.currentTarget.style.transform = 'translateX(4px)';
                                             }}
                                             onMouseLeave={e => {
-                                                e.currentTarget.style.borderColor = pSelected ? `${accent}55` : 'hsl(var(--border))';
-                                                e.currentTarget.style.boxShadow = 'none';
-                                                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                                                e.currentTarget.style.background = pSelected ? `${accent}12` : 'hsl(var(--card))';
+                                                e.currentTarget.style.background = pSelected ? `${accent}10` : `${accent}06`;
+                                                e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}30, 0 4px 20px ${accent}12`;
+                                                e.currentTarget.style.transform = 'translateX(0)';
                                             }}
                                         >
-                                            {/* Barra superior — se ilumina en hover */}
-                                            <div
-                                                className="h-[3px] w-full opacity-40 group-hover:opacity-100 transition-opacity duration-300"
-                                                style={{ background: `linear-gradient(to right, ${accent}, ${accent}50, transparent)` }}
-                                            />
-
-                                            {/* Glow de fondo radial — solo en hover */}
-                                            <div
-                                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                                                style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}20 0%, transparent 60%)` }}
-                                            />
-
-                                            <div className="relative p-5">
-                                                {/* Fila superior: número + botón añadir */}
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <div
-                                                        className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black tabular-nums shrink-0 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300"
-                                                        style={{
-                                                            background: `${accent}25`,
-                                                            color: accent,
-                                                            boxShadow: 'none',
-                                                        }}
-                                                    >
-                                                        {String(idx + 1).padStart(2, '0')}
-                                                    </div>
-                                                    <button
-                                                        onClick={e => { e.stopPropagation(); toggleProcess(p.id); }}
-                                                        className="w-7 h-7 rounded-lg border flex items-center justify-center transition-all shrink-0"
-                                                        style={{
-                                                            borderColor: pSelected ? accent : 'hsl(var(--border))',
-                                                            background: pSelected ? `${accent}22` : 'transparent',
-                                                            color: pSelected ? accent : 'hsl(var(--muted-foreground))',
-                                                        }}
-                                                    >
-                                                        {pSelected ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                                                    </button>
-                                                </div>
-
-                                                {/* Título y tagline */}
-                                                <h4 className="text-base font-bold leading-snug mb-2 text-white/80 group-hover:text-white transition-colors duration-200">
-                                                    {p.nombre}
-                                                </h4>
-                                                {p.tagline && (
-                                                    <p className="text-sm text-muted-foreground group-hover:text-white/60 transition-colors duration-200 leading-relaxed line-clamp-2">{p.tagline}</p>
-                                                )}
-
-                                                {/* Footer */}
-                                                <div className="flex items-center justify-between mt-5 pt-3 border-t border-border group-hover:border-white/10 transition-colors duration-200">
-                                                    <span className="text-xs font-semibold group-hover:text-white transition-colors duration-200" style={{ color: accent }}>
-                                                        Ver proceso
+                                            <div className="flex items-stretch">
+                                                {/* Strip izquierdo sólido con código */}
+                                                <div
+                                                    className="w-[58px] shrink-0 flex items-center justify-center"
+                                                    style={{ backgroundColor: accent }}
+                                                >
+                                                    <span className="text-[11px] font-black text-white tracking-wider text-center leading-tight px-1">
+                                                        {displayCode}
                                                     </span>
-                                                    <ArrowRight
-                                                        className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200"
-                                                        style={{ color: accent }}
-                                                    />
+                                                </div>
+                                                {/* Contenido */}
+                                                <div className="flex items-center gap-4 pl-4 pr-4 py-4 flex-1">
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-[17px] font-bold text-white/75 group-hover:text-white transition-colors duration-200 leading-snug">
+                                                            {p.nombre}
+                                                        </p>
+                                                        {p.tagline && (
+                                                            <p
+                                                                className="text-[14px] leading-relaxed overflow-hidden transition-all duration-300"
+                                                                style={{ maxHeight: '0px', opacity: 0, marginTop: '0px', color: 'hsl(var(--muted-foreground))' }}
+                                                                ref={el => {
+                                                                    if (!el) return;
+                                                                    const parent = el.closest('.group');
+                                                                    if (!parent) return;
+                                                                    parent.addEventListener('mouseenter', () => { el.style.maxHeight = '80px'; el.style.opacity = '1'; el.style.marginTop = '5px'; });
+                                                                    parent.addEventListener('mouseleave', () => { el.style.maxHeight = '0px'; el.style.opacity = '0'; el.style.marginTop = '0px'; });
+                                                                }}
+                                                            >
+                                                                {p.tagline}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center gap-2.5 shrink-0">
+                                                        <button
+                                                            onClick={e => { e.stopPropagation(); toggleProcess(p.id); }}
+                                                            className="w-7 h-7 rounded-lg border flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                                                            style={{
+                                                                borderColor: pSelected ? accent : 'hsl(var(--border))',
+                                                                background: pSelected ? `${accent}22` : 'transparent',
+                                                                color: pSelected ? accent : 'hsl(var(--muted-foreground))',
+                                                            }}
+                                                        >
+                                                            {pSelected ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                                                        </button>
+                                                        <ArrowRight
+                                                            className="w-5 h-5 opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200"
+                                                            style={{ color: accent }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
