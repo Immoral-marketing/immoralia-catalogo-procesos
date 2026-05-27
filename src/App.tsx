@@ -12,7 +12,6 @@ import SaludLanding from "./pages/SaludLanding";
 import ConstruccionLanding from "./pages/ConstruccionLanding";
 import AcademiasLanding from "./pages/AcademiasLanding";
 import RestauracionLanding from "./pages/RestauracionLanding";
-import InmobiliariaLanding from "./pages/InmobiliariaLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
 import SectorSelector from "./pages/SectorSelector";
 import AfiliadoPage from "./pages/AfiliadoPage";
@@ -44,7 +43,7 @@ const App = () => (
             <Route path="/sector/academias" element={<AcademiasLanding />} />
             <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
             <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
-            <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
+            <Route path="/sector/inmobiliaria" element={<Navigate to="/sector/construccion" replace />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
             <Route path="/admin" element={<AdminPage />} />

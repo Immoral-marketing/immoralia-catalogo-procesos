@@ -66,7 +66,13 @@ const ConstruccionLanding = () => {
 
   const construccionProcesses = useMemo(() => {
     return processes
-      .filter((p) => !p.hidden && (p.landing_slug === CONSTRUCCION_LANDING_SLUG || p.sectores?.includes("Construcción & Reformas")))
+      .filter((p) => !p.hidden && (
+        p.landing_slug === CONSTRUCCION_LANDING_SLUG ||
+        p.sectores?.includes("Construcción & Reformas") ||
+        p.sectores?.includes("Constructoras / Obra Nueva") ||
+        p.sectores?.includes("Inmobiliaria") ||
+        p.sectores?.includes("Inmobiliarias")
+      ))
       .map((p) => {
         if (!p.bloque_negocio) return p;
         const block = construccionBlocks.find((b) => b.id === p.bloque_negocio);
@@ -461,7 +467,7 @@ const ConstruccionLanding = () => {
                       </span>
                     </div>
                     <div className="text-xs tracking-widest text-cyan-300/80 mb-3 uppercase">
-                      Diagnóstico · Constructoras · 2026
+                      Diagnóstico · Constructoras / Reformas / Inmobiliarias · 2026
                     </div>
                     <h4 className="text-xl font-bold mb-4 text-white leading-tight">
                       Diagnóstico de madurez comercial
