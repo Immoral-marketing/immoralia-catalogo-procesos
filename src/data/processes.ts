@@ -267,7 +267,7 @@ export const processes: Process[] = [
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.1",
   },
@@ -728,7 +728,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
+    bloque_negocio: "B4",
 
     modulo_codigo: "4.6",
   },
@@ -879,7 +879,7 @@ export const processes: Process[] = [
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
     sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
-    bloque_negocio: "B6",,
+    bloque_negocio: "B6",
 
     modulo_codigo: "6.1",
   },
@@ -1074,12 +1074,12 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "Inmobiliaria", "Agencia/marketing"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
-    landing_slug: “centros-deportivos”,
-    bloque_negocio: “B1”,
-    modulo_codigo: “1.1”,
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
   },
   {
-    id: “E21”,
+    id: "E21",
     codigo: "E21",
     slug: "solicitud-automatica-resenas",
     categoria: "E",
@@ -1302,7 +1302,7 @@ export const processes: Process[] = [
     herramientas: ["Typeform","HubSpot","ActiveCampaign","Make"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió","Pierdo solicitudes entre WhatsApp/Instagram/email"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.1",
   },
@@ -1355,7 +1355,7 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.9",
   },
@@ -1383,7 +1383,7 @@ export const processes: Process[] = [
     herramientas: ["Make","WhatsApp Business API","Stripe"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.3",
   },
@@ -1411,7 +1411,7 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.2",
   },
@@ -1439,7 +1439,7 @@ export const processes: Process[] = [
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.3",
   },
@@ -1467,7 +1467,7 @@ export const processes: Process[] = [
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.1",
   },
@@ -1520,7 +1520,7 @@ export const processes: Process[] = [
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.5",
   },
@@ -1548,7 +1548,7 @@ export const processes: Process[] = [
     herramientas: ["Make","Virtuagym","Mindbody","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.4",
   },
@@ -1601,7 +1601,7 @@ export const processes: Process[] = [
     herramientas: ["Software de gestión","Make","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.4",
   },
@@ -1706,7 +1706,7 @@ export const processes: Process[] = [
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.7",
   },
@@ -1788,7 +1788,7 @@ export const processes: Process[] = [
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.4",
   },
@@ -1816,7 +1816,7 @@ export const processes: Process[] = [
     herramientas: ["WhatsApp Business API","Make","ChatGPT"],
     dolores: ["Me escriben mucho y no doy abasto","Tengo muchas preguntas repetidas"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.2",
   },
@@ -1844,7 +1844,7 @@ export const processes: Process[] = [
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B5",,
+    bloque_negocio: "B5",
 
     modulo_codigo: "5.2",
   },
@@ -1872,7 +1872,7 @@ export const processes: Process[] = [
     herramientas: ["Typeform","ClickUp","Make"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B5",,
+    bloque_negocio: "B5",
 
     modulo_codigo: "5.3",
   },
@@ -1900,7 +1900,7 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Make","WhatsApp Business API"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.6",
   },
@@ -1977,7 +1977,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.3",
   },
@@ -2029,7 +2029,7 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.10",
   },
@@ -2171,7 +2171,7 @@ export const processes: Process[] = [
     herramientas: ["Stripe","GoCardless","Make","WhatsApp Business API"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.2",
   },
@@ -3044,7 +3044,7 @@ export const processes: Process[] = [
     herramientas: ["SignNow/Docusign", "Make", "Formularios Cloud"],
     dolores: ["El proceso de alta de un cliente me quita demasiado tiempo", "A veces empezamos a trabajar sin tener el contrato firmado"],
     landing_slug: "gestorias",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.2",
     integration_domains: ["CRM", "OTHER"]
@@ -3106,7 +3106,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.1",
   },
@@ -3167,7 +3167,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.2",
   },
@@ -3228,7 +3228,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "BI"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.3",
   },
@@ -3289,7 +3289,7 @@ export const processes: Process[] = [
     herramientas: ["Web", "CRM", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.1",
   },
@@ -3350,7 +3350,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "PDF Factory"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.2",
   },
@@ -3411,7 +3411,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.3",
   },
@@ -3472,7 +3472,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Telefonía"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "gestorias",
-    bloque_negocio: "B5",,
+    bloque_negocio: "B5",
 
     modulo_codigo: "5.1",
   },
@@ -3532,7 +3532,7 @@ export const processes: Process[] = [
     herramientas: ["Chat", "Knowledge Base", "IA"],
     integration_domains: ["OTHER"],
     landing_slug: "gestorias",
-    bloque_negocio: "B5",,
+    bloque_negocio: "B5",
 
     modulo_codigo: "5.2",
   },
@@ -3592,7 +3592,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Mailing / WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.1",
   },
@@ -3652,7 +3652,7 @@ export const processes: Process[] = [
     herramientas: ["Agenda", "CRM", "WhatsApp SMS"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.2",
   },
@@ -3712,7 +3712,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Surveys"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",,
+    bloque_negocio: "B3",
 
     modulo_codigo: "3.3",
   },
@@ -3772,7 +3772,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS", "Firma Digital"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "gestorias",
-    bloque_negocio: "B1",,
+    bloque_negocio: "B1",
 
     modulo_codigo: "1.3",
   },
@@ -3832,7 +3832,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Automatización"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B4",,
+    bloque_negocio: "B4",
 
     modulo_codigo: "4.2",
   },
@@ -3892,7 +3892,7 @@ export const processes: Process[] = [
     herramientas: ["Portal Web", "Ticketing", "IA"],
     integration_domains: ["OTHER", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B5",,
+    bloque_negocio: "B5",
 
     modulo_codigo: "5.1",
   },
@@ -3952,7 +3952,7 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B6",,
+    bloque_negocio: "B6",
 
     modulo_codigo: "6.1",
   },
@@ -4014,7 +4014,7 @@ export const processes: Process[] = [
     dolores: ["El equipo no registra bien en el CRM", "Perdemos información clave de las llamadas con compradores"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.4",
   },
@@ -4073,7 +4073,7 @@ export const processes: Process[] = [
     dolores: ["Cada agente nuevo tarda semanas en conocer la promoción a fondo", "El equipo improvisa ante preguntas técnicas del comprador"],
     integration_domains: ["OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",,
+    bloque_negocio: "B2",
 
     modulo_codigo: "2.5",
   },
@@ -4132,7 +4132,7 @@ export const processes: Process[] = [
     dolores: ["El papeleo de contratos ralentiza los cierres", "El comprador se enfría entre el acuerdo y la firma"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
-    bloque_negocio: "B4",,
+    bloque_negocio: "B4",
 
     modulo_codigo: "4.1",
   },

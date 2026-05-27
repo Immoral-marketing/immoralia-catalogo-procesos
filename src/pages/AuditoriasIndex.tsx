@@ -30,6 +30,7 @@ interface SectorAudit {
   path: string;
   status: "available" | "soon";
   accent: string;
+  color?: "orange" | "cyan" | "violet" | "teal";
   bullets: string[];
 }
 
@@ -41,6 +42,7 @@ const AUDITS: SectorAudit[] = [
     icon: Utensils,
     path: "/auditorias/restaurantes",
     status: "available",
+    color: "orange",
     accent: "from-orange-500/30 to-red-500/30",
     bullets: [
       "Reservas y atención 24/7",
@@ -61,12 +63,17 @@ const AUDITS: SectorAudit[] = [
   {
     id: "salud",
     title: "Centros de salud",
-    short: "Clínicas dentales, fisio, estética, veterinaria y médicas",
+    short: "Clínicas dentales, fisio, estética, veterinaria y médicos",
     icon: Stethoscope,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-blue-500/30 to-indigo-500/30",
-    bullets: ["Citas y recordatorios", "Reputación y reseñas", "Gestión de pacientes"],
+    path: "/auditorias/salud",
+    status: "available",
+    color: "teal",
+    accent: "from-teal-500/30 to-teal-700/30",
+    bullets: [
+      "Agenda 24/7 y reducción de ausencias",
+      "Reseñas automáticas y retención de pacientes",
+      "Facturación a mutuas y visibilidad diaria",
+    ],
   },
   {
     id: "gestorias",
@@ -80,23 +87,33 @@ const AUDITS: SectorAudit[] = [
   },
   {
     id: "construccion",
-    title: "Construcción & reformas",
-    short: "Constructoras, arquitectura, reformas y mantenimiento",
+    title: "Construcción & promotoras",
+    short: "Promotoras, constructoras, reformas y rehabilitación",
     icon: HardHat,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-orange-500/20 to-amber-500/30",
-    bullets: ["Pipeline de obra", "Presupuestos y seguimiento", "Coordinación de equipos"],
+    path: "/auditorias/constructoras",
+    status: "available",
+    color: "cyan",
+    accent: "from-cyan-500/30 to-cyan-700/30",
+    bullets: [
+      "Captación, cualificación y pipeline en tiempo real",
+      "Seguimiento y visitas al piso piloto",
+      "Cierre, firma digital y postventa",
+    ],
   },
   {
     id: "academias",
     title: "Academias / Formación",
-    short: "Idiomas, formación profesional, autoescuelas, refuerzo escolar",
+    short: "Idiomas, FP, autoescuelas, refuerzo escolar, música y artes",
     icon: GraduationCap,
-    path: "/auditorias",
-    status: "soon",
+    path: "/auditorias/academias",
+    status: "available",
+    color: "violet",
     accent: "from-violet-500/30 to-purple-500/30",
-    bullets: ["Captación de alumnos", "Seguimiento académico", "Renovaciones de matrícula"],
+    bullets: [
+      "Captación de alumnos y respuesta 24/7",
+      "Matriculación digital y gestión de cobros",
+      "Retención, bajas anticipadas y reactivación",
+    ],
   },
   {
     id: "ecommerce",
@@ -226,19 +243,51 @@ const AuditoriasIndex = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {available.map((a) => {
                 const Icon = a.icon;
+                const c = a.color ?? "orange";
+                const styles = {
+                  orange: {
+                    border: "border-orange-500/30 hover:border-orange-500/50 hover:shadow-[0_0_40px_rgba(234,88,12,0.15)]",
+                    icon: "bg-orange-500/15 border border-orange-500/30",
+                    iconText: "text-orange-400",
+                    check: "text-orange-400",
+                    btn: "bg-orange-600 hover:bg-orange-500",
+                  },
+                  cyan: {
+                    border: "border-cyan-500/30 hover:border-cyan-500/50 hover:shadow-[0_0_40px_rgba(6,182,212,0.15)]",
+                    icon: "bg-cyan-500/15 border border-cyan-500/30",
+                    iconText: "text-cyan-400",
+                    check: "text-cyan-400",
+                    btn: "bg-cyan-600 hover:bg-cyan-500",
+                  },
+                  violet: {
+                    border: "border-violet-500/30 hover:border-violet-500/50 hover:shadow-[0_0_40px_rgba(139,92,246,0.15)]",
+                    icon: "bg-violet-500/15 border border-violet-500/30",
+                    iconText: "text-violet-400",
+                    check: "text-violet-400",
+                    btn: "bg-violet-600 hover:bg-violet-500",
+                  },
+                  teal: {
+                    border: "border-teal-500/30 hover:border-teal-500/50 hover:shadow-[0_0_40px_rgba(20,184,166,0.15)]",
+                    icon: "bg-teal-500/15 border border-teal-500/30",
+                    iconText: "text-teal-400",
+                    check: "text-teal-400",
+                    btn: "bg-teal-600 hover:bg-teal-500",
+                  },
+                } as const;
+                const s = styles[c];
                 return (
                   <Link
                     key={a.id}
                     to={a.path}
-                    className="group relative overflow-hidden rounded-3xl border border-orange-500/30 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-8 hover:border-orange-500/50 transition-all hover:shadow-[0_0_40px_rgba(234,88,12,0.15)]"
+                    className={`group relative overflow-hidden rounded-3xl border bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-8 transition-all ${s.border}`}
                   >
                     <div
                       className={`absolute top-0 right-0 w-72 h-72 bg-gradient-to-br ${a.accent} blur-3xl rounded-full opacity-40 pointer-events-none transition-opacity group-hover:opacity-60`}
                     />
                     <div className="relative">
                       <div className="flex items-center gap-4 mb-5">
-                        <div className="w-14 h-14 rounded-2xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                          <Icon className="w-7 h-7 text-orange-400" />
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${s.icon}`}>
+                          <Icon className={`w-7 h-7 ${s.iconText}`} />
                         </div>
                         <div>
                           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] uppercase tracking-widest text-emerald-300 font-bold">
@@ -253,16 +302,15 @@ const AuditoriasIndex = () => {
                       <p className="text-gray-400 mb-6 leading-relaxed">{a.short}</p>
                       <ul className="space-y-2 mb-7">
                         {a.bullets.map((b, i) => (
-                          <li
-                            key={i}
-                            className="flex gap-2.5 text-sm text-gray-300 items-start"
-                          >
-                            <CheckCircle2 className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                          <li key={i} className="flex gap-2.5 text-sm text-gray-300 items-start">
+                            <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${s.check}`} />
                             <span>{b}</span>
                           </li>
                         ))}
                       </ul>
-                      <Button className="bg-orange-600 hover:bg-orange-500 text-white gap-2 font-semibold h-12 px-6 transition-all group-hover:translate-x-0.5">
+                      <Button
+                        className={`gap-2 font-semibold h-12 px-6 transition-all group-hover:translate-x-0.5 text-white ${s.btn}`}
+                      >
                         Empezar auditoría <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div>
