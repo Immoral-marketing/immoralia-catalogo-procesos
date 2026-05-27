@@ -15,7 +15,6 @@ import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { getCategoryColorClass } from "@/lib/category-colors";
-import { supabase } from "@/lib/supabase";
 
 const SLUG = "informe-semanal-facturas-vencidas";
 
@@ -32,20 +31,6 @@ const ProcessDetailFacturasVencidas = () => {
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
     const [carouselStep, setCarouselStep] = useState(0);
-    const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
-
-    useEffect(() => {
-        supabase
-            .from('processes')
-            .select('image_url_1, image_url_2, image_url_3')
-            .eq('codigo', 'A2')
-            .single()
-            .then(({ data }) => {
-                if (data) {
-                    setStepImages([data.image_url_1 ?? null, data.image_url_2 ?? null, data.image_url_3 ?? null]);
-                }
-            });
-    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -309,15 +294,9 @@ const ProcessDetailFacturasVencidas = () => {
                         const step = steps[carouselStep];
                         return (
                             <div className="rounded-2xl border border-border overflow-hidden">
-                                <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
-                                    {stepImages[carouselStep] ? (
-                                        <img
-                                            src={stepImages[carouselStep]!}
-                                            alt={`Paso ${carouselStep + 1}`}
-                                            className="absolute inset-0 w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                    <><div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+                                {/* Image mockup — reemplazar por screenshot real */}
+                                <div className="relative w-full bg-card aspect-video flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
                                     <div
                                         className="absolute inset-0 opacity-10"
                                         style={{
@@ -334,8 +313,6 @@ const ProcessDetailFacturasVencidas = () => {
                                         </div>
                                         <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
                                     </div>
-                                    </>
-                                    )}
                                 </div>
 
                                 {/* Step info */}

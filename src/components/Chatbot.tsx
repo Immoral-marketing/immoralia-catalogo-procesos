@@ -39,11 +39,13 @@ const Chatbot: React.FC = () => {
     const getAccentColor = () => {
         const path = location.pathname;
         if (path.includes('gestorias')) return '#14b8a6'; // Teal
+        if (path.includes('inmobiliaria')) return '#10b981'; // Emerald
         if (path.includes('salud')) return '#2563eb'; // Blue
         if (path.includes('centros-deportivos')) return '#06b6d4'; // Cyan
         if (path.includes('construccion')) return '#d97706'; // Amber
         if (path.includes('academias')) return '#8b5cf6'; // Violet
         if (path.includes('restauracion')) return '#ea580c'; // Orange
+        if (path.includes('ecommerce')) return '#2563eb'; // Blue
         if (path.includes('agencias')) return '#e11d48'; // Rose
         return '#000000'; // Default black or primary
     };
