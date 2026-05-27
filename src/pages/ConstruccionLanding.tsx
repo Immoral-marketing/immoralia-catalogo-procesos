@@ -461,7 +461,7 @@ const ConstruccionLanding = () => {
                       </span>
                     </div>
                     <div className="text-xs tracking-widest text-cyan-300/80 mb-3 uppercase">
-                      Diagnóstico · Constructoras · 2026
+                      Diagnóstico · Constructoras / Reformas / Inmobiliarias · 2026
                     </div>
                     <h4 className="text-xl font-bold mb-4 text-white leading-tight">
                       Diagnóstico de madurez comercial

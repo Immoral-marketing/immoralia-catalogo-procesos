@@ -1629,8 +1629,7 @@ export const processes: Process[] = [
     herramientas: ["Make","Google Sheets","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
-
+    bloque_negocio: "B4",
     modulo_codigo: "4.2",
   },
   {
@@ -1735,8 +1734,7 @@ export const processes: Process[] = [
     herramientas: ["Docusign","SignNow","Make","Google Drive"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
-
+    bloque_negocio: "B4",
     modulo_codigo: "4.3",
   },
   {
@@ -1763,8 +1761,7 @@ export const processes: Process[] = [
     herramientas: ["Make","WhatsApp Business API","ActiveCampaign"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
-
+    bloque_negocio: "B4",
     modulo_codigo: "4.5",
   },
   {
@@ -2110,12 +2107,12 @@ export const processes: Process[] = [
     herramientas: ["Make","Notion","Gmail"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
-
+    bloque_negocio: "B4",
     modulo_codigo: "4.4",
   },
   {
     id: "RO26",
+    hidden: false,
     codigo: "4.1",
     slug: "gestion-turnos-disponibilidad-instructores",
     categoria: "D",
@@ -2136,10 +2133,18 @@ export const processes: Process[] = [
     personalizacion: "Define los plazos para informar la disponibilidad.",
     sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Make","Google Calendar","Slack"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas"],
+    dolores: [
+      "Cada semana llamas o escribes a cada instructor para saber cuándo puede dar clase",
+      "Los horarios se montan a mano y los errores de asignación generan conflictos de última hora",
+      "Cuando falta cobertura en una clase te enteras tarde, sin margen para reaccionar",
+    ],
+    benefits: [
+      "Los instructores reportan disponibilidad solos desde su móvil, sin que tú intervengas",
+      "El sistema cruza disponibilidades con el calendario y detecta conflictos antes de que ocurran",
+      "Las incidencias de cobertura se notifican al instante para que puedas actuar a tiempo",
+    ],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",,
-
+    bloque_negocio: "B4",
     modulo_codigo: "4.1",
   },
   {
