@@ -792,9 +792,9 @@ const ProcessDetail = () => {
                                                 />
                                                 {/* Robot compositeado directamente en la imagen — no overlay CSS */}
                                                 {stepSubtitles[carouselStep] && (
-                                                    <div className="absolute bottom-0 left-0 right-0 h-[22%] flex items-center justify-center pointer-events-none" style={{ zIndex: 6 }}>
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
-                                                        <span className="relative z-10 text-white font-bold tracking-[0.2em] uppercase text-[clamp(1rem,3vw,1.5rem)] drop-shadow-lg">
+                                                    <div className="absolute bottom-0 left-0 right-0 h-[18%] flex items-end justify-center pb-3 pointer-events-none" style={{ zIndex: 6 }}>
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                                                        <span className="relative z-10 text-white font-bold tracking-[0.2em] uppercase text-[clamp(0.85rem,2.5vw,1.3rem)] drop-shadow-lg">
                                                             {stepSubtitles[carouselStep]}
                                                         </span>
                                                     </div>
