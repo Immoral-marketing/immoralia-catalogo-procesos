@@ -20,7 +20,7 @@ const sectors = [
     id: "sports",
     number: "01",
     title: "Centros Deportivos",
-    description: "Gimnasios, crossfit, centros de yoga y academias deportivas.",
+    description: "Gimnasios, crossfit, centros de yoga, artes marciales y academias deportivas.",
     icon: Dumbbell,
     path: "/sector/centros-deportivos",
     accent: "#0891b2",
