@@ -66,13 +66,7 @@ const ConstruccionLanding = () => {
 
   const construccionProcesses = useMemo(() => {
     return processes
-      .filter((p) => !p.hidden && (
-        p.landing_slug === CONSTRUCCION_LANDING_SLUG ||
-        p.sectores?.includes("Construcción & Reformas") ||
-        p.sectores?.includes("Constructoras / Obra Nueva") ||
-        p.sectores?.includes("Inmobiliaria") ||
-        p.sectores?.includes("Inmobiliarias")
-      ))
+      .filter((p) => !p.hidden && p.landing_slug === CONSTRUCCION_LANDING_SLUG)
       .map((p) => {
         if (!p.bloque_negocio) return p;
         const block = construccionBlocks.find((b) => b.id === p.bloque_negocio);

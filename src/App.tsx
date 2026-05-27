@@ -16,6 +16,8 @@ import AgenciasLanding from "./pages/AgenciasLanding";
 import SectorSelector from "./pages/SectorSelector";
 import AfiliadoPage from "./pages/AfiliadoPage";
 import AdminPage from "./pages/AdminPage";
+import AuditoriasIndex from "./pages/AuditoriasIndex";
+import AuditoriaRestaurantes from "./pages/AuditoriaRestaurantes";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/auditorias" element={<AuditoriasIndex />} />
+            <Route path="/auditorias/restaurantes" element={<AuditoriaRestaurantes />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

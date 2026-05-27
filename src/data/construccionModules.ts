@@ -105,7 +105,7 @@ export const construccionModules: ConstruccionModule[] = [
     descripcion:
       "Cada llamada con un cliente se transcribe, resume y vuelca al CRM automáticamente: intereses, objeciones, próximos pasos. El agente termina la llamada y ya está documentada sin escribir nada.",
     badge: "CRM siempre al día",
-    linkedProcessSlug: "resumen-llamadas-crm",
+    linkedProcessSlug: "resumen-llamadas-comerciales-obra",
     highlights: [
       "Transcripción y resumen automático de cada conversación",
       "Objeciones e intereses volcados directamente al CRM",
@@ -119,7 +119,7 @@ export const construccionModules: ConstruccionModule[] = [
     descripcion:
       "El agente tiene a mano un copiloto que responde en segundos a cualquier pregunta técnica, legal o de producto — mientras está con el cliente, por teléfono o en la visita — sin tener que llamar a nadie ni buscar en documentos.",
     badge: "Agentes más seguros",
-    linkedProcessSlug: "asistente-interno-comerciales",
+    linkedProcessSlug: "copiloto-proyecto-agentes-obra",
     highlights: [
       "Respuestas instantáneas a preguntas técnicas y legales en plena conversación",
       "Acceso a toda la documentación del proyecto desde el móvil",
@@ -179,7 +179,7 @@ export const construccionModules: ConstruccionModule[] = [
     descripcion:
       "Cuando el cliente decide comprar, el sistema genera el contrato de reserva con los datos correctos, lo envía para firma digital y registra cada paso con trazabilidad completa. Sin errores manuales, sin demoras por papeleo.",
     badge: "Cierre ágil",
-    linkedProcessSlug: "automatizacion-contratos-firma",
+    linkedProcessSlug: "contrato-reserva-firma-digital-obra",
     highlights: [
       "Contratos generados automáticamente con datos del CRM",
       "Firma digital integrada con notificación instantánea",

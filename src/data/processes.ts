@@ -1,9 +1,9 @@
-export interface Process {
+﻿export interface Process {
   id: string;
   codigo: string;
   slug: string;
-  categoria: string;
-  categoriaNombre: string;
+  categoria?: string;       // @deprecated — no se usa en landings activas
+  categoriaNombre?: string; // @deprecated — sobreescrito por bloque_negocio en runtime
   nombre: string;
   tagline: string;
   one_liner?: string;
@@ -73,12 +73,33 @@ export interface Process {
       detail?: string;
     }[];
   }>;
+
+  // ===== Campos espejo de Supabase (NO se editan desde processes.ts) =====
+  // Estos campos viven en la BD y guardan estado de generación de assets.
+  // El script de sync los preserva intactos — nunca los sobrescribe.
+  // Mapping: hidden:true (código) ↔ catalog_active:false (BD).
+  catalog_active?: boolean;
+  guion_generado?: boolean;
+  guion_clickup_url?: string;
+  guion_generado_at?: string;
+  video_generado?: boolean;
+  video_remotion_url?: string;
+  video_generado_at?: string;
+  image_url_1?: string;
+  image_url_2?: string;
+  image_url_3?: string;
+  image_subtitle_1?: string;
+  image_subtitle_2?: string;
+  image_subtitle_3?: string;
+  imagenes_generadas?: boolean;
+  imagenes_generadas_at?: string;
 }
 
 
 export const processes: Process[] = [
   {
     id: "A1",
+    hidden: true,
     codigo: "A1",
     slug: "facturas-automatizadas",
     categoria: "A",
@@ -141,6 +162,7 @@ export const processes: Process[] = [
 
   {
     id: "A2",
+    hidden: true,
     codigo: "A2",
     slug: "informe-semanal-facturas-vencidas",
     categoria: "A",
@@ -199,7 +221,7 @@ export const processes: Process[] = [
 
   {
     id: "A3",
-    codigo: "A3",
+    codigo: "1.1",
     slug: "presupuestos-automaticos",
     categoria: "A",
     categoriaNombre: "Facturación y Finanzas",
@@ -245,10 +267,14 @@ export const processes: Process[] = [
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.1",
   },
 
   {
     id: "A4",
+    hidden: true,
     codigo: "A4",
     slug: "seguimiento-presupuestos",
     categoria: "A",
@@ -298,6 +324,7 @@ export const processes: Process[] = [
 
   {
     id: "A5",
+    hidden: true,
     codigo: "A5",
     slug: "recordatorios-pagos",
     categoria: "A",
@@ -458,6 +485,7 @@ export const processes: Process[] = [
   },
   {
     id: "B6",
+    hidden: true,
     codigo: "B6",
     slug: "analisis-incidencias-horarios",
     categoria: "B",
@@ -507,6 +535,7 @@ export const processes: Process[] = [
 
   {
     id: "B7",
+    hidden: true,
     codigo: "B7",
     slug: "informe-mensual-horas-estimadas",
     categoria: "B",
@@ -555,6 +584,7 @@ export const processes: Process[] = [
 
   {
     id: "B8",
+    hidden: true,
     codigo: "B8",
     slug: "alertas-exceso-horas",
     categoria: "B",
@@ -603,6 +633,7 @@ export const processes: Process[] = [
 
   {
     id: "C9",
+    hidden: true,
     codigo: "C9",
     slug: "alertas-vencimiento-facturas-compra",
     categoria: "C",
@@ -646,14 +677,13 @@ export const processes: Process[] = [
     personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     bloque_negocio: "B4",
   },
 
   {
     id: "C10",
-    codigo: "C10",
+    codigo: "4.6",
     slug: "informes-financieros-direccion",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -698,10 +728,13 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B4",
+    bloque_negocio: "B4",,
+
+    modulo_codigo: "4.6",
   },
   {
     id: "C11",
+    hidden: true,
     codigo: "C11",
     slug: "proyeccion-automatica-ingresos",
     categoria: "C",
@@ -750,6 +783,7 @@ export const processes: Process[] = [
 
   {
     id: "C12",
+    hidden: true,
     codigo: "C12",
     slug: "traspasos-automaticos-iva",
     categoria: "C",
@@ -799,7 +833,7 @@ export const processes: Process[] = [
 
   {
     id: "D13",
-    codigo: "D13",
+    codigo: "6.1",
     slug: "registro-automatico-gastos",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -845,7 +879,9 @@ export const processes: Process[] = [
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
     sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
-    bloque_negocio: "B4",
+    bloque_negocio: "B6",,
+
+    modulo_codigo: "6.1",
   },
   {
     id: "D14",
@@ -896,6 +932,7 @@ export const processes: Process[] = [
 
   {
     id: "D15",
+    landing_slug: "agencias",
     codigo: "D15",
     slug: "facturacion-automatica-horas-freelance",
     categoria: "B",
@@ -943,6 +980,7 @@ export const processes: Process[] = [
 
   {
     id: "D16",
+    landing_slug: "agencias",
     codigo: "D16",
     slug: "gestion-automatica-retenciones-freelance",
     categoria: "B",
@@ -990,58 +1028,8 @@ export const processes: Process[] = [
   },
 
   {
-    id: "E17",
-    codigo: "E17",
-    slug: "atencion-automatica-tu vía de comunicación preferida",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Atención automática por mensajería",
-    tagline: "Responde al instante a dudas frecuentes y deriva a una persona cuando haga falta.",
-    recomendado: true,
-    descripcionDetallada: "Automatizamos la atención inicial por canales de mensajería para responder consultas repetidas (horarios, precios, ubicación, servicios, disponibilidad, etc.). Cuando el cliente pregunta algo complejo o fuera de lo previsto, el sistema deriva la conversación a un responsable con el contexto necesario para continuar sin perder tiempo.",
-    summary: {
-      what_it_is: "Asistente inteligente 24/7 que filtra y resuelve dudas en tus canales de mensajería, liberando a tu equipo para ventas reales.",
-      for_who: ["Atención al cliente", "Soportes técnicos", "Recepciones"],
-      requirements: ["API de mensajería móvil", "Base de conocimientos (FAQs)"],
-      output: "Conversaciones resueltas o filtradas con resumen para el humano."
-    },
-    indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["Mensajería", "IA", "Automatización"]
-    },
-    how_it_works_steps: [
-      { title: "Recepción de mensaje", short: "Escuchamos 24/7.", detail: "Cada mensaje entrante es analizado para entender la intención del usuario al instante." },
-      { title: "Resolución por IA", short: "Respondemos con contexto.", detail: "Consultamos tu base de precios, horarios y servicios para dar la respuesta perfecta." },
-      { title: "Derivación humana", short: "Pasamos el testigo cuando hace falta.", detail: "Si la consulta es de venta crítica o muy compleja, avisamos a tu equipo con un resumen de la charla." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Horario de atención", options: ["24/7", "Solo fuera de oficina"] },
-        { type: "radio", label: "Tono de la IA", options: ["Formal", "Cercano", "Divertido"] }
-      ],
-      free_text_placeholder: "¿Cuáles son las 3 preguntas que más te hacen tus clientes?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Puede enviar archivos o imágenes?", a: "Sí, puede enviar catálogos, mapas de ubicación o fotos de productos automáticamente." }
-    ],
-    pasos: [
-      "Detectamos el tipo de consulta del cliente (por palabras clave y contexto)",
-      "Respondemos con mensajes automatizados personalizados según la consulta",
-      "Si la conversación requiere atención humana, derivamos a un responsable",
-      "Guardamos el contexto para retomar sin perder información"
-    ],
-    personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Hostelería"],
-    related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
-    integration_domains: ["OTHER"],
-    landing_slug: "salud",
-    bloque_negocio: "B1",
-  },
-  {
     id: "E18",
-    codigo: "E18",
+    codigo: "1.1",
     slug: "asistente-reservas-recordatorios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1086,112 +1074,12 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "Inmobiliaria", "Agencia/marketing"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
-    landing_slug: "centros-deportivos",
-    bloque_negocio: "B1",
-    modulo_codigo: "1.3",
+    landing_slug: “centros-deportivos”,
+    bloque_negocio: “B1”,
+    modulo_codigo: “1.1”,
   },
   {
-    id: "E19",
-    hidden: true,
-    codigo: "E19",
-    slug: "captura-organizacion-solicitudes",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Captura y organización automática de solicitudes",
-    tagline: "Recoge solicitudes desde distintos canales y las deja ordenadas para gestionarlas rápido.",
-    recomendado: true,
-    descripcionDetallada: "Cuando llegan solicitudes desde formularios o mensajes, las centralizamos y organizamos para que no se pierdan. El objetivo es pasar de “mensajes sueltos” a un sistema claro: qué ha pedido la persona, por qué canal llegó y en qué estado está.",
-    summary: {
-      what_it_is: "Buzón unificado que profesionaliza la entrada de nuevos contactos (leads) de tu negocio.",
-      for_who: ["Equipos comerciales", "Equipos de marketing", "Atención al cliente"],
-      requirements: ["Canales digitales (Web/Redes)", "Base de datos (Gestor de tareas/CRM)"],
-      output: "Tablón con todas las solicitudes clasificadas por canal y urgencia."
-    },
-    indicators: {
-      time_estimate: "< 1 semana",
-      complexity: "Baja",
-      integrations: ["Gestor de tareas", "Canal de comunicación", "Redes sociales"]
-    },
-    how_it_works_steps: [
-      { title: "Escucha multicanal", short: "Leemos todos tus mensajes.", detail: "Extraemos el contacto de quien te escribe por tus canales digitales o web." },
-      { title: "Categorización automática", short: "Entendemos la demanda.", detail: "El sistema clasifica si es una pregunta de precio, una queja o una solicitud de presupuesto." },
-      { title: "Centralización", short: "Todo a tu zona de trabajo.", detail: "Creamos una tarjeta en tu gestor de tareas para que nada dependa de una memoria dispersa." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Destino", options: ["Gestor de tareas", "Software de gestión", "CRM"] },
-        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿Cuántos canales quieres unificar hoy mismo?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Avisa al jefe de equipo?", a: "Podemos configurar reglas para que las solicitudes 'VIP' notifiquen directamente a gerencia." }
-    ],
-    pasos: [
-      "Recibimos solicitudes desde los canales definidos (por ejemplo, formulario, chat o redes)",
-      "Extraemos la información clave (contacto, motivo, servicio y urgencia)",
-      "Guardamos cada solicitud en un listado organizado para su seguimiento",
-      "Notificamos al responsable para que actúe sin retrasos"
-    ],
-    personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
-    sectores: ["Servicios profesionales", "Peluquería/estética", "Retail", "E-commerce", "Construcción & Reformas"],
-    related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"],
-    integration_domains: ["CRM"],
-    landing_slug: "salud"
-  },
-  {
-    id: "E20",
-    hidden: true,
-    codigo: "E20",
-    slug: "seguimiento-automatico-solicitudes",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Seguimiento automático de solicitudes",
-    tagline: "Automatiza el seguimiento para que nadie se quede sin respuesta.",
-    recomendado: true,
-    descripcionDetallada: "Creamos un flujo de seguimiento para retomar conversaciones y solicitudes que no avanzan. El sistema envía mensajes según el estado (pendiente de respuesta, esperando confirmación, propuesta enviada, etc.) y evita que se pierdan solicitudes por falta de seguimiento.",
-    summary: {
-      what_it_is: "Cierre de ventas incansable que 'persigue' suavemente a tus prospectos hasta obtener respuesta.",
-      for_who: ["Comerciales", "Freelancers", "Agencias de marketing"],
-      requirements: ["CRM con estados de venta", "Canal de comunicación (Chat/tu vía de comunicación preferida)"],
-      output: "Aumento de la tasa de conversión sin carga administrativa para el equipo."
-    },
-    indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["CRM", "Comunicación"]
-    },
-    how_it_works_steps: [
-      { title: "Control de estancamiento", short: "Detectamos el silencio.", detail: "Si un cliente no responde a una propuesta en el tiempo definido, el proceso se activa solo." },
-      { title: "Mensaje de contexto", short: "Recordamos el valor.", detail: "Enviamos un mensaje personalizado tipo 'Hola, ¿pudiste ver la propuesta?' por la vía más efectiva." },
-      { title: "Cierre o derivación", short: "Limpiamos el pipeline.", detail: "Si el seguimiento no prospera, el sistema archiva la oportunidad y te avisa del resultado." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Número de toques", options: ["2 intentos", "3 intentos", "5 intentos"] },
-        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿Quieres usar notas de voz autogeneradas para que sea más natural?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Parecerá un robot?", a: "No, usamos variables para que el mensaje incluya su nombre, servicio y contexto real de la charla." }
-    ],
-    pasos: [
-      "Detectamos solicitudes sin respuesta o estancadas según estado y tiempo",
-      "Enviamos un mensaje de seguimiento personalizado",
-      "Si la persona responde, se actualiza el estado y se deriva al responsable si corresponde",
-      "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
-    ],
-    personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
-    sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética", "Gestoria"],
-    related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
-    integration_domains: ["CRM"],
-    landing_slug: "salud"
-  },
-  {
-    id: "E21",
+    id: “E21”,
     codigo: "E21",
     slug: "solicitud-automatica-resenas",
     categoria: "E",
@@ -1234,16 +1122,17 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
     sectores: ["Centros Deportivos", "E-commerce"],
-    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
+    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-redes-sociales"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B2",
-    modulo_codigo: "2.1",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
   },
   {
     id: "E22",
+    hidden: true,
     codigo: "E22",
-    slug: "atencion-automatica-tu vía de comunicación preferida",
+    slug: "atencion-automatica-redes-sociales",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     nombre: "Atención automática por redes sociales",
@@ -1286,62 +1175,12 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
+    related_processes: ["atencion-automatica-redes-sociales", "captura-organizacion-solicitudes"],
 
   },
   {
-    id: "E23",
-    hidden: true,
-    codigo: "E23",
-    slug: "reduccion-ausencias-citas",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Reducción de citas perdidas",
-    tagline: "Confirma citas, recuerda automáticamente y facilita reprogramar para evitar huecos perdidos.",
-    recomendado: false,
-    descripcionDetallada: "Creamos un flujo de confirmación y recordatorios para reducir las ausencias a citas. El cliente puede confirmar de forma sencilla y, si no puede asistir, se le guía para cambiar la cita sin llamadas ni idas y vueltas.",
-    summary: {
-      what_it_is: "Protocolo de comunicación activa que asegura la asistencia de tus clientes y optimiza tu tiempo productivo.",
-      for_who: ["Clínicas", "Consultoría", "Estética"],
-      requirements: ["Sistema de citas (Calendario/CRM)", "API de mensajería"],
-      output: "Agenda llena con ausencias mínimas y reprogramaciones fáciles."
-    },
-    indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["Calendario", "Mensajería"]
-    },
-    how_it_works_steps: [
-      { title: "Trigger de Cita", short: "Detectamos nuevas reservas.", detail: "En cuanto se crea un evento en tu calendario, el sistema planifica los recordatorios." },
-      { title: "Doble Confirmación", short: "Validamos asistencia 24h antes.", detail: "Enviamos un mensaje pidiendo confirmación. Si cancelan, el hueco queda libre automáticamente." },
-      { title: "Aviso de 'Última Hora'", short: "Recordamos 1h antes.", detail: "Un último aviso para asegurar que el cliente ya está de camino a tu centro/oficina." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Tiempo de antelación", options: ["24h antes", "48h antes"] },
-        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿A quién avisamos internamente si un cliente cancela de golpe?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Puedo usar mi propio número?", a: "Sí, a través de integraciones oficiales podemos usar tu línea de empresa para los avisos." }
-    ],
-    pasos: [
-      "Enviamos un mensaje de confirmación tras la reserva (o antes de la cita)",
-      "Enviamos recordatorios en los momentos definidos",
-      "Si el cliente no puede asistir, le guiamos para reprogramar o cancelar fácilmente",
-      "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
-    ],
-    personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Gimnasio/yoga", "Servicios profesionales", "Hostelería"],
-    herramientas: ["Mensajería", "Calendario"],
-    dolores: ["Se olvidan de la cita / hay muchas ausencias"],
-    related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"],
-    landing_slug: "salud"
-  },
-  {
     id: "E24",
+    hidden: true,
     codigo: "E24",
     slug: "alta-automatica-clientes-solicitudes",
     categoria: "E",
@@ -1387,10 +1226,11 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
+    related_processes: ["atencion-automatica-redes-sociales", "captura-organizacion-solicitudes"],
   },
   {
     id: "F25",
+    hidden: true,
     codigo: "F25",
     slug: "auditoria-tecnologica-ia",
     categoria: "F",
@@ -1435,12 +1275,12 @@ export const processes: Process[] = [
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
     sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: [],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
+    related_processes: ["atencion-automatica-redes-sociales", "registro-automatico-gastos"],
     bloque_negocio: "B4",
   },
   {
     id: "CM1",
-    codigo: "CM1",
+    codigo: "2.1",
     slug: "lead-capture-crm",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1462,9 +1302,13 @@ export const processes: Process[] = [
     herramientas: ["Typeform","HubSpot","ActiveCampaign","Make"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió","Pierdo solicitudes entre WhatsApp/Instagram/email"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.1",
   },
   {
     id: "CM2",
+    hidden: true,
     codigo: "CM2",
     slug: "secuencia-bienvenida-leads-frios",
     categoria: "E",
@@ -1489,7 +1333,7 @@ export const processes: Process[] = [
   },
   {
     id: "CM3",
-    codigo: "CM3",
+    codigo: "3.9",
     slug: "campana-reactivacion-ex-socios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1511,10 +1355,13 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.9",
   },
   {
     id: "GV4",
-    codigo: "GV4",
+    codigo: "3.3",
     slug: "notificacion-renovacion-cuota",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1536,10 +1383,13 @@ export const processes: Process[] = [
     herramientas: ["Make","WhatsApp Business API","Stripe"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.3",
   },
   {
     id: "GV5",
-    codigo: "GV5",
+    codigo: "2.2",
     slug: "reactivacion-leads-no-convirtieron",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1561,10 +1411,13 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.2",
   },
   {
     id: "GV6",
-    codigo: "GV6",
+    codigo: "2.3",
     slug: "programa-referidos-automatizado",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1586,10 +1439,13 @@ export const processes: Process[] = [
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.3",
   },
   {
     id: "GV7",
-    codigo: "GV7",
+    codigo: "3.1",
     slug: "seguimiento-alumnos-riesgo-baja",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1611,9 +1467,13 @@ export const processes: Process[] = [
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.1",
   },
   {
     id: "GV8",
+    hidden: true,
     codigo: "GV8",
     slug: "upsell-equipamiento-deportivo",
     categoria: "C",
@@ -1638,7 +1498,7 @@ export const processes: Process[] = [
   },
   {
     id: "GV9",
-    codigo: "GV9",
+    codigo: "3.5",
     slug: "gestion-bonos-packs-clases",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1660,10 +1520,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.5",
   },
   {
     id: "OA10",
-    codigo: "OA10",
+    codigo: "2.4",
     slug: "alta-socio-accesos-auto",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1685,9 +1548,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Virtuagym","Mindbody","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.4",
   },
   {
     id: "OA11",
+    hidden: true,
     codigo: "OA11",
     slug: "gestion-automatizada-reservas",
     categoria: "B",
@@ -1712,8 +1579,7 @@ export const processes: Process[] = [
   },
   {
     id: "OA12",
-    hidden: true,
-    codigo: "OA12",
+    codigo: "1.4",
     slug: "control-aforo-alertas-ocupacion",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1734,11 +1600,14 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Software de gestión","Make","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.4",
   },
   {
     id: "OA13",
-    codigo: "OA13",
+    codigo: "4.2",
     slug: "informe-semanal-kpis-operativos",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1761,6 +1630,7 @@ export const processes: Process[] = [
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
+    modulo_codigo: "4.2",
   },
   {
     id: "OA14",
@@ -1789,6 +1659,7 @@ export const processes: Process[] = [
   },
   {
     id: "OA15",
+    hidden: true,
     codigo: "OA15",
     slug: "gestion-calendario-examenes-grado",
     categoria: "B",
@@ -1813,7 +1684,7 @@ export const processes: Process[] = [
   },
   {
     id: "OA16",
-    codigo: "OA16",
+    codigo: "3.7",
     slug: "registro-seguimiento-lesiones",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1835,10 +1706,13 @@ export const processes: Process[] = [
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.7",
   },
   {
     id: "OA17",
-    codigo: "OA17",
+    codigo: "4.3",
     slug: "gestion-contratos-firma-digital",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1861,10 +1735,11 @@ export const processes: Process[] = [
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
+    modulo_codigo: "4.3",
   },
   {
     id: "OA18",
-    codigo: "OA18",
+    codigo: "4.5",
     slug: "automatizacion-comunicacion-padres",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1887,10 +1762,11 @@ export const processes: Process[] = [
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
+    modulo_codigo: "4.5",
   },
   {
     id: "OA19",
-    codigo: "OA19",
+    codigo: "3.4",
     slug: "informe-mensual-progreso-alumno",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1912,10 +1788,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.4",
   },
   {
     id: "AC20",
-    codigo: "AC20",
+    codigo: "1.2",
     slug: "whatsapp-automata-faq",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1937,10 +1816,13 @@ export const processes: Process[] = [
     herramientas: ["WhatsApp Business API","Make","ChatGPT"],
     dolores: ["Me escriben mucho y no doy abasto","Tengo muchas preguntas repetidas"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.2",
   },
   {
     id: "AC21",
-    codigo: "AC21",
+    codigo: "5.2",
     slug: "encuesta-satisfaccion-post-clase",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1962,10 +1844,13 @@ export const processes: Process[] = [
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B5",,
+
+    modulo_codigo: "5.2",
   },
   {
     id: "AC22",
-    codigo: "AC22",
+    codigo: "5.3",
     slug: "gestion-quejas-reclamaciones",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1987,10 +1872,13 @@ export const processes: Process[] = [
     herramientas: ["Typeform","ClickUp","Make"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B5",,
+
+    modulo_codigo: "5.3",
   },
   {
     id: "AC23",
-    codigo: "AC23",
+    codigo: "3.6",
     slug: "felicitacion-cumpleanos-oferta",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -2012,9 +1900,13 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Make","WhatsApp Business API"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.6",
   },
   {
     id: "AC24",
+    hidden: true,
     codigo: "AC24",
     slug: "deteccion-socios-churn-riesgo",
     categoria: "E",
@@ -2039,7 +1931,7 @@ export const processes: Process[] = [
   },
   {
     id: "AC25",
-    codigo: "AC25",
+    codigo: "1.3",
     slug: "notificacion-cambios-cancelaciones-clase",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2085,10 +1977,13 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.3",
   },
   {
     id: "AC26",
-    codigo: "AC26",
+    codigo: "3.10",
     slug: "control-asistencia-alertas-faltas",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2134,11 +2029,13 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.10",
   },
   {
     id: "AC27",
-    hidden: true,
-    codigo: "AC27",
+    codigo: "2.4",
     slug: "matricula-asignacion-nivel-automatica",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2182,11 +2079,13 @@ export const processes: Process[] = [
     personalizacion: "Personaliza el criterio de asignación, el contenido del kit de bienvenida y los avisos al equipo docente.",
     related_processes: ["notificacion-cambios-cancelaciones-clase", "control-asistencia-alertas-faltas"],
     integration_domains: ["OTHER"],
-    landing_slug: "academias"
+    landing_slug: "academias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4",
   },
   {
     id: "RO25",
-    codigo: "RO25",
+    codigo: "4.4",
     slug: "onboarding-empleado-entrenador",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -2209,11 +2108,12 @@ export const processes: Process[] = [
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
+    modulo_codigo: "4.4",
   },
   {
     id: "RO26",
     hidden: false,
-    codigo: "RO26",
+    codigo: "4.1",
     slug: "gestion-turnos-disponibilidad-instructores",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -2245,10 +2145,11 @@ export const processes: Process[] = [
     ],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
+    modulo_codigo: "4.1",
   },
   {
     id: "FF27",
-    codigo: "FF27",
+    codigo: "3.2",
     slug: "cobro-recurrente-gestion-impagos",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -2270,9 +2171,13 @@ export const processes: Process[] = [
     herramientas: ["Stripe","GoCardless","Make","WhatsApp Business API"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.2",
   },
   {
     id: "FF28",
+    hidden: true,
     codigo: "FF28",
     slug: "alerta-pagos-pendientes-proveedores",
     categoria: "C",
@@ -2297,6 +2202,7 @@ export const processes: Process[] = [
   },
   {
     id: "OE29",
+    hidden: true,
     codigo: "OE29",
     slug: "comunicacion-cambios-horario",
     categoria: "B",
@@ -2321,14 +2227,15 @@ export const processes: Process[] = [
   },
   {
     id: "GS1",
-    hidden: true,
-    codigo: "GS1",
+    codigo: "2.1",
     slug: "recopilacion-mensual-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     nombre: "Recopilación automática de documentos",
     tagline: "Solicita y centraliza la documentación de tus clientes cada mes sin perseguir a nadie.",
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
     benefits: [
       "Ahorro de 5+ horas mensuales en gestión documental",
       "Reducción drástica de retrasos en cierres contables",
@@ -2368,12 +2275,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS2",
-    hidden: true,
-    codigo: "GS2",
+    codigo: "3.1",
     slug: "alertas-vencimientos-fiscales",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
     landing_slug: "gestorias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
     nombre: "Alertas de vencimientos fiscales y laborales",
     tagline: "Evita sanciones y recargos con un calendario de impuestos automatizado.",
     benefits: [
@@ -2415,12 +2323,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS3",
-    hidden: true,
-    codigo: "GS3",
+    codigo: "3.2",
     slug: "seguimiento-expedientes",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
     landing_slug: "gestorias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
     nombre: "Seguimiento del estado de cada expediente",
     tagline: "Tu cliente sabe en qué punto está su gestión sin tener que llamarte.",
     benefits: [
@@ -2509,11 +2418,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS5",
-    codigo: "GS5",
+    codigo: "6.2",
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
     landing_slug: "gestorias",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -2555,12 +2466,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS6",
-    hidden: true,
-    codigo: "GS6",
+    codigo: "4.1",
     slug: "gestion-altas-empleados",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
     nombre: "Alta de nuevos empleados de clientes",
     tagline: "Recopila datos y genera el checklist de contratación al instante.",
     benefits: [
@@ -2602,12 +2514,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS7",
-    hidden: true,
-    codigo: "GS7",
+    codigo: "4.2",
     slug: "vencimientos-contratos-laborales",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
     nombre: "Control de vencimientos de contratos temporales",
     tagline: "Controla renovaciones y extinciones antes de que se pase el plazo legal.",
     benefits: [
@@ -2649,11 +2562,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS8",
-    codigo: "GS8",
+    codigo: "4.4",
     slug: "envio-automatico-nominas",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4",
     nombre: "Envío automático de nóminas a empleados",
     tagline: "Distribuye todos los recibos de salarios en un clic sin envíos manuales.",
     benefits: [
@@ -2695,11 +2610,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS9",
-    codigo: "GS9",
+    codigo: "4.3",
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2741,11 +2658,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS10",
-    codigo: "GS10",
+    codigo: "6.2",
     slug: "comunicaciones-calendario-fiscal",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
     nombre: "Campañas de captación estacional para centros deportivos",
     tagline: "Enero, septiembre, verano — los picos del año activados solos, en el momento exacto.",
     benefits: [
@@ -2788,7 +2707,7 @@ export const processes: Process[] = [
   },
   {
     id: "DEP-6.1",
-    codigo: "DEP-6.1",
+    codigo: "6.1",
     slug: "publicacion-novedades-redes-centro-deportivo",
     categoria: "B6",
     categoriaNombre: "Marketing y contenido digital",
@@ -2822,10 +2741,10 @@ export const processes: Process[] = [
       "Publicaciones en el horario de mayor alcance, sin planificación manual"
     ],
     pasos: [
-      "Registras la novedad (nueva clase, horario, promo) en tu sistema o formulario",
+      "Registras la novedad en tu sistema o formulario (clase nueva / cambio de horario / promo)",
       "La IA genera el copy adaptado al tono del centro",
       "Se crea la imagen siguiendo la identidad visual",
-      "Se publica automáticamente en Instagram, Facebook y Google Business al horario óptimo"
+      "Se publica automáticamente en Instagram y Google Business al horario óptimo"
     ],
     personalizacion: "Define el tono de la marca, la identidad visual (plantillas, colores, tipografías), los canales donde publicar y si quieres aprobación manual antes de cada post.",
     sectores: ["Centros Deportivos"],
@@ -2844,12 +2763,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS11",
-    hidden: true,
-    codigo: "GS11",
+    codigo: "2.4",
     slug: "alertas-caducidad-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4",
     nombre: "Alertas de documentos próximos a caducar",
     tagline: "No permitas que un certificado o poder caducado frene una gestión vital.",
     benefits: [
@@ -2891,11 +2811,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS12",
-    codigo: "GS12",
+    codigo: "2.2",
     slug: "canal-documental-cliente",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
     nombre: "Canal estructurado de envío de documentos con el cliente",
     tagline: "Un lugar único y ordenado para que tu cliente suba su documentación sin errores.",
     benefits: [
@@ -2984,11 +2906,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS14",
-    codigo: "GS14",
+    codigo: "2.3",
     slug: "clasificacion-automatica-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -3030,11 +2954,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS15",
-    codigo: "GS15",
+    codigo: "5.3",
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     landing_slug: "gestorias",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
@@ -3076,8 +3002,7 @@ export const processes: Process[] = [
   },
   {
     id: "GS16",
-    hidden: true,
-    codigo: "GS16",
+    codigo: "1.2",
     slug: "alta-automatizada-nuevos-clientes-gestoria",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -3119,11 +3044,14 @@ export const processes: Process[] = [
     herramientas: ["SignNow/Docusign", "Make", "Formularios Cloud"],
     dolores: ["El proceso de alta de un cliente me quita demasiado tiempo", "A veces empezamos a trabajar sin tener el contrato firmado"],
     landing_slug: "gestorias",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.2",
     integration_domains: ["CRM", "OTHER"]
   },
   {
     id: "CN1",
-    codigo: "CN1",
+    codigo: "1.1",
     slug: "calificacion-inteligente-leads",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3178,11 +3106,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.1",
   },
   {
     id: "CN2",
-    codigo: "CN2",
+    codigo: "1.2",
     slug: "analisis-sentimiento-riesgo",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3237,12 +3167,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.2",
   },
   {
     id: "CN3",
-    hidden: true,
-    codigo: "CN3",
+    codigo: "1.3",
     slug: "dashboard-comercial-tiempo-real",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -3297,11 +3228,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "BI"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B1",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.3",
   },
   {
     id: "CN4",
-    codigo: "CN4",
+    codigo: "2.1",
     slug: "asistente-digital-precualificacion",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3356,11 +3289,13 @@ export const processes: Process[] = [
     herramientas: ["Web", "CRM", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.1",
   },
   {
     id: "CN5",
-    codigo: "CN5",
+    codigo: "2.2",
     slug: "motor-presentacion-perfil",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3415,11 +3350,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "PDF Factory"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.2",
   },
   {
     id: "CN6",
-    codigo: "CN6",
+    codigo: "2.3",
     slug: "generador-dossier-unidad",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3474,11 +3411,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
-    bloque_negocio: "B2",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.3",
   },
   {
     id: "CN7",
-    codigo: "CN7",
+    codigo: "5.1",
     slug: "resumen-llamadas-crm",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3533,11 +3472,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Telefonía"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "gestorias",
-    bloque_negocio: "B2",
+    bloque_negocio: "B5",,
+
+    modulo_codigo: "5.1",
   },
   {
     id: "CN8",
-    codigo: "CN8",
+    codigo: "5.2",
     slug: "asistente-interno-comerciales",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -3591,11 +3532,13 @@ export const processes: Process[] = [
     herramientas: ["Chat", "Knowledge Base", "IA"],
     integration_domains: ["OTHER"],
     landing_slug: "gestorias",
-    bloque_negocio: "B2",
+    bloque_negocio: "B5",,
+
+    modulo_codigo: "5.2",
   },
   {
     id: "CN9",
-    codigo: "CN9",
+    codigo: "3.1",
     slug: "seguimiento-multicanal-inteligente",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3649,11 +3592,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Mailing / WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.1",
   },
   {
     id: "CN10",
-    codigo: "CN10",
+    codigo: "3.2",
     slug: "automatizacion-agendado-visitas",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3707,11 +3652,13 @@ export const processes: Process[] = [
     herramientas: ["Agenda", "CRM", "WhatsApp SMS"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.2",
   },
   {
     id: "CN11",
-    codigo: "CN11",
+    codigo: "3.3",
     slug: "seguimiento-post-visita",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3765,11 +3712,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Surveys"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B3",
+    bloque_negocio: "B3",,
+
+    modulo_codigo: "3.3",
   },
   {
     id: "CN12",
-    codigo: "CN12",
+    codigo: "1.3",
     slug: "automatizacion-contratos-firma",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -3823,12 +3772,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS", "Firma Digital"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "gestorias",
-    bloque_negocio: "B4",
+    bloque_negocio: "B1",,
+
+    modulo_codigo: "1.3",
   },
   {
     id: "CN13",
-    hidden: true,
-    codigo: "CN13",
+    codigo: "4.2",
     slug: "proceso-post-reserva",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3882,11 +3832,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Automatización"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B4",
+    bloque_negocio: "B4",,
+
+    modulo_codigo: "4.2",
   },
   {
     id: "CN14",
-    codigo: "CN14",
+    codigo: "5.1",
     slug: "portal-propietarios-post-entrega",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3940,11 +3892,13 @@ export const processes: Process[] = [
     herramientas: ["Portal Web", "Ticketing", "IA"],
     integration_domains: ["OTHER", "COMMS"],
     landing_slug: "construccion",
-    bloque_negocio: "B5",
+    bloque_negocio: "B5",,
+
+    modulo_codigo: "5.1",
   },
   {
     id: "CN15",
-    codigo: "CN15",
+    codigo: "6.1",
     slug: "identificacion-reactivacion-unidades",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -3998,12 +3952,193 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
-    bloque_negocio: "B6",
+    bloque_negocio: "B6",,
+
+    modulo_codigo: "6.1",
+  },
+
+  // ── CONSTRUCCIÓN CN16-CN18 · versiones promotora/inmobiliaria ────────────
+  {
+    id: "CN16",
+    codigo: "2.4",
+    slug: "resumen-llamadas-comerciales-obra",
+    categoria: "E",
+    categoriaNombre: "Atención y Ventas",
+    nombre: "Resumen automático de cada llamada con el comprador volcado al CRM",
+    tagline: "Registra en el CRM del proyecto todo lo que el comprador dijo sin que el agente vuelva a teclear.",
+    one_liner: "IA que transcribe, resume y vuelca a tu CRM lo hablado con cada comprador.",
+    badges: ["Popular"],
+    benefits: [
+      "Calidad de datos en CRM perfecta, sin resúmenes vagos de 'comprador interesado'",
+      "El agente vende, no hace data-entry después de cada llamada",
+      "No se olvidan detalles clave como 'necesito tres habitaciones' o 'quiero financiación al 90%'",
+    ],
+    recomendado: true,
+    descripcionDetallada: "IA que transcribe las llamadas del equipo comercial, resume los puntos clave, detecta objeciones y actualiza el CRM automáticamente. Evita que el agente tenga que registrar manualmente la tipología, el presupuesto y las objeciones después de cada conversación con un comprador.",
+    summary: {
+      "what_it_is": "Asistente secreto en cada llamada que capta la información del comprador y la sube directamente al CRM del proyecto.",
+      "for_who": ["Directores comerciales de promotoras", "Equipos de sala de ventas"],
+      "requirements": ["Telefonía VOIP", "CRM", "IA"],
+      "output": "Ficha del CRM con tipología de interés, presupuesto, objeciones y próximo paso rellenos.",
+    },
+    indicators: {
+      "time_estimate": "2-3 semanas",
+      "complexity": "Alta",
+      "integrations": ["CRM", "Telefonía", "IA"],
+    },
+    how_it_works_steps: [
+      { "title": "Escucha pasiva", "short": "Graba mediante tu centralita.", "detail": "Se conecta a llamadas salientes y entrantes del número oficial (con aviso legal)." },
+      { "title": "Extracción semántica", "short": "Anota tipología, presupuesto y objeciones.", "detail": "Distingue cuándo el comprador dice 'me parece caro para esa planta' o 'necesitamos piscina y tres habitaciones'." },
+      { "title": "Volcado al CRM", "short": "La ficha del lead se rellena sola.", "detail": "Aparecen las notas estructuradas en el campo del interesado al colgar, sin que el agente escriba nada." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "select", "label": "Formato de resumen", "options": ["Corto y directo", "Transcripción completa", "Campos estructurados en CRM (tipología, presupuesto, objeciones)"] },
+      ],
+      "free_text_placeholder": "¿Cuáles son los 4 datos que siempre hay que capturar de un comprador: tipología, presupuesto, urgencia, financiación?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿Funciona en español y con argot inmobiliario?", "a": "Entiende el lenguaje natural, incluyendo referencias a tipologías, orientaciones y condiciones de pago." },
+      { "q": "¿Es legal?", "a": "Claro, con el aviso de grabación estándar. Se procesa conforme al RGPD." },
+    ],
+    pasos: [
+      "Graba mediante tu centralita o VOIP conectada.",
+      "Anota tipología de interés, presupuesto, objeciones y próximo paso acordado.",
+      "Vuelca las notas estructuradas en el CRM nada más colgar.",
+    ],
+    personalizacion: "Define qué campos del CRM del proyecto se rellenarán automáticamente: tipología preferida, presupuesto máximo, financiación solicitada, objeciones pendientes.",
+    related_processes: ["analisis-sentimiento-riesgo", "calificacion-inteligente-leads"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["CRM", "IA", "Telefonía"],
+    dolores: ["El equipo no registra bien en el CRM", "Perdemos información clave de las llamadas con compradores"],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "construccion",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.4",
+  },
+  {
+    id: "CN17",
+    codigo: "2.5",
+    slug: "copiloto-proyecto-agentes-obra",
+    categoria: "D",
+    categoriaNombre: "Gestión Interna",
+    nombre: "Asistente interno para el equipo comercial de la promotora",
+    tagline: "Todo el argumentario de la promoción en el bolsillo de cada asesor.",
+    one_liner: "Un co-piloto del proyecto exclusivo para tu equipo de ventas.",
+    badges: ["Nuevo"],
+    benefits: [
+      "Capacitación de nuevos comerciales al proyecto en horas",
+      "Los agentes responden cualquier pregunta técnica del comprador sin improvisar",
+      "Discurso unificado y coherente de toda la plantilla hacia el comprador",
+    ],
+    recomendado: false,
+    descripcionDetallada: "Asistente interno que permite a los agentes consultar objeciones frecuentes, argumentos por tipología, detalles técnicos de la promoción y comparativas con la competencia. Aumenta la autonomía del equipo y estandariza el discurso comercial.",
+    summary: {
+      "what_it_is": "La documentación de la promoción convertida en un chat interno, listo para salvar cualquier pregunta difícil de un comprador al instante.",
+      "for_who": ["Equipo de ventas", "Apertura de pisos piloto", "Coordinadoras comerciales"],
+      "requirements": ["Chat Interno", "Documentación del proyecto completa"],
+      "output": "Respuesta al instante y precisa en lenguaje natural.",
+    },
+    indicators: {
+      "time_estimate": "2 semanas",
+      "complexity": "Media",
+      "integrations": ["Chat", "Knowledge Base", "IA"],
+    },
+    how_it_works_steps: [
+      { "title": "Entran los manuales", "short": "Leemos planos, memorias y argumentarios.", "detail": "Cargamos al asistente con todos los FAQs, ventajas competitivas de la promoción y objeciones habituales de la competencia." },
+      { "title": "El agente consulta", "short": "Pregunta desde su propio Slack o WhatsApp.", "detail": "El comercial frente al comprador duda: '¿Qué espesor lleva la carpintería exterior?' o '¿qué digo si le parece caro comparado con la competencia?'" },
+      { "title": "Respuesta experta", "short": "El asistente da la respuesta correcta.", "detail": "Contesta en segundos y señala el documento del que lo ha extraído." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "radio", "label": "Canal interno preferido", "options": ["WhatsApp de equipo", "Microsoft Teams", "Slack", "Intranet web"] },
+      ],
+      "free_text_placeholder": "¿Tienen un manual ya hecho de técnicas de rebote a objeciones de compradores?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿Y si la promotora cambia la memoria de calidades o los precios?", "a": "Subes el nuevo PDF y el asistente actualiza la información de inmediato." },
+    ],
+    pasos: [
+      "Cargamos el asistente con la documentación técnica y comercial de la promoción.",
+      "El agente consulta una objeción por chat rápido ('¿Qué digo si les parece caro respecto al vecino?').",
+      "El asistente contesta al momento con la mejor estrategia argumental.",
+    ],
+    personalizacion: "Cárgalo con técnicas de rebote a las objeciones más frecuentes de tu promoción para que ningún agente improvise ante el comprador.",
+    related_processes: ["generador-dossier-unidad", "resumen-llamadas-comerciales-obra"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["Chat", "Knowledge Base", "IA"],
+    dolores: ["Cada agente nuevo tarda semanas en conocer la promoción a fondo", "El equipo improvisa ante preguntas técnicas del comprador"],
+    integration_domains: ["OTHER"],
+    landing_slug: "construccion",
+    bloque_negocio: "B2",,
+
+    modulo_codigo: "2.5",
+  },
+  {
+    id: "CN18",
+    codigo: "4.1",
+    slug: "contrato-reserva-firma-digital-obra",
+    categoria: "D",
+    categoriaNombre: "Gestión Interna",
+    nombre: "Contratos de reserva generados y enviados a firmar desde el móvil",
+    tagline: "El fin definitivo al papelazo que atranca tus ventas ya cerradas.",
+    one_liner: "De la reserva a la firma vinculante sin imprimir un solo folio.",
+    badges: ["Esencial", "Popular"],
+    benefits: [
+      "Tiempo de emisión de contratos reducido en un 95%",
+      "Cumplimiento 100% legal de reservas inmediatas, sin enfriar al comprador",
+      "Seguimiento visual del estado de firma de todos los intervinientes",
+    ],
+    recomendado: true,
+    descripcionDetallada: "Sistema que automatiza la generación del contrato de reserva y sus anexos, envía los documentos para firma digital certificada y hace seguimiento del estado de cada firma. Reduce la fricción operativa entre el acuerdo verbal y el documento firmado, acelerando los cierres sin riesgo de que el comprador se enfríe.",
+    summary: {
+      "what_it_is": "Un motor técnico que absorbe la reserva cerrada en el CRM y genera el contrato sellado jurídicamente en el móvil del comprador en minutos.",
+      "for_who": ["Administración de promotoras", "Dirección operativa", "Compradores"],
+      "requirements": ["CRM", "Software de Firma Digital Certificada"],
+      "output": "Documentos legales firmados y archivados digitalmente.",
+    },
+    indicators: {
+      "time_estimate": "3 semanas",
+      "complexity": "Alta",
+      "integrations": ["CRM", "DOCS", "Firma Digital"],
+    },
+    how_it_works_steps: [
+      { "title": "Generación del contrato", "short": "Un clic al confirmar la reserva.", "detail": "Extraemos todos los datos del comprador, la unidad y el precio pactado y los volcamos en la plantilla legal de la promotora." },
+      { "title": "Firma certificada desde el móvil", "short": "Notifica al comprador para firma al instante.", "detail": "Le envía por SMS/Email un visualizador legal para firma dactilar o biométrica del documento, sin descargar ninguna app." },
+      { "title": "Sellado y archivado", "short": "Se guarda en tu base y en el correo del comprador.", "detail": "El PDF queda securizado y se autoguarda en el repositorio corporativo listo para elevación a escritura pública." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "select", "label": "Sistema de firma", "options": ["Avanzada OTP por SMS", "Firma biométrica", "Notarial en siguiente fase"] },
+      ],
+      "free_text_placeholder": "¿Cuántos intervinientes promedio tienen los contratos de tu promotora (titulares, co-titulares, avalistas)?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿La firma es totalmente legal para un contrato de arras o reserva?", "a": "100%. Utiliza proveedores homologados europeos (DocuSign, Signaturit) con trazabilidad plena ante cualquier reclamación." },
+    ],
+    pasos: [
+      "Inyectamos los datos del comprador y el precio cerrado en la plantilla legal oficial de la promotora.",
+      "Lanzamos la secuencia de firma en el móvil del comprador con certificado de hora e IP.",
+      "Devolvemos el archivo firmado a la promotora listo para facturación y elevación a escritura pública.",
+    ],
+    personalizacion: "Nos amoldamos a las plantillas blindadas de la promotora, respetando todos los anexos: memoria de calidades, SEPA, RGPD y cualquier cláusula específica.",
+    related_processes: ["proceso-post-reserva", "resumen-llamadas-comerciales-obra"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["CRM", "DOCS", "Firma Digital"],
+    dolores: ["El papeleo de contratos ralentiza los cierres", "El comprador se enfría entre el acuerdo y la firma"],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "construccion",
+    bloque_negocio: "B4",,
+
+    modulo_codigo: "4.1",
   },
 
   {
     id: "AG1",
-    hidden: true,
     codigo: "AG1",
     slug: "recordatorio-horas-no-registradas",
     categoria: "A",
@@ -4061,6 +4196,7 @@ export const processes: Process[] = [
 
   {
     id: "AG2",
+    hidden: true,
     codigo: "AG2",
     slug: "consolidacion-solicitudes-multicanal",
     categoria: "E",
