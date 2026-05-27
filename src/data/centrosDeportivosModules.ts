@@ -101,7 +101,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
   {
     codigo: "2.3",
     bloque: "B2",
-    nombre: "Sistema de referidos: tus socios traen amigos a cambio de un premio",
+    nombre: "Sistema de referidos: tus socios traen amigos a cambio de un descuento",
     descripcion:
       "Tus socios actuales son el mejor canal de captación. El sistema automatiza el programa de referidos: genera el enlace único, rastrea las altas que genera cada socio y entrega la recompensa sin que nadie tenga que gestionarlo.",
     badge: "Captación viral",
@@ -143,8 +143,8 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     ],
   },
   {
-    codigo: "3.2",
-    bloque: "B3",
+    codigo: "4.1",
+    bloque: "B4",
     nombre: "Cobro mensual automático y aviso cuando falla un pago",
     descripcion:
       "Las cuotas se cobran solas cada mes. Cuando un pago falla, el socio recibe un aviso inmediato con enlace de pago directo — sin que nadie tenga que perseguirle ni llamar.",
@@ -214,21 +214,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     ],
   },
   {
-    codigo: "3.7",
-    bloque: "B3",
-    nombre: "Seguimiento de socios lesionados hasta que se recuperan",
-    descripcion:
-      "Cuando un socio se lesiona, el sistema lo registra y activa un seguimiento periódico: mensajes de ánimo, información de recuperación y aviso cuando puede volver. Que la lesión no se convierta en baja.",
-    badge: "Retención en pausa",
-    linkedProcessSlug: "registro-seguimiento-lesiones",
-    highlights: [
-      "Registro de la lesión con seguimiento hasta el alta",
-      "Mensajes de apoyo durante el período de recuperación",
-      "Aviso al equipo para dar la bienvenida de vuelta cuando regresa",
-    ],
-  },
-  {
-    codigo: "3.9",
+    codigo: "3.2",
     bloque: "B3",
     nombre: "Recuperación de ex-socios que se dieron de baja",
     descripcion:
@@ -244,7 +230,7 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
 
   // ── BLOQUE 04 · Operativa del centro y personal ───────────────────────────
   {
-    codigo: "4.1",
+    codigo: "4.7",
     bloque: "B4",
     nombre: "Organización automática de turnos para cubrir todas las sesiones",
     descripcion:

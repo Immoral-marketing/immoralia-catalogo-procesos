@@ -59,7 +59,7 @@ const SLUG_TO_BLOQUE: Record<string, GestoriasBlockId> = {
   "recopilacion-mensual-documentos": "B2",
   "canal-documental-cliente": "B2",
   "clasificacion-automatica-documentos": "B2",
-  "alertas-caducidad-documentos": "B2",
+  "alertas-caducidad-documentos": "B3",
   // B3 — Fiscal y vencimientos
   "alertas-vencimientos-fiscales": "B3",
   "seguimiento-expedientes": "B3",
@@ -98,6 +98,15 @@ const GestoriasLanding = () => {
     []
   );
 
+  // Mapa modulo_codigo → Process para leer el nombre real desde processes.ts
+  const processMapByCode = useMemo(() => {
+    const map: Record<string, Process> = {};
+    processes
+      .filter((p) => p.landing_slug === "gestorias" && p.modulo_codigo)
+      .forEach((p) => { map[p.modulo_codigo!] = p; });
+    return map;
+  }, []);
+
   const filteredCatalog = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return gestoriasProcesses.filter((p) => {
@@ -126,7 +135,7 @@ const GestoriasLanding = () => {
           slug: `mod-${m.codigo}`,
           categoria: "gestorias",
           categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
-          nombre: m.nombre,
+          nombre: processMapByCode[m.codigo]?.nombre ?? m.nombre,
           tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
           recomendado: false,
           descripcionDetallada: m.descripcion,
@@ -670,7 +679,7 @@ const GestoriasLanding = () => {
                                 {m.codigo}
                               </span>
                               <span className="flex-1 text-[15px] text-white font-medium leading-snug">
-                                {m.nombre}
+                                {processMapByCode[m.codigo]?.nombre ?? m.nombre}
                               </span>
                               <ChevronDown
                                 className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-300 mr-2 ${
@@ -698,16 +707,6 @@ const GestoriasLanding = () => {
                               <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto mb-3">
                                 {m.descripcion}
                               </p>
-                              {m.highlights && m.highlights.length > 0 && (
-                                <ul className="space-y-1.5 mb-3">
-                                  {m.highlights.map((h, hi) => (
-                                    <li key={hi} className="flex gap-2 text-xs text-gray-500">
-                                      <span className="text-yellow-500 shrink-0 mt-0.5">→</span>
-                                      <span>{h}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
                               {m.linkedProcessSlug && (
                                 <Link
                                   to={`/catalogo/procesos/${m.linkedProcessSlug}`}

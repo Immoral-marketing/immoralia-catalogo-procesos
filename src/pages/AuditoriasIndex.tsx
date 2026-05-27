@@ -7,11 +7,7 @@ import {
   Stethoscope,
   HardHat,
   GraduationCap,
-  ShoppingBag,
-  Home,
-  Users,
   ArrowRight,
-  Sparkles,
   CheckCircle2,
   Clock,
   FileText,
@@ -30,7 +26,7 @@ interface SectorAudit {
   path: string;
   status: "available" | "soon";
   accent: string;
-  color?: "orange" | "cyan" | "violet" | "teal";
+  color?: "orange" | "cyan" | "violet" | "teal" | "yellow";
   bullets: string[];
 }
 
@@ -53,12 +49,17 @@ const AUDITS: SectorAudit[] = [
   {
     id: "centros-deportivos",
     title: "Centros deportivos",
-    short: "Para gimnasios, crossfit, yoga y academias deportivas",
+    short: "Para gimnasios, crossfit, yoga, natación y academias deportivas",
     icon: Dumbbell,
-    path: "/auditorias",
-    status: "soon",
+    path: "/auditorias/deportivos",
+    status: "available",
+    color: "cyan",
     accent: "from-cyan-500/30 to-blue-500/30",
-    bullets: ["Captación y onboarding", "Retención de socios", "Operativa multi-centro"],
+    bullets: [
+      "Reservas 24/7 y captación de socios sin perder leads",
+      "Retención, cobros automáticos y detección de baja anticipada",
+      "Turnos de instructores, KPIs y reputación online",
+    ],
   },
   {
     id: "salud",
@@ -80,10 +81,15 @@ const AUDITS: SectorAudit[] = [
     title: "Gestorías",
     short: "Despachos profesionales, asesorías fiscales y laborales",
     icon: Briefcase,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-teal-500/30 to-cyan-600/30",
-    bullets: ["Onboarding de clientes", "Documentación y plazos", "Comunicación recurrente"],
+    path: "/auditorias/gestorias",
+    status: "available",
+    color: "yellow",
+    accent: "from-yellow-500/30 to-amber-600/30",
+    bullets: [
+      "Recogida documental automática y cero persecución de clientes",
+      "Plazos fiscales blindados y seguimiento de expedientes",
+      "Alta de clientes, contratos digitales y CRM con historial automático",
+    ],
   },
   {
     id: "construccion",
@@ -115,36 +121,6 @@ const AUDITS: SectorAudit[] = [
       "Retención, bajas anticipadas y reactivación",
     ],
   },
-  {
-    id: "ecommerce",
-    title: "Tienda online / Retail",
-    short: "E-commerce, moda y comercio minorista",
-    icon: ShoppingBag,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-blue-500/30 to-cyan-500/30",
-    bullets: ["Recuperación de carritos", "Post-venta", "Lifetime value"],
-  },
-  {
-    id: "inmobiliaria",
-    title: "Inmobiliaria",
-    short: "Agencias, promotoras y servicios inmobiliarios",
-    icon: Home,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-emerald-500/30 to-teal-500/30",
-    bullets: ["Cualificación de leads", "Pipeline de visitas", "Cierre y postventa"],
-  },
-  {
-    id: "agencias",
-    title: "Agencias",
-    short: "Agencias de marketing, comunicación y consultoras",
-    icon: Users,
-    path: "/auditorias",
-    status: "soon",
-    accent: "from-pink-500/30 to-rose-500/30",
-    bullets: ["Onboarding de clientes", "Reporting y entregables", "Renovaciones y upsells"],
-  },
 ];
 
 const AuditoriasIndex = () => {
@@ -153,7 +129,6 @@ const AuditoriasIndex = () => {
   }, []);
 
   const available = AUDITS.filter((a) => a.status === "available");
-  const soon = AUDITS.filter((a) => a.status === "soon");
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-orange-500/30 font-sans">
@@ -184,12 +159,6 @@ const AuditoriasIndex = () => {
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-7">
-              <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-              <span className="text-orange-300 font-medium tracking-widest uppercase text-[11px]">
-                Auditorías por sector
-              </span>
-            </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-[1.05]">
               Descubre qué procesos están <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
@@ -229,15 +198,10 @@ const AuditoriasIndex = () => {
       <section className="pb-12">
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between mb-8 gap-6 flex-wrap">
-              <div>
-                <div className="text-orange-400 text-[11px] tracking-widest font-bold uppercase mb-2">
-                  Disponibles ahora
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  Empieza tu auditoría
-                </h2>
-              </div>
+            <div className="mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-white">
+                Empieza tu auditoría
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -272,6 +236,13 @@ const AuditoriasIndex = () => {
                     iconText: "text-teal-400",
                     check: "text-teal-400",
                     btn: "bg-teal-600 hover:bg-teal-500",
+                  },
+                  yellow: {
+                    border: "border-yellow-500/30 hover:border-yellow-500/50 hover:shadow-[0_0_40px_rgba(196,168,76,0.15)]",
+                    icon: "bg-yellow-500/15 border border-yellow-500/30",
+                    iconText: "text-yellow-400",
+                    check: "text-yellow-400",
+                    btn: "bg-yellow-600 hover:bg-yellow-500",
                   },
                 } as const;
                 const s = styles[c];
@@ -315,55 +286,6 @@ const AuditoriasIndex = () => {
                       </Button>
                     </div>
                   </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SOON */}
-      <section className="py-16 border-t border-white/5">
-        <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="mb-8">
-              <div className="text-gray-500 text-[11px] tracking-widest font-bold uppercase mb-2">
-                Próximamente
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                Auditorías en desarrollo
-              </h2>
-              <p className="text-gray-400">
-                Estamos preparando auditorías específicas para más sectores. Si te interesa
-                alguna,{" "}
-                <Link to="/" className="text-orange-400 hover:underline">
-                  cuéntanoslo desde el catálogo
-                </Link>
-                .
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {soon.map((a) => {
-                const Icon = a.icon;
-                return (
-                  <div
-                    key={a.id}
-                    className="relative overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02] p-5 opacity-70 hover:opacity-90 transition-opacity"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                        <Icon className="w-5 h-5 text-gray-400" />
-                      </div>
-                      <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
-                        Próximamente
-                      </span>
-                    </div>
-                    <h4 className="text-base font-bold text-white mb-1">
-                      Auditoría para {a.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 leading-relaxed">{a.short}</p>
-                  </div>
                 );
               })}
             </div>
