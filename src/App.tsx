@@ -21,6 +21,8 @@ import AuditoriaRestaurantes from "./pages/AuditoriaRestaurantes";
 import AuditoriaConstructoras from "./pages/AuditoriaConstructoras";
 import AuditoriaAcademias from "./pages/AuditoriaAcademias";
 import AuditoriaSalud from "./pages/AuditoriaSalud";
+import AuditoriaDeportivos from "./pages/AuditoriaDeportivos";
+import AuditoriaGestorias from "./pages/AuditoriaGestorias";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
@@ -57,6 +59,8 @@ const App = () => (
             <Route path="/auditorias/constructoras" element={<AuditoriaConstructoras />} />
             <Route path="/auditorias/academias" element={<AuditoriaAcademias />} />
             <Route path="/auditorias/salud" element={<AuditoriaSalud />} />
+            <Route path="/auditorias/deportivos" element={<AuditoriaDeportivos />} />
+            <Route path="/auditorias/gestorias" element={<AuditoriaGestorias />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

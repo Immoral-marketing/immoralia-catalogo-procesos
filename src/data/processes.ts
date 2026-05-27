@@ -1333,7 +1333,7 @@ export const processes: Process[] = [
   },
   {
     id: "CM3",
-    codigo: "3.9",
+    codigo: "3.2",
     slug: "campana-reactivacion-ex-socios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1357,7 +1357,7 @@ export const processes: Process[] = [
     landing_slug: "centros-deportivos",
     bloque_negocio: "B3",
 
-    modulo_codigo: "3.9",
+    modulo_codigo: "3.2",
   },
   {
     id: "GV4",
@@ -1421,7 +1421,7 @@ export const processes: Process[] = [
     slug: "programa-referidos-automatizado",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    nombre: "Sistema automático para que tus alumnos traigan amigos a cambio de un premio",
+    nombre: "Sistema automático para que tus alumnos traigan amigos a cambio de un descuento",
     tagline: "Tus alumnos son tus mejores comerciales.",
     recomendado: false,
     descripcionDetallada: "A los 30 días del alta, el alumno recibe un incentivo para referir a un amigo. Si el referido se da de alta, el sistema detecta el origen y aplica el beneficio automáticamente.",
@@ -1684,6 +1684,7 @@ export const processes: Process[] = [
   },
   {
     id: "OA16",
+    hidden: true,
     codigo: "3.7",
     slug: "registro-seguimiento-lesiones",
     categoria: "B",
@@ -1973,7 +1974,7 @@ export const processes: Process[] = [
       "Enviamos notificación personalizada a cada alumno"
     ],
     personalizacion: "Elige el canal, el tono del mensaje y si quieres incluir propuesta de nueva fecha.",
-    related_processes: ["control-asistencia-alertas-faltas", "matricula-asignacion-nivel-automatica"],
+    related_processes: ["matricula-asignacion-nivel-automatica"],
     sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
@@ -1983,6 +1984,7 @@ export const processes: Process[] = [
   },
   {
     id: "AC26",
+    hidden: true,
     codigo: "3.10",
     slug: "control-asistencia-alertas-faltas",
     categoria: "B",
@@ -2077,7 +2079,7 @@ export const processes: Process[] = [
       "Enviamos bienvenida al alumno y aviso al profesor del grupo"
     ],
     personalizacion: "Personaliza el criterio de asignación, el contenido del kit de bienvenida y los avisos al equipo docente.",
-    related_processes: ["notificacion-cambios-cancelaciones-clase", "control-asistencia-alertas-faltas"],
+    related_processes: ["notificacion-cambios-cancelaciones-clase"],
     integration_domains: ["OTHER"],
     landing_slug: "academias",
     bloque_negocio: "B2",
@@ -2113,7 +2115,7 @@ export const processes: Process[] = [
   {
     id: "RO26",
     hidden: false,
-    codigo: "4.1",
+    codigo: "4.7",
     slug: "gestion-turnos-disponibilidad-instructores",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -2145,11 +2147,11 @@ export const processes: Process[] = [
     ],
     landing_slug: "centros-deportivos",
     bloque_negocio: "B4",
-    modulo_codigo: "4.1",
+    modulo_codigo: "4.7",
   },
   {
     id: "FF27",
-    codigo: "3.2",
+    codigo: "4.1",
     slug: "cobro-recurrente-gestion-impagos",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -2171,9 +2173,9 @@ export const processes: Process[] = [
     herramientas: ["Stripe","GoCardless","Make","WhatsApp Business API"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
-    bloque_negocio: "B3",
+    bloque_negocio: "B4",
 
-    modulo_codigo: "3.2",
+    modulo_codigo: "4.1",
   },
   {
     id: "FF28",
@@ -2763,13 +2765,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS11",
-    codigo: "2.4",
+    codigo: "3.3",
     slug: "alertas-caducidad-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     landing_slug: "gestorias",
-    bloque_negocio: "B2",
-    modulo_codigo: "2.4",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
     nombre: "Alertas de documentos próximos a caducar",
     tagline: "No permitas que un certificado o poder caducado frene una gestión vital.",
     benefits: [
@@ -3722,7 +3724,7 @@ export const processes: Process[] = [
     slug: "automatizacion-contratos-firma",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
-    nombre: "Contratos generados y enviados a firmar desde el móvil",
+    nombre: "Contratos generados y enviados para su firma desde el móvil",
     tagline: "El fin definitivo al papelazo que atranca tus ventas ya cerradas.",
     one_liner: "De la reserva a la firma vinculante sin imprimir un solo folio.",
     badges: ["Esencial", "Popular"],

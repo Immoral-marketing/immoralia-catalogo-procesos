@@ -65,14 +65,12 @@ const SLUG_TO_BLOQUE: Record<string, CentrosDeportivosBlockId> = {
   "alta-socio-accesos-auto": "B2",
   // B3 — Fidelización y retención
   "seguimiento-alumnos-riesgo-baja": "B3",
-  "cobro-recurrente-gestion-impagos": "B3",
+  "cobro-recurrente-gestion-impagos": "B4",
   "notificacion-renovacion-cuota": "B3",
   "gestion-bonos-packs-clases": "B3",
   "campana-reactivacion-ex-socios": "B3",
   "felicitacion-cumpleanos-oferta": "B3",
   "informe-mensual-progreso-alumno": "B3",
-  "registro-seguimiento-lesiones": "B3",
-  "control-asistencia-alertas-faltas": "B3",
   // B4 — Operativa y personal
   "gestion-turnos-disponibilidad-instructores": "B4",
   "onboarding-empleado-entrenador": "B4",
@@ -120,6 +118,15 @@ const SportsLanding = () => {
     []
   );
 
+  // Mapa modulo_codigo → Process para leer el nombre real desde processes.ts
+  const processMapByCode = useMemo(() => {
+    const map: Record<string, Process> = {};
+    processes
+      .filter((p) => p.landing_slug === "centros-deportivos" && p.modulo_codigo)
+      .forEach((p) => { map[p.modulo_codigo!] = p; });
+    return map;
+  }, []);
+
   const filteredCatalog = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return sportsProcesses.filter((p) => {
@@ -148,7 +155,7 @@ const SportsLanding = () => {
           slug: `mod-${m.codigo}`,
           categoria: "centros-deportivos",
           categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
-          nombre: m.nombre,
+          nombre: processMapByCode[m.codigo]?.nombre ?? m.nombre,
           tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
           recomendado: false,
           descripcionDetallada: m.descripcion,
@@ -694,7 +701,7 @@ const SportsLanding = () => {
                                 {m.codigo}
                               </span>
                               <span className="flex-1 text-[15px] text-white font-medium leading-snug">
-                                {m.nombre}
+                                {processMapByCode[m.codigo]?.nombre ?? m.nombre}
                               </span>
                               <ChevronDown
                                 className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-300 mr-2 ${

@@ -43,7 +43,7 @@ export const gestoriasModules: GestoriasModule[] = [
   {
     codigo: "1.3",
     bloque: "B1",
-    nombre: "Contrato firmado digitalmente desde el móvil sin imprimir nada",
+    nombre: "Contratos generados y enviados para su firma desde el móvil",
     descripcion:
       "Cualquier contrato — de servicios, de mandato, de representación — se genera, se envía y se firma digitalmente. Con la misma validez legal que la firma manuscrita y sin papel, escáner ni desplazamientos.",
     badge: "Cero papeles",
@@ -99,8 +99,8 @@ export const gestoriasModules: GestoriasModule[] = [
     ],
   },
   {
-    codigo: "2.4",
-    bloque: "B2",
+    codigo: "3.3",
+    bloque: "B3",
     nombre: "Alerta antes de que un certificado digital, poder o documento caduque",
     descripcion:
       "Certificados digitales, poderes notariales, NIEs, documentos de identidad — todos tienen fecha de caducidad. El sistema los vigila y avisa con suficiente antelación para renovar sin urgencias ni sustos.",
