@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+﻿import { useState, useMemo, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { processes, type Process } from "@/data/processes";
 import { centrosDeportivosBlocks, type CentrosDeportivosBlockId } from "@/data/centrosDeportivosBlocks";
@@ -755,88 +755,6 @@ const SportsLanding = () => {
         );
       })}
 
-      {/* ───────────────────── CATÁLOGO COMPLETO ───────────────────── */}
-      <section id="catalogo-completo" className="py-28 border-t border-white/5 bg-white/[0.02]">
-        <div className="container mx-auto px-6">
-          <div className="max-w-[1440px] mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <LayoutGrid className="w-5 h-5 text-sky-400" />
-                  <span className="text-sky-400 font-medium tracking-widest uppercase text-xs">
-                    Catálogo completo
-                  </span>
-                </div>
-                <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-                  Todos los procesos del sector
-                </h2>
-                <p className="text-gray-400 leading-relaxed text-justify hyphens-auto">
-                  Explora el catálogo completo filtrado por módulo o busca por nombre. Añade los que te interesen a tu selección.
-                </p>
-              </div>
-              <div className="relative w-full md:w-72">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar proceso..."
-                  className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-gray-500"
-                />
-              </div>
-            </div>
-
-            <Tabs
-              value={activeBlockTab}
-              onValueChange={(v) => setActiveBlockTab(v as "todos" | CentrosDeportivosBlockId)}
-              className="w-full"
-            >
-              <div className="flex justify-center mb-10">
-                <TabsList className="bg-white/5 border border-white/5 p-1 h-auto flex flex-wrap justify-center gap-1 sm:gap-2">
-                  <TabsTrigger
-                    value="todos"
-                    className="px-4 py-2.5 rounded-lg data-[state=active]:bg-sky-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
-                  >
-                    Todos
-                  </TabsTrigger>
-                  {centrosDeportivosBlocks.map((b) => (
-                    <TabsTrigger
-                      key={b.id}
-                      value={b.id}
-                      className="px-4 py-2.5 rounded-lg data-[state=active]:bg-sky-600 data-[state=active]:text-white text-gray-400 text-sm font-medium transition-all"
-                    >
-                      <span className="text-xs opacity-70 mr-1.5 font-light">
-                        M{parseInt(b.number, 10)}
-                      </span>
-                      <span className="hidden sm:inline">{b.title}</span>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </div>
-
-              <TabsContent value={activeBlockTab} className="mt-0">
-                {filteredCatalog.length === 0 ? (
-                  <div className="text-center py-16 text-gray-500">
-                    {activeBlockTab === "B6"
-                      ? "Los procesos de este módulo están en construcción. Estarán disponibles próximamente."
-                      : "No hay procesos que coincidan con tu búsqueda en este módulo."}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredCatalog.map((process) => (
-                      <ProcessCard
-                        key={process.id}
-                        process={process}
-                        accentColor={ACCENT}
-                        sectorSlug="centros-deportivos"
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-      </section>
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
