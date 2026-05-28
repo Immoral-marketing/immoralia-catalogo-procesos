@@ -580,32 +580,76 @@ const ProcessDetail = () => {
                         </p>
                     )}
 
-                    {/* Video mockup */}
-                    <div className="relative w-full rounded-2xl overflow-hidden border border-border bg-card aspect-video flex items-center justify-center group cursor-pointer my-4">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/5" />
-                        <div
-                            className="absolute inset-0 opacity-10"
-                            style={{
-                                backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-                                backgroundSize: "40px 40px"
-                            }}
-                        />
-                        <div className="relative z-10 flex flex-col items-center gap-4">
-                            <div className={cn("w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300", isGastro ? "shadow-[0_0_30px_rgba(234,88,12,0.25)]" : isSalud ? "shadow-[0_0_30px_rgba(14,165,233,0.25)]" : isAcademias ? "shadow-[0_0_30px_rgba(139,92,246,0.25)]" : "shadow-[0_0_30px_rgba(0,200,220,0.2)]")}>
-                                <svg className="w-8 h-8 text-primary ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z" />
-                                </svg>
+                    {/* Cómo funciona — Carrusel */}
+                    {steps.length > 0 && (
+                        <div className="space-y-4 py-2">
+                            <div className="flex items-end justify-between gap-4">
+                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Cómo funciona</h2>
+                                <div className="flex items-center gap-3 shrink-0">
+                                    <div className="flex gap-1.5">
+                                        {steps.map((_: any, i: number) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => setCarouselStep(i)}
+                                                className="h-1 w-6 rounded-full overflow-hidden bg-border transition-all duration-300"
+                                            >
+                                                <div
+                                                    className={cn("h-full bg-primary rounded-full transition-all duration-500", i < carouselStep ? "w-full" : i === carouselStep ? "w-full opacity-100" : "w-0")}
+                                                    style={{ opacity: i < carouselStep ? 0.4 : i === carouselStep ? 1 : 0 }}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <span className="text-xs text-muted-foreground tabular-nums">{carouselStep + 1} / {steps.length}</span>
+                                    <div className="flex gap-1.5">
+                                        <button onClick={() => setCarouselStep(s => Math.max(0, s - 1))} disabled={carouselStep === 0} className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200">
+                                            <ChevronLeft className="w-4 h-4" />
+                                        </button>
+                                        <button onClick={() => setCarouselStep(s => Math.min(steps.length - 1, s + 1))} disabled={carouselStep === steps.length - 1} className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200">
+                                            <ChevronRight className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <p className="text-sm text-muted-foreground font-medium tracking-wide uppercase">
-                                Próximamente · Video explicativo
-                            </p>
+                            {(() => {
+                                const step = steps[carouselStep];
+                                return (
+                                    <div className="rounded-2xl border border-border overflow-hidden">
+                                        <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
+                                            {stepImages[carouselStep] ? (
+                                                <>
+                                                    <img src={stepImages[carouselStep]!} alt={`Paso ${carouselStep + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                                                    {stepSubtitles[carouselStep] && (
+                                                        <div className="absolute bottom-0 left-0 right-0 h-[18%] flex items-end justify-center pb-3 pointer-events-none" style={{ zIndex: 6 }}>
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                                                            <span className="relative z-10 text-white font-bold tracking-[0.2em] uppercase text-[clamp(0.85rem,2.5vw,1.3rem)] drop-shadow-lg">{stepSubtitles[carouselStep]}</span>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+                                                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+                                                    <div className="relative z-10 flex flex-col items-center gap-3">
+                                                        <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                                            <svg className="w-7 h-7 text-primary/50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2" /><path d="M3 17h18M9 21h6" /></svg>
+                                                        </div>
+                                                        <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                        <div className="p-6 space-y-2 border-t border-border bg-card/30">
+                                            <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">{step.detail || step.short}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
-                        <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm border border-border rounded-md px-2.5 py-1 text-xs text-muted-foreground font-mono">
-                            2:30
-                        </div>
-                    </div>
+                    )}
 
-                    {/* CTA debajo del video */}
+                    {/* CTA */}
                     <div className="flex justify-center">
                         <Button
                             onClick={toggleSelect}
@@ -733,104 +777,6 @@ const ProcessDetail = () => {
                         </div>
                     )}
                 </section>
-
-                {/* Cómo funciona — Carrusel */}
-                {steps.length > 0 && (
-                    <section className="space-y-4">
-                        <h2 className="text-2xl font-medium">Cómo funciona</h2>
-
-                        <div className="flex items-center gap-3">
-                            <div className="flex-1 flex gap-1.5">
-                                {steps.map((_: any, i: number) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => setCarouselStep(i)}
-                                        className="h-1 flex-1 rounded-full overflow-hidden bg-border transition-all duration-300"
-                                    >
-                                        <div
-                                            className={cn(
-                                                "h-full bg-primary rounded-full transition-all duration-500",
-                                                i < carouselStep ? "w-full" : i === carouselStep ? "w-full opacity-100" : "w-0"
-                                            )}
-                                            style={{ opacity: i < carouselStep ? 0.4 : i === carouselStep ? 1 : 0 }}
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                            <span className="text-xs text-muted-foreground shrink-0 tabular-nums">
-                                {carouselStep + 1} / {steps.length}
-                            </span>
-                            <div className="flex gap-1.5 shrink-0">
-                                <button
-                                    onClick={() => setCarouselStep(s => Math.max(0, s - 1))}
-                                    disabled={carouselStep === 0}
-                                    className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
-                                >
-                                    <ChevronLeft className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={() => setCarouselStep(s => Math.min(steps.length - 1, s + 1))}
-                                    disabled={carouselStep === steps.length - 1}
-                                    className="w-8 h-8 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
-                                >
-                                    <ChevronRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {(() => {
-                            const step = steps[carouselStep];
-                            return (
-                                <div className="rounded-2xl border border-border overflow-hidden">
-                                    <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
-                                        {stepImages[carouselStep] ? (
-                                            <>
-                                                <img
-                                                    src={stepImages[carouselStep]!}
-                                                    alt={`Paso ${carouselStep + 1}`}
-                                                    className="absolute inset-0 w-full h-full object-cover"
-                                                />
-                                                {/* Robot compositeado directamente en la imagen — no overlay CSS */}
-                                                {stepSubtitles[carouselStep] && (
-                                                    <div className="absolute bottom-0 left-0 right-0 h-[18%] flex items-end justify-center pb-3 pointer-events-none" style={{ zIndex: 6 }}>
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-                                                        <span className="relative z-10 text-white font-bold tracking-[0.2em] uppercase text-[clamp(0.85rem,2.5vw,1.3rem)] drop-shadow-lg">
-                                                            {stepSubtitles[carouselStep]}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
-                                                <div
-                                                    className="absolute inset-0 opacity-10"
-                                                    style={{
-                                                        backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-                                                        backgroundSize: "40px 40px"
-                                                    }}
-                                                />
-                                                <div className="relative z-10 flex flex-col items-center gap-3">
-                                                    <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                                        <svg className="w-7 h-7 text-primary/50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                                                            <rect x="3" y="3" width="18" height="14" rx="2" />
-                                                            <path d="M3 17h18M9 21h6" />
-                                                        </svg>
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground/50 font-medium tracking-wide uppercase">Screenshot · Paso {carouselStep + 1}</p>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className="p-6 space-y-2 border-t border-border bg-card/30">
-                                        <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{step.detail || step.short}</p>
-                                    </div>
-                                </div>
-                            );
-                        })()}
-                    </section>
-                )}
 
                 {/* ── Procesos relacionados ── */}
                 {(() => {
