@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Utensils,
@@ -26,7 +26,7 @@ interface SectorAudit {
   path: string;
   status: "available" | "soon";
   accent: string;
-  color?: "orange" | "cyan" | "violet" | "teal" | "yellow";
+  color?: "orange" | "red" | "green" | "blue" | "violet" | "yellow";
   bullets: string[];
 }
 
@@ -53,8 +53,8 @@ const AUDITS: SectorAudit[] = [
     icon: Dumbbell,
     path: "/auditorias/deportivos",
     status: "available",
-    color: "cyan",
-    accent: "from-cyan-500/30 to-blue-500/30",
+    color: "red",
+    accent: "from-red-500/30 to-red-700/30",
     bullets: [
       "Reservas 24/7 y captación de socios sin perder leads",
       "Retención, cobros automáticos y detección de baja anticipada",
@@ -68,8 +68,8 @@ const AUDITS: SectorAudit[] = [
     icon: Stethoscope,
     path: "/auditorias/salud",
     status: "available",
-    color: "teal",
-    accent: "from-teal-500/30 to-teal-700/30",
+    color: "blue",
+    accent: "from-blue-500/30 to-blue-700/30",
     bullets: [
       "Agenda 24/7 y reducción de ausencias",
       "Reseñas automáticas y retención de pacientes",
@@ -98,8 +98,8 @@ const AUDITS: SectorAudit[] = [
     icon: HardHat,
     path: "/auditorias/constructoras",
     status: "available",
-    color: "cyan",
-    accent: "from-cyan-500/30 to-cyan-700/30",
+    color: "green",
+    accent: "from-green-500/30 to-green-700/30",
     bullets: [
       "Captación, cualificación y pipeline en tiempo real",
       "Seguimiento y visitas al piso piloto",
@@ -131,7 +131,7 @@ const AuditoriasIndex = () => {
   const available = AUDITS.filter((a) => a.status === "available");
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-orange-500/30 font-sans">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
       {/* NAV */}
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -144,7 +144,7 @@ const AuditoriasIndex = () => {
           </Link>
           <Link
             to="/"
-            className="text-sm text-gray-400 hover:text-orange-300 transition-colors"
+            className="text-sm text-gray-400 hover:text-cyan-300 transition-colors"
           >
             Ver catálogo de procesos
           </Link>
@@ -153,15 +153,15 @@ const AuditoriasIndex = () => {
 
       {/* HERO */}
       <section className="relative py-24 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/8 via-transparent to-amber-500/8 pointer-events-none" />
-        <div className="absolute top-1/3 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-orange-500/12 blur-[160px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[420px] h-[420px] bg-amber-500/10 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/8 via-transparent to-cyan-400/8 pointer-events-none" />
+        <div className="absolute top-1/3 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/12 blur-[160px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[420px] h-[420px] bg-cyan-400/10 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-[1.05]">
               Descubre qué procesos están <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-300">
                 consumiendo tu negocio
               </span>
             </h1>
@@ -171,25 +171,6 @@ const AuditoriasIndex = () => {
               módulos que recomendamos activar primero.
             </p>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap gap-2.5 justify-center mt-8">
-              {[
-                { icon: FileText, label: "Informe PDF" },
-                { icon: ListChecks, label: "Preguntas guiadas" },
-                { icon: Lock, label: "100% Confidencial" },
-                { icon: CheckCircle2, label: "Sin tarjeta" },
-              ].map((it, i) => {
-                const Icon = it.icon;
-                return (
-                  <div
-                    key={i}
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
-                  >
-                    <Icon className="w-3.5 h-3.5 text-orange-400" /> {it.label}
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       </section>
@@ -216,12 +197,26 @@ const AuditoriasIndex = () => {
                     check: "text-orange-400",
                     btn: "bg-orange-600 hover:bg-orange-500",
                   },
-                  cyan: {
-                    border: "border-cyan-500/30 hover:border-cyan-500/50 hover:shadow-[0_0_40px_rgba(6,182,212,0.15)]",
-                    icon: "bg-cyan-500/15 border border-cyan-500/30",
-                    iconText: "text-cyan-400",
-                    check: "text-cyan-400",
-                    btn: "bg-cyan-600 hover:bg-cyan-500",
+                  red: {
+                    border: "border-red-500/30 hover:border-red-500/50 hover:shadow-[0_0_40px_rgba(220,38,38,0.15)]",
+                    icon: "bg-red-500/15 border border-red-500/30",
+                    iconText: "text-red-400",
+                    check: "text-red-400",
+                    btn: "bg-red-600 hover:bg-red-500",
+                  },
+                  green: {
+                    border: "border-green-500/30 hover:border-green-500/50 hover:shadow-[0_0_40px_rgba(22,163,74,0.15)]",
+                    icon: "bg-green-500/15 border border-green-500/30",
+                    iconText: "text-green-400",
+                    check: "text-green-400",
+                    btn: "bg-green-600 hover:bg-green-500",
+                  },
+                  blue: {
+                    border: "border-blue-500/30 hover:border-blue-500/50 hover:shadow-[0_0_40px_rgba(37,99,235,0.15)]",
+                    icon: "bg-blue-500/15 border border-blue-500/30",
+                    iconText: "text-blue-400",
+                    check: "text-blue-400",
+                    btn: "bg-blue-600 hover:bg-blue-500",
                   },
                   violet: {
                     border: "border-violet-500/30 hover:border-violet-500/50 hover:shadow-[0_0_40px_rgba(139,92,246,0.15)]",

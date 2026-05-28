@@ -143,6 +143,20 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
     ],
   },
   {
+    codigo: "3.2",
+    bloque: "B3",
+    nombre: "Recuperación de ex-socios que se dieron de baja",
+    descripcion:
+      "Cuando un socio causa baja, no desaparece para siempre. El sistema activa automáticamente una secuencia de reactivación espaciada en el tiempo — sin presionar, recordando el valor del centro — para intentar recuperarlos antes de que se vayan a la competencia.",
+    badge: "Segunda oportunidad",
+    linkedProcessSlug: "campana-reactivacion-ex-socios",
+    highlights: [
+      "Secuencia automática activada al registrar la baja",
+      "Mensajes espaciados que no agobian pero no dejan de estar presentes",
+      "Recupera un porcentaje significativo de bajas antes de los 90 días",
+    ],
+  },
+  {
     codigo: "4.1",
     bloque: "B4",
     nombre: "Cobro mensual automático y aviso cuando falla un pago",
@@ -211,20 +225,6 @@ export const centrosDeportivosModules: CentrosDeportivosModule[] = [
       "Mensaje personalizado enviado automáticamente el día correcto",
       "Configurable: desde un simple saludo hasta un descuento especial",
       "Refuerza el vínculo emocional con el centro sin trabajo del equipo",
-    ],
-  },
-  {
-    codigo: "3.2",
-    bloque: "B3",
-    nombre: "Recuperación de ex-socios que se dieron de baja",
-    descripcion:
-      "Cuando un socio causa baja, no desaparece para siempre. El sistema activa automáticamente una secuencia de reactivación espaciada en el tiempo — sin presionar, recordando el valor del centro — para intentar recuperarlos antes de que se vayan a la competencia.",
-    badge: "Segunda oportunidad",
-    linkedProcessSlug: "campana-reactivacion-ex-socios",
-    highlights: [
-      "Secuencia automática activada al registrar la baja",
-      "Mensajes espaciados que no agobian pero no dejan de estar presentes",
-      "Recupera un porcentaje significativo de bajas antes de los 90 días",
     ],
   },
 

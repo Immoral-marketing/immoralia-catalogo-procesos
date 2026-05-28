@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   SA_AUDIT_BLOCKS,
@@ -231,7 +231,7 @@ const AuditoriaSalud = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-teal-500/30 font-sans">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-blue-500/30 font-sans">
       {/* NAV */}
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -244,7 +244,7 @@ const AuditoriaSalud = () => {
           </Link>
           <button
             onClick={() => navigate("/auditorias")}
-            className="text-sm text-gray-400 hover:text-teal-300 transition-colors flex items-center gap-1.5"
+            className="text-sm text-gray-400 hover:text-blue-300 transition-colors flex items-center gap-1.5"
           >
             <ChevronLeft className="w-4 h-4" />
             Volver a auditorías
@@ -258,7 +258,7 @@ const AuditoriaSalud = () => {
           <div className="container mx-auto px-6 py-3">
             <div className="h-1 rounded-full bg-white/10 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-teal-500 to-teal-300 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-blue-500 to-blue-300 transition-all duration-500"
                 style={{ width: screen === "contact" ? "95%" : `${pct}%` }}
               />
             </div>
@@ -266,7 +266,7 @@ const AuditoriaSalud = () => {
               <span className="text-[11px] tracking-widest uppercase text-gray-500">
                 {screen === "contact" ? "Datos de contacto" : `Paso ${stepNum} de ${total}`}
               </span>
-              <span className="text-[11px] tracking-widest uppercase text-teal-400">
+              <span className="text-[11px] tracking-widest uppercase text-blue-400">
                 {screen === "contact" ? "95%" : `${pct}%`}
               </span>
             </div>
@@ -313,22 +313,22 @@ const AuditoriaSalud = () => {
 /* ───────────────────────── INTRO ───────────────────────── */
 const IntroScreen = ({ onStart }: { onStart: () => void }) => (
   <section className="relative py-24 md:py-32 overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-br from-teal-500/8 via-transparent to-teal-700/8 pointer-events-none" />
-    <div className="absolute top-1/3 left-0 -translate-y-1/2 w-96 h-96 bg-teal-500/10 blur-[140px] rounded-full pointer-events-none" />
-    <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-teal-700/8 blur-[160px] rounded-full pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-transparent to-blue-700/8 pointer-events-none" />
+    <div className="absolute top-1/3 left-0 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[140px] rounded-full pointer-events-none" />
+    <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-blue-700/8 blur-[160px] rounded-full pointer-events-none" />
 
     <div className="container mx-auto px-6 relative z-10">
       <div className="max-w-3xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 mb-7">
-          <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-          <span className="text-teal-300 font-medium tracking-widest uppercase text-[11px]">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-7">
+          <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+          <span className="text-blue-300 font-medium tracking-widest uppercase text-[11px]">
             Auditoría confidencial · Centros de Salud 2026
           </span>
         </div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-7 tracking-tight leading-[1.05]">
           Descubre qué está frenando la{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-200">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
             ocupación de agenda y retención
           </span>{" "}
           de pacientes en tu centro.
@@ -358,7 +358,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
                 key={i}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
               >
-                <Icon className="w-3.5 h-3.5 text-teal-400" /> {it.label}
+                <Icon className="w-3.5 h-3.5 text-blue-400" /> {it.label}
               </div>
             );
           })}
@@ -367,7 +367,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
         <Button
           size="lg"
           onClick={onStart}
-          className="bg-teal-600 hover:bg-teal-500 text-white h-16 px-10 text-lg gap-2 font-bold shadow-lg shadow-teal-900/40 transition-all hover:scale-[1.02]"
+          className="bg-blue-600 hover:bg-blue-500 text-white h-16 px-10 text-lg gap-2 font-bold shadow-lg shadow-blue-900/40 transition-all hover:scale-[1.02]"
         >
           Empezar mi auditoría <ArrowRight className="w-5 h-5" />
         </Button>
@@ -398,9 +398,9 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
         ].map((it) => (
           <div
             key={it.n}
-            className="p-6 rounded-2xl border border-white/8 bg-white/[0.02] hover:bg-white/[0.04] hover:border-teal-500/20 transition-all"
+            className="p-6 rounded-2xl border border-white/8 bg-white/[0.02] hover:bg-white/[0.04] hover:border-blue-500/20 transition-all"
           >
-            <div className="text-teal-400 text-xs tracking-widest font-bold mb-3">{it.n}</div>
+            <div className="text-blue-400 text-xs tracking-widest font-bold mb-3">{it.n}</div>
             <h3 className="text-lg font-bold text-white mb-2">{it.title}</h3>
             <p className="text-sm text-gray-400 leading-relaxed">{it.desc}</p>
           </div>
@@ -433,7 +433,7 @@ const QuestionScreen = ({
   <section className="py-12 md:py-20">
     <div className="container mx-auto px-6">
       <div className="max-w-2xl mx-auto">
-        <div className="text-teal-400 text-[11px] tracking-widest font-bold uppercase mb-3">
+        <div className="text-blue-400 text-[11px] tracking-widest font-bold uppercase mb-3">
           {q.cat}
         </div>
         <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3">
@@ -456,7 +456,7 @@ const QuestionScreen = ({
                   onClick={() => onPick(idx, o.k)}
                   className={`group text-left p-4 rounded-xl border transition-all flex items-center gap-4 ${
                     selected
-                      ? "bg-teal-500/10 border-teal-500/50 shadow-[0_0_24px_rgba(20,184,166,0.18)]"
+                      ? "bg-blue-500/10 border-blue-500/50 shadow-[0_0_24px_rgba(20,184,166,0.18)]"
                       : "bg-white/[0.02] border-white/10 hover:border-white/25 hover:bg-white/[0.04]"
                   }`}
                 >
@@ -464,10 +464,10 @@ const QuestionScreen = ({
                     className={`flex-shrink-0 w-8 h-8 inline-flex items-center justify-center rounded-full text-sm font-bold transition-all ${
                       q.multiselect
                         ? selected
-                          ? "bg-teal-500 text-white"
+                          ? "bg-blue-500 text-white"
                           : "bg-white/5 text-gray-500 border border-white/15 group-hover:text-gray-300"
                         : selected
-                          ? "bg-teal-500 text-white"
+                          ? "bg-blue-500 text-white"
                           : "bg-white/5 text-gray-400 group-hover:text-white"
                     }`}
                     style={!q.multiselect ? {} : { borderRadius: "8px" }}
@@ -499,14 +499,14 @@ const QuestionScreen = ({
                     onClick={() => onPick(idx, val)}
                     className={`group flex flex-col items-center gap-2 p-3 md:p-4 rounded-xl border transition-all ${
                       selected
-                        ? "bg-teal-500/10 border-teal-500/50 shadow-[0_0_24px_rgba(20,184,166,0.18)]"
+                        ? "bg-blue-500/10 border-blue-500/50 shadow-[0_0_24px_rgba(20,184,166,0.18)]"
                         : "bg-white/[0.02] border-white/10 hover:border-white/25 hover:bg-white/[0.04]"
                     }`}
                   >
                     <span
                       className={`w-9 h-9 inline-flex items-center justify-center rounded-full text-sm font-bold transition-all ${
                         selected
-                          ? "bg-teal-500 text-white"
+                          ? "bg-blue-500 text-white"
                           : "bg-white/5 text-gray-400 group-hover:text-white"
                       }`}
                     >
@@ -514,7 +514,7 @@ const QuestionScreen = ({
                     </span>
                     <span
                       className={`text-[10px] md:text-[11px] uppercase tracking-wider leading-tight text-center ${
-                        selected ? "text-teal-300" : "text-gray-500 group-hover:text-gray-300"
+                        selected ? "text-blue-300" : "text-gray-500 group-hover:text-gray-300"
                       }`}
                     >
                       {lbl}
@@ -541,7 +541,7 @@ const QuestionScreen = ({
           <Button
             onClick={onNext}
             disabled={!canAdvance}
-            className="bg-teal-600 hover:bg-teal-500 text-white disabled:bg-white/10 disabled:text-gray-500 gap-2 font-semibold"
+            className="bg-blue-600 hover:bg-blue-500 text-white disabled:bg-white/10 disabled:text-gray-500 gap-2 font-semibold"
           >
             {isLast ? "Continuar" : "Siguiente"} <ArrowRight className="w-4 h-4" />
           </Button>
@@ -566,7 +566,7 @@ const ContactScreen = ({
   <section className="py-12 md:py-20">
     <div className="container mx-auto px-6">
       <div className="max-w-2xl mx-auto">
-        <div className="text-teal-400 text-[11px] tracking-widest font-bold uppercase mb-3">
+        <div className="text-blue-400 text-[11px] tracking-widest font-bold uppercase mb-3">
           Último paso · Tus datos
         </div>
         <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3">
@@ -650,7 +650,7 @@ const ContactScreen = ({
           </Button>
           <Button
             onClick={onFinish}
-            className="bg-teal-600 hover:bg-teal-500 text-white gap-2 font-semibold h-12 px-6"
+            className="bg-blue-600 hover:bg-blue-500 text-white gap-2 font-semibold h-12 px-6"
           >
             Generar mi informe <ArrowRight className="w-4 h-4" />
           </Button>
@@ -735,7 +735,7 @@ const ResultScreen = ({
             <Button
               onClick={onDownload}
               disabled={pdfBusy}
-              className="bg-teal-600 hover:bg-teal-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-teal-900/30 transition-all hover:scale-[1.02]"
+              className="bg-blue-600 hover:bg-blue-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02]"
             >
               <Download className="w-5 h-5" />
               {pdfBusy ? "Preparando PDF…" : "Descargar informe completo (PDF)"}
@@ -768,7 +768,7 @@ const ResultScreen = ({
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-6xl font-bold text-teal-400 leading-none">
+                <span className="text-6xl font-bold text-blue-400 leading-none">
                   {result.global}
                 </span>
                 <span className="text-[10px] tracking-widest text-gray-400 uppercase mt-1">
@@ -777,7 +777,7 @@ const ResultScreen = ({
               </div>
             </div>
             <div className="text-center md:text-left">
-              <div className="text-teal-300 text-[11px] tracking-widest uppercase font-bold mb-2">
+              <div className="text-blue-300 text-[11px] tracking-widest uppercase font-bold mb-2">
                 Hola {firstName} — Tu nivel de madurez operativa
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">
@@ -789,23 +789,23 @@ const ResultScreen = ({
 
           {/* Score por bloque */}
           <div className="rounded-3xl border border-white/8 bg-white/[0.02] p-7 md:p-8 mb-6">
-            <div className="text-teal-400 text-[11px] tracking-widest font-bold uppercase mb-5">
+            <div className="text-blue-400 text-[11px] tracking-widest font-bold uppercase mb-5">
               Score por área operativa
             </div>
             <div className="grid gap-3.5">
               {SA_AUDIT_BLOCK_KEYS.map((b) => {
                 const sc = result.blockScores[b];
                 const color =
-                  sc < 40 ? "bg-red-500" : sc < 70 ? "bg-teal-700" : "bg-teal-400";
+                  sc < 40 ? "bg-red-500" : sc < 70 ? "bg-blue-700" : "bg-blue-400";
                 const textColor =
-                  sc < 40 ? "text-red-400" : sc < 70 ? "text-teal-500" : "text-teal-400";
+                  sc < 40 ? "text-red-400" : sc < 70 ? "text-blue-500" : "text-blue-400";
                 return (
                   <div
                     key={b}
                     className="grid grid-cols-[48px_1fr_72px] gap-4 items-center p-4 rounded-xl bg-white/[0.02] border border-white/5"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#071a1a] border border-teal-500/30 flex items-center justify-center">
-                      <span className="text-teal-400 font-bold text-sm">{b}</span>
+                    <div className="w-12 h-12 rounded-full bg-[#071a1a] border border-blue-500/30 flex items-center justify-center">
+                      <span className="text-blue-400 font-bold text-sm">{b}</span>
                     </div>
                     <div>
                       <div className="text-white font-semibold text-sm">
@@ -833,7 +833,7 @@ const ResultScreen = ({
 
           {/* Diagnóstico */}
           <div className="rounded-3xl border border-white/8 bg-white/[0.02] p-7 md:p-8 mb-6">
-            <div className="text-teal-400 text-[11px] tracking-widest font-bold uppercase mb-5">
+            <div className="text-blue-400 text-[11px] tracking-widest font-bold uppercase mb-5">
               Diagnóstico
             </div>
             <div className="grid md:grid-cols-2 gap-5">
@@ -891,7 +891,7 @@ const ResultScreen = ({
 
           {/* Módulos prioritarios */}
           <div className="rounded-3xl border border-white/8 bg-white/[0.02] p-7 md:p-8 mb-6">
-            <div className="text-teal-400 text-[11px] tracking-widest font-bold uppercase mb-1">
+            <div className="text-blue-400 text-[11px] tracking-widest font-bold uppercase mb-1">
               Módulos prioritarios para tu centro
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-white mb-6">
@@ -901,14 +901,14 @@ const ResultScreen = ({
               {modules.map((m, i) => (
                 <div
                   key={i}
-                  className="p-5 rounded-2xl border-l-4 border-teal-500 bg-white/[0.02] border-t border-r border-b border-white/5"
+                  className="p-5 rounded-2xl border-l-4 border-blue-500 bg-white/[0.02] border-t border-r border-b border-white/5"
                 >
-                  <div className="text-[10px] tracking-widest text-teal-400 font-bold uppercase mb-1">
+                  <div className="text-[10px] tracking-widest text-blue-400 font-bold uppercase mb-1">
                     {m.ref} · {SA_AUDIT_BLOCKS[m.block].name}
                   </div>
                   <h4 className="text-lg font-bold text-white mb-2">{m.name}</h4>
                   <p className="text-sm text-gray-400 leading-relaxed mb-3">{m.desc}</p>
-                  <span className="inline-block px-3 py-1 rounded-full bg-teal-500/10 text-teal-300 text-[10px] uppercase tracking-widest font-bold border border-teal-500/20">
+                  <span className="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 text-[10px] uppercase tracking-widest font-bold border border-blue-500/20">
                     {m.impact}
                   </span>
                 </div>
@@ -917,7 +917,7 @@ const ResultScreen = ({
           </div>
 
           {/* CTA final */}
-          <div className="rounded-3xl bg-gradient-to-br from-[#071a1a] to-[#041414] border border-teal-500/20 p-8 md:p-10 text-center text-white">
+          <div className="rounded-3xl bg-gradient-to-br from-[#071a1a] to-[#041414] border border-blue-500/20 p-8 md:p-10 text-center text-white">
             <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">{ctaTitle}</h3>
             <p className="text-gray-300 mb-7 max-w-xl mx-auto leading-relaxed">{ctaSub}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -925,7 +925,7 @@ const ResultScreen = ({
                 href="https://calendly.com/david-immoral/30min"
                 target="_blank"
                 rel="noopener"
-                className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-teal-500 text-white font-bold hover:bg-teal-400 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-400 transition-all"
               >
                 Agendar llamada de 30 min <ArrowRight className="w-4 h-4" />
               </a>

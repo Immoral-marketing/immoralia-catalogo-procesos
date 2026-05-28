@@ -47,7 +47,7 @@ import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#0ea5e9";
-const AUDIT_URL = "#";
+const AUDIT_URL = "/auditorias/salud";
 
 // Sector exclusivo: los procesos de salud tienen landing_slug propio
 const SALUD_LANDING_SLUG = "salud";
@@ -440,13 +440,12 @@ const SaludLanding = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  size="lg"
-                  onClick={() => window.open(AUDIT_URL, "_blank", "noopener,noreferrer")}
-                  className="bg-sky-600 hover:bg-sky-500 text-white h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-sky-900/30 transition-all hover:scale-[1.02]"
+                <Link
+                  to={AUDIT_URL}
+                  className="inline-flex items-center justify-center bg-sky-600 hover:bg-sky-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-sky-900/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
-                </Button>
+                </Link>
               </div>
             </div>
 
