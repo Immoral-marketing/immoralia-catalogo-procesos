@@ -457,14 +457,12 @@ const GestoriasLanding = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  size="lg"
-                  disabled
-                  className="bg-yellow-600 hover:bg-yellow-500 text-black h-14 px-7 text-base gap-2 font-bold shadow-lg shadow-yellow-900/30 transition-all hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                <Link
+                  to="/auditorias/gestorias"
+                  className="inline-flex items-center justify-center bg-yellow-600 hover:bg-yellow-500 text-black h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-yellow-900/30 transition-all hover:scale-[1.02]"
                 >
-                  Empezar mi diagnóstico <ArrowRight className="w-4 h-4" />
-                </Button>
-                <p className="self-center text-xs text-gray-500 sm:pl-1">Disponible próximamente</p>
+                  Empezar mi auditoría <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
 

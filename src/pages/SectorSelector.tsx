@@ -25,10 +25,10 @@ const sectors = [
     description: "Gimnasios, crossfit, centros de yoga, artes marciales y academias deportivas.",
     icon: Dumbbell,
     path: "/sector/centros-deportivos",
-    accent: "#0891b2",
-    accentClass: "bg-sky-600/10 border-sky-600/25 text-sky-400",
-    accentGlow: "rgba(8,145,178,0.25)",
-    accentBar: "bg-sky-500",
+    accent: "#dc2626",
+    accentClass: "bg-red-600/10 border-red-600/25 text-red-400",
+    accentGlow: "rgba(220,38,38,0.25)",
+    accentBar: "bg-red-500",
     heroImage: "/centros-deportivos/hero.png",
     landingSlug: "centros-deportivos",
     sectorNames: [] as string[],
@@ -70,10 +70,10 @@ const sectors = [
     description: "Constructoras, empresas de reformas, arquitectura, agencias inmobiliarias y gestión de propiedades.",
     icon: HardHat,
     path: "/sector/construccion",
-    accent: "#d97706",
-    accentClass: "bg-amber-600/10 border-amber-600/25 text-amber-400",
-    accentGlow: "rgba(217,119,6,0.25)",
-    accentBar: "bg-amber-500",
+    accent: "#16a34a",
+    accentClass: "bg-green-600/10 border-green-600/25 text-green-400",
+    accentGlow: "rgba(22,163,74,0.25)",
+    accentBar: "bg-green-500",
     heroImage: "/constructoras.png" as string | null,
     landingSlug: "construccion",
     sectorNames: ["Construcción & Reformas", "Constructoras / Obra Nueva", "Inmobiliaria", "Inmobiliarias"],
@@ -119,10 +119,7 @@ const SectorSelector = () => {
   const sectorCounts = useMemo(() => {
     return sectors.reduce((acc, sector) => {
       acc[sector.id] = processes.filter(
-        (p) =>
-          !p.hidden &&
-          (p.landing_slug === sector.landingSlug ||
-            sector.sectorNames.some((name) => p.sectores?.includes(name)))
+        (p) => !p.hidden && p.landing_slug === sector.landingSlug
       ).length;
       return acc;
     }, {} as Record<string, number>);
@@ -203,7 +200,7 @@ const SectorSelector = () => {
       </section>
 
       {/* ── SECTOR GRID ── */}
-      <section id="sectores" className="px-6 pb-32 relative">
+      <section id="sectores" className="px-6 pb-0 relative">
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-12">
@@ -253,19 +250,13 @@ const SectorSelector = () => {
                     style={{ background: `linear-gradient(to top, ${sector.accent}28 0%, transparent 60%)` }}
                   />
 
-                  {/* Top row: icon + number */}
-                  <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
+                  {/* Top row: icon */}
+                  <div className="absolute top-5 left-5 z-10">
                     <div
                       className={`w-11 h-11 rounded-xl border flex items-center justify-center backdrop-blur-sm ${sector.accentClass}`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span
-                      className="text-[11px] font-bold tabular-nums tracking-widest opacity-30 group-hover:opacity-60 transition-opacity"
-                      style={{ color: sector.accent }}
-                    >
-                      {sector.number}
-                    </span>
                   </div>
 
                   {/* Bottom content */}
@@ -322,49 +313,111 @@ const SectorSelector = () => {
                 (e.currentTarget as HTMLElement).style.boxShadow = `none`;
               }}
             >
-              {/* Fondo con glow sutil */}
-              <div
-                className="absolute inset-0"
-                style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.05) 0%, transparent 65%)" }}
-              />
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.09) 0%, transparent 65%)" }}
-              />
-
-              {/* Icono + copy */}
+              <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.05) 0%, transparent 65%)" }} />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(0,255,255,0.09) 0%, transparent 65%)" }} />
               <div className="relative z-10 flex items-center gap-5">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border"
-                  style={{
-                    backgroundColor: "rgba(0,255,255,0.07)",
-                    borderColor: "rgba(0,255,255,0.18)",
-                  }}
-                >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border" style={{ backgroundColor: "rgba(0,255,255,0.07)", borderColor: "rgba(0,255,255,0.18)" }}>
                   <MessageCircle className="w-5 h-5" style={{ color: "rgba(0,255,255,0.75)" }} />
                 </div>
                 <div>
-                  <p className="text-base font-bold text-white mb-1">
-                    ¿Tu sector no está en la lista?
-                  </p>
-                  <p className="text-sm text-gray-400 leading-relaxed max-w-xl">
-                    Trabajamos con cualquier tipo de negocio. Cuéntanos qué haces y analizamos contigo qué procesos tiene sentido automatizar.
-                  </p>
+                  <p className="text-base font-bold text-white mb-1">¿Tu sector no está en la lista?</p>
+                  <p className="text-sm text-gray-400 leading-relaxed max-w-xl">Trabajamos con cualquier tipo de negocio. Cuéntanos qué haces y analizamos contigo qué procesos tiene sentido automatizar.</p>
                 </div>
               </div>
-
-              {/* CTA */}
-              <div
-                className="relative z-10 shrink-0 flex items-center gap-2 text-sm font-semibold tracking-wide transition-all duration-300 opacity-55 group-hover:opacity-100 pl-1 sm:pl-0"
-                style={{ color: "rgba(0,255,255,0.9)" }}
-              >
+              <div className="relative z-10 shrink-0 flex items-center gap-2 text-sm font-semibold tracking-wide transition-all duration-300 opacity-55 group-hover:opacity-100 pl-1 sm:pl-0" style={{ color: "rgba(0,255,255,0.9)" }}>
                 <span>Contáctanos</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
-
-              {/* Línea de acento inferior */}
               <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-cyan-400/50" />
             </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── SEGUNDO HERO ── */}
+      <section className="relative py-16 overflow-hidden text-center">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, rgba(0,255,255,0.04) 0%, transparent 70%)" }}
+        />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl md:text-5xl font-bold leading-[1.1] text-white mb-5">
+            Los mejores negocios no trabajan<br />
+            más duro.
+            <span style={{ color: "rgba(0,255,255,0.85)" }}> Trabajan mejor.</span>
+          </h2>
+          <p className="text-gray-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+            Optimizar cómo fluye el trabajo es la palanca que más impacto tiene en tu equipo, tu tiempo y tus márgenes.
+          </p>
+        </div>
+      </section>
+
+      {/* ── BOTTOM CARDS ── */}
+      <section className="px-6 pb-32 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {/* ── AUDITORÍAS CALLOUT ── */}
+            <Link
+              to="/auditorias"
+              className="group col-span-1 md:col-span-2 relative overflow-hidden rounded-2xl border border-white/8 hover:border-cyan-500/25 bg-[#0d0d0d] transition-all duration-500 hover:shadow-[0_0_80px_rgba(0,212,232,0.07)] flex flex-col md:flex-row min-h-[280px]"
+            >
+              {/* LEFT: texto + KPIs */}
+              <div className="relative z-10 flex flex-col justify-between p-8 md:p-10 md:w-[42%] shrink-0">
+                <div>
+                  <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-cyan-400/60 mb-5">Auditorías de madurez operativa</p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white leading-[1.15] mb-5">
+                    ¿Sabes qué procesos<br />frenan tu negocio?
+                  </h2>
+                  <div className="flex items-center gap-2 text-sm font-semibold text-cyan-400 group-hover:gap-4 transition-all duration-300">
+                    Descúbrelo en 8 minutos
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  </div>
+                </div>
+
+                {/* KPIs genéricos — franja pequeña */}
+                <div className="flex gap-3 mt-8" style={{ perspective: "600px" }}>
+                  {[
+                    { val: "+3h", label: "recuperables al día" },
+                    { val: "8 min", label: "para el diagnóstico" },
+                    { val: "PDF", label: "con tu hoja de ruta" },
+                  ].map((k, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-lg border border-white/8 bg-white/[0.04] p-3 text-center transition-all duration-300"
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = `rotateY(${i === 1 ? "0deg" : i === 0 ? "-10deg" : "10deg"}) rotateX(-5deg) scale(1.07)`;
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,232,0.35)";
+                        (e.currentTarget as HTMLElement).style.background = "rgba(0,212,232,0.06)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = "";
+                        (e.currentTarget as HTMLElement).style.borderColor = "";
+                        (e.currentTarget as HTMLElement).style.background = "";
+                      }}
+                    >
+                      <p className="text-lg font-bold text-white leading-none mb-1">{k.val}</p>
+                      <p className="text-[10px] text-gray-500 leading-tight">{k.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* RIGHT: imagen */}
+              <div className="md:flex-1 relative overflow-hidden min-h-[180px] md:min-h-0 rounded-b-2xl md:rounded-b-none md:rounded-r-2xl">
+                <img
+                  src="/auditorias-banner.png"
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
+              </div>
+            </Link>
+
           </div>
 
         </div>
