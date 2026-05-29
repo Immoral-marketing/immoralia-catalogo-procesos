@@ -48,6 +48,11 @@ interface Contact {
   phone: string;
 }
 
+const parseScaleHelp = (help: string): { hint1: string; hint5: string } | null => {
+  const m = help.match(/^\s*1\s*=\s*(.+?)\s*;\s*5\s*=\s*(.+?)\s*$/i);
+  return m ? { hint1: m[1], hint5: m[2] } : null;
+};
+
 const SCALE_LABELS = ["Nada", "Poco", "A medias", "Bastante", "Totalmente"];
 
 const AuditoriaAcademias = () => {
@@ -439,7 +444,21 @@ const QuestionScreen = ({
         <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3">
           {q.title}
         </h2>
-        {q.help && <p className="text-gray-400 mb-8 leading-relaxed">{q.help}</p>}
+        {q.help && (() => {
+          const p = q.type === "scale" ? parseScaleHelp(q.help!) : null;
+          return p ? (
+            <div className="flex flex-col gap-2 mb-6">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">1</span>
+                <p className="text-gray-300 text-sm leading-snug">{p.hint1}</p>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">5</span>
+                <p className="text-gray-300 text-sm leading-snug">{p.hint5}</p>
+              </div>
+            </div>
+          ) : <p className="text-gray-400 mb-8 leading-relaxed">{q.help}</p>;
+        })()}
 
         {q.type === "choice" && (
           <div className="grid gap-2.5 mb-8">
@@ -490,7 +509,7 @@ const QuestionScreen = ({
         {q.type === "scale" && (
           <>
             <div className="grid grid-cols-5 gap-2 mb-3">
-              {SCALE_LABELS.map((lbl, i) => {
+              {(q.scaleLabels ?? SCALE_LABELS).map((lbl, i) => {
                 const val = i + 1;
                 const selected = answer === val;
                 return (
@@ -524,8 +543,8 @@ const QuestionScreen = ({
               })}
             </div>
             <div className="flex justify-between text-[10px] uppercase tracking-widest text-gray-500 mb-8">
-              <span>1 — No lo hacemos</span>
-              <span>5 — Es sistemático</span>
+              <span>{q.scaleHints?.[0] ?? "1 — No lo hacemos"}</span>
+              <span>{q.scaleHints?.[1] ?? "5 — Es sistemático"}</span>
             </div>
           </>
         )}

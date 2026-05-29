@@ -20,6 +20,10 @@ export type DpAuditQuestion =
       title: string;
       help?: string;
       block: DpAuditBlockId;
+      /** Etiquetas personalizadas para los 5 puntos de la escala. */
+      scaleLabels?: [string, string, string, string, string];
+      /** Texto bajo la escala (extremos). */
+      scaleHints?: [string, string];
     };
 
 export type DpAuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -95,6 +99,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Qué pasa cuando alguien escribe fuera de tu horario para preguntar por tarifas o reservar una clase de prueba? ¿Cuántos de esos contactos acaban convirtiéndose en alta?",
     help: "1 = Se responde al día siguiente y muchos no esperan; 5 = Chatbot cualifica al instante y reserva una sesión de prueba sin que intervenga nadie",
     block: "B1",
+    scaleLabels: ["Día siguiente", "Tarde", "Horas", "Rápido", "Al instante"],
+    scaleHints: ["1 — Respuesta al día siguiente, muchos se pierden", "5 — Chatbot reserva sesión al instante"],
   },
   {
     type: "scale",
@@ -103,6 +109,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Pueden los socios reservar, cancelar o cambiar su clase desde el móvil sin llamar a recepción?",
     help: "1 = Todo pasa por llamada o presencialmente; 5 = El socio gestiona sus reservas 100% digital sin intervención del equipo",
     block: "B1",
+    scaleLabels: ["Solo llamada", "Poco", "A medias", "Casi todo", "100% digital"],
+    scaleHints: ["1 — Solo en persona o por llamada", "5 — El socio lo gestiona todo desde el móvil"],
   },
   // ─── B2 Captación y conversión ──────────────────────────────────────────────
   {
@@ -112,6 +120,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "Cuando alguien rellena tu formulario o escribe por Instagram pidiendo información, ¿cuánto tarda en recibir respuesta útil y cuántos acaban dándose de alta?",
     help: "1 = Respuesta manual cuando alguien lo ve, muchos se pierden; 5 = Seguimiento automatizado desde el primer contacto con alta tasa de conversión",
     block: "B2",
+    scaleLabels: ["Tasa muy baja", "Baja", "A medias", "Alta tasa", "Sistemático"],
+    scaleHints: ["1 — Respuesta manual, muchos se pierden", "5 — Seguimiento automático, alta conversión"],
   },
   {
     type: "scale",
@@ -120,6 +130,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Tienes algún sistema para recuperar a personas que vinieron a probar o se dieron de baja y no volvieron?",
     help: "1 = No se hace nada; 5 = Secuencia automática que recupera un porcentaje significativo de pruebas no convertidas y ex-socios",
     block: "B2",
+    scaleLabels: ["Nunca", "Rara vez", "A veces", "A menudo", "Automático"],
+    scaleHints: ["1 — No se hace nada", "5 — Secuencia automática de recuperación"],
   },
   // ─── B3 Fidelización y retención ────────────────────────────────────────────
   {
@@ -129,6 +141,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Sabes en tiempo real qué socios llevan días sin venir y tienes un sistema que los contacta antes de que se den de baja?",
     help: "1 = Te enteras cuando ya han causado baja; 5 = Detección automática de riesgo de abandono con mensaje preventivo personalizado",
     block: "B3",
+    scaleLabels: ["Cuando se van", "Tarde", "A veces", "Con tiempo", "Automático"],
+    scaleHints: ["1 — Te enteras cuando ya se han dado de baja", "5 — Detección automática preventiva"],
   },
   {
     type: "scale",
@@ -137,6 +151,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Las cuotas mensuales se cobran automáticamente y, cuando un pago falla, el sistema avisa al socio y reintenta sin que nadie del equipo tenga que gestionarlo?",
     help: "1 = Los cobros fallidos los persigues tú a mano; 5 = Cobro automático con reintentos y aviso inmediato al socio sin intervención",
     block: "B3",
+    scaleLabels: ["Todo manual", "Poco auto", "A medias", "Casi auto", "Automático"],
+    scaleHints: ["1 — Cobros fallidos perseguidos a mano", "5 — Reintentos y avisos sin intervención"],
   },
   // ─── B4 Operativa del centro ────────────────────────────────────────────────
   {
@@ -146,6 +162,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Cómo se gestionan los turnos de los instructores, los cambios de horario y las sustituciones cuando falta alguien a última hora?",
     help: "1 = Todo por WhatsApp en grupo, llamadas de última hora y caos; 5 = Sistema automatizado con turnos individuales, confirmaciones y sustituciones sin intervención tuya",
     block: "B4",
+    scaleLabels: ["Grupo WhatsApp", "Pizarra", "A medias", "Individual", "Automático"],
+    scaleHints: ["1 — Grupo de WhatsApp caótico", "5 — Confirmaciones y sustituciones automáticas"],
   },
   {
     type: "scale",
@@ -154,6 +172,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Tienes visibilidad del rendimiento del centro — nuevas altas, bajas, cobros, ocupación — sin tener que construirlo manualmente?",
     help: "1 = Tienes que entrar en varios sistemas y montarlo a mano; 5 = Resumen automático semanal con los KPIs clave enviado a tu móvil",
     block: "B4",
+    scaleLabels: ["Montarlo a mano", "Parcial", "A medias", "Bastante", "Automático"],
+    scaleHints: ["1 — Varios sistemas, montarlo a mano", "5 — Resumen automático semanal al móvil"],
   },
   // ─── B5 Reputación y comunidad ──────────────────────────────────────────────
   {
@@ -163,6 +183,8 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Qué porcentaje de socios satisfechos acaba dejando una reseña en Google? ¿Tienes un sistema que se la pide justo después del alta o de una clase?",
     help: "1 = Casi nadie deja reseña y nadie se las pide; 5 = Solicitud automática post-clase con alta tasa de conversión a reseña 5 estrellas",
     block: "B5",
+    scaleLabels: ["Casi nadie", "Muy pocos", "Algunos", "Bastantes", "Sistema activo"],
+    scaleHints: ["1 — Nadie lo pide", "5 — Solicitud automática con alta conversión"],
   },
   // ─── B6 Marketing y contenido ───────────────────────────────────────────────
   {
@@ -172,6 +194,64 @@ export const DP_AUDIT_QUESTIONS: DpAuditQuestion[] = [
       "¿Tu Instagram y Google My Business están activos con novedades, horarios y campañas estacionales, sin que alguien del equipo tenga que gestionarlo manualmente cada semana?",
     help: "1 = Semanas sin publicar o dependiendo de que alguien se acuerde; 5 = Contenido generado y publicado automáticamente con campañas de captación en los picos del año",
     block: "B6",
+    scaleLabels: ["Sin publicar", "Esporádico", "Irregular", "Regular", "Automático"],
+    scaleHints: ["1 — Semanas sin publicar", "5 — Contenido y campañas estacionales automáticas"],
+  },
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Qué sistemas digitales usáis hoy para gestionar el centro?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Papel, Excel o WhatsApp — sin software específico" },
+      { k: "B", label: "App de gestión básica de reservas o cobros" },
+      { k: "C", label: "Software completo de gestión de socios y actividades" },
+      { k: "D", label: "Software + CRM para captación y comunicación con socios" },
+      { k: "E", label: "Suite integrada con automatizaciones y panel de control" },
+    ],
+  },
+  // ─── Dependencia de ingresos (scoreless) ─────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de dependencia",
+    title: "¿Qué porcentaje de los ingresos proviene de cuotas mensuales fijas vs actividades esporádicas o pagos únicos?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Más del 80% cuotas fijas — base de ingresos muy estable" },
+      { k: "B", label: "Entre el 60% y el 80% cuotas fijas" },
+      { k: "C", label: "Entre el 40% y el 60% — mix equilibrado" },
+      { k: "D", label: "Menos del 40% cuotas fijas — alta dependencia de actividades puntuales" },
+    ],
+  },
+  // ─── Certificaciones (scoreless multiselect) ─────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y acreditaciones",
+    title: "¿Qué certificaciones o registros tenéis activos en el centro?",
+    scoreless: true,
+    multiselect: true,
+    options: [
+      { k: "A", label: "Licencia de actividades municipal en regla" },
+      { k: "B", label: "Titulaciones deportivas oficiales de todos los instructores" },
+      { k: "C", label: "Seguro de responsabilidad civil específico deportivo" },
+      { k: "D", label: "ISO 9001 o certificación de calidad" },
+      { k: "E", label: "Certificación de plataforma de valoraciones (Google, TripAdvisor)" },
+      { k: "F", label: "Solo los mínimos legales" },
+    ],
+  },
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si mañana falta el coordinador o responsable principal del centro, ¿qué pasa?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Caos — todo el funcionamiento del centro depende de él/ella" },
+      { k: "B", label: "Hay un backup parcial pero se nota mucho la diferencia" },
+      { k: "C", label: "Hay un instructor o coordinador suplente bien formado" },
+      { k: "D", label: "El centro funciona con cualquier persona del equipo gracias a los protocolos" },
+    ],
   },
   // ─── Prioridades (scoreless) ─────────────────────────────────────────────────
   {
