@@ -13,6 +13,7 @@ import ConstruccionLanding from "./pages/ConstruccionLanding";
 import AcademiasLanding from "./pages/AcademiasLanding";
 import RestauracionLanding from "./pages/RestauracionLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
+import IndustrialLanding from "./pages/IndustrialLanding";
 import SectorSelector from "./pages/SectorSelector";
 import AfiliadoPage from "./pages/AfiliadoPage";
 import AdminPage from "./pages/AdminPage";
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
             <Route path="/sector/inmobiliaria" element={<Navigate to="/sector/construccion" replace />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
+            <Route path="/sector/industrial" element={<IndustrialLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/auditorias" element={<AuditoriasIndex />} />

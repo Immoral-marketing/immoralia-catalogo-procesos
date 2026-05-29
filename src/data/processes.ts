@@ -6988,6 +6988,1226 @@ export const processes: Process[] = [
     },
     integration_domains: ["ADMIN", "COMMS"],
     related_processes: ["academias-comunicacion-turnos", "academias-onboarding-profesor"]
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SECTOR INDUSTRIAL / PRODUCCIÓN — 24 procesos · 6 bloques
+  // Exclusivos de este sector. landing_slug: "industrial"
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── BLOQUE B1 · Clientes y presupuestos ─────────────────────────────────
+  {
+    id: "IND-1.1",
+    codigo: "1.1",
+    slug: "industrial-captacion-peticiones-oferta",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Captación de peticiones de oferta",
+    tagline: "Cada petición de presupuesto que llega por email, web o WhatsApp queda registrada automáticamente como oportunidad con los datos ya extraídos.",
+    recomendado: true,
+    descripcionDetallada: "El comercial de una industrial pierde tiempo buscando los datos de cada petición que llega dispersa entre bandejas de email, mensajes de WhatsApp y formularios web. Este proceso centraliza todas las entradas, extrae automáticamente producto, cantidad, plazo y datos del cliente, y crea una ficha de oportunidad asignada al responsable correcto. Ninguna petición se pierde y el comercial solo tiene que revisar, no construir desde cero.",
+    summary: {
+      what_it_is: "Sistema de captura y cualificación automática de peticiones de oferta desde cualquier canal.",
+      for_who: ["Industriales con comercial propio", "Empresas que reciben peticiones por múltiples canales", "Equipos donde las peticiones se pierden o llegan tarde"],
+      requirements: ["Email corporativo", "WhatsApp Business (opcional)", "Formulario web o canal habitual de entrada"],
+      output: "Ficha de oportunidad creada y asignada al responsable en menos de 5 minutos desde la recepción."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["Email", "WhatsApp Business", "CRM / ERP"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge la petición", short: "Desde cualquier canal.", detail: "Email, WhatsApp, formulario web — todas las entradas llegan a un único punto de procesamiento." },
+      { title: "Extrae los datos", short: "Producto, cantidad, plazo.", detail: "IA extrae automáticamente los campos clave de la petición y los estructura en la ficha." },
+      { title: "Asigna y notifica", short: "Al comercial correcto.", detail: "La ficha creada se asigna al responsable y este recibe una notificación con todo listo para responder." }
+    ],
+    benefits: [
+      "Cero peticiones perdidas entre bandejas y canales",
+      "Datos extraídos automáticamente, sin teclear a mano",
+      "El comercial actúa más rápido con la información estructurada"
+    ],
+    pasos: [
+      "Se detecta la entrada de una petición de oferta por cualquier canal",
+      "La IA extrae producto, cantidad, plazo y datos de contacto",
+      "Se crea la ficha de oportunidad en el CRM o ERP",
+      "Se asigna al comercial responsable y se le notifica",
+      "El comercial recibe la ficha lista para empezar a trabajar"
+    ],
+    personalizacion: "Define qué campos extraer, cómo asignar por producto o zona, el canal de notificación al comercial y si requiere validación antes de crear la ficha.",
+    sectores: ["Industrial"],
+    herramientas: ["Email", "WhatsApp Business API", "CRM / ERP", "IA"],
+    canales: ["Email", "WhatsApp"],
+    dolores: [
+      "Las peticiones llegan por tres sitios y alguna siempre se nos escapa",
+      "El comercial pierde tiempo buscando datos antes de poder responder"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1"
+  },
+  {
+    id: "IND-1.2",
+    codigo: "1.2",
+    slug: "industrial-presupuestos-automaticos",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Generación de presupuestos automáticos",
+    tagline: "El sistema prepara el presupuesto con precios actualizados, especificaciones y plazos sin que el comercial tenga que buscar cada dato a mano.",
+    recomendado: true,
+    descripcionDetallada: "Preparar un presupuesto en una industrial implica consultar la tarifa de precios, calcular el tiempo de producción, revisar el stock de materia prima y maquetar el documento en el formato correcto. Este proceso automatiza toda esa cadena: extrae los datos de la petición cualificada, los cruza con las tarifas vigentes y los plazos de producción, y genera el documento listo para revisar y aprobar. El comercial solo necesita unos minutos para personalizar y enviar.",
+    summary: {
+      what_it_is: "Generador automático de presupuestos con datos actualizados de precio, plazo y especificaciones.",
+      for_who: ["Industriales con catálogo de productos o procesos parametrizables", "Comerciales que invierten horas en preparar cada presupuesto", "Empresas con tarifas frecuentemente actualizadas"],
+      requirements: ["Tarifa de precios actualizada", "Datos de plazos de producción por producto", "Plantilla de presupuesto en formato de la empresa"],
+      output: "Presupuesto en formato PDF o Word listo para revisar y enviar al cliente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP / CRM", "Tarifas de precio", "Generador de documentos"]
+    },
+    how_it_works_steps: [
+      { title: "Toma los datos de la petición", short: "Producto, cantidad, condiciones.", detail: "Recoge la ficha de oportunidad creada en el paso anterior con todos los campos estructurados." },
+      { title: "Calcula precio y plazo", short: "Con datos siempre actualizados.", detail: "Cruza con la tarifa vigente, calcula el tiempo de producción y comprueba disponibilidad de materiales." },
+      { title: "Genera el documento", short: "En el formato de la empresa.", detail: "Produce el presupuesto en PDF o Word con el diseño corporativo, listo para que el comercial revise y apruebe." }
+    ],
+    benefits: [
+      "Presupuesto listo en minutos, no en horas",
+      "Precios siempre actualizados desde la tarifa vigente",
+      "El comercial invierte su tiempo en vender, no en formatear documentos"
+    ],
+    pasos: [
+      "Se recoge la ficha de oportunidad con los datos de la petición",
+      "El sistema cruza con la tarifa de precios actualizada",
+      "Calcula plazos de producción y disponibilidad de materiales",
+      "Genera el documento de presupuesto en formato corporativo",
+      "El comercial revisa, personaliza si necesita y envía"
+    ],
+    personalizacion: "Define las variables de precio (volumen, descuentos, condiciones de pago), el formato del documento y si quiere aprobación de un segundo nivel antes del envío.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP / CRM", "Generador de documentos", "IA"],
+    dolores: [
+      "Preparar un presupuesto nos lleva entre 2 y 4 horas",
+      "A veces enviamos presupuestos con precios desfasados",
+      "El comercial pierde más tiempo en el documento que con el cliente"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2"
+  },
+  {
+    id: "IND-1.3",
+    codigo: "1.3",
+    slug: "industrial-seguimiento-ofertas",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Seguimiento de ofertas abiertas",
+    tagline: "Alerta cuando una oferta lleva demasiado tiempo sin respuesta del cliente y registra el resultado automáticamente al cierre.",
+    recomendado: false,
+    descripcionDetallada: "Una oferta enviada que no tiene seguimiento es una oferta que se pierde al silencio. Este proceso monitoriza cada presupuesto enviado, detecta cuando supera el tiempo de respuesta habitual y lanza un recordatorio al comercial con el contexto completo para que pueda hacer un seguimiento efectivo. Al cierre — ganada, perdida o pausada — registra el resultado automáticamente para construir el histórico de conversión.",
+    summary: {
+      what_it_is: "Sistema de seguimiento automático de ofertas pendientes con alertas y registro de resultado al cierre.",
+      for_who: ["Comerciales con múltiples ofertas abiertas a la vez", "Empresas que pierden ofertas por falta de seguimiento", "Industrias con ciclo de venta largo"],
+      requirements: ["CRM o ERP donde se registran los presupuestos", "Canal de notificación al comercial"],
+      output: "Tasa de seguimiento del 100% de ofertas abiertas y histórico de conversión por producto y cliente."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["CRM / ERP", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza cada oferta", short: "Desde el envío hasta el cierre.", detail: "Sigue el estado de cada presupuesto enviado y cuenta los días transcurridos desde el envío." },
+      { title: "Alerta al comercial", short: "Cuando lleva demasiado sin respuesta.", detail: "En función del tipo de cliente y producto, lanza un recordatorio al comercial con el contexto de la oferta." },
+      { title: "Registra el resultado", short: "Ganada, perdida o pausada.", detail: "Al cierre, el comercial indica el resultado y el sistema lo registra en el histórico con el motivo." }
+    ],
+    benefits: [
+      "Ninguna oferta cae en el olvido por falta de seguimiento",
+      "El comercial actúa en el momento correcto con el contexto completo",
+      "Histórico de conversión por producto, cliente y motivo de pérdida"
+    ],
+    pasos: [
+      "Se marca la oferta como enviada en el sistema",
+      "El proceso monitoriza los días sin respuesta",
+      "Al superar el umbral configurado, alerta al comercial",
+      "El comercial contacta con el cliente y actualiza el estado",
+      "Al cierre, el resultado queda registrado automáticamente"
+    ],
+    personalizacion: "Define los umbrales de alerta por tipo de producto o importe, el canal de notificación y qué campos registrar al cierre.",
+    sectores: ["Industrial"],
+    herramientas: ["CRM / ERP", "Email", "Make/n8n"],
+    dolores: [
+      "Enviamos presupuestos y luego no sabemos en qué estado están",
+      "El comercial tiene tantas ofertas abiertas que olvida hacer seguimiento"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3"
+  },
+  {
+    id: "IND-1.4",
+    codigo: "1.4",
+    slug: "industrial-portal-estado-pedido",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Portal de estado de pedido para el cliente",
+    tagline: "El cliente puede consultar en tiempo real en qué fase está su pedido, cuándo se entrega y qué documentación tiene disponible, sin llamar.",
+    recomendado: false,
+    descripcionDetallada: "El cliente industrial llama para saber si su pedido está listo porque no tiene otra forma de saberlo. Esas llamadas consumen tiempo del administrativo y del comercial, y no siempre tienen la información actualizada. Este portal da al cliente una visión en tiempo real del estado de su pedido — confirmado, en producción, en control de calidad, enviado — y acceso a toda la documentación asociada sin que nadie tenga que gestionarlo manualmente.",
+    summary: {
+      what_it_is: "Portal web para que el cliente consulte el estado de sus pedidos y descargue documentación sin llamar.",
+      for_who: ["Industriales cuyos clientes llaman frecuentemente a preguntar por pedidos", "Empresas que quieren reducir la carga administrativa", "Clientes habituales con varios pedidos activos a la vez"],
+      requirements: ["Sistema de gestión de pedidos actualizado", "Datos de cliente para acceso al portal"],
+      output: "Reducción del volumen de llamadas de estado de pedido y mayor satisfacción del cliente."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP / Sistema de producción", "Portal web", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "El cliente accede al portal", short: "Por link sin contraseñas complicadas.", detail: "Al confirmar el pedido, el cliente recibe un link de acceso personalizado a su espacio de seguimiento." },
+      { title: "Ve el estado en tiempo real", short: "Actualizado desde producción.", detail: "El estado del pedido se sincroniza con el sistema de producción: confirmado, en fabricación, QC, expedición." },
+      { title: "Descarga su documentación", short: "Albarán, certificado, factura.", detail: "La documentación disponible aparece automáticamente en el portal en cuanto se genera." }
+    ],
+    benefits: [
+      "Clientes informados sin que nadie tenga que atender sus llamadas",
+      "Reducción significativa de llamadas de 'cómo va mi pedido'",
+      "Imagen profesional y servicio diferenciado respecto a la competencia"
+    ],
+    pasos: [
+      "Al confirmar el pedido, el cliente recibe acceso al portal",
+      "El estado del pedido se actualiza automáticamente desde producción",
+      "El cliente ve la fase en tiempo real: confirmado, en producción, enviado",
+      "La documentación aparece en el portal al generarse",
+      "El cliente descarga lo que necesita sin llamar"
+    ],
+    personalizacion: "Define qué información mostrar en cada fase, qué documentos son visibles y cuándo, y si quieres añadir chat de soporte integrado.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Portal web", "Make/n8n"],
+    dolores: [
+      "Los clientes llaman todo el día a preguntar por sus pedidos",
+      "El administrativo pierde horas al día dando el mismo tipo de información"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4"
+  },
+
+  // ── BLOQUE B2 · Pedidos y producción ──────────────────────────────────────
+  {
+    id: "IND-2.1",
+    codigo: "2.1",
+    slug: "industrial-entrada-pedido-produccion",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Entrada de pedido y planificación de producción",
+    tagline: "Cuando entra un pedido confirmado, el sistema lo convierte en una orden de fabricación, reserva los materiales y lo ubica en la cola de producción.",
+    recomendado: true,
+    descripcionDetallada: "El traslado manual de un pedido confirmado a una orden de producción es uno de los cuellos de botella más habituales en la industria. Alguien tiene que introducir los datos en el sistema de producción, comprobar los materiales disponibles, reservarlos y asignar la posición en la cola. Si hay errores en ese paso, los plazos se incumplen y planta trabaja con información incorrecta. Este proceso cierra ese gap de forma automática y sin intervención humana.",
+    summary: {
+      what_it_is: "Automatización del puente entre la confirmación de pedido y la creación de la orden de fabricación con materiales reservados.",
+      for_who: ["Industriales donde el paso de pedido a producción es manual", "Empresas con errores frecuentes en la transferencia de información", "Fábricas donde el jefe de planta recibe datos tarde o incompletos"],
+      requirements: ["Sistema de gestión de pedidos", "Sistema de planificación de producción (ERP / MES)", "Gestión de stock de materiales"],
+      output: "Orden de fabricación creada al instante con materiales reservados y posicionada en la cola de producción."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Alta",
+      integrations: ["ERP / CRM", "MES / Sistema de producción", "Gestión de stock"]
+    },
+    how_it_works_steps: [
+      { title: "Pedido confirmado", short: "Arranca el flujo de producción.", detail: "Al confirmarse el pedido, el sistema crea automáticamente la orden de fabricación con los datos del pedido." },
+      { title: "Reserva materiales", short: "Comprueba stock y reserva.", detail: "Verifica disponibilidad de materias primas y reserva las cantidades necesarias en el almacén." },
+      { title: "Planifica la producción", short: "Posiciona en la cola con el plazo.", detail: "Ubica la orden en la cola de producción según capacidad disponible y plazo comprometido al cliente." }
+    ],
+    benefits: [
+      "Orden de fabricación creada automáticamente, sin introducción manual",
+      "Materiales reservados antes de que planta empiece a trabajar",
+      "El jefe de planta recibe la información completa y a tiempo"
+    ],
+    pasos: [
+      "El pedido se confirma en el sistema de gestión",
+      "Se crea automáticamente la orden de fabricación",
+      "Se comprueba el stock de materiales necesarios",
+      "Se reservan los materiales para la orden",
+      "La orden se posiciona en la cola de producción según plazo"
+    ],
+    personalizacion: "Define los criterios de posicionamiento en cola (FIFO, por fecha de entrega, por cliente prioritario), qué hacer si faltan materiales y cómo notificar a planta.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "MES / Sistema de producción", "Make/n8n"],
+    dolores: [
+      "De la confirmación del pedido a la orden de producción pueden pasar horas o días",
+      "Planta empieza a trabajar con datos incorrectos o incompletos",
+      "Los errores de transferencia nos generan retrabajos y retrasos"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1"
+  },
+  {
+    id: "IND-2.2",
+    codigo: "2.2",
+    slug: "industrial-control-avance-linea",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Control de avance de línea en tiempo real",
+    tagline: "Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.",
+    recomendado: true,
+    descripcionDetallada: "El jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente. Este panel muestra en tiempo real el avance de cada orden, los operarios asignados, los tiempos invertidos y una alerta automática si alguna orden supera el tiempo previsto. Comercial y dirección pueden ver también el estado sin interrumpir a planta.",
+    summary: {
+      what_it_is: "Dashboard en tiempo real del estado de todas las órdenes de producción activas, con alertas por desviación de plazo.",
+      for_who: ["Jefes de producción sin visibilidad en tiempo real", "Empresas que se enteran del retraso cuando ya no hay margen", "Organizaciones donde comercial y producción no comparten información"],
+      requirements: ["Registro de avance por parte de los operarios (tablet o terminal)", "Sistema de órdenes de fabricación"],
+      output: "Visibilidad completa del estado de planta en tiempo real para producción, comercial y dirección."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["MES / Sistema de producción", "Dashboard", "Alertas por WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Operarios reportan avance", short: "Desde tablet o terminal en planta.", detail: "Al completar cada fase de la orden, el operario registra el avance en menos de 30 segundos." },
+      { title: "Panel actualizado al instante", short: "Estado de cada orden en tiempo real.", detail: "El dashboard refleja el avance, el tiempo invertido y el tiempo restante estimado por orden." },
+      { title: "Alerta si hay desviación", short: "Antes de que el problema escale.", detail: "Si una orden supera el tiempo previsto, alerta automáticamente al jefe de producción y al comercial." }
+    ],
+    benefits: [
+      "Visibilidad completa de planta sin interrumpir el trabajo",
+      "Alertas antes de que el retraso sea inevitable",
+      "Comercial puede informar al cliente con datos reales, no con estimaciones"
+    ],
+    pasos: [
+      "Los operarios reportan el avance de cada fase desde planta",
+      "El sistema actualiza el estado de cada orden en tiempo real",
+      "Se calcula el tiempo restante estimado por orden",
+      "Se lanza alerta si hay desviación respecto al plazo comprometido",
+      "Jefe de producción y comercial reciben la alerta y pueden actuar"
+    ],
+    personalizacion: "Define los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).",
+    sectores: ["Industrial"],
+    herramientas: ["MES / Sistema de producción", "Dashboard", "Make/n8n"],
+    dolores: [
+      "Nos enteramos de los retrasos cuando ya es demasiado tarde",
+      "El comercial llama a planta para saber el estado y los interrumpe"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2"
+  },
+  {
+    id: "IND-2.3",
+    codigo: "2.3",
+    slug: "industrial-cambios-pedido-curso",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Gestión de cambios de pedido en curso",
+    tagline: "Cuando el cliente modifica un pedido ya en marcha, el proceso recalcula el impacto en plazo y coste y notifica a todos los afectados antes de validar.",
+    recomendado: false,
+    descripcionDetallada: "Un cambio en un pedido que ya está en producción es una de las situaciones más costosas y caóticas en una industrial. El cliente lo pide como si fuera fácil, pero el impacto en materiales, cola de producción y plazo puede ser significativo. Este proceso obliga a cuantificar ese impacto antes de aceptar el cambio, coordina la comunicación con todos los afectados (producción, compras, comercial) y registra la modificación de forma trazable.",
+    summary: {
+      what_it_is: "Flujo de gestión de modificaciones de pedidos en curso con cálculo de impacto y aprobación coordinada.",
+      for_who: ["Industriales que gestionan cambios de pedido de forma manual", "Empresas con clientes que modifican pedidos con frecuencia", "Fábricas donde los cambios generan caos y errores de comunicación"],
+      requirements: ["Sistema de gestión de órdenes de fabricación", "Datos de coste de producción por tipo de cambio"],
+      output: "Cambios gestionados con impacto cuantificado, aprobación registrada y notificación coordinada a todos los afectados."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Se recibe la solicitud de cambio", short: "Del comercial o del cliente.", detail: "El comercial introduce la modificación solicitada en el sistema con los detalles del cambio." },
+      { title: "Calcula el impacto", short: "En plazo, coste y materiales.", detail: "El sistema calcula automáticamente cómo afecta el cambio al plazo de entrega, al coste y a los materiales reservados." },
+      { title: "Coordina la aprobación", short: "Y notifica a todos los afectados.", detail: "El cambio aprobado se comunica automáticamente a producción, compras y al cliente, y queda registrado." }
+    ],
+    benefits: [
+      "El impacto del cambio se calcula antes de aceptarlo, no después",
+      "Cero cambios que llegan a planta sin que compras lo sepa",
+      "Trazabilidad completa de cada modificación para facturación y disputas"
+    ],
+    pasos: [
+      "Se registra la solicitud de cambio con los detalles de la modificación",
+      "El sistema calcula el impacto en plazo, coste y materiales",
+      "El responsable revisa y aprueba o rechaza el cambio",
+      "Al aprobarse, se notifica a producción, compras y al cliente",
+      "La modificación queda registrada en el expediente del pedido"
+    ],
+    personalizacion: "Define quién aprueba según el tipo de cambio, los criterios de cálculo de coste adicional y el canal de notificación a cada parte.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Email", "Make/n8n"],
+    dolores: [
+      "Los cambios de pedido en curso generan caos en planta",
+      "No sabemos el coste de cada modificación hasta que ya está hecha"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3"
+  },
+  {
+    id: "IND-2.4",
+    codigo: "2.4",
+    slug: "industrial-cierre-orden-documentacion",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Cierre de orden y entrega de documentación",
+    tagline: "Al terminar la producción, el sistema genera automáticamente el albarán, el certificado de calidad y la documentación técnica, y los envía al cliente en un solo paso.",
+    recomendado: false,
+    descripcionDetallada: "Cuando una orden termina, empieza otra carrera: generar el albarán, crear el certificado de calidad, adjuntar la ficha técnica del lote y enviarlo todo al cliente antes de que llame preguntando. Si este proceso es manual, el margen de error es alto y el retraso habitual. Este proceso genera toda la documentación de cierre automáticamente al marcar la orden como completada y la envía al cliente en un único paquete coordinado.",
+    summary: {
+      what_it_is: "Generación y envío automático de toda la documentación de cierre al completar una orden de fabricación.",
+      for_who: ["Industriales con procesos de documentación de entrega manual", "Empresas que envían documentación con retraso respecto a la entrega física", "Sectores que requieren certificados de calidad o fichas técnicas de lote"],
+      requirements: ["Sistema de gestión de órdenes con cierre de estado", "Plantillas de albarán y certificado de calidad", "Email del cliente"],
+      output: "Documentación completa enviada al cliente automáticamente en el momento del cierre de producción."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Generador de documentos", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "Se cierra la orden", short: "Al marcar producción como completada.", detail: "El operario o el jefe de producción marca la orden como completada en el sistema." },
+      { title: "Genera la documentación", short: "Albarán, certificado, ficha técnica.", detail: "El sistema genera automáticamente todos los documentos requeridos con los datos del lote y la orden." },
+      { title: "Envía al cliente", short: "En un paquete coordinado.", detail: "El cliente recibe por email todos los documentos en el mismo momento, sin que nadie tenga que gestionarlo." }
+    ],
+    benefits: [
+      "Documentación enviada al cliente en el mismo momento del cierre de producción",
+      "Sin errores por datos introducidos a mano en cada documento",
+      "El cliente tiene todo lo que necesita antes de que llegue el camión"
+    ],
+    pasos: [
+      "Se marca la orden de fabricación como completada",
+      "El sistema extrae los datos del lote y la orden",
+      "Genera el albarán, el certificado de calidad y la ficha técnica",
+      "Envía el paquete de documentación al cliente por email",
+      "Archiva los documentos en el expediente del pedido"
+    ],
+    personalizacion: "Define qué documentos generar por tipo de producto, el formato y el canal de envío, y si quiere confirmación de recepción por parte del cliente.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Generador de documentos", "Email"],
+    dolores: [
+      "Enviamos el albarán días después de que el producto ya llegó",
+      "El certificado de calidad siempre se demora o llega con errores"
+    ],
+    integration_domains: ["DOCS", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4"
+  },
+
+  // ── BLOQUE B3 · Calidad, entregas y trazabilidad ──────────────────────────
+  {
+    id: "IND-3.1",
+    codigo: "3.1",
+    slug: "industrial-control-calidad-proceso",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Control de calidad en proceso",
+    tagline: "Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.",
+    recomendado: true,
+    descripcionDetallada: "El control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.",
+    summary: {
+      what_it_is: "Sistema de control de calidad digital integrado en el proceso de producción con bloqueo automático ante desviaciones.",
+      for_who: ["Industriales con controles de calidad en papel o memoria", "Empresas con problemas de calidad detectados tarde", "Sectores con requisitos de certificación ISO o de cliente"],
+      requirements: ["Puntos de control definidos por tipo de producto", "Terminal o tablet en planta para el registro"],
+      output: "Control de calidad registrado en cada fase con trazabilidad completa y bloqueo automático ante desviaciones."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["MES / Sistema de producción", "Tablet / Terminal en planta", "Alertas"]
+    },
+    how_it_works_steps: [
+      { title: "Define los puntos de control", short: "Por tipo de producto y fase.", detail: "Se configuran los puntos de inspección, los valores esperados y las tolerancias para cada tipo de producción." },
+      { title: "Operario registra valores", short: "Desde la tablet en planta.", detail: "Al llegar al punto de control, el operario introduce los valores medidos en menos de un minuto." },
+      { title: "Sistema valida y bloquea", short: "Si hay desviación, para el avance.", detail: "Si los valores están fuera de tolerancia, se bloquea el avance y se notifica al responsable de calidad." }
+    ],
+    benefits: [
+      "Los problemas de calidad se detectan en planta, no en el cliente",
+      "Trazabilidad completa de cada inspección por lote y operario",
+      "Cumplimiento de requisitos de certificación sin más burocracia"
+    ],
+    pasos: [
+      "Se definen los puntos de control y tolerancias por tipo de producto",
+      "El operario registra los valores medidos en cada punto de control",
+      "El sistema compara con los valores esperados",
+      "Si hay desviación, bloquea el avance y alerta al responsable",
+      "El responsable valida o rechaza antes de permitir continuar"
+    ],
+    personalizacion: "Define los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.",
+    sectores: ["Industrial"],
+    herramientas: ["MES / Sistema de producción", "Tablet", "Make/n8n"],
+    dolores: [
+      "El control de calidad se hace de memoria y la trazabilidad es muy mala",
+      "Detectamos los problemas cuando el producto ya está en el cliente"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1"
+  },
+  {
+    id: "IND-3.2",
+    codigo: "3.2",
+    slug: "industrial-trazabilidad-lote-serie",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Trazabilidad de lote y número de serie",
+    tagline: "Rastrea cada pieza o lote desde la materia prima hasta el cliente final. Consulta el histórico completo en segundos cuando hay una reclamación o auditoría.",
+    recomendado: true,
+    descripcionDetallada: "Cuando llega una reclamación de cliente o una auditoría de certificación, el tiempo que se tarda en reconstruir el histórico de un lote determina si el problema se resuelve en horas o en semanas. Este proceso registra automáticamente cada movimiento de cada lote o número de serie — materias primas, operaciones, controles de calidad, expedición — y lo hace consultable en segundos con el número de lote o serie como punto de entrada.",
+    summary: {
+      what_it_is: "Sistema de trazabilidad completa de lote y número de serie desde materia prima hasta cliente final.",
+      for_who: ["Industriales con requisitos de trazabilidad por cliente o certificación", "Empresas que tardan días en reconstruir el histórico de un lote", "Sectores con reclamaciones frecuentes que requieren investigación rápida"],
+      requirements: ["Codificación de lotes en producción", "Registro de movimientos de materiales"],
+      output: "Árbol de trazabilidad completo por lote o número de serie, consultable en segundos."
+    },
+    indicators: {
+      time_estimate: "4-6 semanas",
+      complexity: "Alta",
+      integrations: ["ERP", "MES", "Gestión de almacén", "Códigos QR / escáneres"]
+    },
+    how_it_works_steps: [
+      { title: "Asigna identificación a cada lote", short: "Código QR o número de serie.", detail: "Cada lote de materia prima y cada producto terminado recibe un identificador único desde el inicio." },
+      { title: "Registra cada movimiento", short: "Automáticamente en cada paso.", detail: "Entradas de almacén, operaciones de producción, controles de calidad y expedición se registran vinculados al lote." },
+      { title: "Consulta en segundos", short: "Árbol completo por lote o serie.", detail: "Con el número de lote, se obtiene inmediatamente toda la cadena: materia prima → proceso → cliente." }
+    ],
+    benefits: [
+      "Reclamaciones investigadas en horas, no en semanas",
+      "Cumplimiento de requisitos de clientes y certificaciones sin esfuerzo adicional",
+      "Retiradas de lote ejecutadas con precisión sin afectar a otros clientes"
+    ],
+    pasos: [
+      "Se asigna un identificador único a cada lote de material o producto",
+      "Cada operación y movimiento se registra vinculado al identificador",
+      "Los controles de calidad se asocian al lote correspondiente",
+      "Al expedir, se registra el cliente y la cantidad por lote",
+      "Ante una reclamación, se obtiene el árbol completo en segundos"
+    ],
+    personalizacion: "Define la granularidad de trazabilidad (lote, sublote, unidad), los puntos de registro y el formato de exportación para auditorías.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "MES", "Códigos QR / escáneres", "Make/n8n"],
+    dolores: [
+      "Cuando un cliente reclama, tardamos días en saber qué pasó y con qué material",
+      "Una auditoría de cliente nos genera semanas de trabajo de reconstrucción"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2"
+  },
+  {
+    id: "IND-3.3",
+    codigo: "3.3",
+    slug: "industrial-devoluciones-no-conformidades",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Gestión de devoluciones y no conformidades",
+    tagline: "Abre el expediente de no conformidad automáticamente al recibir una reclamación, asígnalo al responsable y sigue hasta el cierre formal con el cliente.",
+    recomendado: false,
+    descripcionDetallada: "Una reclamación de cliente que no tiene un expediente formal asignado y seguido tiende a resolverse tarde, mal o a repetirse porque nadie investiga la causa raíz. Este proceso abre el expediente automáticamente, lo asigna al responsable de calidad, documenta la investigación, registra las acciones correctivas y cierra formalmente con el cliente una vez resuelto.",
+    summary: {
+      what_it_is: "Sistema de gestión de no conformidades y devoluciones con expediente automático, seguimiento y cierre formal.",
+      for_who: ["Industriales que gestionan reclamaciones sin sistema formal", "Empresas con reclamaciones recurrentes que no se analizan", "Sectores con clientes que exigen respuesta formal a no conformidades"],
+      requirements: ["Canal de recepción de reclamaciones definido", "Responsable de calidad identificado"],
+      output: "100% de reclamaciones con expediente abierto, investigado y cerrado formalmente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Email", "CRM / ERP", "Generador de documentos"]
+    },
+    how_it_works_steps: [
+      { title: "Llega la reclamación", short: "Por email, llamada o portal.", detail: "Se recibe la reclamación del cliente por el canal habitual y se abre el expediente automáticamente." },
+      { title: "Se investiga y se actúa", short: "Responsable asignado con seguimiento.", detail: "El responsable de calidad investiga la causa raíz, define la acción correctiva y la ejecuta dentro del plazo." },
+      { title: "Se cierra con el cliente", short: "Informe formal y confirmación.", detail: "Se envía al cliente el informe de resolución y se registra el cierre formal en el expediente." }
+    ],
+    benefits: [
+      "Cero reclamaciones sin expediente y sin responsable asignado",
+      "Las causas raíz se identifican y atacan, reduciendo recurrencia",
+      "Los clientes reciben respuesta formal en plazo, mejorando la relación"
+    ],
+    pasos: [
+      "Se recibe la reclamación y se abre el expediente automáticamente",
+      "Se asigna al responsable de calidad con plazo de investigación",
+      "El responsable documenta la causa raíz y la acción correctiva",
+      "Se ejecuta la acción correctiva y se verifica su eficacia",
+      "Se cierra el expediente formalmente y se notifica al cliente"
+    ],
+    personalizacion: "Define los plazos de respuesta por tipo de reclamación, el flujo de aprobación de acciones correctivas y el formato del informe al cliente.",
+    sectores: ["Industrial"],
+    herramientas: ["Email", "CRM / ERP", "Generador de documentos", "Make/n8n"],
+    dolores: [
+      "Las reclamaciones de clientes se gestionan de forma informal y sin seguimiento",
+      "Los mismos problemas se repiten porque nunca investigamos la causa raíz"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3"
+  },
+  {
+    id: "IND-3.4",
+    codigo: "3.4",
+    slug: "industrial-preparacion-seguimiento-envios",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Preparación y seguimiento de envíos",
+    tagline: "Coordina la preparación del pedido, genera la documentación de transporte y envía al cliente el número de seguimiento en cuanto sale de planta.",
+    recomendado: false,
+    descripcionDetallada: "El proceso de expedición en muchas industriales es manual: alguien busca el número del transportista, genera el albarán, llama al cliente para avisar de que el pedido sale. Este proceso automatiza la coordinación de expedición, genera la documentación de transporte al confirmar la recogida, envía automáticamente el número de seguimiento al cliente y alerta al comercial si el transportista registra alguna incidencia en la entrega.",
+    summary: {
+      what_it_is: "Automatización del proceso de expedición: documentación de transporte, notificación al cliente y seguimiento de entrega.",
+      for_who: ["Industriales con proceso de expedición manual", "Empresas cuyos clientes llaman para saber cuándo llega su pedido", "Negocios con volumen de envíos que no pueden gestionar manualmente"],
+      requirements: ["Transportistas habituales con API o acceso web", "Email o WhatsApp del contacto del cliente"],
+      output: "Documentación de transporte generada automáticamente y cliente notificado en cuanto el pedido sale de planta."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Transportistas (API)", "Email", "WhatsApp", "ERP"]
+    },
+    how_it_works_steps: [
+      { title: "Confirma la recogida", short: "Con el transportista habitual.", detail: "Al confirmar que el pedido está listo para expedir, el sistema solicita recogida al transportista." },
+      { title: "Genera la documentación", short: "CMR, albarán, etiquetas.", detail: "La documentación de transporte se genera automáticamente con los datos del pedido y el destinatario." },
+      { title: "Notifica al cliente", short: "Con el número de seguimiento.", detail: "En cuanto el transportista registra la recogida, el cliente recibe el número de seguimiento automáticamente." }
+    ],
+    benefits: [
+      "El cliente siempre sabe cuándo llega su pedido sin llamar",
+      "Documentación de transporte generada sin intervención manual",
+      "Alertas al comercial ante incidencias del transportista antes de que llame el cliente"
+    ],
+    pasos: [
+      "Se confirma que el pedido está listo para expedir",
+      "El sistema solicita recogida al transportista",
+      "Se genera la documentación de transporte automáticamente",
+      "El transportista recoge y registra la incidencia de recogida",
+      "El cliente recibe el número de seguimiento por email o WhatsApp"
+    ],
+    personalizacion: "Define los transportistas habituales, el canal de notificación al cliente y las alertas en caso de incidencia de entrega.",
+    sectores: ["Industrial"],
+    herramientas: ["API de transportistas", "Email", "WhatsApp Business", "ERP"],
+    dolores: [
+      "El cliente llama para saber si su pedido salió cuando ya deberíamos haberlo avisado",
+      "Generamos la documentación de transporte a mano y a veces hay errores"
+    ],
+    integration_domains: ["COMMS", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.4"
+  },
+
+  // ── BLOQUE B4 · Compras y proveedores ─────────────────────────────────────
+  {
+    id: "IND-4.1",
+    codigo: "4.1",
+    slug: "industrial-solicitud-materiales-pedidos",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Solicitud de materiales y generación de pedidos",
+    tagline: "Cuando la planificación detecta que faltan materiales, lanza automáticamente la solicitud de compra con el proveedor preferente seleccionado.",
+    recomendado: true,
+    descripcionDetallada: "En muchas industriales, la generación de pedidos de compra es un proceso manual que depende de que alguien revise el stock o que producción avise cuando falta algo. Este proceso monitoriza las necesidades de materiales en función de las órdenes planificadas, detecta automáticamente las necesidades de compra y genera la solicitud con el proveedor preferente, las cantidades correctas y el plazo necesario, lista para que compras solo tenga que aprobar.",
+    summary: {
+      what_it_is: "Generación automática de solicitudes de compra a partir de las necesidades detectadas en planificación de producción.",
+      for_who: ["Industriales donde los pedidos de compra se gestionan manualmente", "Empresas con roturas de stock por retrasos en la generación de pedidos", "Departamentos de compras que pasan más tiempo recopilando necesidades que negociando"],
+      requirements: ["Sistema de planificación de producción", "Catálogo de proveedores con condiciones", "Stock mínimo definido por material"],
+      output: "Solicitud de compra generada automáticamente con proveedor, cantidad y plazo, lista para aprobación."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Gestión de stock", "Email al proveedor"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la necesidad", short: "Por planificación o por stock mínimo.", detail: "El sistema calcula las necesidades de material en función de las órdenes planificadas o el nivel de stock." },
+      { title: "Genera la solicitud", short: "Con proveedor y cantidad correctos.", detail: "Crea la solicitud de compra con el proveedor preferente, la cantidad necesaria y el plazo requerido." },
+      { title: "Aprobación de un clic", short: "Para el responsable de compras.", detail: "El responsable recibe la solicitud por email o en el sistema, revisa y aprueba en un solo paso." }
+    ],
+    benefits: [
+      "Cero roturas de stock por retrasos en la generación de pedidos",
+      "El departamento de compras invierte su tiempo en negociar, no en recopilar necesidades",
+      "Proveedor preferente seleccionado automáticamente con el mejor plazo"
+    ],
+    pasos: [
+      "El sistema detecta la necesidad de material por planificación o stock",
+      "Calcula la cantidad a pedir y el plazo necesario",
+      "Selecciona el proveedor preferente según condiciones configuradas",
+      "Genera la solicitud de compra lista para aprobación",
+      "El responsable de compras aprueba y el pedido se envía al proveedor"
+    ],
+    personalizacion: "Define los criterios de selección de proveedor (precio, plazo, calidad histórica), los niveles de aprobación y si quiere envío automático al proveedor tras la aprobación.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de stock", "Email", "Make/n8n"],
+    dolores: [
+      "Nos quedamos sin material porque nadie generó el pedido a tiempo",
+      "Compras pasa más tiempo recopilando necesidades que negociando con proveedores"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1"
+  },
+  {
+    id: "IND-4.2",
+    codigo: "4.2",
+    slug: "industrial-evaluacion-proveedores",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Evaluación y homologación de proveedores",
+    tagline: "Recoge automáticamente los datos de entrega, calidad y precio por proveedor y genera el informe periódico para decidir con quién seguir trabajando.",
+    recomendado: false,
+    descripcionDetallada: "La evaluación de proveedores en muchas industriales se hace de forma subjetiva o directamente no se hace. Este proceso recoge automáticamente los datos reales de cada proveedor — plazos de entrega cumplidos, tasa de material rechazado, desviaciones de precio — y genera un scorecard periódico que sirve de base objetiva para las decisiones de compras: homologar proveedores nuevos, renegociar condiciones o buscar alternativas.",
+    summary: {
+      what_it_is: "Sistema automático de evaluación de proveedores con datos reales de entrega, calidad y precio.",
+      for_who: ["Industriales sin sistema formal de evaluación de proveedores", "Empresas con problemas de calidad o plazo recurrentes con los mismos proveedores", "Departamentos de compras que necesitan datos objetivos para negociar"],
+      requirements: ["Registro de pedidos de compra con fechas comprometidas y reales", "Registro de incidencias de calidad por proveedor"],
+      output: "Scorecard periódico por proveedor con métricas objetivas de rendimiento."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Gestión de compras", "Dashboard"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge los datos reales", short: "Automaticamente de cada operación.", detail: "Extrae de los pedidos cerrados los plazos reales, las incidencias de calidad y las desviaciones de precio." },
+      { title: "Calcula el scorecard", short: "Por proveedor y periodo.", detail: "Puntúa a cada proveedor en las dimensiones configuradas y genera el ranking comparativo." },
+      { title: "Genera el informe periódico", short: "Para la reunión de compras.", detail: "El informe se genera automáticamente con la frecuencia definida y se envía al responsable de compras." }
+    ],
+    benefits: [
+      "Decisiones de compras basadas en datos reales, no en percepciones",
+      "Proveedores problemáticos identificados antes de que el impacto sea mayor",
+      "Base objetiva para renegociaciones y decisiones de homologación"
+    ],
+    pasos: [
+      "El sistema recoge automáticamente los datos de cada pedido cerrado",
+      "Calcula las métricas de rendimiento por proveedor: plazo, calidad, precio",
+      "Genera el scorecard comparativo por proveedor",
+      "Envía el informe al responsable de compras con la frecuencia definida",
+      "Las decisiones de homologación y renegociación se basan en el scorecard"
+    ],
+    personalizacion: "Define las métricas y su ponderación (plazo, calidad, precio, servicio), la frecuencia del informe y los umbrales que activan una revisión de proveedor.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Dashboard", "Make/n8n"],
+    dolores: [
+      "No tenemos datos objetivos para evaluar a nuestros proveedores",
+      "Seguimos trabajando con proveedores problemáticos porque no tenemos alternativa documentada"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2"
+  },
+  {
+    id: "IND-4.3",
+    codigo: "4.3",
+    slug: "industrial-recepcion-verificacion-materiales",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Recepción y verificación de materiales",
+    tagline: "Guía al almacén en la recepción de materiales, comprueba que lo recibido coincide con el pedido y registra las incidencias antes de dar entrada al stock.",
+    recomendado: false,
+    descripcionDetallada: "Recibir materiales sin un proceso de verificación estructurado significa que errores del proveedor — cantidades incorrectas, materiales fuera de especificación, daños de transporte — entran en el stock y se detectan cuando ya están en producción, mucho más tarde y con mucho más impacto. Este proceso guía al personal de almacén en la recepción con una checklist vinculada al pedido, registra las incidencias en el momento y bloquea la entrada al stock hasta que están resueltas.",
+    summary: {
+      what_it_is: "Proceso guiado de recepción y verificación de materiales con registro de incidencias y control de entrada al stock.",
+      for_who: ["Almacenes que reciben sin proceso de verificación formal", "Industriales con problemas de material incorrecto o dañado detectado tarde", "Empresas que pierden tiempo reconciliando diferencias con proveedores sin documentación"],
+      requirements: ["Pedidos de compra en el sistema con cantidades y especificaciones", "Terminal o tablet en almacén"],
+      output: "Recepción verificada, incidencias documentadas en el momento y entrada al stock controlada."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["ERP", "Gestión de almacén", "Tablet"]
+    },
+    how_it_works_steps: [
+      { title: "Identifica el pedido entrante", short: "Escaneando albarán o código.", detail: "El personal de almacén identifica el pedido en el sistema para cargar la checklist de recepción." },
+      { title: "Verifica cantidad y estado", short: "Guiado por el sistema.", detail: "La checklist guía la verificación: cantidad, referencia, estado del embalaje, documentación requerida." },
+      { title: "Registra incidencias y da entrada", short: "Solo si todo está correcto.", detail: "Las incidencias se registran al momento y se notifica al proveedor. La entrada al stock solo se permite si la recepción es correcta." }
+    ],
+    benefits: [
+      "Los errores del proveedor se detectan en almacén, no en producción",
+      "Incidencias documentadas automáticamente para reclamación al proveedor",
+      "Stock correcto desde el primer día, sin sorpresas en producción"
+    ],
+    pasos: [
+      "El personal de almacén identifica el pedido entrante en el sistema",
+      "La checklist guía la verificación de cantidad, referencia y estado",
+      "Las incidencias detectadas se registran en el sistema con foto",
+      "Se notifica automáticamente al proveedor de las incidencias",
+      "La entrada al stock solo se aprueba cuando la recepción es correcta"
+    ],
+    personalizacion: "Define qué verificar por tipo de material, los criterios de aceptación/rechazo y el flujo de notificación al proveedor en caso de incidencia.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de almacén", "Tablet", "Make/n8n"],
+    dolores: [
+      "Recibimos material incorrecto o dañado y lo detectamos cuando ya está en producción",
+      "No tenemos documentación de las incidencias para reclamar al proveedor"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3"
+  },
+  {
+    id: "IND-4.4",
+    codigo: "4.4",
+    slug: "industrial-stock-minimo-alertas",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Control de stock mínimo y alertas de reposición",
+    tagline: "Monitoriza el nivel de cada material y lanza una alerta cuando baja del mínimo definido, con el tiempo de antelación necesario para recibir el pedido antes de que afecte a producción.",
+    recomendado: false,
+    descripcionDetallada: "Una rotura de stock en una referencia crítica puede parar una línea de producción entera. Y el stock mínimo que se configuró hace dos años ya no refleja el ritmo de consumo actual. Este proceso monitoriza en tiempo real el nivel de cada referencia de material, ajusta dinámicamente las alertas según el consumo reciente y el plazo de entrega del proveedor, y lanza la alerta con la antelación suficiente para recibir el pedido antes de que la producción se vea afectada.",
+    summary: {
+      what_it_is: "Sistema de monitorización de niveles de stock con alertas de reposición adaptadas al consumo real y al plazo del proveedor.",
+      for_who: ["Industriales con roturas de stock recurrentes", "Almacenes con stocks mínimos desactualizados", "Empresas donde la rotura de stock es un evento que paraliza la actividad"],
+      requirements: ["Sistema de gestión de stock actualizado", "Plazos de entrega por proveedor y referencia definidos"],
+      output: "Alertas de reposición con la antelación correcta para que nunca haya rotura de stock por falta de previsión."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["ERP", "Gestión de stock", "Email / WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza el nivel de stock", short: "En tiempo real por referencia.", detail: "Sigue el nivel de cada material actualizado en el sistema de gestión de stock." },
+      { title: "Calcula el punto de reposición", short: "Según consumo y plazo del proveedor.", detail: "Calcula dinámicamente cuándo lanzar la alerta para que el pedido llegue antes de que se agote el stock." },
+      { title: "Lanza la alerta", short: "Con propuesta de pedido incluida.", detail: "Notifica al responsable de compras con la referencia, la cantidad sugerida y el proveedor habitual." }
+    ],
+    benefits: [
+      "Cero roturas de stock por falta de previsión",
+      "Alertas con la antelación correcta, no cuando ya es tarde",
+      "Stock mínimo actualizado dinámicamente según consumo real"
+    ],
+    pasos: [
+      "El sistema monitoriza el nivel de stock por referencia en tiempo real",
+      "Calcula el punto de reposición según consumo y plazo del proveedor",
+      "Cuando el nivel baja del punto de reposición, lanza la alerta",
+      "La alerta incluye la cantidad sugerida y el proveedor habitual",
+      "El responsable de compras genera el pedido en un clic"
+    ],
+    personalizacion: "Define los stocks mínimos por referencia, la sensibilidad de ajuste dinámico y el canal de alerta al responsable de compras.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de stock", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Nos quedamos sin material y paramos producción cuando ya es tarde",
+      "Los stocks mínimos que tenemos configurados están desactualizados"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4"
+  },
+
+  // ── BLOQUE B5 · Administración y facturación ───────────────────────────────
+  {
+    id: "IND-5.1",
+    codigo: "5.1",
+    slug: "industrial-facturacion-automatica",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Facturación automática al cierre de entrega",
+    tagline: "En cuanto el albarán está firmado, el sistema genera la factura, la envía al cliente y la registra en contabilidad sin intervención manual.",
+    recomendado: true,
+    descripcionDetallada: "En una industrial que factura a plazos largos (60 o 90 días), cualquier retraso en la emisión de la factura se traduce directamente en retraso del cobro. Si el albarán tarda tres días en procesarse y convertirse en factura, esos tres días se suman al plazo de cobro. Este proceso elimina ese retraso: desde la firma del albarán hasta la factura enviada al cliente en cuestión de minutos, con los datos correctos y el registro automático en el sistema contable.",
+    summary: {
+      what_it_is: "Automatización completa del ciclo albarán → factura → envío → registro contable.",
+      for_who: ["Industriales con facturación a plazos largos", "Empresas donde el proceso de facturación es manual y lento", "Negocios con errores frecuentes en facturas por datos introducidos a mano"],
+      requirements: ["Sistema de albaranes actualizado", "Software de facturación o ERP con módulo de facturación", "Email del cliente para envío"],
+      output: "Factura generada, enviada al cliente y registrada en contabilidad en minutos desde la firma del albarán."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Software de facturación", "Email", "Contabilidad"]
+    },
+    how_it_works_steps: [
+      { title: "Albarán firmado y registrado", short: "Arranca el proceso de facturación.", detail: "Al registrarse el albarán firmado en el sistema, arranca automáticamente el flujo de facturación." },
+      { title: "Genera la factura", short: "Con los datos del pedido y el albarán.", detail: "La factura se genera con los datos correctos del pedido, condiciones de pago y detalles del cliente." },
+      { title: "Envía y registra", short: "Al cliente y en contabilidad.", detail: "La factura se envía al cliente por email y se registra automáticamente en el sistema contable." }
+    ],
+    benefits: [
+      "El cobro empieza antes porque la factura llega antes",
+      "Cero errores por datos introducidos manualmente",
+      "El administrativo libera horas de tecleo para tareas de más valor"
+    ],
+    pasos: [
+      "El albarán firmado queda registrado en el sistema",
+      "El proceso detecta el cierre y arranca la facturación",
+      "Se genera la factura con los datos del pedido y las condiciones acordadas",
+      "La factura se envía automáticamente al cliente por email",
+      "Se registra en el sistema contable sin intervención manual"
+    ],
+    personalizacion: "Define las condiciones de facturación por cliente (plazo, divisa, formato), los campos de validación requeridos y si quiere revisión humana antes del envío para pedidos de gran importe.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Software de facturación", "Email", "Contabilidad"],
+    dolores: [
+      "El albarán tarda días en convertirse en factura y perdemos días de cobro",
+      "Las facturas tienen errores por los datos introducidos a mano"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1"
+  },
+  {
+    id: "IND-5.2",
+    codigo: "5.2",
+    slug: "industrial-seguimiento-cobros",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Seguimiento de cobros y reclamación de impagados",
+    tagline: "Controla el estado de cada factura emitida, lanza recordatorios automáticos antes del vencimiento y escala si el pago no llega en plazo.",
+    recomendado: true,
+    descripcionDetallada: "En industria, los plazos de cobro son largos y las facturas son muchas. Llevar el seguimiento manual de cuáles están cobradas, cuáles están próximas a vencer y cuáles han vencido sin cobrar es un trabajo que consume horas del administrativo cada semana. Este proceso automatiza toda la cadena: recordatorio preventivo antes del vencimiento, seguimiento tras el vencimiento y escalado a la dirección si la situación persiste.",
+    summary: {
+      what_it_is: "Sistema de seguimiento automatizado de cobros con recordatorios escalonados y gestión de impagados.",
+      for_who: ["Industriales con volumen de facturas difícil de gestionar manualmente", "Empresas con tensiones de tesorería por cobros retrasados", "Departamentos administrativos que dedican demasiado tiempo al seguimiento de cobros"],
+      requirements: ["Sistema de facturación actualizado con fechas de vencimiento", "Email o teléfono del responsable de pagos del cliente"],
+      output: "Reducción de días de cobro y del volumen de facturas vencidas sin gestión activa."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["ERP / Software de facturación", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Recordatorio preventivo", short: "Días antes del vencimiento.", detail: "El cliente recibe un recordatorio amable días antes del vencimiento con los datos de la factura." },
+      { title: "Seguimiento post-vencimiento", short: "Escalado si no hay respuesta.", detail: "Si la factura vence sin cobrar, los recordatorios se escalan en tono y frecuencia hasta obtener respuesta." },
+      { title: "Alerta a dirección", short: "Si supera el umbral crítico.", detail: "Cuando una factura supera los días de retraso definidos, alerta a dirección para la gestión directa." }
+    ],
+    benefits: [
+      "Reducción del tiempo medio de cobro sin gestión manual adicional",
+      "Cero facturas vencidas sin ningún seguimiento activo",
+      "El administrativo invierte su tiempo en casos complejos, no en recordatorios rutinarios"
+    ],
+    pasos: [
+      "El sistema monitoriza el estado de cada factura emitida",
+      "Días antes del vencimiento, envía recordatorio al cliente",
+      "Al vencer sin cobrar, inicia el proceso de seguimiento escalonado",
+      "Si persiste sin pago, escala a un nivel de comunicación más directo",
+      "Cuando supera el umbral crítico, alerta a dirección para gestión directa"
+    ],
+    personalizacion: "Define los umbrales de recordatorio, el tono de cada escalado, quién recibe las alertas en dirección y si integra con el departamento legal para casos extremos.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP / Software de facturación", "Email", "WhatsApp Business", "Make/n8n"],
+    dolores: [
+      "Las facturas se cobran tarde porque nadie lleva el seguimiento de forma sistemática",
+      "Tenemos facturas vencidas de hace meses que descubrimos por casualidad"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2"
+  },
+  {
+    id: "IND-5.3",
+    codigo: "5.3",
+    slug: "industrial-cuadro-mando-financiero",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Cuadro de mando financiero",
+    tagline: "Consolidada facturación, cobros pendientes, coste de producción y margen por orden en un informe accesible en tiempo real, sin esperar al gestor.",
+    recomendado: false,
+    descripcionDetallada: "La dirección de una industrial no puede tomar decisiones operativas si los datos financieros del mes actual solo están disponibles cuando el gestor cierra los libros. Este cuadro de mando consolida en tiempo real los datos de facturación, cobros pendientes, costes de producción y margen por orden desde los sistemas operativos, y los presenta en un panel accesible para dirección sin necesidad de intervención del administrativo.",
+    summary: {
+      what_it_is: "Dashboard financiero en tiempo real con facturación, cobros, costes y márgenes consolidados.",
+      for_who: ["Directores que toman decisiones sin datos actualizados", "Empresas donde el cierre financiero llega semanas tarde", "Industriales que no conocen su margen real por orden o por cliente"],
+      requirements: ["Datos de facturación y cobros en el sistema", "Datos de costes de producción actualizados"],
+      output: "Panel financiero accesible en tiempo real para dirección con los indicadores clave del negocio."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Contabilidad", "Dashboard (Power BI / Looker / similar)"]
+    },
+    how_it_works_steps: [
+      { title: "Conecta las fuentes de datos", short: "ERP, facturación, contabilidad.", detail: "Se integran los sistemas operativos para extraer datos de facturación, cobros y costes en tiempo real." },
+      { title: "Consolida y calcula", short: "Márgenes, cobros pendientes, tendencias.", detail: "El sistema calcula automáticamente márgenes por orden, cobros pendientes y evolución frente al periodo anterior." },
+      { title: "Panel accesible para dirección", short: "Desde cualquier dispositivo.", detail: "El dashboard está disponible en tiempo real para dirección desde cualquier dispositivo, sin intervención del administrativo." }
+    ],
+    benefits: [
+      "Decisiones basadas en datos actuales, no en cierres del mes pasado",
+      "Margen real por orden y por cliente visible en tiempo real",
+      "Dirección autónoma para consultar sus KPIs sin depender de nadie"
+    ],
+    pasos: [
+      "Se integran los sistemas de datos (ERP, facturación, contabilidad)",
+      "El sistema extrae y consolida los datos en tiempo real",
+      "Calcula márgenes, cobros pendientes y variaciones respecto al periodo anterior",
+      "El panel se actualiza automáticamente y es accesible para dirección",
+      "Se configuran alertas si algún indicador supera los umbrales definidos"
+    ],
+    personalizacion: "Define los indicadores clave para tu negocio, los periodos de comparación y los umbrales que disparan alertas para dirección.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Contabilidad", "Power BI / Looker / similar", "Make/n8n"],
+    dolores: [
+      "No sabemos nuestro margen real hasta que el gestor cierra los libros, semanas tarde",
+      "Dirección toma decisiones con datos del mes pasado"
+    ],
+    integration_domains: ["ADMIN"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3"
+  },
+  {
+    id: "IND-5.4",
+    codigo: "5.4",
+    slug: "industrial-informes-mensuales",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Informes mensuales de actividad y rendimiento",
+    tagline: "Genera automáticamente el informe mensual con métricas clave de producción, ventas, calidad y equipo, listo para presentar a dirección sin prepararlo desde cero.",
+    recomendado: false,
+    descripcionDetallada: "El informe mensual que se presenta en la reunión de dirección suele prepararse manualmente, extrayendo datos de varios sistemas y formateando el documento. Este proceso lo automatiza completamente: al cierre de cada mes, extrae los datos de producción, ventas, calidad y equipo de los sistemas operativos, genera el informe con el formato corporativo y lo envía a los destinatarios configurados listo para revisar y presentar.",
+    summary: {
+      what_it_is: "Generación automática del informe mensual de actividad y rendimiento con datos de todos los departamentos.",
+      for_who: ["Empresas donde el informe mensual se prepara manualmente", "Directores que necesitan datos consolidados de varios departamentos", "Industriales con reuniones de dirección mensuales o trimestrales"],
+      requirements: ["Fuentes de datos definidas por departamento", "Plantilla del informe en formato corporativo"],
+      output: "Informe mensual generado automáticamente al cierre de mes y enviado a los destinatarios configurados."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Sistema de producción", "Generador de documentos", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "Se activa al cierre de mes", short: "Automáticamente en la fecha configurada.", detail: "Al cierre del periodo, el proceso arranca automáticamente sin que nadie tenga que iniciarlo." },
+      { title: "Extrae y consolida los datos", short: "De producción, ventas, calidad, equipo.", detail: "Recoge los KPIs de cada área desde sus sistemas respectivos y los consolida en el informe." },
+      { title: "Genera y envía el informe", short: "En formato corporativo por email.", detail: "El informe se genera en el formato definido y se envía a la lista de distribución configurada." }
+    ],
+    benefits: [
+      "Horas de trabajo manual eliminadas en la preparación del informe mensual",
+      "Datos siempre consistentes porque vienen del sistema, no de Excel manual",
+      "Dirección recibe el informe el mismo día del cierre, no una semana después"
+    ],
+    pasos: [
+      "Al cierre del mes, el proceso se activa automáticamente",
+      "Extrae KPIs de producción: órdenes, plazos, eficiencia",
+      "Extrae KPIs de ventas: facturación, nuevos pedidos, pipeline",
+      "Extrae KPIs de calidad: no conformidades, reclamaciones, rechazos",
+      "Genera el informe en formato corporativo y lo envía a la lista de distribución"
+    ],
+    personalizacion: "Define los KPIs de cada área, el formato del informe, la fecha de generación y la lista de distribución.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Sistema de producción", "Generador de documentos", "Email"],
+    dolores: [
+      "El informe mensual lo prepara alguien a mano y siempre llega tarde a la reunión",
+      "Los datos de distintos departamentos no cuadran porque cada uno tira de su Excel"
+    ],
+    integration_domains: ["ADMIN", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.4"
+  },
+
+  // ── BLOQUE B6 · Equipo y planta ──────────────────────────────────────────
+  {
+    id: "IND-6.1",
+    codigo: "6.1",
+    slug: "industrial-onboarding-trabajador",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Onboarding de nuevo trabajador",
+    tagline: "Cuando se incorpora un operario, el proceso organiza automáticamente la documentación, los accesos, el equipo de protección y la formación obligatoria del primer día.",
+    recomendado: false,
+    descripcionDetallada: "En una industrial, la incorporación de un nuevo operario implica coordinación entre RRHH, el responsable de planta, el responsable de seguridad y el responsable de sistemas: contrato, alta en nómina, ficha de formación PRL, entrega de EPIs, acceso a máquinas y sistemas. Si ese proceso no está automatizado, la mitad de las veces el nuevo llega y alguien está improvisando. Este proceso coordina automáticamente cada paso del onboarding desde el momento de la contratación.",
+    summary: {
+      what_it_is: "Proceso automatizado de incorporación de nuevo trabajador que coordina documentación, accesos, EPIs y formación.",
+      for_who: ["Industriales con incorporaciones frecuentes de personal", "Empresas donde el onboarding es caótico e improvisto", "Fábricas con requisitos de formación PRL obligatoria en el primer día"],
+      requirements: ["Datos del nuevo trabajador al confirmar la contratación", "Listado de accesos, EPIs y formaciones por puesto"],
+      output: "Nuevo trabajador operativo desde el primer día con toda la documentación, accesos y formaciones en orden."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["RRHH / Nómina", "Email / WhatsApp", "Gestión de formaciones", "Control de accesos"]
+    },
+    how_it_works_steps: [
+      { title: "Se confirma la contratación", short: "Arranca el flujo de onboarding.", detail: "Al registrar la nueva contratación, el proceso lanza automáticamente todos los pasos coordinados." },
+      { title: "Coordina acciones paralelas", short: "Documentación, EPIs, accesos, formación.", detail: "RRHH recibe la checklist de documentación, planta recibe la lista de EPIs a preparar, sistemas activa los accesos." },
+      { title: "El primer día está listo", short: "Sin que nadie improvise.", detail: "El nuevo llega y todo está preparado: su puesto, su equipo de protección, sus accesos y su agenda de formación del día." }
+    ],
+    benefits: [
+      "El primer día del nuevo trabajador funciona sin improvisación ni caos",
+      "Cero formaciones PRL olvidadas que generan incumplimiento normativo",
+      "El responsable de planta no pierde su tiempo gestionando el onboarding"
+    ],
+    pasos: [
+      "Se confirma la contratación en el sistema de RRHH",
+      "El proceso lanza la checklist de documentación a RRHH",
+      "Se preparan los EPIs y accesos necesarios para el puesto",
+      "Se programan las formaciones obligatorias del primer día",
+      "El nuevo trabajador llega con todo preparado y operativo"
+    ],
+    personalizacion: "Define la lista de acciones por tipo de puesto, los responsables de cada acción y el canal de comunicación para cada parte.",
+    sectores: ["Industrial"],
+    herramientas: ["RRHH / Nómina", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Cuando entra alguien nuevo siempre hay algo sin preparar: el acceso, los EPIs, la formación",
+      "El responsable de planta pierde media jornada el primer día del nuevo"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1"
+  },
+  {
+    id: "IND-6.2",
+    codigo: "6.2",
+    slug: "industrial-control-presencia-turnos",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Control de presencia y turnos",
+    tagline: "Cada operario recibe su turno individual por WhatsApp con confirmación. Los cambios se gestionan automáticamente y la ausencia no justificada alerta al responsable.",
+    recomendado: false,
+    descripcionDetallada: "Los grupos de WhatsApp de turnos en una fábrica son ingobernables cuando el equipo supera los 10-15 operarios. Los cambios de turno generan confusión, las ausencias de última hora cogen a producción sin cobertura y el cuaderno de presencia en papel no permite análisis ni cruce con nómina. Este proceso digitaliza la comunicación de turnos, el registro de presencia y la gestión de ausencias con notificaciones automáticas al responsable.",
+    summary: {
+      what_it_is: "Sistema de comunicación de turnos individuales, registro de presencia y gestión de ausencias para equipos de producción.",
+      for_who: ["Fábricas con equipos de 10+ operarios", "Industriales con grupos de WhatsApp de turnos caóticos", "Empresas donde las ausencias cogen a producción sin cobertura"],
+      requirements: ["Cuadrante de turnos (Excel, software de RRHH)", "WhatsApp de cada operario", "Responsable de planta como punto de escalado"],
+      output: "Comunicación de turnos sin grupos caóticos, registro de presencia digital y alertas de ausencia a tiempo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Software de RRHH / Excel", "WhatsApp Business API", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Envía turnos individuales", short: "Cada operario recibe el suyo.", detail: "Al publicarse el cuadrante, cada operario recibe su turno individual por WhatsApp con confirmación de lectura." },
+      { title: "Gestiona cambios y ausencias", short: "Solo a quien afecta.", detail: "Los cambios se notifican solo a los afectados. Las ausencias detectadas alertan al responsable con tiempo para buscar cobertura." },
+      { title: "Sincroniza con nómina", short: "Registro digital de presencia.", detail: "El registro de entradas y salidas se sincroniza con el sistema de nómina, sin tecleo manual adicional." }
+    ],
+    benefits: [
+      "Fin del grupo de WhatsApp ingobernable de turnos",
+      "El responsable sabe la ausencia con tiempo suficiente para buscar cobertura",
+      "Registro de presencia digital sincronizado con nómina"
+    ],
+    pasos: [
+      "Se publica el cuadrante de turnos en el sistema",
+      "Cada operario recibe su turno individual por WhatsApp",
+      "Se registra la confirmación de lectura de cada turno",
+      "Los cambios y ausencias generan notificaciones solo a los afectados",
+      "El registro de presencia se sincroniza automáticamente con nómina"
+    ],
+    personalizacion: "Define el día y hora de envío del cuadrante, los criterios de sustitución por ausencia y el canal de escalado al responsable.",
+    sectores: ["Industrial"],
+    herramientas: ["WhatsApp Business API", "Software de RRHH / Excel", "Make/n8n"],
+    dolores: [
+      "El grupo de WhatsApp de turnos es un caos que nadie controla",
+      "Las ausencias de última hora nos pillan sin cobertura en planta"
+    ],
+    integration_domains: ["COMMS", "ADMIN"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2"
+  },
+  {
+    id: "IND-6.3",
+    codigo: "6.3",
+    slug: "industrial-documentacion-laboral",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Gestión de documentación laboral",
+    tagline: "Centraliza contratos, certificados, permisos, formaciones PRL y revisiones médicas de cada trabajador, con alertas antes de que venza cualquier documento.",
+    recomendado: false,
+    descripcionDetallada: "En una industrial con obligaciones de PRL, los documentos laborales que caducan sin renovación son un riesgo legal directo. Una revisión médica vencida, un carné de carretillero caducado o una formación no actualizada pueden suponer sanciones significativas en una inspección de trabajo. Este proceso centraliza todos los documentos de cada trabajador, calcula automáticamente las fechas de vencimiento y lanza alertas con la antelación suficiente para gestionar la renovación sin urgencias.",
+    summary: {
+      what_it_is: "Gestión centralizada de documentación laboral con alertas automáticas de vencimiento por trabajador.",
+      for_who: ["Industriales con obligaciones de PRL y formación periódica", "Empresas con inspecciones de trabajo frecuentes", "RRHH que lleva el control de documentos en Excel o papel"],
+      requirements: ["Listado de documentos requeridos por puesto de trabajo", "Documentos actuales de cada trabajador digitalizados"],
+      output: "Expediente digital de cada trabajador actualizado con alertas de vencimiento antes de que sea un problema."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["RRHH / Nómina", "Gestión documental", "Email / WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Centraliza los documentos", short: "Por trabajador y tipo de documento.", detail: "Se crea el expediente digital de cada trabajador con todos los documentos laborales relevantes." },
+      { title: "Calcula fechas de vencimiento", short: "Por tipo de documento y normativa.", detail: "El sistema registra la fecha de cada documento y calcula cuándo caduca según la normativa o las condiciones del documento." },
+      { title: "Alerta antes del vencimiento", short: "Con tiempo suficiente para renovar.", detail: "RRHH recibe la alerta con la antelación configurada para gestionar la renovación sin urgencias." }
+    ],
+    benefits: [
+      "Cero documentos laborales vencidos que generen riesgo legal",
+      "RRHH no lleva el control en Excel — el sistema lo hace automáticamente",
+      "Preparación de inspecciones de trabajo en minutos, no en días"
+    ],
+    pasos: [
+      "Se crean los expedientes digitales de cada trabajador",
+      "Se registran todos los documentos con sus fechas de vencimiento",
+      "El sistema calcula las fechas de alerta según el tipo de documento",
+      "RRHH recibe la alerta antes del vencimiento para gestionar la renovación",
+      "El documento renovado sustituye al anterior en el expediente"
+    ],
+    personalizacion: "Define los tipos de documentos a controlar, las antelaciones de alerta por tipo y los destinatarios de cada alerta.",
+    sectores: ["Industrial"],
+    herramientas: ["RRHH / Nómina", "Gestión documental", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Hemos tenido sanciones por formaciones o revisiones médicas vencidas",
+      "El control de documentos laborales lo llevamos en un Excel que siempre está desactualizado"
+    ],
+    integration_domains: ["ADMIN", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.3"
+  },
+  {
+    id: "IND-6.4",
+    codigo: "6.4",
+    slug: "industrial-mantenimiento-preventivo",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Mantenimiento preventivo de maquinaria",
+    tagline: "Planifica y registra las revisiones de cada máquina, avisa antes de que caduque un mantenimiento y deja trazabilidad de cada intervención para auditorías.",
+    recomendado: true,
+    descripcionDetallada: "El mantenimiento que 'está pendiente de programar' se convierte invariablemente en una avería en el peor momento. En una línea de producción, una parada no planificada tiene un coste por hora que supera fácilmente al coste del mantenimiento preventivo del año entero. Este proceso planifica automáticamente las revisiones de cada máquina según su plan de mantenimiento, lanza alertas antes de cada vencimiento y registra cada intervención con el responsable, el tiempo invertido y el resultado.",
+    summary: {
+      what_it_is: "Sistema de planificación y seguimiento de mantenimiento preventivo de maquinaria con alertas y trazabilidad de intervenciones.",
+      for_who: ["Industriales con paradas no planificadas frecuentes", "Empresas que gestionan el mantenimiento de memoria o en papel", "Fábricas con requisitos de trazabilidad de mantenimiento por certificación o cliente"],
+      requirements: ["Inventario de máquinas con su plan de mantenimiento", "Responsable de mantenimiento identificado"],
+      output: "Plan de mantenimiento preventivo ejecutado con alertas puntuales y trazabilidad completa de intervenciones."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["Gestión de mantenimiento (CMMS)", "Email / WhatsApp", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Define el plan por máquina", short: "Revisiones, frecuencia, responsable.", detail: "Se configura el plan de mantenimiento de cada máquina: tipo de revisión, frecuencia y responsable." },
+      { title: "Alerta antes del vencimiento", short: "Con la antelación correcta.", detail: "El sistema alerta al responsable con la antelación suficiente para planificar la intervención sin urgencias." },
+      { title: "Registra la intervención", short: "Responsable, tiempo, resultado.", detail: "Al completar el mantenimiento, se registra quién lo hizo, cuánto tardó y el resultado, con la próxima fecha calculada." }
+    ],
+    benefits: [
+      "Paradas no planificadas reducidas significativamente",
+      "Cada intervención registrada para auditorías internas, de cliente o de certificación",
+      "El responsable de mantenimiento actúa de forma planificada, no reactiva"
+    ],
+    pasos: [
+      "Se define el plan de mantenimiento por máquina con frecuencias y responsables",
+      "El sistema calcula las fechas de vencimiento de cada revisión",
+      "Alerta al responsable con la antelación configurada antes de cada revisión",
+      "El responsable ejecuta el mantenimiento y registra la intervención",
+      "El sistema calcula automáticamente la próxima fecha de revisión"
+    ],
+    personalizacion: "Define los tipos de mantenimiento por máquina, las frecuencias, los responsables y los umbrales de alerta para cada tipo de revisión.",
+    sectores: ["Industrial"],
+    herramientas: ["CMMS / Gestión de mantenimiento", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Las averías siempre nos pillan en el peor momento porque el mantenimiento no está al día",
+      "El mantenimiento lo llevamos de memoria y no tenemos trazabilidad de intervenciones"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.4"
   }
 ];
 
