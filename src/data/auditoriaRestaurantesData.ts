@@ -19,6 +19,8 @@ export type AuditQuestion =
       title: string;
       help?: string;
       block: AuditBlockId;
+      scaleLabels?: [string, string, string, string, string];
+      scaleHints?: [string, string];
     };
 
 export type AuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -106,6 +108,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B1",
     title: "Atendemos llamadas y mensajes de reserva fuera del horario de sala (noches, fines de semana).",
     help: "Sin depender de que alguien del equipo esté disponible para coger el teléfono.",
+    scaleLabels: ["Sin cobertura", "Solo llamadas", "WhatsApp tarde", "Casi siempre", "24/7 automático"],
+    scaleHints: ["1 — Sin cobertura fuera de horario", "5 — Reservas atendidas 24/7 automáticamente"],
   },
   {
     type: "scale",
@@ -113,6 +117,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B1",
     title: "Los no-shows representan menos del 5% de las reservas de fin de semana.",
     help: "Incluye confirmación previa, recordatorios y lista de espera.",
+    scaleLabels: ["Más del 15%", "Del 10 al 15%", "Del 5 al 10%", "Cerca del 5%", "Menos del 5%"],
+    scaleHints: ["1 — Más del 15% de no-shows", "5 — Menos del 5% con sistema automático"],
   },
 
   // B2
@@ -122,6 +128,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B2",
     title: "Pedimos reseña de forma sistemática a los clientes que tuvieron buena experiencia.",
     help: "No a todos — solo a los que están contentos, en el momento adecuado.",
+    scaleLabels: ["Nunca pedimos", "Rara vez", "A veces", "Con frecuencia", "Siempre, automático"],
+    scaleHints: ["1 — Nunca se solicitan reseñas", "5 — Sistema automático post-visita"],
   },
   {
     type: "scale",
@@ -129,6 +137,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B2",
     title: "Cuando recibimos una reseña negativa, respondemos en menos de 24 horas.",
     help: "Con un mensaje elaborado, no con una respuesta genérica.",
+    scaleLabels: ["Días después", "Mismo día (tarde)", "En horas", "Alertados y listos", "Inmediato + borrador"],
+    scaleHints: ["1 — Se responde días después", "5 — Alerta inmediata con borrador de respuesta"],
   },
 
   // B3
@@ -138,6 +148,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B3",
     title: "Tenemos una base de datos de clientes habituales a la que podemos comunicar eventos o novedades.",
     help: "Sin depender de redes sociales ni publicidad de pago.",
+    scaleLabels: ["Sin base de datos", "Agenda informal", "Lista parcial", "Base organizada", "CRM automatizado"],
+    scaleHints: ["1 — Sin base de datos de clientes", "5 — CRM automatizado con segmentación"],
   },
   {
     type: "scale",
@@ -145,6 +157,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B3",
     title: "Detectamos cuándo un cliente habitual lleva tiempo sin volver y hacemos algo al respecto.",
     help: "De forma proactiva, no esperando a que él llame.",
+    scaleLabels: ["No lo sabemos", "Gut feeling", "Revisión manual", "Con alertas", "Reactivación auto"],
+    scaleHints: ["1 — No sabemos quién ha dejado de venir", "5 — Reactivación automática de inactivos"],
   },
 
   // B4
@@ -154,6 +168,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B4",
     title: "La dirección tiene visibilidad del rendimiento de cada local sin tener que ir en persona.",
     help: "Cubiertos, ocupación, ticket medio, reseñas nuevas — en tiempo real o cada mañana.",
+    scaleLabels: ["Hay que ir en persona", "Informe semanal", "Reportes diarios", "Panel en tiempo real", "Dashboard automático"],
+    scaleHints: ["1 — Solo con visita presencial", "5 — Dashboard automático diario"],
   },
   {
     type: "scale",
@@ -161,6 +177,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B4",
     title: "Cuando algo se sale de lo normal (cancelaciones, reseñas malas, ocupación baja), nos enteramos el mismo día.",
     help: "Sin tener que ir a mirar activamente.",
+    scaleLabels: ["Días después", "Semana siguiente", "Mismo día (revisando)", "Alertas básicas", "Tiempo real"],
+    scaleHints: ["1 — Nos enteramos días después", "5 — Alertas en tiempo real automáticas"],
   },
 
   // B5
@@ -170,6 +188,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B5",
     title: "Los turnos llegan a todo el equipo de forma automática con confirmación de lectura.",
     help: "Sin depender de grupos de WhatsApp caóticos ni llamadas del encargado.",
+    scaleLabels: ["Llamadas caóticas", "Excel / pizarra", "App básica", "Sistema parcial", "Totalmente automático"],
+    scaleHints: ["1 — Turnos por llamadas y WhatsApp caótico", "5 — Distribución automática con confirmación"],
   },
   {
     type: "scale",
@@ -177,6 +197,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B5",
     title: "Cuando entra personal nuevo, recibe información y protocolos sin que el encargado lo explique desde cero.",
     help: "Especialmente relevante en temporada alta con muchas incorporaciones.",
+    scaleLabels: ["Encargado siempre", "Algo escrito", "A medias", "Docs digitales", "Onboarding automático"],
+    scaleHints: ["1 — El encargado lo explica todo siempre", "5 — Onboarding digital automático"],
   },
 
   // B6
@@ -186,6 +208,8 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B6",
     title: "Tenemos presencia activa en redes sociales sin que el equipo del local dedique tiempo semanalmente.",
     help: "Las publicaciones de eventos, novedades o temporada salen solas o con muy poca intervención.",
+    scaleLabels: ["Inactivo", "Manual ocasional", "Manual regular", "Semi-automático", "Totalmente automático"],
+    scaleHints: ["1 — Redes inactivas o totalmente manuales", "5 — Publicaciones automáticas sin intervención"],
   },
   {
     type: "scale",
@@ -193,6 +217,72 @@ export const AUDIT_QUESTIONS: AuditQuestion[] = [
     block: "B6",
     title: "Cuando organizamos un evento o noche especial, comunicamos a nuestra base de clientes antes de pagar publicidad.",
     help: "El cliente que ya nos conoce es el más fácil de traer de vuelta.",
+    scaleLabels: ["Siempre pagamos ads", "A veces base propia", "Mitad y mitad", "Base primero", "Siempre base primero"],
+    scaleHints: ["1 — Siempre recurrimos a publicidad de pago", "5 — Base de clientes siempre antes que ads"],
+  },
+
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Cuántas de estas herramientas digitales usáis de forma activa?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "Software de gestión de reservas (propio o de plataforma)" },
+      { k: "B", label: "TPV integrado con análisis de ventas" },
+      { k: "C", label: "CRM o base de datos de clientes" },
+      { k: "D", label: "Herramienta de email marketing o WhatsApp masivo" },
+      { k: "E", label: "Plataforma de publicación en redes sociales" },
+      { k: "F", label: "Reporting automático (ocupación, ticket medio, reseñas)" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Riesgo de concentración (scoreless) ─────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de concentración",
+    title: "¿Qué porcentaje de los ingresos anuales se genera en los 3 mejores meses (temporada alta)?",
+    options: [
+      { k: "A", label: "Menos del 30% — ingresos estables todo el año" },
+      { k: "B", label: "Del 30 al 50%" },
+      { k: "C", label: "Del 50 al 70%" },
+      { k: "D", label: "Más del 70% — fuerte concentración estacional" },
+      { k: "E", label: "No aplica / sin temporada marcada" },
+    ],
+    scoreless: true,
+  },
+
+  // ─── Calidad y certificaciones (scoreless) ───────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y certificaciones",
+    title: "¿Cuáles de estas acreditaciones o sistemas de calidad tenéis activos?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "Certificados de manipulador de alimentos en vigor" },
+      { k: "B", label: "Sistema APPCC documentado y auditado" },
+      { k: "C", label: "Carta de alérgenos documentada y visible" },
+      { k: "D", label: "Sello de calidad turística o distinción gastronómica" },
+      { k: "E", label: "Ninguna aún" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si tu proveedor principal de producto desapareciera mañana, ¿cuánto tardaría en normalizarse la operativa?",
+    options: [
+      { k: "A", label: "1-2 días — tenemos proveedores alternativos identificados" },
+      { k: "B", label: "Una semana" },
+      { k: "C", label: "2-4 semanas" },
+      { k: "D", label: "Más de un mes — dependemos completamente de él" },
+    ],
+    scoreless: true,
   },
 
   // Prioridad

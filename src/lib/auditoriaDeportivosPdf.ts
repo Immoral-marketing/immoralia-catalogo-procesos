@@ -155,6 +155,60 @@ function buildPdfHtml(s: DpAuditState): string {
     });
   });
 
+  // ─── Resumen ejecutivo ──────────────────────────────────────────────────────
+  const benchmark = 45; // <-- sector-specific value
+  const vsNum = s.global - benchmark;
+  const vsText = vsNum >= 0 ? `+${vsNum}` : `${vsNum}`;
+  const vsColor = vsNum >= 0 ? "#0D9488" : "#DC2626";
+  const vsBg = vsNum >= 0 ? "#F0FDF4" : "#FEF2F2";
+  const vsBorder = vsNum >= 0 ? "#BBF7D0" : "#FECACA";
+  const riskBlocks = sorted.filter(({ sc }) => sc < 40).sort((a, b) => a.sc - b.sc);
+
+  const topBlocksHtml = sorted.slice(0, 2).map(({ b, sc }) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#F0FDF4;border-radius:8px;margin-bottom:6px;border:1px solid #BBF7D0">
+      <div style="width:28px;height:28px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-weight:800;color:#fff;font-size:9px">${b}</span>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#1A1A1A">${DP_AUDIT_BLOCKS[b].name}</div>
+        <div style="font-size:9px;color:#059669;font-weight:600">${sc}/100</div>
+      </div>
+    </div>
+  `).join("");
+
+  const bottomBlocksHtml = sorted.slice(-2).reverse().map(({ b, sc }) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#FEF2F2;border-radius:8px;margin-bottom:6px;border:1px solid #FECACA">
+      <div style="width:28px;height:28px;border-radius:50%;background:#DC2626;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-weight:800;color:#fff;font-size:9px">${b}</span>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#1A1A1A">${DP_AUDIT_BLOCKS[b].name}</div>
+        <div style="font-size:9px;color:#DC2626;font-weight:600">${sc}/100</div>
+      </div>
+    </div>
+  `).join("");
+
+  const riskHtml = riskBlocks.length > 0 ? `
+    <div style="font-size:9px;letter-spacing:2px;color:#D97706;text-transform:uppercase;font-weight:700;margin-bottom:10px">Factores de riesgo operativo</div>
+    <div style="display:grid;grid-template-columns:${riskBlocks.length > 1 ? "1fr 1fr" : "1fr"};gap:10px;margin-bottom:0">
+      ${riskBlocks.slice(0, 2).map(({ b, sc }) => `
+        <div style="padding:12px 14px;background:#FFFBEB;border-radius:8px;border:1px solid #FDE68A">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-weight:800;font-size:12px;color:#92400E">!</span>
+            <span style="font-weight:700;font-size:10px;color:#92400E">${DP_AUDIT_BLOCKS[b].name}</span>
+            <span style="margin-left:auto;font-size:10px;font-weight:700;color:#D97706">${sc}/100</span>
+          </div>
+          <div style="font-size:9px;color:#78350F;line-height:1.4">${DP_AUDIT_BLOCKS[b].short}</div>
+        </div>
+      `).join("")}
+    </div>
+  ` : `
+    <div style="padding:14px 16px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0">
+      <div style="font-size:11px;font-weight:700;color:#059669;margin-bottom:4px">Sin riesgos operativos críticos detectados</div>
+      <div style="font-size:10px;color:#6B7280">Ninguna área cae por debajo de 40/100. El trabajo ahora es de optimización y diferenciación.</div>
+    </div>
+  `;
+
   return `
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
@@ -312,6 +366,42 @@ function buildPdfHtml(s: DpAuditState): string {
     </div>
     <div class="section-label" style="margin-bottom:12px">Score por área</div>
     ${blockRows}
+    <div class="pg-footer"><span>immoralia · Auditoría de Madurez Operativa · ${c.company || c.name}</span><span>${today}</span></div>
+  </div>
+
+  <!-- RESUMEN EJECUTIVO -->
+  <div class="pg" style="padding:32px 40px 24px">
+    <div class="section-label">Resumen ejecutivo</div>
+    <div style="font-size:22px;font-weight:800;color:#1A1A1A;margin-bottom:4px">Hallazgos clave de tu auditoría</div>
+    <div style="font-size:12px;color:#6B7280;margin-bottom:18px">Diagnóstico ejecutivo basado en los resultados de las 6 áreas evaluadas.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px">
+      <div style="padding:20px;background:#041A1E;border-radius:10px;text-align:center">
+        <div style="font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:4px">Tu score global</div>
+        <div style="font-size:40px;font-weight:800;color:#06b6d4;line-height:1">${s.global}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">/100</div>
+      </div>
+      <div style="padding:20px;background:#F9FAFB;border-radius:10px;text-align:center;border:1px solid #E5E7EB">
+        <div style="font-size:9px;letter-spacing:2px;color:#6B7280;text-transform:uppercase;margin-bottom:4px">Benchmark sector</div>
+        <div style="font-size:40px;font-weight:800;color:#374151;line-height:1">${benchmark}</div>
+        <div style="font-size:9px;color:#6B7280;margin-top:2px">Media centros deportivos</div>
+      </div>
+      <div style="padding:20px;background:${vsBg};border-radius:10px;text-align:center;border:1px solid ${vsBorder}">
+        <div style="font-size:9px;letter-spacing:2px;color:${vsColor};text-transform:uppercase;margin-bottom:4px">Vs. benchmark</div>
+        <div style="font-size:40px;font-weight:800;color:${vsColor};line-height:1">${vsText}</div>
+        <div style="font-size:9px;color:#6B7280;margin-top:2px">puntos</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:#059669;text-transform:uppercase;font-weight:700;margin-bottom:10px">Puntos fuertes</div>
+        ${topBlocksHtml}
+      </div>
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:#DC2626;text-transform:uppercase;font-weight:700;margin-bottom:10px">Áreas de mejora</div>
+        ${bottomBlocksHtml}
+      </div>
+    </div>
+    ${riskHtml}
     <div class="pg-footer"><span>immoralia · Auditoría de Madurez Operativa · ${c.company || c.name}</span><span>${today}</span></div>
   </div>
 

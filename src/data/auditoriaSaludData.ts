@@ -20,6 +20,10 @@ export type SaAuditQuestion =
       title: string;
       help?: string;
       block: SaAuditBlockId;
+      /** Etiquetas personalizadas para los 5 puntos de la escala. */
+      scaleLabels?: [string, string, string, string, string];
+      /** Texto bajo la escala (extremos). */
+      scaleHints?: [string, string];
     };
 
 export type SaAuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -95,6 +99,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Qué pasa cuando un paciente escribe o llama fuera del horario del centro? ¿Con qué frecuencia esas consultas acaban en una cita reservada?",
     help: "1 = Se responde al día siguiente y muchos no esperan; 5 = Chatbot cualifica al instante y reserva huecos disponibles",
     block: "B1",
+    scaleLabels: ["Día siguiente", "Tarde", "Horas", "Rápido", "Al instante"],
+    scaleHints: ["1 — Sin respuesta hasta el día siguiente", "5 — Chatbot da cita al instante"],
   },
   {
     type: "scale",
@@ -103,6 +109,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Pueden los pacientes confirmar, cambiar o cancelar su cita por WhatsApp o web sin necesidad de llamar a recepción?",
     help: "1 = Todo pasa por llamada; 5 = El paciente gestiona su cita 100% digital y sin intervención del equipo",
     block: "B1",
+    scaleLabels: ["Solo llamada", "Poco digital", "A medias", "Casi digital", "100% digital"],
+    scaleHints: ["1 — Solo por teléfono o en persona", "5 — Todo desde el móvil sin intervención"],
   },
   // ─── B2 Gestión de citas ─────────────────────────────────────────────────────
   {
@@ -112,6 +120,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Cuántos huecos se quedan vacíos cada semana por cancelaciones? ¿Tienes un sistema que los llena automáticamente desde una lista de espera?",
     help: "1 = Los huecos se pierden sin más; 5 = Lista de espera activa que cubre cualquier cancelación en minutos",
     block: "B2",
+    scaleLabels: ["Se pierden", "Rara vez", "A veces", "Casi siempre", "Lista activa"],
+    scaleHints: ["1 — Huecos perdidos sin más", "5 — Lista de espera llena en minutos"],
   },
   {
     type: "scale",
@@ -120,6 +130,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "Cuando un profesional falta a última hora, ¿cuánto tarda el equipo en reasignar las citas y avisar a los pacientes afectados?",
     help: "1 = Horas de llamadas y caos en recepción; 5 = El sistema reasigna y avisa automáticamente en minutos",
     block: "B2",
+    scaleLabels: ["Horas", "30 min", "15 min", "5 min", "Automático"],
+    scaleHints: ["1 — Horas de llamadas en recepción", "5 — Reasignación y aviso automáticos"],
   },
   // ─── B3 Reputación y comunicación ───────────────────────────────────────────
   {
@@ -129,6 +141,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Qué porcentaje de tus pacientes satisfechos acaba dejando reseña en Google? ¿Tienes un sistema que se la pide justo después de la visita?",
     help: "1 = Casi nadie deja reseña y no se les pide; 5 = Solicitud automática post-visita con muy alta tasa de conversión",
     block: "B3",
+    scaleLabels: ["Casi nadie", "Muy pocos", "Algunos", "Bastantes", "Sistema activo"],
+    scaleHints: ["1 — Sin sistema de solicitud", "5 — Solicitud automática post-visita"],
   },
   {
     type: "scale",
@@ -137,6 +151,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿El centro recuerda proactivamente a cada paciente cuándo debería volver para su revisión, o es el paciente quien tiene que acordarse?",
     help: "1 = El paciente llama cuando quiere (o no vuelve); 5 = Recordatorio personalizado automático en el momento exacto",
     block: "B3",
+    scaleLabels: ["Nunca", "Raramente", "A veces", "Casi siempre", "Automático"],
+    scaleHints: ["1 — El paciente llama si quiere", "5 — Recordatorio personalizado automático"],
   },
   // ─── B4 Retención de pacientes ───────────────────────────────────────────────
   {
@@ -146,6 +162,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Tienes identificados los pacientes que llevan más tiempo del habitual sin venir y los contactas de forma personalizada antes de que se vayan a la competencia?",
     help: "1 = No se hace; 5 = Detección automática con secuencia de reactivación personalizada",
     block: "B4",
+    scaleLabels: ["Nunca", "Si se acuerdan", "A veces", "Casi siempre", "Automático"],
+    scaleHints: ["1 — No se hace nada", "5 — Detección y secuencia automática"],
   },
   {
     type: "scale",
@@ -154,6 +172,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Recoges feedback de los pacientes después de los tratamientos de forma sistemática y actúas sobre esa información antes de que escale a una queja?",
     help: "1 = Solo cuando el paciente se queja directamente; 5 = Encuesta automática post-tratamiento con alertas de insatisfacción",
     block: "B4",
+    scaleLabels: ["Nunca", "Si se quejan", "A veces", "Regular", "Sistemático"],
+    scaleHints: ["1 — Solo cuando se quejan directamente", "5 — Encuesta automática con alertas"],
   },
   // ─── B5 Administración ───────────────────────────────────────────────────────
   {
@@ -163,6 +183,8 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿El ciclo completo de cobro —facturas a mutuas, recordatorios de pago y seguimiento de impagos— funciona sin que el equipo tenga que intervenir manualmente?",
     help: "1 = Todo manual, facturas perdidas y cobros perseguidos; 5 = Completamente automatizado con visibilidad financiera diaria",
     block: "B5",
+    scaleLabels: ["Todo manual", "Parcial", "A medias", "Casi auto", "Automático"],
+    scaleHints: ["1 — Facturas y cobros perseguidos a mano", "5 — Ciclo completo automatizado"],
   },
   // ─── B6 Equipo y personal ────────────────────────────────────────────────────
   {
@@ -172,6 +194,64 @@ export const SA_AUDIT_QUESTIONS: SaAuditQuestion[] = [
       "¿Cuánto tiempo dedica el equipo cada semana a gestionar turnos, comunicar cambios de horario y cubrir bajas del personal?",
     help: "1 = Más de 5 horas semanales en WhatsApp y llamadas; 5 = Sistema automatizado, cada profesional recibe su turno y confirma",
     block: "B6",
+    scaleLabels: ["5+ horas", "3-5 h", "1-3 h", "Menos 1 h", "Automático"],
+    scaleHints: ["1 — Más de 5 horas semanales en gestión", "5 — Cada profesional recibe y confirma turno"],
+  },
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Qué sistemas digitales usáis hoy para gestionar el centro?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Agenda en papel o Excel sin software específico" },
+      { k: "B", label: "Software básico de citas (Doctoralia, Calendly o similar)" },
+      { k: "C", label: "Software clínico completo (iClinic, Gesden, Clinicalia…)" },
+      { k: "D", label: "Software clínico + CRM para comunicación con pacientes" },
+      { k: "E", label: "Suite completa integrada con automatizaciones y panel de gestión" },
+    ],
+  },
+  // ─── Dependencia de seguros / mutuas (scoreless) ─────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de dependencia",
+    title: "¿Qué porcentaje de vuestra facturación viene de seguros médicos y mutuas (vs paciente privado)?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Menos del 20% — mayoría paciente privado directo" },
+      { k: "B", label: "Entre el 20% y el 40%" },
+      { k: "C", label: "Entre el 40% y el 60%" },
+      { k: "D", label: "Más del 60% — alta dependencia de mutuas y seguros" },
+    ],
+  },
+  // ─── Acreditaciones (scoreless multiselect) ──────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y acreditaciones",
+    title: "¿Qué certificaciones o acreditaciones tenéis activas en el centro?",
+    scoreless: true,
+    multiselect: true,
+    options: [
+      { k: "A", label: "ISO 9001 — Gestión de calidad" },
+      { k: "B", label: "Acreditación sanitaria regional o nacional" },
+      { k: "C", label: "Adecuación al RGPD / ENS — Protección de datos sanitarios" },
+      { k: "D", label: "Certificación específica de especialidad (SEPA, SEC…)" },
+      { k: "E", label: "Registro en plataformas de salud verificadas (Doctoralia, etc.)" },
+      { k: "F", label: "Ninguna por ahora" },
+    ],
+  },
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si mañana falta la recepcionista o coordinadora principal, ¿qué pasa?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Caos — toda la agenda y los protocolos dependen de ella" },
+      { k: "B", label: "Hay un backup parcial pero se nota mucho su ausencia" },
+      { k: "C", label: "Hay un backup formado que puede cubrirla sin problemas" },
+      { k: "D", label: "Todo está documentado y el centro funciona con cualquier persona del equipo" },
+    ],
   },
   // ─── Prioridades (scoreless) ─────────────────────────────────────────────────
   {
