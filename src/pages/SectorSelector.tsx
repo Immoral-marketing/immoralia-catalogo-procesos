@@ -120,7 +120,7 @@ const sectors = [
     accentClass: "bg-yellow-500/10 border-yellow-500/25 text-yellow-400",
     accentGlow: "rgba(234,179,8,0.25)",
     accentBar: "bg-yellow-500",
-    heroImage: "/industrial/hero.svg" as string | null,
+    heroImage: "/industrial/hero.png" as string | null,
     landingSlug: "industrial",
     sectorNames: ["Industrial / Producción"],
   },
