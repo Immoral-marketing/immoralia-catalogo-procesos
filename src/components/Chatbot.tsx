@@ -45,6 +45,7 @@ const Chatbot: React.FC = () => {
         if (path.includes('academias')) return '#7c3aed';          // Violet
         if (path.includes('restauracion') || path.includes('gastronomia')) return '#ea580c'; // Orange
         if (path.includes('agencias')) return '#e11d48';           // Rose
+        if (path.includes('industrial')) return '#eab308';         // Yellow
         return '#000000';
     };
 
