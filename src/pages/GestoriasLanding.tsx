@@ -482,8 +482,8 @@ const GestoriasLanding = () => {
                   <div className="p-6 md:p-8">
                     <div className="flex items-center justify-between mb-6">
                       <div className="font-bold text-lg">
-                        <span className="text-white">im</span>
-                        <span className="text-yellow-500">moralia</span>
+                        <span className="text-white">immoral</span>
+                        <span className="text-yellow-500">ia</span>
                       </div>
                       <span className="text-[10px] tracking-widest text-yellow-400/80 uppercase">
                         Confidencial
