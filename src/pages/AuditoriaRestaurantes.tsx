@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AUDIT_BLOCKS,
@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
-const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/LOCATION_ID/WORKFLOW_ID";
+const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/oAgj6wUxweXdbWMvz0Gn/webhook-trigger/673af019-7b64-4d52-ac6b-e0adbcb12a60";
 
 type Screen = "intro" | "questions" | "contact" | "result";
 
