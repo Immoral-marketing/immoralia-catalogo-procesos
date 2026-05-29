@@ -1,5 +1,6 @@
 ﻿import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, type Process } from "@/data/processes";
 import { gestoriasBlocks, type GestoriasBlockId } from "@/data/gestoriasBlocks";
 import { gestoriasModules, getGestoriasModulesByBlock } from "@/data/gestoriasModules";
@@ -79,6 +80,7 @@ const SLUG_TO_BLOQUE: Record<string, GestoriasBlockId> = {
 const GestoriasLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBlockTab, setActiveBlockTab] = useState<"todos" | GestoriasBlockId>("todos");
@@ -241,7 +243,7 @@ const GestoriasLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+                onClick={() => setShowBookingModal(true)}
                 className="text-sm text-gray-400 hover:text-yellow-400 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -754,7 +756,7 @@ const GestoriasLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+              onClick={() => setShowBookingModal(true)}
             >
               Agendar llamada
             </Button>
@@ -812,6 +814,7 @@ const GestoriasLanding = () => {
       />
 
       
+      <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </div>
   );
 };

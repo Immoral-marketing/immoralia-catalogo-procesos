@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -102,6 +103,7 @@ const ProcessDetail = () => {
 
     // Procesos del mismo módulo desde Supabase staging (tiene bloque_negocio, slug, catalog_active)
     const [dbModuleProcesses, setDbModuleProcesses] = useState<any[]>([]);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
     // Fallback a Supabase para procesos no definidos en el archivo estático
     const [dbProcess, setDbProcess] = useState<any>(null);
@@ -914,7 +916,7 @@ const ProcessDetail = () => {
                         variant="ghost"
                         size="lg"
                         className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+                        onClick={() => setShowBookingModal(true)}
                     >
                         Agendar llamada
                     </Button>
@@ -958,7 +960,8 @@ const ProcessDetail = () => {
                 onClose={() => setShowShareModal(false)}
                 selectedProcesses={processes.filter(p => selectedProcessIds.has(p.id))}
             />
-        </div>
+          <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </div>
     );
 };
 

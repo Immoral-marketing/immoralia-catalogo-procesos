@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ const ProcessDetailFacturasVencidas = () => {
     const isSelected = selectedProcessIds.has(process.id);
 
     const [showContactForm, setShowContactForm] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
@@ -406,7 +408,7 @@ const ProcessDetailFacturasVencidas = () => {
                         variant="ghost"
                         size="lg"
                         className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+                        onClick={() => setShowBookingModal(true)}
                     >
                         Agendar llamada
                     </Button>
@@ -450,7 +452,8 @@ const ProcessDetailFacturasVencidas = () => {
                 onClose={() => setShowShareModal(false)}
                 selectedProcesses={processes.filter(p => selectedProcessIds.has(p.id))}
             />
-        </div>
+          <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </div>
     );
 };
 

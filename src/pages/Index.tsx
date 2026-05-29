@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, categories, Process } from "@/data/processes";
 import { Link } from "react-router-dom";
 import { ProcessCard } from "@/components/ProcessCard";
@@ -33,6 +34,7 @@ const Index = () => {
   const { selectedProcessIds, toggleProcess, clearSelection, n8nHosting, setN8nHosting } = useSelection();
 
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
@@ -277,7 +279,7 @@ const Index = () => {
                       <TooltipTrigger asChild>
                         <button
                           className="w-full flex items-center gap-[11px] h-[42px] px-4 rounded-lg text-[14px] font-bold text-cyan-400 hover:bg-cyan-500/10 transition-all duration-200"
-                          onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+                          onClick={() => setShowBookingModal(true)}
                         >
                           <HelpCircle className="w-5 h-5 shrink-0" />
                           <span className="truncate">Agendar llamada</span>
@@ -328,7 +330,7 @@ const Index = () => {
                 })}
 
                 {/* Can't find your process? */}
-                <div className="bg-transparent border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:border-cyan-500/30 transition-colors group cursor-pointer" onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}>
+                <div className="bg-transparent border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:border-cyan-500/30 transition-colors group cursor-pointer" onClick={() => setShowBookingModal(true)}>
                   <div className="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Sparkles className="w-8 h-8 text-cyan-400" />
                   </div>
@@ -381,7 +383,8 @@ const Index = () => {
               </Button>
             </div>
           </div>
-        </div>
+          <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </div>
       )}
 
       <OnboardingModal

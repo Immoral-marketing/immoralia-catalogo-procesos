@@ -1,5 +1,6 @@
 ﻿import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, type Process } from "@/data/processes";
 import { academiasBlocks, type BlockId } from "@/data/academiasBlocks";
 import { academiasModules, getModulesByBlock } from "@/data/academiasModules";
@@ -54,6 +55,7 @@ const ACADEMIAS_LANDING_SLUG = "academias";
 const AcademiasLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBlockTab, setActiveBlockTab] = useState<"todos" | BlockId>("todos");
@@ -219,7 +221,7 @@ const AcademiasLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+                onClick={() => setShowBookingModal(true)}
                 className="text-sm text-gray-400 hover:text-violet-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -790,7 +792,7 @@ const AcademiasLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
+              onClick={() => setShowBookingModal(true)}
             >
               Agendar llamada
             </Button>
@@ -848,6 +850,7 @@ const AcademiasLanding = () => {
       />
 
       
+      <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </div>
   );
 };
