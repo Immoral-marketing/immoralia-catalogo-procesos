@@ -44,7 +44,6 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#c4a84c";
 
@@ -85,7 +84,6 @@ const GestoriasLanding = () => {
   const [activeBlockTab, setActiveBlockTab] = useState<"todos" | GestoriasBlockId>("todos");
   const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<GestoriasBlockId>("B1");
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -243,7 +241,7 @@ const GestoriasLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => setShowCalendlyModal(true)}
+                onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
                 className="text-sm text-gray-400 hover:text-yellow-400 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -756,7 +754,7 @@ const GestoriasLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => setShowCalendlyModal(true)}
+              onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
             >
               Agendar llamada
             </Button>
@@ -813,10 +811,7 @@ const GestoriasLanding = () => {
         accentColor={ACCENT}
       />
 
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
-      />
+      
     </div>
   );
 };

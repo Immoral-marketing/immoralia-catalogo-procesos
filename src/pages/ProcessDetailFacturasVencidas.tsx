@@ -10,7 +10,6 @@ import { useSelection } from "@/lib/SelectionContext";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
@@ -26,7 +25,6 @@ const ProcessDetailFacturasVencidas = () => {
     const isSelected = selectedProcessIds.has(process.id);
 
     const [showContactForm, setShowContactForm] = useState(false);
-    const [showCalendlyModal, setShowCalendlyModal] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
@@ -408,7 +406,7 @@ const ProcessDetailFacturasVencidas = () => {
                         variant="ghost"
                         size="lg"
                         className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => setShowCalendlyModal(true)}
+                        onClick={() => window.open("https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta", "_blank")}
                     >
                         Agendar llamada
                     </Button>
@@ -445,10 +443,7 @@ const ProcessDetailFacturasVencidas = () => {
                 initialAnswers={onboardingAnswers}
             />
 
-            <CalendlyLeadModal
-                isOpen={showCalendlyModal}
-                onClose={() => setShowCalendlyModal(false)}
-            />
+            
 
             <ShareSelectionModal
                 isOpen={showShareModal}
