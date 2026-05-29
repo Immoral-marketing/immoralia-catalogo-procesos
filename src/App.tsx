@@ -15,9 +15,18 @@ import RestauracionLanding from "./pages/RestauracionLanding";
 import EcommerceLanding from "./pages/EcommerceLanding";
 import InmobiliariaLanding from "./pages/InmobiliariaLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
+import IndustrialLanding from "./pages/IndustrialLanding";
 import SectorSelector from "./pages/SectorSelector";
 import AfiliadoPage from "./pages/AfiliadoPage";
 import AdminPage from "./pages/AdminPage";
+import AuditoriasIndex from "./pages/AuditoriasIndex";
+import AuditoriaRestaurantes from "./pages/AuditoriaRestaurantes";
+import AuditoriaConstructoras from "./pages/AuditoriaConstructoras";
+import AuditoriaAcademias from "./pages/AuditoriaAcademias";
+import AuditoriaSalud from "./pages/AuditoriaSalud";
+import AuditoriaDeportivos from "./pages/AuditoriaDeportivos";
+import AuditoriaGestorias from "./pages/AuditoriaGestorias";
+import AuditoriaIndustrial from "./pages/AuditoriaIndustrial";
 import NotFound from "./pages/NotFound";
 import { SelectionProvider } from "./lib/SelectionContext";
 import Chatbot from "./components/Chatbot";
@@ -47,8 +56,17 @@ const App = () => (
             <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
             <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
+            <Route path="/sector/industrial" element={<IndustrialLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/auditorias" element={<AuditoriasIndex />} />
+            <Route path="/auditorias/restaurantes" element={<AuditoriaRestaurantes />} />
+            <Route path="/auditorias/constructoras" element={<AuditoriaConstructoras />} />
+            <Route path="/auditorias/academias" element={<AuditoriaAcademias />} />
+            <Route path="/auditorias/salud" element={<AuditoriaSalud />} />
+            <Route path="/auditorias/deportivos" element={<AuditoriaDeportivos />} />
+            <Route path="/auditorias/gestorias" element={<AuditoriaGestorias />} />
+            <Route path="/auditorias/industrial" element={<AuditoriaIndustrial />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

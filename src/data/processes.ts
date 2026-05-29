@@ -1,9 +1,9 @@
-export interface Process {
+﻿export interface Process {
   id: string;
   codigo: string;
   slug: string;
-  categoria: string;
-  categoriaNombre: string;
+  categoria?: string;       // @deprecated — no se usa en landings activas
+  categoriaNombre?: string; // @deprecated — sobreescrito por bloque_negocio en runtime
   nombre: string;
   tagline: string;
   one_liner?: string;
@@ -52,6 +52,8 @@ export interface Process {
   integration_domains?: ("ERP" | "CRM" | "COMMS" | "DOCS" | "OTHER")[];
   landing_slug?: string;
   hidden?: boolean;
+  bloque_negocio?: "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
+  modulo_codigo?: string;
   sector_variants?: Record<string, {
     tagline?: string;
     one_liner?: string;
@@ -71,12 +73,33 @@ export interface Process {
       detail?: string;
     }[];
   }>;
+
+  // ===== Campos espejo de Supabase (NO se editan desde processes.ts) =====
+  // Estos campos viven en la BD y guardan estado de generación de assets.
+  // El script de sync los preserva intactos — nunca los sobrescribe.
+  // Mapping: hidden:true (código) ↔ catalog_active:false (BD).
+  catalog_active?: boolean;
+  guion_generado?: boolean;
+  guion_clickup_url?: string;
+  guion_generado_at?: string;
+  video_generado?: boolean;
+  video_remotion_url?: string;
+  video_generado_at?: string;
+  image_url_1?: string;
+  image_url_2?: string;
+  image_url_3?: string;
+  image_subtitle_1?: string;
+  image_subtitle_2?: string;
+  image_subtitle_3?: string;
+  imagenes_generadas?: boolean;
+  imagenes_generadas_at?: string;
 }
 
 
 export const processes: Process[] = [
   {
     id: "A1",
+    hidden: true,
     codigo: "A1",
     slug: "facturas-automatizadas",
     categoria: "A",
@@ -131,15 +154,15 @@ export const processes: Process[] = [
       "Enviamos notificación al responsable para validar, emitir y enviar"
     ],
     personalizacion: "Elige la vía de comunicación que mejor se adapte a tu agencia.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Necesito centralizar la información de clientes"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
   },
 
   {
     id: "A2",
+    hidden: true,
     codigo: "A2",
     slug: "informe-semanal-facturas-vencidas",
     categoria: "A",
@@ -189,7 +212,7 @@ export const processes: Process[] = [
       "Generamos un informe automático"
     ],
     personalizacion: "Decide cuándo recibes el informe y por qué canal (tu vía de comunicación preferida, mensajería, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
     dolores: ["Necesito centralizar la información de clientes"],
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
@@ -198,7 +221,7 @@ export const processes: Process[] = [
 
   {
     id: "A3",
-    codigo: "A3",
+    codigo: "1.1",
     slug: "presupuestos-automaticos",
     categoria: "A",
     categoriaNombre: "Facturación y Finanzas",
@@ -238,226 +261,19 @@ export const processes: Process[] = [
       "Notificamos al responsable para envío o revisión"
     ],
     personalizacion: "Decide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.",
-    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["ERP/Software de gestión", "Hoja de cálculo"],
     dolores: ["Quiero automatizar presupuestos y respuestas", "Tardamos en responder y perdemos clientes"],
     related_processes: ["seguimiento-presupuestos", "facturas-automatizadas"],
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
-  },
+    bloque_negocio: "B1",
 
-  {
-    id: "A4",
-    codigo: "A4",
-    slug: "seguimiento-presupuestos",
-    categoria: "A",
-    categoriaNombre: "Facturación y Finanzas",
-    nombre: "Seguimiento de presupuestos enviados",
-    tagline: "Controla todos los presupuestos enviados.",
-    recomendado: false,
-    descripcionDetallada: "Si pasan X días sin respuesta → Aviso a responsables por el canal que elijas. Revisamos el estado del presupuesto en tu ERP/CRM. Detectamos inactividad. Disparamos alerta o tu vía de comunicación preferida de seguimiento.",
-    summary: {
-      what_it_is: "Flujo de control que asegura que ningún presupuesto se pierda por falta de seguimiento comercial.",
-      for_who: ["Equipos de ventas", "Project Managers", "Gerencia"],
-      requirements: ["ERP/CRM", "Sistema de notificaciones"],
-      output: "Recordatorios a ventas o mensajes directos al cliente."
-    },
-    indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["ERP/CRM", "Comunicación"]
-    },
-    how_it_works_steps: [
-      { title: "Monitorización", short: "Vigilamos estados 'Enviado'.", detail: "El sistema revisa diariamente qué presupuestos siguen sin ser aceptados ni rechazados." },
-      { title: "Cálculo de inactividad", short: "Contamos los días transcurridos.", detail: "Si se supera el umbral definido (ej. 3 días), se inicia la acción de seguimiento." },
-      { title: "Acción de rescate", short: "Disparamos recordatorio.", detail: "Avisamos al comercial o enviamos un mensaje de seguimiento suave al cliente." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Días de espera", options: ["3 días", "5 días", "7 días"] }
-      ],
-      free_text_placeholder: "¿Quieres un texto de seguimiento específico?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Diferencia presupuestos de facturas?", a: "Sí, este proceso se centra exclusivamente en la fase preventiva de venta." }
-    ],
-    pasos: [
-      "Revisamos el estado del presupuesto en tu sistema de gestión",
-      "Detectamos inactividad",
-      "Disparamos alerta o mensaje de seguimiento"
-    ],
-    personalizacion: "Elige el canal del aviso y los días sin respuesta.",
-    sectores: ["Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "E-commerce", "Inmobiliaria"],
-    herramientas: ["ERP/CRM", "Canal de comunicación"],
-    dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["presupuestos-automaticos", "recordatorios-pagos"],
-    integration_domains: ["ERP", "CRM"]
-  },
-
-  {
-    id: "A5",
-    codigo: "A5",
-    slug: "recordatorios-pagos",
-    categoria: "A",
-    categoriaNombre: "Facturación y Finanzas",
-    nombre: "Envío de recordatorios de pagos a clientes",
-    tagline: "Automatiza el ir detrás de quien no ha pagado.",
-    recomendado: true,
-    descripcionDetallada: "Envía recordatorios de pago a los clientes que tienen facturas vencidas según hayan pasado 5/10/15 días. Identificación de facturas vencidas según días de atraso. Generación del mensaje con plantilla dinámica. Envío automático al canal del cliente.",
-    summary: {
-      what_it_is: "Sistema automatizado de reclamación de deuda que mejora el flujo de caja sin esfuerzo manual.",
-      for_who: ["Administración", "Finanzas", "Dueños de agencias"],
-      requirements: ["ERP/Software de gestión", "canal de comunicación que prefieras"],
-      output: "Mensajes de recordatorio automáticos segmentados por gravedad."
-    },
-    indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["ERP", "Canal de comunicación"]
-    },
-    how_it_works_steps: [
-      { title: "Detección de impago", short: "Analizamos facturas vencidas.", detail: "Cruzamos fechas de vencimiento con el estado de pago en tiempo real." },
-      { title: "Segmentación", short: "Aplicamos lógica 5/10/15 días.", detail: "El mensaje se vuelve más firme a medida que el retraso aumenta." },
-      { title: "Comunicación directa", short: "Enviamos aviso personalizado.", detail: "El cliente recibe un aviso con el detalle de la factura y enlace directo al pago." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "radio", label: "Tono inicial", options: ["Amable", "Conciso"] },
-        { type: "select", label: "Frecuencia", options: ["Semanal", "Diaria"] },
-        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿Quieres excluir a algún cliente VIP de este proceso?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Puedo enviar avisos por mensajería?", a: "Sí, es posible integrar APIs de mensajería para que el recordatorio sea más directo." }
-    ],
-    pasos: [
-      "Identificación de facturas vencidas según días de atraso",
-      "Generación del mensaje con plantilla dinámica",
-      "Envío automático al contacto del cliente"
-    ],
-    personalizacion: "Elige tono del mensaje (amable, neutro, firme) y excepciones por cliente.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
-    herramientas: ["ERP/Software de gestión", "Canal de comunicación"],
-    dolores: ["Tardamos en responder y perdemos clientes", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["informe-semanal-facturas-vencidas", "traspasos-automaticos-iva"],
-    integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
-    sector_variants: {
-      "centros-deportivos": {
-        tagline: "Cobra las cuotas de tus socios sin perseguirlos cada mes.",
-        one_liner: "Detecta socios con cuota vencida y envíales un recordatorio automático antes de que el impago se cronifique.",
-        descripcionDetallada: "Cada día el sistema revisa qué socios tienen la cuota vencida y les envía un recordatorio progresivo: amable al principio, más directo si pasan los días. Tú no tienes que hacer nada. Los socios que no responden escalan a una alerta para que puedas actuar antes de que cancelen.",
-        dolores: ["Socios que no pagan pero siguen usando las instalaciones", "Vergüenza o incomodidad de reclamar dinero en persona", "Perder socios por no hacer seguimiento a tiempo"],
-        pasos: ["Detectamos socios con cuota vencida en tu software de gestión", "Enviamos recordatorio automático y personalizado al canal del socio", "Escalamos el aviso si pasan 5/10/15 días sin respuesta", "Alertamos al equipo si el impago persiste para intervención manual"],
-        personalizacion: "Elige el tono del mensaje (amable, neutro, firme), el canal (WhatsApp, email, SMS) y si quieres excluir a socios VIP del proceso automático.",
-        summary: {
-          what_it_is: "Sistema que detecta socios con cuota vencida y gestiona los recordatorios de pago de forma automática y progresiva.",
-          for_who: ["Gestores de gimnasios", "Coordinadores de centros deportivos", "Dueños de estudios de yoga o crossfit"],
-        },
-      },
-      "gestorias": {
-        tagline: "Recuerda automáticamente a tus clientes los honorarios pendientes.",
-        one_liner: "Cobra tus honorarios sin perseguir a cada cliente: el sistema detecta la factura vencida y actúa por ti.",
-        descripcionDetallada: "Cuando un cliente de tu despacho tiene una factura vencida, el sistema le envía un recordatorio profesional y escalonado. Tú mantienes la relación intacta mientras la automatización hace el trabajo sucio. Si el impago se alarga, recibes una alerta para decidir cómo actuar.",
-        dolores: ["Clientes que pagan tarde y bloquean la tesorería del despacho", "Incomodidad de reclamar dinero a clientes con los que tienes trato diario", "Pérdida de tiempo gestionando impagos manualmente"],
-        pasos: ["Identificamos facturas vencidas en tu ERP o software de facturación", "Generamos un recordatorio profesional con el detalle de la factura", "Lo enviamos por el canal del cliente (email o WhatsApp)", "Escalamos el tono si pasan 5/10/15 días sin pago"],
-        personalizacion: "Ajusta el tono del recordatorio, elige si quieres incluir el desglose de la factura en el mensaje y configura excepciones para clientes clave.",
-        summary: {
-          what_it_is: "Automatización que gestiona la reclamación de honorarios pendientes sin comprometer la relación con el cliente.",
-          for_who: ["Gestores y asesores", "Administración de despachos", "Dueños de gestorías y asesorías"],
-        },
-      },
-      "salud": {
-        tagline: "Cobra tus sesiones y tratamientos sin incómodos recordatorios manuales.",
-        one_liner: "La relación con tu paciente es lo primero. El sistema cobra por ti sin que tengas que pedirlo tú.",
-        descripcionDetallada: "En centros de salud, reclamar dinero a un paciente puede sentirse incómodo. Esta automatización lo hace por ti: detecta facturas o sesiones impagadas y envía un recordatorio discreto y profesional al paciente, sin que tengas que intervenir. Si el impago se prolonga, recibes una alerta para decidir cómo gestionarlo.",
-        dolores: ["La relación personal con el paciente hace difícil reclamar dinero directamente", "Sesiones o tratamientos que se facturan tarde o no se cobran", "Tiempo del personal dedicado a hacer seguimiento de impagos"],
-        pasos: ["Detectamos sesiones o facturas sin cobrar en tu software de gestión", "Enviamos un recordatorio discreto y profesional al paciente", "Escalamos el aviso según los días de retraso", "Alertamos al equipo si el impago supera el umbral definido"],
-        personalizacion: "Elige el tono y la frecuencia de los recordatorios, el canal de envío y si quieres excluir a determinados pacientes o tipos de tratamiento.",
-        summary: {
-          what_it_is: "Sistema que gestiona el cobro de sesiones y tratamientos pendientes de forma automática, preservando la relación clínica con el paciente.",
-          for_who: ["Fisioterapeutas", "Clínicas dentales", "Centros de estética y bienestar", "Clínicas veterinarias"],
-        },
-      },
-      "construccion": {
-        tagline: "Reclama automáticamente los hitos de pago de cada obra.",
-        one_liner: "Con varias obras en marcha y múltiples hitos de facturación, ningún pago vuelve a caer en el olvido.",
-        descripcionDetallada: "En construcción los pagos se estructuran por hitos: proyecto aprobado, obra iniciada, certificación, entrega. Esta automatización vigila cada hito y, cuando la factura asociada vence sin pago, envía un recordatorio al cliente o promotor de forma automática. El sistema escala la urgencia si el retraso se acumula.",
-        dolores: ["Múltiples obras con hitos de pago distintos, imposibles de rastrear manualmente", "Clientes o promotores que retrasan pagos por desorganización, no por mala fe", "Tesorería tensa por obra avanzada sin cobrar"],
-        pasos: ["Sincronizamos los hitos de facturación de cada obra desde tu ERP", "Detectamos facturas vencidas asociadas a cada hito", "Enviamos recordatorio automático al contacto del cliente o promotor", "Escalamos el aviso y alertamos al responsable de obra si el retraso supera el umbral"],
-        personalizacion: "Configura los hitos de pago por tipo de obra, el tono del recordatorio y las excepciones por cliente o proyecto.",
-        summary: {
-          what_it_is: "Automatización que vigila los hitos de pago de cada obra y gestiona los recordatorios a clientes y promotores sin intervención manual.",
-          for_who: ["Jefes de obra", "Administración de constructoras", "Estudios de arquitectura", "Empresas de reformas"],
-        },
-      },
-      "academias": {
-        tagline: "Cobra las mensualidades sin perseguir a los padres cada mes.",
-        one_liner: "Automatiza el cobro de cuotas y mensualidades para que tu equipo dedique el tiempo a enseñar, no a reclamar.",
-        descripcionDetallada: "Cada mes hay alumnos cuyo pago no llega a tiempo. Esta automatización detecta los impagos y envía un recordatorio a los padres o al propio alumno de forma automática y escalonada. Así tu equipo administrativo no tiene que hacer llamadas ni enviar correos manualmente.",
-        dolores: ["Padres que olvidan el pago mensual y hay que recordarles uno a uno", "Tiempo administrativo dedicado a seguimiento de cobros", "Alumnos que continúan asistiendo con mensualidades sin pagar"],
-        pasos: ["Identificamos alumnos con mensualidad vencida en tu plataforma de gestión", "Enviamos recordatorio automático a los padres o alumnos", "Escalamos el tono si pasan 5/10/15 días sin pago", "Alertamos al equipo administrativo para intervención si es necesario"],
-        personalizacion: "Elige el canal de comunicación (WhatsApp, email), el tono según los días de retraso y si quieres excluir a alumnos con beca o acuerdo especial.",
-        summary: {
-          what_it_is: "Sistema automatizado de recordatorio de cuotas y mensualidades para academias y centros de formación.",
-          for_who: ["Directores de academia", "Administración de centros de formación", "Autoescuelas"],
-        },
-      },
-      "restauracion": {
-        tagline: "Recupera el dinero de tus eventos y reservas corporativas sin perseguir a nadie.",
-        one_liner: "Eventos, catering y reservas corporativas que no pagan a tiempo: el sistema los reclama por ti.",
-        descripcionDetallada: "Los restaurantes y hoteles suelen emitir facturas a clientes corporativos con pago diferido. Esta automatización monitoriza esas facturas y envía recordatorios automáticos cuando se acerca o supera la fecha de vencimiento, para que no tengas que hacer seguimiento manual de cada evento o reserva.",
-        dolores: ["Clientes corporativos que pagan a 30/60 días y se olvidan de la factura", "Eventos pasados con dinero sin cobrar que bloquean la liquidez", "Equipo dedicando tiempo a llamadas de cobro en vez de atender el negocio"],
-        pasos: ["Detectamos facturas de eventos o reservas corporativas vencidas", "Enviamos recordatorio automático con el detalle del evento y la factura", "Escalamos la urgencia según los días de retraso", "Alertamos al responsable comercial si el impago se prolonga"],
-        personalizacion: "Configura qué tipos de reserva o eventos entran en el proceso, el canal de comunicación y el tono según el perfil del cliente.",
-        summary: {
-          what_it_is: "Automatización de cobro para eventos, catering y reservas corporativas con pago diferido.",
-          for_who: ["Propietarios de restaurante", "Coordinadores de eventos", "Gestores de hotel"],
-        },
-      },
-      "ecommerce": {
-        tagline: "Recupera cobros fallidos de suscripciones y pedidos automáticamente.",
-        one_liner: "Cada pago fallido no detectado es un cliente perdido. El sistema lo identifica y actúa antes de que cancele.",
-        descripcionDetallada: "En e-commerce y tiendas con suscripción, los pagos fallidos son silenciosos: la tarjeta caduca, los fondos son insuficientes y el cliente ni se entera. Esta automatización detecta esos fallos en tiempo real y envía un recordatorio con enlace directo para actualizar el método de pago, antes de que el cliente se dé de baja sin quererlo.",
-        dolores: ["Pagos de suscripción que fallan silenciosamente sin que el cliente lo sepa", "Churn involuntario por no detectar pagos fallidos a tiempo", "Tiempo del equipo revisando manualmente el estado de cada pedido"],
-        pasos: ["Detectamos pagos fallidos o pedidos con cobro pendiente en tu plataforma", "Enviamos notificación automática al cliente con enlace para resolver el pago", "Reintentamos el cobro tras un periodo configurable", "Alertamos al equipo si el cliente no responde tras varios intentos"],
-        personalizacion: "Elige el número de reintentos, el intervalo entre ellos, el canal de notificación y si quieres aplicar un descuento de retención.",
-        summary: {
-          what_it_is: "Sistema de recuperación de pagos fallidos y cobros pendientes para tiendas online y negocios con suscripción.",
-          for_who: ["Gestores de tienda online", "Responsables de e-commerce", "Negocios con modelo de suscripción"],
-        },
-      },
-      "inmobiliaria": {
-        tagline: "Reclama rentas y honorarios pendientes sin tensionar la relación con propietarios ni inquilinos.",
-        one_liner: "Gestiona el cobro de rentas, honorarios y comisiones de forma automática y profesional.",
-        descripcionDetallada: "Las agencias inmobiliarias gestionan rentas de alquiler, honorarios de gestión y comisiones de venta. Esta automatización detecta los pagos vencidos y envía recordatorios automáticos a propietarios, inquilinos o compradores según corresponda, manteniendo el tono profesional que requiere el sector.",
-        dolores: ["Inquilinos que retrasan el pago de la renta y hay que recordarles cada mes", "Honorarios de gestión o comisiones de venta cobradas tarde", "Propietarios que presionan cuando el cobro se demora"],
-        pasos: ["Detectamos rentas, honorarios o comisiones vencidas en tu sistema de gestión", "Enviamos recordatorio automático al contacto correspondiente", "Escalamos según los días de retraso con el tono adecuado", "Notificamos al agente responsable si el impago se cronifica"],
-        personalizacion: "Configura por tipo de cobro (renta, honorario, comisión), el canal de comunicación y el tono por perfil de cliente.",
-        summary: {
-          what_it_is: "Automatización de cobro de rentas, honorarios y comisiones para agencias inmobiliarias.",
-          for_who: ["Agentes inmobiliarios", "Gestores de alquiler", "Administradores de fincas"],
-        },
-      },
-      "agencias": {
-        tagline: "Recuerda los honorarios de campaña a tus clientes sin dañar la relación.",
-        one_liner: "Cobra lo que te deben sin tener que pedirlo tú directamente: el sistema mantiene la presión sin la incomodidad.",
-        descripcionDetallada: "En agencias de marketing y consultoría la relación con el cliente es el activo más valioso. Reclamar dinero directamente puede tensar esa relación. Esta automatización envía recordatorios de pago en nombre de la agencia de forma profesional y escalonada, manteniendo el tono adecuado mientras tú te centras en el trabajo.",
-        dolores: ["Clientes con presupuestos variables que pagan en plazos erráticos", "Incomodidad de reclamar honorarios a clientes con los que tienes relación estrecha", "Tesorería de agencia tensa por proyectos cerrados sin cobrar"],
-        pasos: ["Detectamos facturas de proyectos o retainers vencidos en tu sistema de facturación", "Enviamos recordatorio profesional con el detalle del proyecto y la factura", "Escalamos el tono según los días de retraso", "Alertamos al account manager para intervención personalizada si es necesario"],
-        personalizacion: "Ajusta el tono (profesional, cercano, formal), elige si el recordatorio va firmado por la agencia o por el account, y configura excepciones por cliente estratégico.",
-        summary: {
-          what_it_is: "Automatización de cobro de honorarios y retainers para agencias y consultoras que cuidan la relación con el cliente.",
-          for_who: ["Account managers", "Directores de agencia", "Consultores independientes"],
-        },
-      },
-    },
+    modulo_codigo: "1.1",
   },
   {
     id: "B6",
+    hidden: true,
     codigo: "B6",
     slug: "analisis-incidencias-horarios",
     categoria: "B",
@@ -501,11 +317,13 @@ export const processes: Process[] = [
     personalizacion: "Elige qué tipo de alertas quieres recibir y cada cuánto.",
     related_processes: ["alertas-exceso-horas", "informe-mensual-horas-estimadas"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    bloque_negocio: "B4",
   },
 
   {
     id: "B7",
+    hidden: true,
     codigo: "B7",
     slug: "informe-mensual-horas-estimadas",
     categoria: "B",
@@ -549,11 +367,12 @@ export const processes: Process[] = [
     personalizacion: "Elige formato del informe (PDF, hoja de cálculo).",
     related_processes: ["analisis-incidencias-horarios", "alertas-exceso-horas"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
     id: "B8",
+    hidden: true,
     codigo: "B8",
     slug: "alertas-exceso-horas",
     categoria: "B",
@@ -597,11 +416,12 @@ export const processes: Process[] = [
     personalizacion: "Define el porcentaje de exceso que activa la alerta, el mensaje y quién la recibe.",
     related_processes: ["informe-mensual-horas-estimadas", "analisis-incidencias-horarios"],
     integration_domains: ["OTHER"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
   },
 
   {
     id: "C9",
+    hidden: true,
     codigo: "C9",
     slug: "alertas-vencimiento-facturas-compra",
     categoria: "C",
@@ -645,25 +465,25 @@ export const processes: Process[] = [
     personalizacion: "Anticipación (2 días, 5 días, 1 semana). ¿Deseas agrupar todas las del mismo proveedor?",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    bloque_negocio: "B4",
   },
 
   {
     id: "C10",
-    codigo: "C10",
+    codigo: "4.6",
     slug: "informes-financieros-direccion",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    nombre: "Informes financieros para dirección",
-    tagline: "Claridad financiera directa en tu inbox, cada mes.",
+    nombre: "Resumen financiero mensual del centro deportivo",
+    tagline: "Saber cómo va el centro sin esperar a que nadie prepare un informe.",
     recomendado: true,
-    descripcionDetallada: "Cierre mensual → Informe con facturación, margen, costes. Consolidamos datos de ingresos, gastos y estructura. Calculamos KPIs clave. Enviamos informe por tu vía de comunicación preferida.",
+    descripcionDetallada: "Al cierre de cada mes, el sistema consolida automáticamente los ingresos por cuotas, bonos y servicios, los gastos operativos y los KPIs clave del centro. El responsable recibe un resumen ejecutivo sin tener que abrir el software de gestión ni preparar nada.",
     summary: {
-      what_it_is: "Fotografía financiera automatizada del negocio para facilitar la toma de decisiones estratégicas.",
-      for_who: ["Directores Generales", "CFOs", "Socios de agencias"],
-      requirements: ["ERP/Software de gestión", "Hoja de cálculo de costes fijos"],
-      output: "Informe PDF/hoja de cálculo con Margen Bruto, EBITDA y Punto de Equilibrio mensual."
+      what_it_is: "Fotografía financiera automatizada del centro deportivo para tomar decisiones con datos reales cada mes.",
+      for_who: ["Propietarios de centros deportivos", "Gerentes de instalaciones", "Responsables de área"],
+      requirements: ["Software de gestión del centro", "Hoja de costes fijos"],
+      output: "Resumen mensual con ingresos por cuotas, ocupación, bajas y margen — entregado automáticamente."
     },
     indicators: {
       time_estimate: "2 semanas",
@@ -693,13 +513,16 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige tu fecha de cierre y tus KPIs.",
     related_processes: ["proyeccion-automatica-ingresos", "traspasos-automaticos-iva"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
 
+    modulo_codigo: "4.6",
   },
   {
     id: "C11",
+    hidden: true,
     codigo: "C11",
     slug: "proyeccion-automatica-ingresos",
     categoria: "C",
@@ -742,12 +565,13 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige entre visión moderada, alcista o pesimista.",
     related_processes: ["informes-financieros-direccion", "seguimiento-presupuestos"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP", "CRM"]
   },
 
   {
     id: "C12",
+    hidden: true,
     codigo: "C12",
     slug: "traspasos-automaticos-iva",
     categoria: "C",
@@ -790,14 +614,14 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige cuándo se notifica (mensual, trimestral) y vía (tu vía de comunicación preferida, mensajería o nube).",
     related_processes: ["recordatorios-pagos", "informes-financieros-direccion"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     integration_domains: ["ERP"],
-    landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
   },
 
   {
     id: "D13",
-    codigo: "D13",
+    codigo: "6.1",
     slug: "registro-automatico-gastos",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -842,57 +666,15 @@ export const processes: Process[] = [
     related_processes: ["alertas-vencimiento-facturas-compra", "traspasos-automaticos-iva"],
     integration_domains: ["ERP"],
     landing_slug: "gestorias",
-    sectores: ["Gestoria", "Construcción & Reformas", "Restauración", "Inmobiliaria"],
-  },
-  {
-    id: "D14",
-    hidden: true,
-    codigo: "D14",
-    slug: "creacion-metas-clickup",
-    categoria: "D",
-    categoriaNombre: "Gestión Interna",
-    nombre: "Creación de metas en tu herramienta de gestión de tareas",
-    tagline: "Saca todo el partido a las metas de tu herramienta de gestión de tareas sin perder tiempo en crearlas a mano.",
-    recomendado: true,
-    descripcionDetallada: "Desde un documento con objetivos mensuales → Creamos metas en tu herramienta de gestión de tareas, asignadas por cliente y equipo. Leemos los objetivos del documento. Creamos metas dinámicas en tu herramienta de gestión de tareas por usuario/equipo. Configuramos seguimiento automático de KPIs.",
-    summary: {
-      what_it_is: "Traducción automática de tu estrategia de negocio en objetivos accionables (Goals) dentro de tu herramienta de gestión de tareas.",
-      for_who: ["Directores de equipo", "CEOs", "Responsables de OKRs"],
-      requirements: ["tu herramienta de gestión de tareas (Plan Unlimited/Business)", "Documento de objetivos (Sheets/tu herramienta de gestión de tareas)"],
-      output: "Estructura de Metas (Goals) y objetivos (Targets) creada y asignada en tu herramienta de gestión de tareas."
-    },
-    indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["tu herramienta de gestión de tareas", "Google Sheets"]
-    },
-    how_it_works_steps: [
-      { title: "Definición de Targets", short: "Leemos tus objetivos.", detail: "Extraemos de tu hoja de planificación cuáles son los KPIs a medir este mes." },
-      { title: "Arquitectura tu herramienta de gestión de tareas", short: "Creamos los Goals dinámicos.", detail: "Generamos la estructura de metas en tu herramienta de gestión de tareas asignando pesos y porcentajes de éxito." },
-      { title: "Asignación de equipo", short: "Conectamos con responsables.", detail: "Cada usuario implicado recibe su meta para que su progreso se actualice automáticamente." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "radio", label: "Actualización", options: ["Automática vía API", "Manual en tu herramienta de gestión de tareas"] }
-      ],
-      free_text_placeholder: "¿Cómo mides el éxito de tus metas (monetario, numérico, booleano)?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Se actualiza si cambio el Sheets?", a: "Sí, podemos configurar una sincronización bidireccional o bajo demanda." }
-    ],
-    pasos: [
-      "Leemos los objetivos del documento",
-      "Creamos metas dinámicas en tu herramienta de gestión de tareas por usuario/equipo",
-      "Configuramos seguimiento automático de KPIs"
-    ],
-    personalizacion: "Elige colores por cliente/equipo.",
-    related_processes: ["informe-mensual-horas-estimadas", "alertas-exceso-horas"],
-    integration_domains: ["OTHER"]
+    sectores: ["Gestoria", "Construcción & Reformas", "Inmobiliaria"],
+    bloque_negocio: "B6",
+
+    modulo_codigo: "6.1",
   },
 
   {
     id: "D15",
+    landing_slug: "agencias",
     codigo: "D15",
     slug: "facturacion-automatica-horas-freelance",
     categoria: "B",
@@ -940,6 +722,7 @@ export const processes: Process[] = [
 
   {
     id: "D16",
+    landing_slug: "agencias",
     codigo: "D16",
     slug: "gestion-automatica-retenciones-freelance",
     categoria: "B",
@@ -987,69 +770,20 @@ export const processes: Process[] = [
   },
 
   {
-    id: "E17",
-    codigo: "E17",
-    slug: "atencion-automatica-tu vía de comunicación preferida",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Atención automática por mensajería",
-    tagline: "Responde al instante a dudas frecuentes y deriva a una persona cuando haga falta.",
-    recomendado: true,
-    descripcionDetallada: "Automatizamos la atención inicial por canales de mensajería para responder consultas repetidas (horarios, precios, ubicación, servicios, disponibilidad, etc.). Cuando el cliente pregunta algo complejo o fuera de lo previsto, el sistema deriva la conversación a un responsable con el contexto necesario para continuar sin perder tiempo.",
-    summary: {
-      what_it_is: "Asistente inteligente 24/7 que filtra y resuelve dudas en tus canales de mensajería, liberando a tu equipo para ventas reales.",
-      for_who: ["Atención al cliente", "Soportes técnicos", "Recepciones"],
-      requirements: ["API de mensajería móvil", "Base de conocimientos (FAQs)"],
-      output: "Conversaciones resueltas o filtradas con resumen para el humano."
-    },
-    indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["Mensajería", "IA", "Automatización"]
-    },
-    how_it_works_steps: [
-      { title: "Recepción de mensaje", short: "Escuchamos 24/7.", detail: "Cada mensaje entrante es analizado para entender la intención del usuario al instante." },
-      { title: "Resolución por IA", short: "Respondemos con contexto.", detail: "Consultamos tu base de precios, horarios y servicios para dar la respuesta perfecta." },
-      { title: "Derivación humana", short: "Pasamos el testigo cuando hace falta.", detail: "Si la consulta es de venta crítica o muy compleja, avisamos a tu equipo con un resumen de la charla." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Horario de atención", options: ["24/7", "Solo fuera de oficina"] },
-        { type: "radio", label: "Tono de la IA", options: ["Formal", "Cercano", "Divertido"] }
-      ],
-      free_text_placeholder: "¿Cuáles son las 3 preguntas que más te hacen tus clientes?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Puede enviar archivos o imágenes?", a: "Sí, puede enviar catálogos, mapas de ubicación o fotos de productos automáticamente." }
-    ],
-    pasos: [
-      "Detectamos el tipo de consulta del cliente (por palabras clave y contexto)",
-      "Respondemos con mensajes automatizados personalizados según la consulta",
-      "Si la conversación requiere atención humana, derivamos a un responsable",
-      "Guardamos el contexto para retomar sin perder información"
-    ],
-    personalizacion: "Define el tono, las preguntas frecuentes, horarios, servicios, mensajes de derivación y cuándo debe pasar a una persona.",
-    sectores: ["Servicios profesionales", "Retail", "Peluquería/estética", "Gestoria", "Construcción & Reformas", "Academias / Formación", "Hostelería"],
-    related_processes: ["atencion-automatica-redes", "captura-organizacion-solicitudes"],
-    integration_domains: ["OTHER"],
-    landing_slug: "salud"
-  },
-  {
     id: "E18",
-    codigo: "E18",
+    codigo: "1.1",
     slug: "asistente-reservas-recordatorios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Asistente de reservas y recordatorios",
-    tagline: "Gestiona reservas de forma ágil y reduce ausencias con confirmaciones y recordatorios.",
+    nombre: "Reservas de sesiones y pistas con recordatorios automáticos",
+    tagline: "Los socios reservan, el sistema confirma y avisa. Tú no tienes que hacer nada.",
     recomendado: true,
-    descripcionDetallada: "Facilitamos que los clientes reserven sin esperas: el asistente recopila la información necesaria, confirma la reserva y envía recordatorios. También permite cambios o reprogramaciones con un flujo guiado para evitar pérdidas de tiempo y reducir las ausencias a citas.",
+    descripcionDetallada: "El socio reserva su sesión o pista desde donde prefiera — WhatsApp, web o app. El sistema confirma la plaza al instante, envía un recordatorio antes de la cita y gestiona los cambios o cancelaciones con un flujo guiado. Sin llamadas, sin papel, sin malentendidos.",
     summary: {
-      what_it_is: "Secretaria virtual que coordina tu agenda y asegura que tus citas lleguen a tiempo.",
-      for_who: ["Clínicas", "Centros de estética", "Consultoras", "Restaurantes"],
-      requirements: ["Sistema de calendario corporativo", "Canal de comunicación directa"],
-      output: "Citas confirmadas en agenda + Reducción de 'No-Shows' hasta un 80%."
+      what_it_is: "Asistente de reservas automático para centros deportivos que elimina la gestión manual de sesiones, pistas y actividades.",
+      for_who: ["Centros deportivos", "Clubs de pádel", "Gimnasios boutique", "Estudios de yoga y fitness"],
+      requirements: ["Canal de comunicación del centro (WhatsApp, web o app)", "Calendario de actividades o pistas"],
+      output: "Reservas confirmadas al instante + recordatorios automáticos + reducción de ausencias."
     },
     indicators: {
       time_estimate: "1-2 semanas",
@@ -1079,110 +813,12 @@ export const processes: Process[] = [
       "Si el cliente necesita cambiar, guiamos la reprogramación o cancelación de forma sencilla"
     ],
     personalizacion: "Define qué datos pedir, reglas de confirmación, mensajes de recordatorio, tiempos de aviso y cómo gestionar cambios/cancelaciones.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "Inmobiliaria", "Agencia/marketing"],
     related_processes: ["reduccion-ausencias-citas", "solicitud-automatica-resenas"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
-  },
-  {
-    id: "E19",
-    hidden: true,
-    codigo: "E19",
-    slug: "captura-organizacion-solicitudes",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Captura y organización automática de solicitudes",
-    tagline: "Recoge solicitudes desde distintos canales y las deja ordenadas para gestionarlas rápido.",
-    recomendado: true,
-    descripcionDetallada: "Cuando llegan solicitudes desde formularios o mensajes, las centralizamos y organizamos para que no se pierdan. El objetivo es pasar de “mensajes sueltos” a un sistema claro: qué ha pedido la persona, por qué canal llegó y en qué estado está.",
-    summary: {
-      what_it_is: "Buzón unificado que profesionaliza la entrada de nuevos contactos (leads) de tu negocio.",
-      for_who: ["Equipos comerciales", "Equipos de marketing", "Atención al cliente"],
-      requirements: ["Canales digitales (Web/Redes)", "Base de datos (Gestor de tareas/CRM)"],
-      output: "Tablón con todas las solicitudes clasificadas por canal y urgencia."
-    },
-    indicators: {
-      time_estimate: "< 1 semana",
-      complexity: "Baja",
-      integrations: ["Gestor de tareas", "Canal de comunicación", "Redes sociales"]
-    },
-    how_it_works_steps: [
-      { title: "Escucha multicanal", short: "Leemos todos tus mensajes.", detail: "Extraemos el contacto de quien te escribe por tus canales digitales o web." },
-      { title: "Categorización automática", short: "Entendemos la demanda.", detail: "El sistema clasifica si es una pregunta de precio, una queja o una solicitud de presupuesto." },
-      { title: "Centralización", short: "Todo a tu zona de trabajo.", detail: "Creamos una tarjeta en tu gestor de tareas para que nada dependa de una memoria dispersa." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Destino", options: ["Gestor de tareas", "Software de gestión", "CRM"] },
-        { type: "select", label: "Canal de comunicación", options: ["Email", "Slack", "Teams", "WhatsApp", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿Cuántos canales quieres unificar hoy mismo?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Avisa al jefe de equipo?", a: "Podemos configurar reglas para que las solicitudes 'VIP' notifiquen directamente a gerencia." }
-    ],
-    pasos: [
-      "Recibimos solicitudes desde los canales definidos (por ejemplo, formulario, chat o redes)",
-      "Extraemos la información clave (contacto, motivo, servicio y urgencia)",
-      "Guardamos cada solicitud en un listado organizado para su seguimiento",
-      "Notificamos al responsable para que actúe sin retrasos"
-    ],
-    personalizacion: "Define qué información quieres capturar, cómo se ordena (por prioridad/servicio) y qué avisos se envían al equipo.",
-    sectores: ["Servicios profesionales", "Peluquería/estética", "Retail", "E-commerce", "Construcción & Reformas", "Academias / Formación"],
-    related_processes: ["seguimiento-automatico-solicitudes", "alta-automatica-clientes-solicitudes"],
-    integration_domains: ["CRM"],
-    landing_slug: "salud"
-  },
-  {
-    id: "E20",
-    hidden: true,
-    codigo: "E20",
-    slug: "seguimiento-automatico-solicitudes",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Seguimiento automático de solicitudes",
-    tagline: "Automatiza el seguimiento para que nadie se quede sin respuesta.",
-    recomendado: true,
-    descripcionDetallada: "Creamos un flujo de seguimiento para retomar conversaciones y solicitudes que no avanzan. El sistema envía mensajes según el estado (pendiente de respuesta, esperando confirmación, propuesta enviada, etc.) y evita que se pierdan solicitudes por falta de seguimiento.",
-    summary: {
-      what_it_is: "Cierre de ventas incansable que 'persigue' suavemente a tus prospectos hasta obtener respuesta.",
-      for_who: ["Comerciales", "Freelancers", "Agencias de marketing"],
-      requirements: ["CRM con estados de venta", "Canal de comunicación (Chat/tu vía de comunicación preferida)"],
-      output: "Aumento de la tasa de conversión sin carga administrativa para el equipo."
-    },
-    indicators: {
-      time_estimate: "1-2 semanas",
-      complexity: "Media",
-      integrations: ["CRM", "Comunicación"]
-    },
-    how_it_works_steps: [
-      { title: "Control de estancamiento", short: "Detectamos el silencio.", detail: "Si un cliente no responde a una propuesta en el tiempo definido, el proceso se activa solo." },
-      { title: "Mensaje de contexto", short: "Recordamos el valor.", detail: "Enviamos un mensaje personalizado tipo 'Hola, ¿pudiste ver la propuesta?' por la vía más efectiva." },
-      { title: "Cierre o derivación", short: "Limpiamos el pipeline.", detail: "Si el seguimiento no prospera, el sistema archiva la oportunidad y te avisa del resultado." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Número de toques", options: ["2 intentos", "3 intentos", "5 intentos"] },
-        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿Quieres usar notas de voz autogeneradas para que sea más natural?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Parecerá un robot?", a: "No, usamos variables para que el mensaje incluya su nombre, servicio y contexto real de la charla." }
-    ],
-    pasos: [
-      "Detectamos solicitudes sin respuesta o estancadas según estado y tiempo",
-      "Enviamos un mensaje de seguimiento personalizado",
-      "Si la persona responde, se actualiza el estado y se deriva al responsable si corresponde",
-      "Si no hay respuesta, realizamos un segundo intento y cerramos con un mensaje final (opcional)"
-    ],
-    personalizacion: "Define estados, tiempos de espera, número de intentos, tono de los mensajes y qué casos deben pasar a una persona.",
-    sectores: ["Inmobiliaria", "Servicios profesionales", "Peluquería/estética", "Gestoria"],
-    related_processes: ["captura-organizacion-solicitudes", "seguimiento-presupuestos"],
-    integration_domains: ["CRM"],
-    landing_slug: "salud"
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
   },
   {
     id: "E21",
@@ -1227,15 +863,18 @@ export const processes: Process[] = [
       "Opcionalmente, registramos el resultado para mejorar el servicio"
     ],
     personalizacion: "Define cuándo se envía, el texto, si hay recordatorio y el tono (más cercano o más formal).",
-    sectores: ["Centros Deportivos", "Academias / Formación", "Restauración", "E-commerce"],
-    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-tu vía de comunicación preferida"],
+    sectores: ["Centros Deportivos", "E-commerce"],
+    related_processes: ["asistente-reservas-recordatorios", "atencion-automatica-redes-sociales"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
   },
   {
     id: "E22",
+    hidden: true,
     codigo: "E22",
-    slug: "atencion-automatica-tu vía de comunicación preferida",
+    slug: "atencion-automatica-redes-sociales",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     nombre: "Atención automática por redes sociales",
@@ -1275,66 +914,15 @@ export const processes: Process[] = [
       "Notificamos al equipo sobre las interacciones más relevantes"
     ],
     personalizacion: "Define el tono de respuesta, qué tipo de interacciones priorizar y qué información enviar (enlaces, catálogos, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Redes Sociales", "IA", "Herramienta de automatización"],
     dolores: ["Me escriben mucho y no doy abasto", "Tardamos en responder y perdemos clientes"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
-    landing_slug: "centros-deportivos",
+    related_processes: ["atencion-automatica-redes-sociales", "captura-organizacion-solicitudes"],
 
   },
   {
-    id: "E23",
-    hidden: true,
-    codigo: "E23",
-    slug: "reduccion-ausencias-citas",
-    categoria: "E",
-    categoriaNombre: "Atención y Ventas",
-    nombre: "Reducción de citas perdidas",
-    tagline: "Confirma citas, recuerda automáticamente y facilita reprogramar para evitar huecos perdidos.",
-    recomendado: false,
-    descripcionDetallada: "Creamos un flujo de confirmación y recordatorios para reducir las ausencias a citas. El cliente puede confirmar de forma sencilla y, si no puede asistir, se le guía para cambiar la cita sin llamadas ni idas y vueltas.",
-    summary: {
-      what_it_is: "Protocolo de comunicación activa que asegura la asistencia de tus clientes y optimiza tu tiempo productivo.",
-      for_who: ["Clínicas", "Consultoría", "Estética"],
-      requirements: ["Sistema de citas (Calendario/CRM)", "API de mensajería"],
-      output: "Agenda llena con ausencias mínimas y reprogramaciones fáciles."
-    },
-    indicators: {
-      time_estimate: "1 semana",
-      complexity: "Baja",
-      integrations: ["Calendario", "Mensajería"]
-    },
-    how_it_works_steps: [
-      { title: "Trigger de Cita", short: "Detectamos nuevas reservas.", detail: "En cuanto se crea un evento en tu calendario, el sistema planifica los recordatorios." },
-      { title: "Doble Confirmación", short: "Validamos asistencia 24h antes.", detail: "Enviamos un mensaje pidiendo confirmación. Si cancelan, el hueco queda libre automáticamente." },
-      { title: "Aviso de 'Última Hora'", short: "Recordamos 1h antes.", detail: "Un último aviso para asegurar que el cliente ya está de camino a tu centro/oficina." }
-    ],
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Tiempo de antelación", options: ["24h antes", "48h antes"] },
-        { type: "select", label: "Canal comunicación", options: ["WhatsApp", "Email", "SMS", "Tu vía de comunicación preferida"] }
-      ],
-      free_text_placeholder: "¿A quién avisamos internamente si un cliente cancela de golpe?"
-    },
-    demo: { video_url: "PENDING" },
-    faqs: [
-      { q: "¿Puedo usar mi propio número?", a: "Sí, a través de integraciones oficiales podemos usar tu línea de empresa para los avisos." }
-    ],
-    pasos: [
-      "Enviamos un mensaje de confirmación tras la reserva (o antes de la cita)",
-      "Enviamos recordatorios en los momentos definidos",
-      "Si el cliente no puede asistir, le guiamos para reprogramar o cancelar fácilmente",
-      "Si no hay respuesta, avisamos al responsable para actuar a tiempo"
-    ],
-    personalizacion: "Define cuándo enviar confirmaciones y recordatorios, el texto de los mensajes y las reglas para cambios/cancelaciones.",
-    sectores: ["Peluquería/estética", "Clínicas / Salud / Dental / Veterinaria", "Gimnasio/yoga", "Servicios profesionales", "Academias / Formación", "Hostelería"],
-    herramientas: ["Mensajería", "Calendario"],
-    dolores: ["Se olvidan de la cita / hay muchas ausencias"],
-    related_processes: ["asistente-reservas-recordatorios", "solicitud-automatica-resenas"],
-    landing_slug: "salud"
-  },
-  {
     id: "E24",
+    hidden: true,
     codigo: "E24",
     slug: "alta-automatica-clientes-solicitudes",
     categoria: "E",
@@ -1377,14 +965,14 @@ export const processes: Process[] = [
       "Enviamos el mensaje de bienvenida con los acceso"
     ],
     personalizacion: "Define las preguntas del formulario, la estructura de carpetas, el tablero del gestor de tareas y el mensaje de bienvenida.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Formulario", "Gestor de tareas", "Gestor de archivos", "Canal de comunicación"],
     dolores: ["Pierdo solicitudes entre tu vía de comunicación preferida/tu vía de comunicación preferida/tu vía de comunicación preferida", "No hago seguimiento a las personas interesadas"],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "captura-organizacion-solicitudes"],
-    landing_slug: "centros-deportivos",
+    related_processes: ["atencion-automatica-redes-sociales", "captura-organizacion-solicitudes"],
   },
   {
     id: "F25",
+    hidden: true,
     codigo: "F25",
     slug: "auditoria-tecnologica-ia",
     categoria: "F",
@@ -1427,14 +1015,14 @@ export const processes: Process[] = [
       "Roadmap por fases + backlog priorizado"
     ],
     personalizacion: "Duración orientativa: 1–2 semanas (según alcance). Entregables: informe + roadmap + backlog.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: [],
-    related_processes: ["atencion-automatica-tu vía de comunicación preferida", "registro-automatico-gastos"],
-    landing_slug: "centros-deportivos",
+    related_processes: ["atencion-automatica-redes-sociales", "registro-automatico-gastos"],
+    bloque_negocio: "B4",
   },
   {
     id: "CM1",
-    codigo: "CM1",
+    codigo: "2.1",
     slug: "lead-capture-crm",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1452,13 +1040,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de lead desde formulario/RRSS","Sincronización con CRM","Activación de secuencia de email/notificación"],
     personalizacion: "Define los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","HubSpot","ActiveCampaign","Make"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió","Pierdo solicitudes entre WhatsApp/Instagram/email"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.1",
   },
   {
     id: "CM2",
+    hidden: true,
     codigo: "CM2",
     slug: "secuencia-bienvenida-leads-frios",
     categoria: "E",
@@ -1477,14 +1069,13 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger por nuevo lead","Envío de secuencia temporizada","Detección de conversión para parada automática"],
     personalizacion: "Elige el canal (Email/WhatsApp) y el número de impactos.",
-    sectores: ["Centros Deportivos", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce"],
+    sectores: ["Centros Deportivos", "Construcción & Reformas", "E-commerce"],
     herramientas: ["ActiveCampaign","Brevo","WhatsApp Business API"],
     dolores: ["Tardamos en responder y perdemos clientes"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "CM3",
-    codigo: "CM3",
+    codigo: "3.2",
     slug: "campana-reactivacion-ex-socios",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1502,14 +1093,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Filtro de ex-socios (baja > 3 meses)","Envío de oferta vía Email/WhatsApp","Seguimiento de respuesta"],
     personalizacion: "Define el tiempo de inactividad y las fechas de lanzamiento.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ActiveCampaign","Airtable","Mindbody","Make"],
     dolores: ["Los socios se van sin avisar y te enteras cuando ya es tarde"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.2",
   },
   {
     id: "GV4",
-    codigo: "GV4",
+    codigo: "3.3",
     slug: "notificacion-renovacion-cuota",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1527,14 +1121,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Monitorización de fechas de vencimiento","Avisos automáticos T-7 y T-2","Link de pago directo"],
     personalizacion: "Elige los días de antelación y el tono del mensaje.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","WhatsApp Business API","Stripe"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.3",
   },
   {
     id: "GV5",
-    codigo: "GV5",
+    codigo: "2.2",
     slug: "reactivacion-leads-no-convirtieron",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1552,18 +1149,21 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de 'Prueba sin Alta'","Secuencia 15/30/60 días","Aviso a equipo si hay respuesta"],
     personalizacion: "Define los incentivos y el número de recordatorios.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ActiveCampaign","Make","Calendly"],
     dolores: ["Tienes leads de prueba gratuita que nunca nadie siguió"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.2",
   },
   {
     id: "GV6",
-    codigo: "GV6",
+    codigo: "2.3",
     slug: "programa-referidos-automatizado",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    nombre: "Sistema automático para que tus alumnos traigan amigos a cambio de un premio",
+    nombre: "Sistema automático para que tus alumnos traigan amigos a cambio de un descuento",
     tagline: "Tus alumnos son tus mejores comerciales.",
     recomendado: false,
     descripcionDetallada: "A los 30 días del alta, el alumno recibe un incentivo para referir a un amigo. Si el referido se da de alta, el sistema detecta el origen y aplica el beneficio automáticamente.",
@@ -1577,14 +1177,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Trigger a los 30 días del alta","Envío de link único de referido","Atribución automática de premio"],
     personalizacion: "Elige el premio (mes gratis, descuento, etc.).",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ReferralHero","Viral Loops","Make","ActiveCampaign"],
     dolores: ["Necesito más reservas"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.3",
   },
   {
     id: "GV7",
-    codigo: "GV7",
+    codigo: "3.1",
     slug: "seguimiento-alumnos-riesgo-baja",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1602,13 +1205,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Análisis de frecuencia de asistencia","Detección de 'riesgo de abandono'","Mensaje preventivo personalizado"],
     personalizacion: "Ajusta los días de inactividad según la intensidad del centro.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Virtuagym","Mindbody","Make","WhatsApp Business API"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.1",
   },
   {
     id: "GV8",
+    hidden: true,
     codigo: "GV8",
     slug: "upsell-equipamiento-deportivo",
     categoria: "C",
@@ -1630,11 +1237,10 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Make","ActiveCampaign","Shopify"],
     dolores: ["Quiero automatizar presupuestos y respuestas"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "GV9",
-    codigo: "GV9",
+    codigo: "3.5",
     slug: "gestion-bonos-packs-clases",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -1656,10 +1262,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Stripe","ActiveCampaign"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.5",
   },
   {
     id: "OA10",
-    codigo: "OA10",
+    codigo: "2.4",
     slug: "alta-socio-accesos-auto",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1681,9 +1290,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Virtuagym","Mindbody","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.4",
   },
   {
     id: "OA11",
+    hidden: true,
     codigo: "OA11",
     slug: "gestion-automatizada-reservas",
     categoria: "B",
@@ -1705,12 +1318,10 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Mindbody","Virtuagym","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "OA12",
-    hidden: true,
-    codigo: "OA12",
+    codigo: "1.4",
     slug: "control-aforo-alertas-ocupacion",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1731,11 +1342,14 @@ export const processes: Process[] = [
     sectores: ["Centros Deportivos"],
     herramientas: ["Software de gestión","Make","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja"],
-    landing_slug: "centros-deportivos"
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.4",
   },
   {
     id: "OA13",
-    codigo: "OA13",
+    codigo: "4.2",
     slug: "informe-semanal-kpis-operativos",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1757,61 +1371,13 @@ export const processes: Process[] = [
     herramientas: ["Make","Google Sheets","Slack"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
     landing_slug: "centros-deportivos",
-  },
-  {
-    id: "OA14",
-    hidden: true,
-    codigo: "OA14",
-    slug: "gestion-incidencias-equipamiento",
-    categoria: "B",
-    categoriaNombre: "Horarios y Proyectos",
-    nombre: "Registro automático de averías con seguimiento hasta que estén reparadas",
-    tagline: "Tus máquinas siempre a punto, sin olvidos.",
-    recomendado: false,
-    descripcionDetallada: "Reporte de averías mediante formulario o mensaje. Se crea automáticamente un ticket, se notifica al responsable de mantenimiento y se hace seguimiento hasta resolución.",
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
-        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
-      ],
-      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
-    },
-    demo: { video_url: "PENDING" },
-    pasos: ["Entrada de incidencia desde staff","Alta en gestor de mantenimiento","Aviso y tracking de reparación"],
-    personalizacion: "Elige la herramienta de tickets (ClickUp, Notion, Slack).",
-    sectores: ["Centros Deportivos"],
-    herramientas: ["Typeform","Slack","ClickUp","Make"],
-    dolores: ["Pierdo solicitudes entre WhatsApp/Instagram/email"],
-    landing_slug: "centros-deportivos"
-  },
-  {
-    id: "OA15",
-    codigo: "OA15",
-    slug: "gestion-calendario-examenes-grado",
-    categoria: "B",
-    categoriaNombre: "Horarios y Proyectos",
-    nombre: "Organización automática de exámenes o pruebas de nivel para tus alumnos",
-    tagline: "Organiza tus pasos de grado sin caos administrativo.",
-    recomendado: true,
-    descripcionDetallada: "Identifica automáticamente a los alumnos que cumplen requisitos para examen, les envía invitación con fecha y formulario de confirmación. El instructor recibe el listado 48h antes.",
-    customization: {
-      options_blocks: [
-        { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
-        { type: "select", label: "Canal de Notificaciones", options: ["Email", "WhatsApp", "Slack", "Teams", "Otro"] }
-      ],
-      free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
-    },
-    demo: { video_url: "PENDING" },
-    pasos: ["Filtrado de alumnos elegibles","Envío masivo de invitaciones","Consolidación de confirmaciones"],
-    personalizacion: "Ajusta los requisitos por cada nivel o cinturón.",
-    sectores: ["Centros Deportivos"],
-    herramientas: ["Make","Google Sheets","Gmail","WhatsApp Business API"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
   },
   {
     id: "OA16",
-    codigo: "OA16",
+    hidden: true,
+    codigo: "3.7",
     slug: "registro-seguimiento-lesiones",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1833,10 +1399,13 @@ export const processes: Process[] = [
     herramientas: ["Typeform","Make","Airtable","Gmail"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.7",
   },
   {
     id: "OA17",
-    codigo: "OA17",
+    codigo: "4.3",
     slug: "gestion-contratos-firma-digital",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1854,14 +1423,16 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Generación de contrato dinámico","Envío para firma digital","Archivo automático en la nube"],
     personalizacion: "Incluye tus propias plantillas de contrato.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Docusign","SignNow","Make","Google Drive"],
     dolores: ["Necesito centralizar la información de clientes"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
   },
   {
     id: "OA18",
-    codigo: "OA18",
+    codigo: "4.5",
     slug: "automatizacion-comunicacion-padres",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1879,14 +1450,16 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Segmentación Alumno vs Tutor","Alertas de asistencia en tiempo real","Recordatorios de eventos infantiles"],
     personalizacion: "Elige qué avisos enviar a los padres y por qué canal.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","WhatsApp Business API","ActiveCampaign"],
     dolores: ["Tardamos en responder y perdemos clientes"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.5",
   },
   {
     id: "OA19",
-    codigo: "OA19",
+    codigo: "3.4",
     slug: "informe-mensual-progreso-alumno",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -1904,14 +1477,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Agregación de actividad mensual","Generación de reporte visual","Envío personalizado automatizado"],
     personalizacion: "Define qué hitos celebrar (ej. '10 clases este mes').",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Software de gestión","ActiveCampaign","Google Sheets"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.4",
   },
   {
     id: "AC20",
-    codigo: "AC20",
+    codigo: "1.2",
     slug: "whatsapp-automata-faq",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1929,21 +1505,24 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Detección de intención (NLP)","Respuesta desde base de conocimiento","Escalado inteligente con contexto"],
     personalizacion: "Entrena al bot con tus horarios y tarifas específicas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["WhatsApp Business API","Make","ChatGPT"],
     dolores: ["Me escriben mucho y no doy abasto","Tengo muchas preguntas repetidas"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.2",
   },
   {
     id: "AC21",
-    codigo: "AC21",
+    codigo: "5.2",
     slug: "encuesta-satisfaccion-post-clase",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    nombre: "Encuesta rápida automática a tus alumnos justo después de cada clase",
-    tagline: "Escucha a tus alumnos en caliente.",
+    nombre: "Encuesta de satisfacción periódica a socios: detecta problemas antes de que se vayan",
+    tagline: "Saber cómo están tus socios sin preguntarles cada día.",
     recomendado: false,
-    descripcionDetallada: "2 horas después de la clase, el asistente recibe una encuesta de 1-2 preguntas. Las valoraciones bajas generan una alerta inmediata al responsable.",
+    descripcionDetallada: "Una vez al mes, o tras un número configurable de sesiones, el sistema envía una encuesta breve de 1-2 preguntas a una muestra de socios. No es un bombardeo — es una escucha inteligente. Si alguien valora mal, el responsable recibe una alerta inmediata para actuar antes de que ese socio decida irse.",
     customization: {
       options_blocks: [
         { type: "select", label: "Preferencias de Configuración", options: ["Priorizar automatización total", "Mantener paso de revisión manual", "Adaptar según el caso"] },
@@ -1952,16 +1531,19 @@ export const processes: Process[] = [
       free_text_placeholder: "¿Existe algún requisito específico para tu negocio o clientes a tener en cuenta?"
     },
     demo: { video_url: "PENDING" },
-    pasos: ["Trigger post-asistencia","Envío de micro-encuesta","Alertas por malas valoraciones"],
-    personalizacion: "Elige las preguntas y el tiempo de espera post-clase.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    pasos: ["Trigger periódico configurable (mensual o cada X sesiones)","Envío de micro-encuesta a muestra de socios","Alerta inmediata al responsable si la valoración es baja"],
+    personalizacion: "Elige la frecuencia (mensual, quincenal, cada 5 sesiones), las preguntas y el umbral de alerta.",
+    sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Make","ActiveCampaign"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B5",
+
+    modulo_codigo: "5.2",
   },
   {
     id: "AC22",
-    codigo: "AC22",
+    codigo: "5.3",
     slug: "gestion-quejas-reclamaciones",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -1979,14 +1561,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Captura de queja vía formulario","Creación de ticket prioritario","Notificación y seguimiento de SLA"],
     personalizacion: "Define tus tiempos de respuesta por tipo de queja.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Typeform","ClickUp","Make"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B5",
+
+    modulo_codigo: "5.3",
   },
   {
     id: "AC23",
-    codigo: "AC23",
+    codigo: "3.6",
     slug: "felicitacion-cumpleanos-oferta",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -2008,9 +1593,13 @@ export const processes: Process[] = [
     herramientas: ["ActiveCampaign","Make","WhatsApp Business API"],
     dolores: ["Los socios se van sin avisar"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.6",
   },
   {
     id: "AC24",
+    hidden: true,
     codigo: "AC24",
     slug: "deteccion-socios-churn-riesgo",
     categoria: "E",
@@ -2029,14 +1618,13 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Chequeo diario de inactividad","Multicanalidad de contacto (Email/WA)","Oferta de rescate personalizada"],
     personalizacion: "Define el umbral de 'riesgo' (14, 20 o 30 días).",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Software de gestión","Make","ActiveCampaign","WhatsApp"],
     dolores: ["No sabes cuántos socios están en riesgo de baja ahora mismo"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "AC25",
-    codigo: "AC25",
+    codigo: "1.3",
     slug: "notificacion-cambios-cancelaciones-clase",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2078,14 +1666,18 @@ export const processes: Process[] = [
       "Enviamos notificación personalizada a cada alumno"
     ],
     personalizacion: "Elige el canal, el tono del mensaje y si quieres incluir propuesta de nueva fecha.",
-    related_processes: ["control-asistencia-alertas-faltas", "matricula-asignacion-nivel-automatica"],
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    related_processes: ["matricula-asignacion-nivel-automatica"],
+    sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.3",
   },
   {
     id: "AC26",
-    codigo: "AC26",
+    hidden: true,
+    codigo: "3.10",
     slug: "control-asistencia-alertas-faltas",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2128,14 +1720,16 @@ export const processes: Process[] = [
     ],
     personalizacion: "Define el umbral de faltas, a quién avisar y el tono del mensaje (recordatorio amable o formal).",
     related_processes: ["notificacion-cambios-cancelaciones-clase", "matricula-asignacion-nivel-automatica"],
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     integration_domains: ["OTHER"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.10",
   },
   {
     id: "AC27",
-    hidden: true,
-    codigo: "AC27",
+    codigo: "2.4",
     slug: "matricula-asignacion-nivel-automatica",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -2177,13 +1771,15 @@ export const processes: Process[] = [
       "Enviamos bienvenida al alumno y aviso al profesor del grupo"
     ],
     personalizacion: "Personaliza el criterio de asignación, el contenido del kit de bienvenida y los avisos al equipo docente.",
-    related_processes: ["notificacion-cambios-cancelaciones-clase", "control-asistencia-alertas-faltas"],
+    related_processes: ["notificacion-cambios-cancelaciones-clase"],
     integration_domains: ["OTHER"],
-    landing_slug: "academias"
+    landing_slug: "academias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4",
   },
   {
     id: "RO25",
-    codigo: "RO25",
+    codigo: "4.4",
     slug: "onboarding-empleado-entrenador",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -2201,15 +1797,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lanzamiento de workflow por nuevo contrato","Distribución de kit de bienvenida digital","Seguimiento de tareas de onboarding"],
     personalizacion: "Adapta el checklist por rol (staff, instructor, alumno).",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Make","Notion","Gmail"],
     dolores: ["Quiero ordenar tareas y que se asignen solas"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4",
   },
   {
     id: "RO26",
-    hidden: true,
-    codigo: "RO26",
+    hidden: false,
+    codigo: "4.7",
     slug: "gestion-turnos-disponibilidad-instructores",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -2229,12 +1827,23 @@ export const processes: Process[] = [
     personalizacion: "Define los plazos para informar la disponibilidad.",
     sectores: ["Centros Deportivos"],
     herramientas: ["Typeform","Make","Google Calendar","Slack"],
-    dolores: ["Quiero ordenar tareas y que se asignen solas"],
-    landing_slug: "centros-deportivos"
+    dolores: [
+      "Cada semana llamas o escribes a cada instructor para saber cuándo puede dar clase",
+      "Los horarios se montan a mano y los errores de asignación generan conflictos de última hora",
+      "Cuando falta cobertura en una clase te enteras tarde, sin margen para reaccionar",
+    ],
+    benefits: [
+      "Los instructores reportan disponibilidad solos desde su móvil, sin que tú intervengas",
+      "El sistema cruza disponibilidades con el calendario y detecta conflictos antes de que ocurran",
+      "Las incidencias de cobertura se notifican al instante para que puedas actuar a tiempo",
+    ],
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.7",
   },
   {
     id: "FF27",
-    codigo: "FF27",
+    codigo: "4.1",
     slug: "cobro-recurrente-gestion-impagos",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
@@ -2252,13 +1861,17 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Ejecución de remesa/cobro tarjeta","Lógica de reintentos automática","Comunicación de deuda instantánea"],
     personalizacion: "Define el número de reintentos y los plazos de aviso.",
-    sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
+    sectores: ["Centros Deportivos", "E-commerce"],
     herramientas: ["Stripe","GoCardless","Make","WhatsApp Business API"],
     dolores: ["Los cobros fallidos los sigues persiguiendo tú"],
     landing_slug: "centros-deportivos",
+    bloque_negocio: "B4",
+
+    modulo_codigo: "4.1",
   },
   {
     id: "FF28",
+    hidden: true,
     codigo: "FF28",
     slug: "alerta-pagos-pendientes-proveedores",
     categoria: "C",
@@ -2277,13 +1890,13 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Lectura de fechas de vencimiento de compra","Consolidación semanal de pagos","Avisos internos de tesorería"],
     personalizacion: "Elige el día de la semana para el resumen de pagos.",
-    sectores: ["Centros Deportivos", "Academias / Formación", "E-commerce"],
+    sectores: ["Centros Deportivos", "E-commerce"],
     herramientas: ["Airtable","Make","Gmail"],
     dolores: ["Necesito centralizar la información de clientes"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "OE29",
+    hidden: true,
     codigo: "OE29",
     slug: "comunicacion-cambios-horario",
     categoria: "B",
@@ -2302,21 +1915,21 @@ export const processes: Process[] = [
     demo: { video_url: "PENDING" },
     pasos: ["Actualización de horario en sistema","Identificación de socios afectados","Aviso masivo multicanal"],
     personalizacion: "Define el margen de tiempo para avisar de cancelaciones.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["Software de gestión","Make","WhatsApp Business API"],
     dolores: ["Gestionas las reservas y cancelaciones a mano"],
-    landing_slug: "centros-deportivos",
   },
   {
     id: "GS1",
-    hidden: true,
-    codigo: "GS1",
+    codigo: "2.1",
     slug: "recopilacion-mensual-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     nombre: "Recopilación automática de documentos",
     tagline: "Solicita y centraliza la documentación de tus clientes cada mes sin perseguir a nadie.",
     landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
     benefits: [
       "Ahorro de 5+ horas mensuales en gestión documental",
       "Reducción drástica de retrasos en cierres contables",
@@ -2356,12 +1969,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS2",
-    hidden: true,
-    codigo: "GS2",
+    codigo: "3.1",
     slug: "alertas-vencimientos-fiscales",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
     landing_slug: "gestorias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
     nombre: "Alertas de vencimientos fiscales y laborales",
     tagline: "Evita sanciones y recargos con un calendario de impuestos automatizado.",
     benefits: [
@@ -2403,12 +2017,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS3",
-    hidden: true,
-    codigo: "GS3",
+    codigo: "3.2",
     slug: "seguimiento-expedientes",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
     landing_slug: "gestorias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
     nombre: "Seguimiento del estado de cada expediente",
     tagline: "Tu cliente sabe en qué punto está su gestión sin tener que llamarte.",
     benefits: [
@@ -2497,11 +2112,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS5",
-    codigo: "GS5",
+    codigo: "6.2",
     slug: "conciliacion-bancaria-automatica",
     categoria: "C",
     categoriaNombre: "Facturación y Finanzas",
-    landing_slug: "centros-deportivos",
+    landing_slug: "gestorias",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
     nombre: "Conciliación de extractos bancarios",
     tagline: "Cruza cobros y pagos con tus facturas registradas de forma automática.",
     benefits: [
@@ -2536,19 +2153,20 @@ export const processes: Process[] = [
       "Sincronizamos los estados de pago con tu software contable"
     ],
     personalizacion: "Define el umbral de tolerancia para descuadres de céntimos y reglas por palabras clave.",
-    sectores: ["Centros Deportivos", "Gestoria", "Academias / Formación", "E-commerce"],
+    sectores: ["Centros Deportivos", "Gestoria", "E-commerce"],
     herramientas: ["Pasarela bancaria", "ERP", "Make"],
     dolores: ["Dedico demasiadas horas a puntear el banco con las facturas", "No sé quién me debe dinero hasta que no reviso el banco a mano"],
     integration_domains: ["ERP", "OTHER"]
   },
   {
     id: "GS6",
-    hidden: true,
-    codigo: "GS6",
+    codigo: "4.1",
     slug: "gestion-altas-empleados",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
     nombre: "Alta de nuevos empleados de clientes",
     tagline: "Recopila datos y genera el checklist de contratación al instante.",
     benefits: [
@@ -2590,12 +2208,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS7",
-    hidden: true,
-    codigo: "GS7",
+    codigo: "4.2",
     slug: "vencimientos-contratos-laborales",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
     nombre: "Control de vencimientos de contratos temporales",
     tagline: "Controla renovaciones y extinciones antes de que se pase el plazo legal.",
     benefits: [
@@ -2637,11 +2256,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS8",
-    codigo: "GS8",
+    codigo: "4.4",
     slug: "envio-automatico-nominas",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
     landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4",
     nombre: "Envío automático de nóminas a empleados",
     tagline: "Distribuye todos los recibos de salarios en un clic sin envíos manuales.",
     benefits: [
@@ -2683,11 +2304,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS9",
-    codigo: "GS9",
+    codigo: "4.3",
     slug: "incidencias-laborales-clientes",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
-    landing_slug: "centros-deportivos",
+    landing_slug: "gestorias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
     nombre: "Gestión de incidencias de personal",
     tagline: "Recibe bajas, altas, vacaciones e incidencias de forma ordenada y procesable.",
     benefits: [
@@ -2722,36 +2345,38 @@ export const processes: Process[] = [
       "Configuramos el repositorio de adjuntos (partes de baja, facturas de gastos)"
     ],
     personalizacion: "Define qué tipos de incidencias quieres permitir y si necesitan validación del gestor jefe.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Tally/JotForm", "Make", "Notion/ClickUp"],
     dolores: ["Me llegan las bajas médicas por fotos borrosas de WhatsApp", "A final de mes siempre falta algún variable que el cliente olvidó decirme"],
     integration_domains: ["OTHER"]
   },
   {
     id: "GS10",
-    codigo: "GS10",
+    codigo: "6.2",
     slug: "comunicaciones-calendario-fiscal",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
     landing_slug: "centros-deportivos",
-    nombre: "Comunicaciones estacionales por calendario fiscal",
-    tagline: "Mantén a tus clientes informados y tranquilos con avisos automáticos útiles.",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
+    nombre: "Campañas de captación estacional para centros deportivos",
+    tagline: "Enero, septiembre, verano — los picos del año activados solos, en el momento exacto.",
     benefits: [
-      "Posicionamiento como expertos proactivos ante el cliente",
-      "Aumento de la confianza y reducción de la incertidumbre",
-      "Oportunidad de ofrecer servicios adicionales en momentos clave"
+      "Centro lleno antes de los picos de temporada sin pagar publicidad externa",
+      "Comunicación personalizada para socios actuales, ex-socios e interesados",
+      "Campañas que se lanzan solas en la fecha correcta, sin que nadie tenga que recordarlo"
     ],
     recomendado: false,
-    descripcionDetallada: "No esperes a que el cliente te pregunte. En los momentos clave del año (apertura de la Renta, cierres trimestrales, fin de año fiscal), el sistema envía automáticamente contenidos útiles, recordatorios de plazos y recomendaciones de ahorro fiscal. Automatiza la comunicación masiva pero personalizada, derivando a cita solo a los clientes con dudas complejas.",
+    descripcionDetallada: "Los centros deportivos tienen sus propios picos de captación: la vuelta al cole de septiembre, el propósito de año nuevo de enero, el «voy a ponerme en forma antes del verano» de marzo. Antes de cada uno, el sistema activa una campaña hacia socios actuales, ex-socios e interesados — mensaje adecuado, canal adecuado, sin agencia y sin briefings de última hora.",
     indicators: {
       time_estimate: "1-2 semanas",
       complexity: "Media",
       integrations: ["Email Marketing", "CRM", "Calendario"]
     },
     how_it_works_steps: [
-      { title: "Trigger estacional", short: "Detectamos el hito fiscal.", detail: "El sistema se activa al llegar fechas clave (ej. 1 de abril para la Renta)." },
-      { title: "Envío didáctico", short: "Educamos al cliente.", detail: "Enviamos una guía o checklist automático sobre qué debe preparar este mes." },
-      { title: "Llamada a la acción", short: "Convertimos dudas en trámites.", detail: "Ofrecemos un link para agendar consulta o subir los documentos específicos." }
+      { title: "Calendario deportivo", short: "Definimos los picos del centro.", detail: "Mapeamos las fechas clave del año: vuelta al cole, enero, verano, eventos propios del centro y temporadas de mayor intención de apuntarse." },
+      { title: "Segmentación de socios", short: "Avisamos a quien ya te conoce.", detail: "Filtramos la base por socios activos, ex-socios y leads fríos para enviar el mensaje más relevante a cada segmento." },
+      { title: "Activación automática", short: "Las campañas se lanzan solas.", detail: "El sistema dispara cada campaña en el momento óptimo — sin que nadie tenga que acordarse ni preparar nada." }
     ],
     customization: {
       options_blocks: [
@@ -2762,25 +2387,83 @@ export const processes: Process[] = [
     },
     demo: { video_url: "PENDING" },
     pasos: [
-      "Redactamos las plantillas de comunicación para cada hito del año",
-      "Segmentamos tu base de datos (Autónomos vs Sociedades)",
-      "Configuramos los disparadores por fecha en tu herramienta de email",
-      "Integramos el link de reserva de citas para consultas especiales"
+      "Definimos el calendario de picos del centro deportivo (enero, septiembre, verano, eventos propios)",
+      "Segmentamos la base por socios activos, ex-socios e interesados según historial y frecuencia",
+      "Configuramos los disparadores por fecha y activamos las campañas de forma automática",
+      "Medimos la ocupación antes y después de cada campaña para optimizar la siguiente"
     ],
-    personalizacion: "Elige el tono de la comunicación y añade vídeos cortos explicativos propios si lo deseas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
-    herramientas: ["Mailchimp/ActiveCampaign", "Make", "Calendly"],
-    dolores: ["Los clientes me colapsan a llamadas cuando empieza la campaña de Renta", " Siento que no aporto valor más allá de meter facturas"],
-    integration_domains: ["CRM", "OTHER"]
+    personalizacion: "Elige los canales preferidos (WhatsApp o email), los picos del año que quieres activar y el tono de los mensajes. Si tienes eventos propios del centro, los añadimos al calendario.",
+    sectores: ["Centros Deportivos"],
+    herramientas: ["Mailchimp/ActiveCampaign", "Make", "WhatsApp Business"],
+    dolores: ["El centro no aprovecha los picos más rentables del año", "Las campañas de temporada llegan tarde o no llegan"],
+    integration_domains: ["CRM", "OTHER"],
+    bloque_negocio: "B6",
+  },
+  {
+    id: "DEP-6.1",
+    codigo: "6.1",
+    slug: "publicacion-novedades-redes-centro-deportivo",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Publica novedades, horarios y promociones del centro sin tocar el móvil",
+    tagline: "Nuevas clases, cambios de horario, retos y promos — publicados solos en Instagram, Facebook y Google Business.",
+    recomendado: false,
+    descripcionDetallada: "Cuando hay algo nuevo en el centro — una clase nueva, un cambio de horario, un reto de temporada, una promo de captación — el sistema lo detecta y publica automáticamente en tus canales: Instagram, Facebook y Google Business. Con el copy en el tono del centro y en el horario de mayor engagement de tu audiencia. Tu perfil deja de depender de que alguien tenga un rato.",
+    summary: {
+      what_it_is: "Sistema de publicación automática en redes sociales y Google Business para centros deportivos: clases, horarios, promos y eventos publicados sin esfuerzo.",
+      for_who: [
+        "Gimnasios, boxes y centros con Instagram activo que no tienen tiempo de gestionar el contenido",
+        "Centros con programación cambiante (clases nuevas, eventos, retos de temporada)",
+        "Centros que quieren presencia digital constante sin contratar a un community manager"
+      ],
+      requirements: ["Cuenta Instagram Business", "Identidad visual del centro (logo, colores)", "Acceso a Google Business Profile"],
+      output: "Perfil actualizado y activo de forma continua con contenido relevante, sin trabajo manual del equipo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Instagram Business API", "Google Business Profile", "IA generativa"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la novedad", short: "Clase nueva, cambio, promo.", detail: "El flujo se activa cuando registras un cambio en el calendario, una oferta nueva o un evento — vía formulario, Notion o el sistema que uses." },
+      { title: "Genera el contenido", short: "Copy + imagen en tu identidad.", detail: "La IA redacta el texto en el tono del centro y crea una imagen que sigue tu guía visual (colores, tipografías, logotipo)." },
+      { title: "Publica al momento óptimo", short: "Cuando tu audiencia está activa.", detail: "El post se programa al horario de mayor engagement de tu cuenta — sin que nadie tenga que pensar en ello ni recordarlo." }
+    ],
+    benefits: [
+      "Perfil de Instagram y Google Business siempre actualizado sin esfuerzo del equipo",
+      "Contenido con identidad visual consistente en todos los canales",
+      "Publicaciones en el horario de mayor alcance, sin planificación manual"
+    ],
+    pasos: [
+      "Registras la novedad en tu sistema o formulario (clase nueva / cambio de horario / promo)",
+      "La IA genera el copy adaptado al tono del centro",
+      "Se crea la imagen siguiendo la identidad visual",
+      "Se publica automáticamente en Instagram y Google Business al horario óptimo"
+    ],
+    personalizacion: "Define el tono de la marca, la identidad visual (plantillas, colores, tipografías), los canales donde publicar y si quieres aprobación manual antes de cada post.",
+    sectores: ["Centros Deportivos"],
+    herramientas: ["Instagram Business API", "Google Business API", "OpenAI / DALL-E", "Make/n8n"],
+    canales: ["Instagram", "Facebook", "Google Business"],
+    dolores: [
+      "Nuestro Instagram lleva semanas sin publicar nada",
+      "Las publicaciones que hacemos son inconsistentes en estética",
+      "No tenemos tiempo de gestionar las redes encima de gestionar el centro"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "centros-deportivos",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    related_processes: ["comunicaciones-calendario-fiscal"]
   },
   {
     id: "GS11",
-    hidden: true,
-    codigo: "GS11",
+    codigo: "3.3",
     slug: "alertas-caducidad-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
     landing_slug: "gestorias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
     nombre: "Alertas de documentos próximos a caducar",
     tagline: "No permitas que un certificado o poder caducado frene una gestión vital.",
     benefits: [
@@ -2822,10 +2505,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS12",
-    codigo: "GS12",
+    codigo: "2.2",
     slug: "canal-documental-cliente",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
+    landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
     nombre: "Canal estructurado de envío de documentos con el cliente",
     tagline: "Un lugar único y ordenado para que tu cliente suba su documentación sin errores.",
     benefits: [
@@ -2860,11 +2546,10 @@ export const processes: Process[] = [
       "Activamos el historial de versiones para evitar pérdida de datos"
     ],
     personalizacion: "Decide si prefieres un portal web propio o usar carpetas compartidas de Google Drive/Dropbox personalizadas.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Google Drive/Dropbox", "Make", "Slack/Email"],
     dolores: ["Tengo el email colapsado de adjuntos de clientes y pierdo horas descargando", "Nunca sé si el cliente me ha enviado ya lo que le pedí"],
     integration_domains: ["DOCS", "OTHER"],
-    landing_slug: "centros-deportivos",
 
   },
   {
@@ -2915,11 +2600,13 @@ export const processes: Process[] = [
   },
   {
     id: "GS14",
-    codigo: "GS14",
+    codigo: "2.3",
     slug: "clasificacion-automatica-documentos",
     categoria: "F",
     categoriaNombre: "Auditoría tecnológica",
-    landing_slug: "centros-deportivos",
+    landing_slug: "gestorias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3",
     nombre: "Clasificación y archivo automático de documentos",
     tagline: "Deja que la tecnología lea, clasifique y guarde los documentos por ti.",
     benefits: [
@@ -2954,18 +2641,20 @@ export const processes: Process[] = [
       "Activamos un canal de revisión para casos dudosos"
     ],
     personalizacion: "Define qué tipos de documentos quieres que se clasifiquen solos y cuáles prefieres revisar tú.",
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["OpenAI/OCR", "Make", "Gestores de archivos"],
     dolores: ["Recibo cientos de documentos al día y pierdo horas clasificándolos", "Muchas veces archivamos mal los documentos y luego no aparecen"],
     integration_domains: ["DOCS"]
   },
   {
     id: "GS15",
-    codigo: "GS15",
+    codigo: "5.3",
     slug: "reactivacion-clientes-gestoria",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
-    landing_slug: "centros-deportivos",
+    landing_slug: "gestorias",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3",
     nombre: "Reactivación de clientes inactivos",
     tagline: "Recupera el contacto con clientes recurrentes que han perdido actividad.",
     benefits: [
@@ -3000,15 +2689,14 @@ export const processes: Process[] = [
       "Configuramos la automatización de envío y el registro de respuestas"
     ],
     personalizacion: "Define el tiempo de espera por segmento y el canal de contacto preferido por cada cliente.",
-    sectores: ["Centros Deportivos", "Academias / Formación"],
+    sectores: ["Centros Deportivos"],
     herramientas: ["ActiveCampaign/Brevo", "Make", "CRM"],
     dolores: ["Solo hablo con mis clientes cuando hay problemas o toca pagar", "Se me olvidan clientes que solían traerme trámites y ya no vienen"],
     integration_domains: ["CRM", "OTHER"]
   },
   {
     id: "GS16",
-    hidden: true,
-    codigo: "GS16",
+    codigo: "1.2",
     slug: "alta-automatizada-nuevos-clientes-gestoria",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -3050,11 +2738,14 @@ export const processes: Process[] = [
     herramientas: ["SignNow/Docusign", "Make", "Formularios Cloud"],
     dolores: ["El proceso de alta de un cliente me quita demasiado tiempo", "A veces empezamos a trabajar sin tener el contrato firmado"],
     landing_slug: "gestorias",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.2",
     integration_domains: ["CRM", "OTHER"]
   },
   {
     id: "CN1",
-    codigo: "CN1",
+    codigo: "1.1",
     slug: "calificacion-inteligente-leads",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3109,10 +2800,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.1",
   },
   {
     id: "CN2",
-    codigo: "CN2",
+    codigo: "1.2",
     slug: "analisis-sentimiento-riesgo",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3167,11 +2861,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.2",
   },
   {
     id: "CN3",
-    hidden: true,
-    codigo: "CN3",
+    codigo: "1.3",
     slug: "dashboard-comercial-tiempo-real",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -3225,11 +2921,14 @@ export const processes: Process[] = [
     sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
     herramientas: ["CRM", "BI"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.3",
   },
   {
     id: "CN4",
-    codigo: "CN4",
+    codigo: "2.1",
     slug: "asistente-digital-precualificacion",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3284,10 +2983,13 @@ export const processes: Process[] = [
     herramientas: ["Web", "CRM", "WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.1",
   },
   {
     id: "CN5",
-    codigo: "CN5",
+    codigo: "2.2",
     slug: "motor-presentacion-perfil",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3342,10 +3044,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "PDF Factory"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.2",
   },
   {
     id: "CN6",
-    codigo: "CN6",
+    codigo: "2.3",
     slug: "generador-dossier-unidad",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3400,10 +3105,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "construccion",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.3",
   },
   {
     id: "CN7",
-    codigo: "CN7",
+    codigo: "5.1",
     slug: "resumen-llamadas-crm",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3458,10 +3166,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Telefonía"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "gestorias",
+    bloque_negocio: "B5",
+
+    modulo_codigo: "5.1",
   },
   {
     id: "CN8",
-    codigo: "CN8",
+    codigo: "5.2",
     slug: "asistente-interno-comerciales",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
@@ -3515,11 +3226,13 @@ export const processes: Process[] = [
     herramientas: ["Chat", "Knowledge Base", "IA"],
     integration_domains: ["OTHER"],
     landing_slug: "gestorias",
+    bloque_negocio: "B5",
 
+    modulo_codigo: "5.2",
   },
   {
     id: "CN9",
-    codigo: "CN9",
+    codigo: "3.1",
     slug: "seguimiento-multicanal-inteligente",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3573,10 +3286,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Mailing / WhatsApp"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.1",
   },
   {
     id: "CN10",
-    codigo: "CN10",
+    codigo: "3.2",
     slug: "automatizacion-agendado-visitas",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3630,10 +3346,13 @@ export const processes: Process[] = [
     herramientas: ["Agenda", "CRM", "WhatsApp SMS"],
     integration_domains: ["CRM", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.2",
   },
   {
     id: "CN11",
-    codigo: "CN11",
+    codigo: "3.3",
     slug: "seguimiento-post-visita",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3687,14 +3406,17 @@ export const processes: Process[] = [
     herramientas: ["CRM", "Surveys"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B3",
+
+    modulo_codigo: "3.3",
   },
   {
     id: "CN12",
-    codigo: "CN12",
+    codigo: "1.3",
     slug: "automatizacion-contratos-firma",
     categoria: "D",
     categoriaNombre: "Gestión Interna",
-    nombre: "Contratos generados y enviados a firmar desde el móvil",
+    nombre: "Contratos generados y enviados para su firma desde el móvil",
     tagline: "El fin definitivo al papelazo que atranca tus ventas ya cerradas.",
     one_liner: "De la reserva a la firma vinculante sin imprimir un solo folio.",
     badges: ["Esencial", "Popular"],
@@ -3744,11 +3466,13 @@ export const processes: Process[] = [
     herramientas: ["CRM", "DOCS", "Firma Digital"],
     integration_domains: ["CRM", "DOCS"],
     landing_slug: "gestorias",
+    bloque_negocio: "B1",
+
+    modulo_codigo: "1.3",
   },
   {
     id: "CN13",
-    hidden: true,
-    codigo: "CN13",
+    codigo: "4.2",
     slug: "proceso-post-reserva",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3801,11 +3525,14 @@ export const processes: Process[] = [
     sectores: ["Constructoras / Obra Nueva", "Inmobiliaria", "Construcción & Reformas"],
     herramientas: ["CRM", "Automatización"],
     integration_domains: ["CRM", "OTHER"],
-    landing_slug: "construccion"
+    landing_slug: "construccion",
+    bloque_negocio: "B4",
+
+    modulo_codigo: "4.2",
   },
   {
     id: "CN14",
-    codigo: "CN14",
+    codigo: "5.1",
     slug: "portal-propietarios-post-entrega",
     categoria: "E",
     categoriaNombre: "Atención y Ventas",
@@ -3859,10 +3586,13 @@ export const processes: Process[] = [
     herramientas: ["Portal Web", "Ticketing", "IA"],
     integration_domains: ["OTHER", "COMMS"],
     landing_slug: "construccion",
+    bloque_negocio: "B5",
+
+    modulo_codigo: "5.1",
   },
   {
     id: "CN15",
-    codigo: "CN15",
+    codigo: "6.1",
     slug: "identificacion-reactivacion-unidades",
     categoria: "B",
     categoriaNombre: "Horarios y Proyectos",
@@ -3916,11 +3646,193 @@ export const processes: Process[] = [
     herramientas: ["CRM", "IA", "Market Data"],
     integration_domains: ["CRM", "OTHER"],
     landing_slug: "construccion",
+    bloque_negocio: "B6",
+
+    modulo_codigo: "6.1",
+  },
+
+  // ── CONSTRUCCIÓN CN16-CN18 · versiones promotora/inmobiliaria ────────────
+  {
+    id: "CN16",
+    codigo: "2.4",
+    slug: "resumen-llamadas-comerciales-obra",
+    categoria: "E",
+    categoriaNombre: "Atención y Ventas",
+    nombre: "Resumen automático de cada llamada con el comprador volcado al CRM",
+    tagline: "Registra en el CRM del proyecto todo lo que el comprador dijo sin que el agente vuelva a teclear.",
+    one_liner: "IA que transcribe, resume y vuelca a tu CRM lo hablado con cada comprador.",
+    badges: ["Popular"],
+    benefits: [
+      "Calidad de datos en CRM perfecta, sin resúmenes vagos de 'comprador interesado'",
+      "El agente vende, no hace data-entry después de cada llamada",
+      "No se olvidan detalles clave como 'necesito tres habitaciones' o 'quiero financiación al 90%'",
+    ],
+    recomendado: true,
+    descripcionDetallada: "IA que transcribe las llamadas del equipo comercial, resume los puntos clave, detecta objeciones y actualiza el CRM automáticamente. Evita que el agente tenga que registrar manualmente la tipología, el presupuesto y las objeciones después de cada conversación con un comprador.",
+    summary: {
+      "what_it_is": "Asistente secreto en cada llamada que capta la información del comprador y la sube directamente al CRM del proyecto.",
+      "for_who": ["Directores comerciales de promotoras", "Equipos de sala de ventas"],
+      "requirements": ["Telefonía VOIP", "CRM", "IA"],
+      "output": "Ficha del CRM con tipología de interés, presupuesto, objeciones y próximo paso rellenos.",
+    },
+    indicators: {
+      "time_estimate": "2-3 semanas",
+      "complexity": "Alta",
+      "integrations": ["CRM", "Telefonía", "IA"],
+    },
+    how_it_works_steps: [
+      { "title": "Escucha pasiva", "short": "Graba mediante tu centralita.", "detail": "Se conecta a llamadas salientes y entrantes del número oficial (con aviso legal)." },
+      { "title": "Extracción semántica", "short": "Anota tipología, presupuesto y objeciones.", "detail": "Distingue cuándo el comprador dice 'me parece caro para esa planta' o 'necesitamos piscina y tres habitaciones'." },
+      { "title": "Volcado al CRM", "short": "La ficha del lead se rellena sola.", "detail": "Aparecen las notas estructuradas en el campo del interesado al colgar, sin que el agente escriba nada." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "select", "label": "Formato de resumen", "options": ["Corto y directo", "Transcripción completa", "Campos estructurados en CRM (tipología, presupuesto, objeciones)"] },
+      ],
+      "free_text_placeholder": "¿Cuáles son los 4 datos que siempre hay que capturar de un comprador: tipología, presupuesto, urgencia, financiación?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿Funciona en español y con argot inmobiliario?", "a": "Entiende el lenguaje natural, incluyendo referencias a tipologías, orientaciones y condiciones de pago." },
+      { "q": "¿Es legal?", "a": "Claro, con el aviso de grabación estándar. Se procesa conforme al RGPD." },
+    ],
+    pasos: [
+      "Graba mediante tu centralita o VOIP conectada.",
+      "Anota tipología de interés, presupuesto, objeciones y próximo paso acordado.",
+      "Vuelca las notas estructuradas en el CRM nada más colgar.",
+    ],
+    personalizacion: "Define qué campos del CRM del proyecto se rellenarán automáticamente: tipología preferida, presupuesto máximo, financiación solicitada, objeciones pendientes.",
+    related_processes: ["analisis-sentimiento-riesgo", "calificacion-inteligente-leads"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["CRM", "IA", "Telefonía"],
+    dolores: ["El equipo no registra bien en el CRM", "Perdemos información clave de las llamadas con compradores"],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "construccion",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.4",
+  },
+  {
+    id: "CN17",
+    codigo: "2.5",
+    slug: "copiloto-proyecto-agentes-obra",
+    categoria: "D",
+    categoriaNombre: "Gestión Interna",
+    nombre: "Asistente interno para el equipo comercial de la promotora",
+    tagline: "Todo el argumentario de la promoción en el bolsillo de cada asesor.",
+    one_liner: "Un co-piloto del proyecto exclusivo para tu equipo de ventas.",
+    badges: ["Nuevo"],
+    benefits: [
+      "Capacitación de nuevos comerciales al proyecto en horas",
+      "Los agentes responden cualquier pregunta técnica del comprador sin improvisar",
+      "Discurso unificado y coherente de toda la plantilla hacia el comprador",
+    ],
+    recomendado: false,
+    descripcionDetallada: "Asistente interno que permite a los agentes consultar objeciones frecuentes, argumentos por tipología, detalles técnicos de la promoción y comparativas con la competencia. Aumenta la autonomía del equipo y estandariza el discurso comercial.",
+    summary: {
+      "what_it_is": "La documentación de la promoción convertida en un chat interno, listo para salvar cualquier pregunta difícil de un comprador al instante.",
+      "for_who": ["Equipo de ventas", "Apertura de pisos piloto", "Coordinadoras comerciales"],
+      "requirements": ["Chat Interno", "Documentación del proyecto completa"],
+      "output": "Respuesta al instante y precisa en lenguaje natural.",
+    },
+    indicators: {
+      "time_estimate": "2 semanas",
+      "complexity": "Media",
+      "integrations": ["Chat", "Knowledge Base", "IA"],
+    },
+    how_it_works_steps: [
+      { "title": "Entran los manuales", "short": "Leemos planos, memorias y argumentarios.", "detail": "Cargamos al asistente con todos los FAQs, ventajas competitivas de la promoción y objeciones habituales de la competencia." },
+      { "title": "El agente consulta", "short": "Pregunta desde su propio Slack o WhatsApp.", "detail": "El comercial frente al comprador duda: '¿Qué espesor lleva la carpintería exterior?' o '¿qué digo si le parece caro comparado con la competencia?'" },
+      { "title": "Respuesta experta", "short": "El asistente da la respuesta correcta.", "detail": "Contesta en segundos y señala el documento del que lo ha extraído." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "radio", "label": "Canal interno preferido", "options": ["WhatsApp de equipo", "Microsoft Teams", "Slack", "Intranet web"] },
+      ],
+      "free_text_placeholder": "¿Tienen un manual ya hecho de técnicas de rebote a objeciones de compradores?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿Y si la promotora cambia la memoria de calidades o los precios?", "a": "Subes el nuevo PDF y el asistente actualiza la información de inmediato." },
+    ],
+    pasos: [
+      "Cargamos el asistente con la documentación técnica y comercial de la promoción.",
+      "El agente consulta una objeción por chat rápido ('¿Qué digo si les parece caro respecto al vecino?').",
+      "El asistente contesta al momento con la mejor estrategia argumental.",
+    ],
+    personalizacion: "Cárgalo con técnicas de rebote a las objeciones más frecuentes de tu promoción para que ningún agente improvise ante el comprador.",
+    related_processes: ["generador-dossier-unidad", "resumen-llamadas-comerciales-obra"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["Chat", "Knowledge Base", "IA"],
+    dolores: ["Cada agente nuevo tarda semanas en conocer la promoción a fondo", "El equipo improvisa ante preguntas técnicas del comprador"],
+    integration_domains: ["OTHER"],
+    landing_slug: "construccion",
+    bloque_negocio: "B2",
+
+    modulo_codigo: "2.5",
+  },
+  {
+    id: "CN18",
+    codigo: "4.1",
+    slug: "contrato-reserva-firma-digital-obra",
+    categoria: "D",
+    categoriaNombre: "Gestión Interna",
+    nombre: "Contratos de reserva generados y enviados a firmar desde el móvil",
+    tagline: "El fin definitivo al papelazo que atranca tus ventas ya cerradas.",
+    one_liner: "De la reserva a la firma vinculante sin imprimir un solo folio.",
+    badges: ["Esencial", "Popular"],
+    benefits: [
+      "Tiempo de emisión de contratos reducido en un 95%",
+      "Cumplimiento 100% legal de reservas inmediatas, sin enfriar al comprador",
+      "Seguimiento visual del estado de firma de todos los intervinientes",
+    ],
+    recomendado: true,
+    descripcionDetallada: "Sistema que automatiza la generación del contrato de reserva y sus anexos, envía los documentos para firma digital certificada y hace seguimiento del estado de cada firma. Reduce la fricción operativa entre el acuerdo verbal y el documento firmado, acelerando los cierres sin riesgo de que el comprador se enfríe.",
+    summary: {
+      "what_it_is": "Un motor técnico que absorbe la reserva cerrada en el CRM y genera el contrato sellado jurídicamente en el móvil del comprador en minutos.",
+      "for_who": ["Administración de promotoras", "Dirección operativa", "Compradores"],
+      "requirements": ["CRM", "Software de Firma Digital Certificada"],
+      "output": "Documentos legales firmados y archivados digitalmente.",
+    },
+    indicators: {
+      "time_estimate": "3 semanas",
+      "complexity": "Alta",
+      "integrations": ["CRM", "DOCS", "Firma Digital"],
+    },
+    how_it_works_steps: [
+      { "title": "Generación del contrato", "short": "Un clic al confirmar la reserva.", "detail": "Extraemos todos los datos del comprador, la unidad y el precio pactado y los volcamos en la plantilla legal de la promotora." },
+      { "title": "Firma certificada desde el móvil", "short": "Notifica al comprador para firma al instante.", "detail": "Le envía por SMS/Email un visualizador legal para firma dactilar o biométrica del documento, sin descargar ninguna app." },
+      { "title": "Sellado y archivado", "short": "Se guarda en tu base y en el correo del comprador.", "detail": "El PDF queda securizado y se autoguarda en el repositorio corporativo listo para elevación a escritura pública." },
+    ],
+    customization: {
+      "options_blocks": [
+        { "type": "select", "label": "Sistema de firma", "options": ["Avanzada OTP por SMS", "Firma biométrica", "Notarial en siguiente fase"] },
+      ],
+      "free_text_placeholder": "¿Cuántos intervinientes promedio tienen los contratos de tu promotora (titulares, co-titulares, avalistas)?",
+    },
+    demo: { video_url: "PENDING" },
+    faqs: [
+      { "q": "¿La firma es totalmente legal para un contrato de arras o reserva?", "a": "100%. Utiliza proveedores homologados europeos (DocuSign, Signaturit) con trazabilidad plena ante cualquier reclamación." },
+    ],
+    pasos: [
+      "Inyectamos los datos del comprador y el precio cerrado en la plantilla legal oficial de la promotora.",
+      "Lanzamos la secuencia de firma en el móvil del comprador con certificado de hora e IP.",
+      "Devolvemos el archivo firmado a la promotora listo para facturación y elevación a escritura pública.",
+    ],
+    personalizacion: "Nos amoldamos a las plantillas blindadas de la promotora, respetando todos los anexos: memoria de calidades, SEPA, RGPD y cualquier cláusula específica.",
+    related_processes: ["proceso-post-reserva", "resumen-llamadas-comerciales-obra"],
+    sectores: ["Construcción & Reformas", "Inmobiliaria"],
+    herramientas: ["CRM", "DOCS", "Firma Digital"],
+    dolores: ["El papeleo de contratos ralentiza los cierres", "El comprador se enfría entre el acuerdo y la firma"],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "construccion",
+    bloque_negocio: "B4",
+
+    modulo_codigo: "4.1",
   },
 
   {
     id: "AG1",
-    hidden: true,
     codigo: "AG1",
     slug: "recordatorio-horas-no-registradas",
     categoria: "A",
@@ -3978,6 +3890,7 @@ export const processes: Process[] = [
 
   {
     id: "AG2",
+    hidden: true,
     codigo: "AG2",
     slug: "consolidacion-solicitudes-multicanal",
     categoria: "E",
@@ -4027,12 +3940,3967 @@ export const processes: Process[] = [
     ],
     personalizacion: "Elige qué canales conectar, dónde centralizar las fichas y las reglas de asignación por tipo de solicitud.",
     related_processes: ["captura-organizacion-solicitudes", "seguimiento-automatico-solicitudes"],
-    sectores: ["Centros Deportivos", "Gestoria", "Clínicas / Salud / Dental / Veterinaria", "Construcción & Reformas", "Academias / Formación", "Restauración", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
+    sectores: ["Centros Deportivos", "Gestoria", "Construcción & Reformas", "E-commerce", "Inmobiliaria", "Agencia/marketing"],
     herramientas: ["Make", "Zapier", "Instagram Business API", "WhatsApp Business API", "Notion", "Airtable", "HubSpot", "Pipedrive"],
     dolores: ["Las solicitudes llegan por 5 canales distintos y siempre se pierde alguna", "No hay un registro único de leads entrantes"],
     integration_domains: ["CRM", "COMMS"],
-    landing_slug: "centros-deportivos",
   },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SECTOR GASTRONOMÍA / HOSTELERÍA — 16 procesos · 6 bloques
+  // Cada proceso es exclusivo de este sector (no se reutiliza)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── BLOQUE B1 · Reservas y atención 24/7 ────────────────────────────────
+  {
+    id: "GAST-1.1",
+    codigo: "1.1",
+    slug: "gastro-voz-reservas-247",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Asistente de voz para reservas 24/7",
+    tagline: "Una voz natural atiende cada llamada — incluso a las 23h — y deja la reserva confirmada en tu sistema.",
+    recomendado: true,
+    descripcionDetallada: "Una voz IA atiende las llamadas que entran fuera de horario, en hora punta o cuando la sala está hasta arriba. Pregunta fecha, hora, comensales y alergias, comprueba disponibilidad en tu sistema de reservas y deja la mesa confirmada. Si el restaurante está lleno, ofrece alternativas o anota al cliente en lista de espera. Atiende en castellano natural y maneja interrupciones del cliente sin perder el hilo.",
+    summary: {
+      what_it_is: "Recepcionista IA por voz, conectado a tu sistema de reservas, que atiende 24/7 sin perder ni una sola llamada.",
+      for_who: ["Restaurantes con alto volumen de llamadas", "Locales con horario partido", "Grupos con varios locales"],
+      requirements: ["Sistema de reservas (Covermanager, Tock, The Fork…) o agenda propia", "Línea telefónica derivable a la IA"],
+      output: "Reserva confirmada en el sistema + confirmación al cliente (SMS/WhatsApp) sin que nadie del equipo descuelgue el teléfono."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Telefonía", "Sistema de reservas", "WhatsApp/SMS"]
+    },
+    how_it_works_steps: [
+      { title: "Atiende la llamada", short: "Voz natural, no robótica.", detail: "El asistente responde con la voz y el tono del local, identifica que el cliente quiere reservar y se presenta como parte del restaurante." },
+      { title: "Recoge datos", short: "Fecha, hora, comensales, alergias.", detail: "Pregunta lo justo, confirma cada dato y maneja correcciones sobre la marcha (\"perdón, mejor a las 22h\")." },
+      { title: "Comprueba disponibilidad", short: "En tiempo real contra tu sistema.", detail: "Consulta Covermanager/Tock al instante. Si no hay hueco a esa hora, propone alternativas cercanas o lista de espera." },
+      { title: "Confirma y registra", short: "Reserva creada + confirmación al cliente.", detail: "Crea la reserva en el sistema, envía WhatsApp/SMS de confirmación y deja la llamada cerrada con todos los datos." }
+    ],
+    benefits: [
+      "Cero llamadas perdidas — el teléfono nunca queda sin atender",
+      "Voz natural en castellano, no suena robot",
+      "Sincronización directa con Covermanager, Tock o tu sistema actual"
+    ],
+    pasos: [
+      "La llamada entra al número del restaurante (o se desvía a la IA fuera de horario)",
+      "El asistente saluda con el nombre del local y pregunta en qué puede ayudar",
+      "Si es una reserva: recoge fecha, hora, comensales, nombre y alergias",
+      "Comprueba disponibilidad en tu sistema de reservas en tiempo real",
+      "Crea la reserva o propone alternativas si no hay hueco",
+      "Envía confirmación al cliente por el canal elegido (WhatsApp/SMS)"
+    ],
+    personalizacion: "Define el tono de voz, qué datos pedir, qué hacer en lleno (lista de espera, alternativas, derivar a humano), horarios de cobertura IA vs. humanos y el canal de confirmación.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Vapi", "ElevenLabs", "Covermanager / Tock / TheFork", "Twilio", "WhatsApp Business API"],
+    canales: ["Voz / Teléfono"],
+    dolores: [
+      "Perdemos reservas porque no podemos atender el teléfono en hora punta",
+      "Fuera de horario el contestador no recoge nada útil",
+      "Una persona dedicada solo al teléfono cuesta lo mismo que un cocinero"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
+    related_processes: ["gastro-reservas-multicanal", "gastro-recordatorios-noshows"]
+  },
+  {
+    id: "GAST-1.2",
+    codigo: "1.2",
+    slug: "gastro-reservas-multicanal",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Reservas desde WhatsApp, Instagram y web",
+    tagline: "El cliente reserva desde donde te encuentre — un DM, un WhatsApp, un botón en la web — sin duplicados ni mesas perdidas.",
+    recomendado: true,
+    descripcionDetallada: "Unificamos todos los canales de reserva entrantes en una única bandeja. El cliente pide mesa desde Instagram DM, WhatsApp o el botón de la web y la reserva cae al mismo sistema, sin duplicados y sin que el equipo tenga que copiar datos a mano. Si la disponibilidad cambia (cancelación, hueco abierto), se refleja al instante en todos los canales.",
+    summary: {
+      what_it_is: "Un panel único de reservas que recoge entradas desde redes sociales, WhatsApp y la web, eliminando saltos manuales entre apps.",
+      for_who: ["Restaurantes con presencia activa en Instagram", "Locales que reciben DMs pidiendo mesa", "Negocios que no quieren depender solo del teléfono"],
+      requirements: ["Cuenta Instagram Business", "WhatsApp Business API", "Sistema de reservas con webhook (o agenda compartida)"],
+      output: "Todas las reservas en una sola vista, con el canal de origen marcado y sin duplicados."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Instagram", "WhatsApp", "Web", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Escucha multicanal", short: "DMs, WhatsApp y web a la vez.", detail: "El sistema monitoriza cada canal en paralelo y detecta intención de reserva incluso en mensajes informales." },
+      { title: "Conversa y recoge", short: "Pide solo lo necesario.", detail: "Pregunta fecha, hora, comensales y alergias en el mismo canal donde escribe el cliente — sin obligarle a saltar a otra app." },
+      { title: "Confirma y centraliza", short: "Una sola bandeja, sin duplicados.", detail: "Crea la reserva en tu sistema único, marca el canal de origen y avisa al equipo si requiere atención humana." }
+    ],
+    benefits: [
+      "Un único panel para todos los canales — adiós a saltar entre apps",
+      "Sin duplicados ni reservas perdidas",
+      "El cliente reserva donde ya está, no donde tú quieres"
+    ],
+    pasos: [
+      "Conectamos Instagram DM, WhatsApp Business y un widget de la web",
+      "Detectamos automáticamente cuándo un mensaje es petición de reserva",
+      "Recogemos los datos en el propio canal sin obligar a cambiar de app",
+      "Creamos la reserva en tu sistema único y marcamos el canal de origen",
+      "Notificamos al equipo si hay algo fuera de lo previsto (grupos grandes, peticiones especiales)"
+    ],
+    personalizacion: "Elige qué canales activar, el tono de cada uno, qué datos pedir y qué se considera 'caso especial' para escalar al equipo (grupos >8 personas, peticiones VIP, eventos).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Instagram Business API", "WhatsApp Business API", "Make/n8n", "Covermanager / Tock"],
+    canales: ["Instagram", "WhatsApp", "Web"],
+    dolores: [
+      "Los DMs de Instagram pidiendo mesa se nos pasan",
+      "El equipo está copiando datos de WhatsApp al sistema de reservas a mano",
+      "Tenemos reservas duplicadas por venir del mismo cliente por dos canales"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2",
+    related_processes: ["gastro-voz-reservas-247", "gastro-recordatorios-noshows", "gastro-chatbot-info"]
+  },
+  {
+    id: "GAST-1.3",
+    codigo: "1.3",
+    slug: "gastro-recordatorios-noshows",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Recordatorios y confirmación anti no-shows",
+    tagline: "Un mensaje previo pide confirmación. Si el cliente cancela, esa mesa se ofrece al instante a la lista de espera.",
+    recomendado: true,
+    descripcionDetallada: "Antes del servicio, el sistema envía un mensaje al cliente pidiendo confirmación de la reserva. Si responde 'sí', mesa segura. Si dice que no puede, esa mesa se libera y se ofrece automáticamente a quien estaba en lista de espera. Resultado: caída del 30-50% en no-shows y mejor ocupación real de sala.",
+    summary: {
+      what_it_is: "Sistema automático de confirmación pre-servicio que reduce no-shows y rescata mesas para la lista de espera.",
+      for_who: ["Restaurantes con problema de no-shows", "Locales con lista de espera frecuente", "Restaurantes con menú degustación o producto de coste alto"],
+      requirements: ["Sistema de reservas con datos de contacto", "WhatsApp Business o SMS"],
+      output: "Tasa de no-show baja del 15-20% típico al 5-8%, con mesas canceladas rescatadas en tiempo real."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/SMS", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Mensaje pre-servicio", short: "24h y 2h antes.", detail: "Enviamos un mensaje amable pidiendo confirmación. El cliente solo tiene que responder un emoji o un 'sí/no'." },
+      { title: "Liberación automática", short: "Si cancela, la mesa vuela.", detail: "Si el cliente no puede venir, su mesa se libera al instante y se ofrece al primero de la lista de espera." },
+      { title: "Rescate de mesa", short: "Lista de espera activa.", detail: "Ofrecemos automáticamente la mesa libre al siguiente cliente en lista de espera vía WhatsApp con respuesta directa." }
+    ],
+    benefits: [
+      "Caída del 30-50% en no-shows",
+      "Mesas canceladas se rescatan al instante",
+      "Lista de espera funcional, no decorativa"
+    ],
+    pasos: [
+      "Detectamos las reservas del día siguiente (24h antes) o del turno (2h antes)",
+      "Enviamos confirmación amable por el canal del cliente (WhatsApp o SMS)",
+      "Si confirma → mesa lista. Si cancela → mesa libre",
+      "Notificamos al primero de la lista de espera con el hueco liberado",
+      "Si nadie responde a la confirmación, alertamos al equipo en sala"
+    ],
+    personalizacion: "Define cuándo se envía el mensaje (24h, 2h, ambos), el tono del recordatorio y las reglas de lista de espera (orden, tiempo de respuesta, etc.).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Twilio", "Covermanager / Tock", "Make/n8n"],
+    canales: ["WhatsApp", "SMS"],
+    dolores: [
+      "Cada noche tenemos 2-3 mesas que no aparecen sin avisar",
+      "Tenemos lista de espera pero cuando alguien cancela no le ofrecemos la mesa a nadie",
+      "Las pérdidas por no-shows en menú degustación son enormes"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3",
+    related_processes: ["gastro-voz-reservas-247", "gastro-reservas-multicanal"]
+  },
+  {
+    id: "GAST-1.4",
+    codigo: "1.4",
+    slug: "gastro-chatbot-info",
+    categoria: "B1",
+    categoriaNombre: "Reservas y atención 24/7",
+    nombre: "Chatbot con toda la información del restaurante",
+    tagline: "Un asistente que conoce la carta, horarios, alérgenos, ubicación, precio medio y eventos — y lo cuenta cuando se lo pregunten.",
+    recomendado: true,
+    descripcionDetallada: "Un asistente conversacional disponible en WhatsApp, Instagram DM y el chat de la web que tiene en la cabeza toda la información del restaurante: carta y precios, horarios, alérgenos y opciones especiales (sin gluten, vegano), ubicación y cómo llegar, eventos próximos, política de grupos, parking, terraza, mascotas, etc. Responde al instante 24/7 con la información actualizada y, cuando la conversación llega a 'quiero reservar', deriva o gestiona la reserva directamente.",
+    summary: {
+      what_it_is: "Base de conocimiento conversacional del restaurante accesible por chat. Respuestas instantáneas a todas las preguntas frecuentes que ahogan al equipo.",
+      for_who: ["Restaurantes con muchas preguntas repetidas", "Locales con carta amplia o cambiante", "Negocios con eventos o programación variable"],
+      requirements: ["Carta y datos del local actualizados", "WhatsApp Business o widget web", "Cuenta Instagram Business (opcional)"],
+      output: "Cliente informado al instante 24/7. Ahorras al equipo 1-2 horas al día de preguntas repetidas."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["WhatsApp", "Instagram", "Web", "IA / Base de conocimiento"]
+    },
+    how_it_works_steps: [
+      { title: "Carga la información", short: "Carta, horarios, todo.", detail: "Subimos carta con precios, alérgenos, horarios por día, ubicación, política de grupos, eventos. Se actualiza cuando tú la actualizas." },
+      { title: "Responde 24/7", short: "Instantáneo, en el canal del cliente.", detail: "Da respuestas precisas a las preguntas habituales: '¿tenéis terraza?', '¿abrís el lunes?', '¿tenéis opciones sin gluten?', '¿precio medio?'." },
+      { title: "Deriva a venta", short: "Cuando hay intención de reservar.", detail: "Si la conversación se orienta a reservar, conecta con tu sistema de reservas o pasa el contacto al humano con todo el contexto." }
+    ],
+    benefits: [
+      "Cero preguntas repetidas para el equipo",
+      "Información correcta y actualizada 24/7",
+      "Conversaciones que terminan en reserva, no en silencio"
+    ],
+    pasos: [
+      "Recopilamos toda la información del restaurante (carta, horarios, datos)",
+      "Entrenamos al asistente para responder en el tono del local",
+      "Lo conectamos a los canales donde te escriben los clientes",
+      "Responde dudas al instante con información actualizada",
+      "Cuando detecta intención de reservar, gestiona o deriva con contexto"
+    ],
+    personalizacion: "Define el tono del asistente, qué información incluir, qué preguntas escalar siempre a humano y cuándo proponer activamente reservar.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["OpenAI / Claude", "WhatsApp Business API", "Instagram Business", "Make/n8n"],
+    canales: ["WhatsApp", "Instagram", "Web"],
+    dolores: [
+      "Todos los días respondemos las mismas 10 preguntas (horarios, sin gluten, terraza)",
+      "El equipo está atendiendo el móvil en vez de la sala",
+      "Damos información incorrecta o desactualizada por las prisas"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4",
+    related_processes: ["gastro-reservas-multicanal", "gastro-voz-reservas-247"]
+  },
+
+  // ── BLOQUE B2 · Reputación y reseñas ────────────────────────────────────
+  {
+    id: "GAST-2.1",
+    codigo: "2.1",
+    slug: "gastro-solicitud-resenas",
+    categoria: "B2",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Solicitud automática de reseñas",
+    tagline: "Al día siguiente de la visita, los clientes contentos reciben un mensaje pidiendo reseña. Los descontentos van a canal privado.",
+    recomendado: true,
+    descripcionDetallada: "Después de cada servicio, el sistema detecta cuándo es el momento óptimo para pedir reseña (típicamente al día siguiente, no en caliente). Envía un mensaje breve y personal al cliente. Si la experiencia fue positiva, lo guía a dejar reseña en Google o TripAdvisor. Si detecta señales de descontento, deriva la conversación al responsable en privado para que pueda gestionarlo antes de que se convierta en una reseña pública negativa.",
+    summary: {
+      what_it_is: "Sistema automático de solicitud de reseñas con filtro de descontento — más reseñas reales, menos sorpresas públicas.",
+      for_who: ["Restaurantes que quieren crecer en Google Maps", "Locales que necesitan reseñas frescas para posicionar", "Negocios que ya tienen buen producto pero pocas reseñas"],
+      requirements: ["Sistema de reservas con datos de contacto", "WhatsApp/Email", "Ficha en Google Business activa"],
+      output: "Crecimiento orgánico de reseñas reales en Google + ratio mejor de positivas vs. negativas públicas."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Business", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el momento", short: "Día siguiente, no en caliente.", detail: "Tras el servicio, esperamos al momento de mayor satisfacción procesada (típicamente 18-24h después) para pedir reseña." },
+      { title: "Pregunta breve", short: "Una sola pregunta sencilla.", detail: "Mensaje corto y personal: '¿Cómo te trataron ayer?'. Si responde bien → enlace a Google. Si responde mal → conversación privada." },
+      { title: "Gestión de descontentos", short: "En privado, no en público.", detail: "Si el cliente menciona algo negativo, derivamos al responsable con todo el contexto para gestionar antes de que sea reseña pública." }
+    ],
+    benefits: [
+      "Más reseñas 5★ pidiendo en el momento de máxima satisfacción",
+      "Filtro de descontentos a canal privado — protege reputación",
+      "Crecimiento orgánico de reseñas reales en Google Maps"
+    ],
+    pasos: [
+      "Detectamos las reservas servidas del día anterior",
+      "Enviamos mensaje breve de seguimiento al cliente",
+      "Si la respuesta es positiva → enlace directo a reseña Google",
+      "Si la respuesta es negativa o tibia → conversación privada con el responsable",
+      "Registramos la interacción para análisis de tendencias"
+    ],
+    personalizacion: "Define cuándo se envía (24h, 48h), el tono, el canal (WhatsApp/email), qué responsable recibe los descontentos y si quieres añadir incentivo (descuento próxima visita).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Resend/SendGrid", "Google Business API", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Tenemos clientes contentos pero pocas reseñas en Google",
+      "Las únicas reseñas que dejan son las quejas",
+      "La competencia tiene 800 reseñas y nosotros 80"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
+    related_processes: ["gastro-alertas-resenas-negativas"]
+  },
+  {
+    id: "GAST-2.2",
+    codigo: "2.2",
+    slug: "gastro-alertas-resenas-negativas",
+    categoria: "B2",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Alertas de reseñas negativas en tiempo real",
+    tagline: "Cuando alguien deja una reseña <3★, recibes el aviso al instante con borrador de respuesta listo para revisar.",
+    recomendado: false,
+    descripcionDetallada: "Monitorizamos Google, TripAdvisor, TheFork y otras plataformas. Cuando alguien publica una reseña por debajo de 3 estrellas, el responsable recibe una notificación inmediata por WhatsApp o email con la reseña, el contexto del cliente (si reservó, qué tomó), y un borrador de respuesta generado por IA en el tono del local. Solo tienes que revisar, ajustar si quieres y publicar. Cero reseñas malas sin responder, cero respuestas tardías.",
+    summary: {
+      what_it_is: "Sistema de monitorización + alerta + asistencia de respuesta para reseñas negativas en todas las plataformas relevantes.",
+      for_who: ["Restaurantes presentes en Google + TripAdvisor + TheFork", "Locales que cuidan reputación online", "Grupos con varios locales que necesitan visibilidad consolidada"],
+      requirements: ["Acceso a Google Business", "Cuenta TripAdvisor/TheFork (opcional)"],
+      output: "100% de las reseñas <3★ con respuesta en menos de 24h, redactadas en el tono del local."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Google Business", "TripAdvisor", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza 24/7", short: "Todas las plataformas, en tiempo real.", detail: "Vigilamos Google, TripAdvisor, TheFork y cualquier otra plataforma donde estés presente." },
+      { title: "Alerta inmediata", short: "Aviso con contexto y borrador.", detail: "Si aparece una reseña <3★, el responsable recibe notificación con la reseña, el contexto del cliente y un borrador de respuesta IA." },
+      { title: "Respuesta humana asistida", short: "Tú revisas y publicas.", detail: "El borrador respeta el tono del local. Solo revisas, ajustas si quieres, y publicas. Cero reseñas malas sin responder." }
+    ],
+    benefits: [
+      "Alerta inmediata cuando publican una reseña <3★",
+      "Borrador de respuesta generado con IA en el tono del local",
+      "Cero reseñas malas sin responder ni respuestas tardías"
+    ],
+    pasos: [
+      "Monitorizamos las plataformas de reseñas en tiempo real",
+      "Detectamos reseñas por debajo del umbral definido (por defecto 3★)",
+      "Buscamos contexto del cliente en tu sistema (si reservó, fecha, mesa)",
+      "Generamos borrador de respuesta personalizado en el tono del local",
+      "Te enviamos alerta con todo + opción de aprobar/editar/rechazar"
+    ],
+    personalizacion: "Define el umbral de estrellas que activa la alerta, plataformas a monitorizar, tono de la respuesta IA y quién recibe la alerta.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Google Business API", "TripAdvisor", "OpenAI", "WhatsApp Business / Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Nos enteramos de las reseñas malas días después",
+      "No sabemos qué responder ni con qué tono",
+      "Cuando respondemos, ya nadie las ve"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
+    related_processes: ["gastro-solicitud-resenas"]
+  },
+
+  // ── BLOQUE B3 · Fidelización y vuelta del cliente ───────────────────────
+  {
+    id: "GAST-3.1",
+    codigo: "3.1",
+    slug: "gastro-base-datos-comensales",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Base de datos automática de comensales",
+    tagline: "Cada cliente que reserva queda registrado con preferencias, alergias y visitas — sin fichas manuales.",
+    recomendado: true,
+    descripcionDetallada: "Cada reserva crea o actualiza la ficha del comensal en tu base de datos: nombre, contacto, fechas de visita, qué pidió (si lo registramos), alergias, preferencias y observaciones. Sin pedirle nada extra al cliente y sin que nadie del equipo rellene fichas. Es el activo más valioso a 5 años: una base de habituales conocida que puedes segmentar para campañas, eventos y reactivación.",
+    summary: {
+      what_it_is: "CRM automatizado de comensales que se llena solo con cada reserva, sin trabajo manual.",
+      for_who: ["Restaurantes que quieren conocer a sus habituales", "Grupos con varios locales que comparten clientes", "Negocios que planean campañas a base propia"],
+      requirements: ["Sistema de reservas o entrada de datos consistente", "CRM ligero (Airtable, HubSpot o Notion)"],
+      output: "Base de datos limpia, segmentable y útil para campañas, eventos y análisis de visitas."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["Sistema de reservas", "CRM"]
+    },
+    how_it_works_steps: [
+      { title: "Captura en cada reserva", short: "Sin pedir nada extra.", detail: "Cada reserva (por cualquier canal) crea o actualiza la ficha del comensal con todos los datos disponibles." },
+      { title: "Enriquece automáticamente", short: "Preferencias y alergias guardadas.", detail: "Si el cliente menciona alergias, preferencias o aniversario, queda registrado en su ficha para próximas visitas." },
+      { title: "Segmenta para campañas", short: "Habituales, ocasionales, dormidos.", detail: "La base se segmenta sola por frecuencia, ticket medio, preferencias y antigüedad — lista para usar en campañas." }
+    ],
+    benefits: [
+      "Se llena sola con cada reserva, sin fichas manuales",
+      "Preferencias y alergias guardadas en la ficha del comensal",
+      "Tu activo más valioso a 5 años vista"
+    ],
+    pasos: [
+      "Conectamos tu sistema de reservas al CRM",
+      "Cada reserva crea/actualiza la ficha del comensal con todos los datos",
+      "Detectamos preferencias y alergias mencionadas en mensajes",
+      "Segmentamos automáticamente por frecuencia y ticket",
+      "Te damos un panel para consultar y exportar la base"
+    ],
+    personalizacion: "Define qué campos quieres registrar, qué cuenta como 'habitual' (frecuencia), cómo gestionar duplicados y qué consentimiento marketing pides al cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable", "HubSpot", "Notion", "Covermanager / Tock", "Make/n8n"],
+    dolores: [
+      "No sabemos quiénes son nuestros habituales",
+      "Tenemos clientes desde hace años y no les podemos avisar de nada porque no tenemos sus datos",
+      "Cada vez que viene un cliente VIP el equipo se entera tarde"
+    ],
+    integration_domains: ["CRM"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
+    related_processes: ["gastro-reactivacion-inactivos", "gastro-segmentacion-eventos"]
+  },
+  {
+    id: "GAST-3.2",
+    codigo: "3.2",
+    slug: "gastro-reactivacion-inactivos",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Reactivación de clientes inactivos",
+    tagline: "Si un habitual lleva meses sin venir, el sistema lo detecta y le envía un mensaje personal con un motivo para volver.",
+    recomendado: false,
+    descripcionDetallada: "El sistema detecta automáticamente cuándo un cliente habitual lleva más tiempo del normal sin reservar. En ese momento, le envía un mensaje personal — no campaña masiva — con un motivo concreto para volver: una novedad de carta, una mención al plato que pidió la última vez, una invitación a un evento o simplemente un saludo. Recupera entre el 15% y el 25% de la base inactiva sin coste publicitario.",
+    summary: {
+      what_it_is: "Sistema de detección de habituales que se enfrían + envío de mensajes personales de reactivación.",
+      for_who: ["Restaurantes con base de habituales identificada", "Negocios maduros con historial de clientes", "Locales con ticket medio alto donde un cliente perdido cuesta caro"],
+      requirements: ["Base de datos de comensales (módulo 3.1)", "WhatsApp/Email", "Carta o eventos actualizados"],
+      output: "Recuperación del 15-25% de clientes inactivos con mensajes personales, sin agencia ni publicidad."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email", "Sistema de reservas"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta habituales fríos", short: "Más tiempo del normal sin venir.", detail: "Calcula para cada cliente su frecuencia habitual y detecta cuándo se está saliendo del patrón." },
+      { title: "Mensaje personal", short: "Con motivo concreto, no spam.", detail: "Genera un mensaje individual con un gancho real: plato nuevo, evento, mención a su última visita." },
+      { title: "Mide la respuesta", short: "Qué funciona, qué no.", detail: "Trackea quién vuelve, quién no responde, qué tipo de mensaje convierte mejor. Aprende y mejora." }
+    ],
+    benefits: [
+      "Detección automática de habituales que se enfrían",
+      "Mensaje personal, no campaña masiva",
+      "Recupera entre el 15% y el 25% de la base inactiva"
+    ],
+    pasos: [
+      "Calculamos la frecuencia normal de cada cliente",
+      "Detectamos cuándo alguien se está saliendo del patrón",
+      "Generamos un mensaje personal con motivo concreto",
+      "Lo enviamos por el canal preferido del cliente",
+      "Medimos la respuesta y mejoramos el mensaje en cada ciclo"
+    ],
+    personalizacion: "Define qué cuenta como 'inactivo' (umbral de tiempo), el canal preferido, tipos de gancho a usar (carta, eventos, descuentos) y la frecuencia máxima de contacto.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Email", "OpenAI", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Teníamos clientes habituales que han dejado de venir y no sabemos por qué",
+      "Cuando alguien deja de venir, no hacemos nada activo para recuperarlo",
+      "Pagamos publicidad para captar nuevos en vez de recuperar los que ya tuvimos"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
+    related_processes: ["gastro-base-datos-comensales", "gastro-segmentacion-eventos"]
+  },
+  {
+    id: "GAST-3.3",
+    codigo: "3.3",
+    slug: "gastro-segmentacion-eventos",
+    categoria: "B3",
+    categoriaNombre: "Fidelización y vuelta del cliente",
+    nombre: "Comunicaciones segmentadas para eventos",
+    tagline: "Si organizas un evento, avisas solo a los clientes que ya han venido a algo parecido. Cero spam, cero publicidad.",
+    recomendado: false,
+    descripcionDetallada: "Cuando programas un evento (cena con maridaje, noche temática, concierto, brunch especial), el sistema te ayuda a identificar exactamente qué clientes de tu base ya han venido a eventos similares o tienen perfil afín. Envías el aviso solo a ellos. La tasa de apertura y conversión es muy superior a campañas masivas, y llenas el evento sin pagar publicidad a desconocidos.",
+    summary: {
+      what_it_is: "Sistema de segmentación + comunicación dirigida a clientes propios para llenar eventos sin coste publicitario.",
+      for_who: ["Restaurantes que organizan eventos regulares", "Locales con base segmentada por preferencias", "Negocios con producto premium o experiencias diferenciadas"],
+      requirements: ["Base de datos de comensales con histórico", "WhatsApp/Email"],
+      output: "Eventos llenos con clientes ya cualificados, tasa de apertura >40% vs 15% típico de email frío."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Define el evento", short: "Qué es, qué perfil encaja.", detail: "Describes el evento y el sistema identifica los criterios de perfil que mejor encajan (han venido a maridajes, prefieren vino, vienen en parejas, etc.)." },
+      { title: "Segmenta la base", short: "Solo los que encajan.", detail: "Filtra automáticamente la base de comensales por criterios de afinidad y propone una lista de destinatarios." },
+      { title: "Envía y mide", short: "Mensaje personalizado por canal.", detail: "Envía la invitación por el canal preferido de cada uno. Mide aperturas, respuestas y conversiones para mejorar la próxima vez." }
+    ],
+    benefits: [
+      "Segmentación por histórico de visitas y preferencias",
+      "Cero coste publicitario para llenar eventos",
+      "Tasa de apertura muy superior al email frío"
+    ],
+    pasos: [
+      "Defines el evento y sus criterios ideales de público",
+      "El sistema filtra la base de comensales por afinidad",
+      "Te propone la lista de destinatarios y el mensaje",
+      "Envías por el canal preferido de cada cliente",
+      "Mides resultados y aprendes para el siguiente evento"
+    ],
+    personalizacion: "Define los criterios de afinidad por tipo de evento, los canales preferidos por defecto y la frecuencia máxima de invitaciones por cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Resend", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Organizamos eventos y nos cuesta llenarlos",
+      "Tenemos clientes ideales en la base pero no sabemos quiénes son para cada evento",
+      "Pagamos publicidad para llenar eventos cuando ya tenemos a la gente en casa"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
+    related_processes: ["gastro-base-datos-comensales", "gastro-campanas-temporada"]
+  },
+
+  // ── BLOQUE B4 · Operativa diaria y visibilidad ──────────────────────────
+  {
+    id: "GAST-4.1",
+    codigo: "4.1",
+    slug: "gastro-reporte-diario",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Reporte diario por restaurante",
+    tagline: "Cada mañana, un parte único con cubiertos, ocupación, ticket medio, reseñas nuevas y no-shows del día anterior.",
+    recomendado: true,
+    descripcionDetallada: "Cada mañana a la hora que decidas, recibes un resumen consolidado de cómo fue el día anterior en cada uno de tus locales: cubiertos servidos, ocupación por turno, ticket medio, reseñas nuevas y su valoración, no-shows e incidencias destacables. Todo en un único mensaje por WhatsApp o email, no en cinco hojas de cálculo distintas. Para grupos con varios locales, llega un parte consolidado del grupo y opcionalmente uno por local.",
+    summary: {
+      what_it_is: "Informe diario operativo consolidado que llega antes de que abras el ordenador.",
+      for_who: ["Restauradores que llevan varios turnos", "Grupos con múltiples locales", "Propietarios que no quieren depender del encargado para enterarse"],
+      requirements: ["Sistema de reservas con datos de cubiertos", "TPV/POS con ticket medio (opcional)", "Acceso a Google Business para reseñas"],
+      output: "Un mensaje matutino con todos los KPIs clave del día anterior por local y consolidado."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Sistema de reservas", "TPV", "Google Business", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Recopila datos overnight", short: "De todas las fuentes.", detail: "Durante la noche el sistema recoge cubiertos, ticket medio, reseñas, no-shows e incidencias de todas las fuentes." },
+      { title: "Consolida por local", short: "Un solo mensaje, no cinco.", detail: "Une todos los datos en un parte claro por local y un consolidado del grupo si tienes varios." },
+      { title: "Envía al equipo directivo", short: "WhatsApp o email, a primera hora.", detail: "Llega al canal y a la hora que defines, sin que nadie tenga que prepararlo manualmente." }
+    ],
+    benefits: [
+      "Llega por WhatsApp o email a primera hora",
+      "Multi-local en un único parte consolidado",
+      "Sin esperar a que el encargado pase el cierre"
+    ],
+    pasos: [
+      "Conectamos sistema de reservas, TPV y plataformas de reseñas",
+      "Definimos el horario y el formato del parte",
+      "Cada mañana se generan los datos del día anterior",
+      "Se consolidan en un mensaje único (o uno por local + consolidado)",
+      "Se envía por WhatsApp o email al equipo definido"
+    ],
+    personalizacion: "Define qué KPIs incluir, formato (texto, tabla, gráfico), hora de envío, destinatarios por local y por grupo, y nivel de detalle.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Covermanager / Tock", "TPV (Glop, Camarero10, etc.)", "Google Business API", "Make/n8n", "WhatsApp/Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Cada mañana llamo al encargado para saber cómo fue el día anterior",
+      "Tengo varios locales y no consigo una visión consolidada",
+      "Los informes que pido tardan semanas en llegar"
+    ],
+    integration_domains: ["ERP", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
+    related_processes: ["gastro-seguimiento-facturas", "gastro-registro-gastos"]
+  },
+  {
+    id: "GAST-4.2",
+    codigo: "4.2",
+    slug: "gastro-seguimiento-facturas",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Seguimiento de facturas próximas a vencer",
+    tagline: "Aviso anticipado de cada factura de proveedor antes de su vencimiento, agrupada por proveedor y prioridad.",
+    recomendado: false,
+    descripcionDetallada: "El sistema vigila tus facturas de compra (proveedores de género, bebida, suministros, alquileres). Con la antelación que tú decidas, te avisa antes de cada vencimiento con la lista priorizada: cuáles vencen mañana, esta semana, el próximo lunes, agrupadas por proveedor. Adiós a recargos por olvidar pagar a tiempo y adiós a llamadas incómodas de proveedores.",
+    summary: {
+      what_it_is: "Sistema de vigilancia y aviso anticipado de vencimiento de facturas de compra de un restaurante.",
+      for_who: ["Restaurantes con muchos proveedores recurrentes", "Grupos con compras descentralizadas", "Negocios que pagan recargos por olvidar facturas"],
+      requirements: ["Software de gestión / ERP / hojas de control de facturas", "Email o WhatsApp del responsable"],
+      output: "Cero facturas vencidas sin pagar a tiempo. Aviso anticipado con priorización."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["ERP / Software de gestión", "Email/WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Vigila los vencimientos", short: "Todas las facturas, todos los días.", detail: "Cada noche revisa las facturas pendientes y calcula cuáles vencen en los próximos días según tu umbral." },
+      { title: "Agrupa y prioriza", short: "Por proveedor y urgencia.", detail: "Agrupa las facturas por proveedor para pagar de una sola vez y prioriza por urgencia y por importe." },
+      { title: "Avisa al responsable", short: "Con todo listo para pagar.", detail: "Envía aviso con la lista, el importe total y los datos necesarios para hacer las transferencias." }
+    ],
+    benefits: [
+      "Cero recargos por facturas vencidas",
+      "Lista agrupada por proveedor, lista para pagar de una",
+      "Visibilidad anticipada del cash-flow operativo"
+    ],
+    pasos: [
+      "Conectamos tu sistema de gestión de facturas",
+      "Definimos el umbral de aviso (2 días, 5 días, 1 semana)",
+      "Cada día el sistema revisa los vencimientos próximos",
+      "Genera la lista agrupada por proveedor y priorizada",
+      "Te llega el aviso por el canal que prefieras"
+    ],
+    personalizacion: "Define el umbral de anticipación (cuándo avisar), si agrupar por proveedor o no, el canal y la frecuencia (diaria, semanal).",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["ERP / Holded / Anfix / Sage", "Make/n8n", "Email/WhatsApp"],
+    canales: ["Email", "WhatsApp"],
+    dolores: [
+      "Olvidamos pagar facturas y nos clavan recargos",
+      "Las facturas de proveedores se acumulan y nadie las revisa hasta que llaman",
+      "No tenemos visibilidad de qué tenemos que pagar la próxima semana"
+    ],
+    integration_domains: ["ERP"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
+    related_processes: ["gastro-reporte-diario", "gastro-registro-gastos"]
+  },
+  {
+    id: "GAST-4.3",
+    codigo: "4.3",
+    slug: "gastro-registro-gastos",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Registro automático de gastos",
+    tagline: "Cada ticket o factura de gasto se captura, clasifica y archiva sin que nadie pegue papeles ni teclee importes.",
+    recomendado: false,
+    descripcionDetallada: "El equipo hace foto a un ticket o reenvía una factura por email — el sistema extrae proveedor, importe, fecha, IVA y partida de gasto (género, bebida, suministros, etc.), lo registra en el ERP y archiva el justificante en la nube. Adiós a cajas de zapatos llenas de tickets, adiós a buscar a fin de mes qué se compró y dónde.",
+    summary: {
+      what_it_is: "Captura automatizada de tickets y facturas de gasto + clasificación contable + archivo en la nube.",
+      for_who: ["Restaurantes que pierden tickets de compra", "Grupos con compras descentralizadas (varios encargados compran)", "Negocios que quieren cerrar mes en horas, no días"],
+      requirements: ["Móvil del equipo (foto del ticket) o email", "ERP / Software contable", "Almacenamiento en la nube"],
+      output: "Todos los gastos registrados y clasificados al día, con justificante archivado y trazable."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["OCR / IA", "ERP", "Google Drive / Dropbox"]
+    },
+    how_it_works_steps: [
+      { title: "Captura el justificante", short: "Foto del ticket o reenvío email.", detail: "Cualquiera del equipo hace foto al ticket o reenvía la factura electrónica. No hace falta app especial." },
+      { title: "Extrae los datos", short: "OCR + IA leen todo.", detail: "El sistema extrae proveedor, importe, fecha, IVA y propone partida de gasto según el histórico." },
+      { title: "Registra y archiva", short: "ERP + nube.", detail: "Anota el gasto en el ERP con la clasificación correcta y guarda el justificante en la carpeta de la nube." }
+    ],
+    benefits: [
+      "Cero tickets perdidos",
+      "Cierre de mes en horas, no en días",
+      "Trazabilidad total de cada gasto"
+    ],
+    pasos: [
+      "El equipo hace foto al ticket o reenvía la factura por email",
+      "El sistema extrae proveedor, importe, fecha, IVA",
+      "Clasifica el gasto por partida (género, bebida, suministros...)",
+      "Registra en el ERP/software de gestión",
+      "Archiva el justificante en la carpeta de la nube correspondiente"
+    ],
+    personalizacion: "Define las partidas de gasto a usar, el sistema de archivo en la nube, qué emails de proveedor conectar y reglas de aprobación si las hay.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Mindee / OCR", "Holded / Anfix", "Google Drive / Dropbox", "Make/n8n"],
+    dolores: [
+      "Los tickets de proveedores se pierden o se acumulan sin registrar",
+      "El cierre de mes es una pesadilla de buscar justificantes",
+      "No sabemos cuánto gastamos en cada partida hasta meses después"
+    ],
+    integration_domains: ["ERP", "DOCS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
+    related_processes: ["gastro-reporte-diario", "gastro-seguimiento-facturas"]
+  },
+
+  // ── BLOQUE B5 · Gestión de personal y equipo ────────────────────────────
+  {
+    id: "GAST-5.1",
+    codigo: "5.1",
+    slug: "gastro-onboarding-personal",
+    categoria: "B5",
+    categoriaNombre: "Gestión de personal y equipo",
+    nombre: "Onboarding automático de personal nuevo",
+    tagline: "Cuando entra alguien nuevo, recibe automáticamente documentos, protocolos y vídeos para estar operativo el primer turno.",
+    recomendado: false,
+    descripcionDetallada: "Cuando se incorpora una persona nueva al equipo, recibe automáticamente toda la información que necesita: contrato y documentación, protocolos del local (apertura, cierre, COVID, alergenos), vídeos de la carta y los platos clave, listado de proveedores, contactos del equipo y normas de uso de cocina/sala. Sin que el encargado se siente a explicar lo mismo 30 veces al año. El nuevo entra ya con contexto y arranca el primer turno operativo.",
+    summary: {
+      what_it_is: "Sistema automático de onboarding de personal con documentos, protocolos y vídeos enviados al instante.",
+      for_who: ["Restaurantes con rotación alta de personal", "Grupos con muchos locales que contratan en paralelo", "Negocios donde el encargado pierde tiempo explicando lo mismo"],
+      requirements: ["Carpeta con protocolos y documentos del local", "WhatsApp/Email del nuevo", "Vídeos de carta (opcional)"],
+      output: "Persona nueva operativa desde el primer turno, sin saturar al encargado."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Drive / Notion"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el alta", short: "Nueva persona, arranca onboarding.", detail: "Al registrar al nuevo en el sistema (o al añadirlo manualmente), arranca el flujo de onboarding." },
+      { title: "Envía paquete inicial", short: "Documentos, protocolos, vídeos.", detail: "Le llega un mensaje organizado con todo: contrato, protocolos, vídeos de carta, contactos del equipo y normas." },
+      { title: "Hace seguimiento", short: "¿Ha leído? ¿Tiene dudas?", detail: "Pregunta a los pocos días si todo está claro y deriva al encargado si hay dudas concretas." }
+    ],
+    benefits: [
+      "Documentos, protocolos y vídeos enviados al instante",
+      "Encargado deja de repetir lo mismo 30 veces al año",
+      "Persona nueva operativa en el primer turno"
+    ],
+    pasos: [
+      "Se detecta el alta de personal nuevo",
+      "Se le envía el paquete de onboarding por WhatsApp/email",
+      "Recibe documentos, protocolos, vídeos de carta",
+      "Se hace seguimiento a los pocos días para detectar dudas",
+      "Se notifica al encargado si hay puntos pendientes"
+    ],
+    personalizacion: "Define qué materiales incluir, en qué orden, canal de envío, días de seguimiento y a quién escalar dudas.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Google Drive / Notion", "WhatsApp Business", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Cada vez que entra alguien nuevo el encargado pierde un día entero",
+      "El personal nuevo empieza sin saber dónde está nada",
+      "Repetimos la misma explicación de carta 50 veces al año"
+    ],
+    integration_domains: ["DOCS", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
+    related_processes: ["gastro-gestion-personal"]
+  },
+  {
+    id: "GAST-5.2",
+    codigo: "5.2",
+    slug: "gastro-gestion-personal",
+    categoria: "B5",
+    categoriaNombre: "Gestión de personal y equipo",
+    nombre: "Gestión automática de personal",
+    tagline: "Turnos, comunicaciones, sustituciones y confirmaciones — sin grupos de WhatsApp caóticos ni llamadas de última hora.",
+    recomendado: true,
+    descripcionDetallada: "El sistema gestiona la comunicación operativa del equipo: cada persona recibe su turno semanal por WhatsApp con confirmación de lectura. Los cambios y sustituciones se notifican al instante solo a quien afecta. Si alguien no puede venir, propone automáticamente a quién avisar para cubrir según disponibilidad. Y guarda histórico para análisis de cobertura. Fin del grupo de WhatsApp ingobernable donde nadie sabe quién entra mañana.",
+    summary: {
+      what_it_is: "Sistema integral de comunicación de turnos, sustituciones y cambios para equipos de sala y cocina.",
+      for_who: ["Restaurantes con equipos de 5+ personas", "Grupos con plantilla rotativa", "Locales con turnos cambiantes"],
+      requirements: ["Cuadrante de turnos (Excel, Sesame, Factorial)", "WhatsApp del equipo", "Lista de personal con disponibilidad"],
+      output: "Cero malentendidos de turnos. Sustituciones cubiertas en minutos, no en horas."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["WhatsApp Business", "Software de turnos / Excel", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Envía turnos individuales", short: "A cada persona el suyo.", detail: "Cada lunes (o el día que decidas), cada persona recibe su turno semanal por WhatsApp con confirmación de lectura." },
+      { title: "Gestiona cambios", short: "Solo a quien afecta.", detail: "Si hay un cambio, se notifica al instante solo a las personas afectadas. Nada de spam al grupo entero." },
+      { title: "Sustituciones inteligentes", short: "Propone quién puede cubrir.", detail: "Si alguien no puede venir, el sistema propone candidatos según disponibilidad y experiencia, y gestiona el aviso." }
+    ],
+    benefits: [
+      "Turnos individuales con confirmación de lectura",
+      "Cambios notificados al instante a quien afectan",
+      "Fin de los grupos de WhatsApp ingobernables"
+    ],
+    pasos: [
+      "Conectamos tu cuadrante de turnos (Excel, Sesame, Factorial)",
+      "Enviamos a cada persona su turno individual por WhatsApp",
+      "Detectamos confirmación de lectura y respuesta",
+      "Gestionamos cambios y sustituciones notificando solo a quien afecta",
+      "Si alguien falta, proponemos candidatos para cubrir"
+    ],
+    personalizacion: "Define el día y hora de envío del cuadrante, los criterios de sustitución, qué confirmaciones pedir y cómo escalar imprevistos.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["WhatsApp Business API", "Sesame / Factorial / Excel", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Los grupos de WhatsApp del equipo son ingobernables",
+      "Cada cambio de turno requiere 20 llamadas",
+      "Cuando alguien falta, perdemos una hora buscando sustituto"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2",
+    related_processes: ["gastro-onboarding-personal"]
+  },
+
+  // ── BLOQUE B6 · Marketing y contenido digital ───────────────────────────
+  {
+    id: "GAST-6.1",
+    codigo: "6.1",
+    slug: "gastro-publicaciones-eventos",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Publicaciones automáticas de eventos y novedades",
+    tagline: "Cuando programas un evento o plato nuevo, el contenido se genera y publica en Instagram y Facebook en el momento óptimo.",
+    recomendado: false,
+    descripcionDetallada: "Cuando se programa un evento, una noche especial, un nuevo plato o una promoción, el sistema genera automáticamente el contenido (copy + imagen en la identidad visual del local) y lo publica en Instagram y Facebook al horario óptimo de tu audiencia. Tu Instagram deja de depender de quien tenga rato un martes a las once de la noche.",
+    summary: {
+      what_it_is: "Sistema de generación + publicación automática de contenido en redes sociales para restaurantes.",
+      for_who: ["Restaurantes con presencia en Instagram/Facebook", "Negocios que descuidan redes por falta de tiempo", "Locales con programación cambiante (eventos, carta de temporada)"],
+      requirements: ["Cuenta Instagram Business", "Identidad visual del local (logo, colores, tipografías)", "Calendario de eventos/cambios"],
+      output: "Instagram y Facebook actualizados sin esfuerzo, con contenido coherente y publicado en horario óptimo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Instagram Business API", "IA generativa", "Banco de imágenes"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge la novedad", short: "Evento, plato, oferta.", detail: "Detectas un evento o cambio (en calendario, agenda compartida o formulario simple) y arranca el flujo." },
+      { title: "Genera el contenido", short: "Copy + imagen en tu identidad.", detail: "La IA crea texto en el tono del local y una imagen siguiendo la guía visual (colores, tipografías, plantillas)." },
+      { title: "Publica al horario óptimo", short: "Cuando tu audiencia está activa.", detail: "Programa la publicación al horario de mayor engagement de tu cuenta, sin que tengas que pensar en ello." }
+    ],
+    benefits: [
+      "Generación de copy + imagen en la identidad del local",
+      "Publicación programada al horario óptimo",
+      "Tu Instagram deja de depender de quien tenga rato"
+    ],
+    pasos: [
+      "Detectamos novedades (evento, plato nuevo, oferta) en tu calendario o formulario",
+      "La IA genera el copy en el tono del local",
+      "Se crea la imagen siguiendo tu identidad visual",
+      "Se programa la publicación al horario óptimo",
+      "Publicamos en Instagram, Facebook y opcionalmente otros canales"
+    ],
+    personalizacion: "Define el tono de la marca, la identidad visual (plantillas, colores, tipografías), los canales a publicar, la frecuencia máxima y si quieres aprobación humana antes de cada post.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Instagram Business API", "OpenAI / DALL-E", "Canva API", "Make/n8n"],
+    canales: ["Instagram", "Facebook"],
+    dolores: [
+      "Nuestro Instagram lleva semanas sin publicar nada",
+      "Las publicaciones que hacemos son inconsistentes en estética",
+      "No tenemos tiempo de pensar el contenido encima de servir mesas"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    related_processes: ["gastro-campanas-temporada"]
+  },
+  {
+    id: "GAST-6.2",
+    codigo: "6.2",
+    slug: "gastro-campanas-temporada",
+    categoria: "B6",
+    categoriaNombre: "Marketing y contenido digital",
+    nombre: "Campañas de temporada hacia base propia",
+    tagline: "Antes de los picos (San Valentín, Semana Santa, verano, Navidad), se activan campañas a tu base de clientes. Sin agencia.",
+    recomendado: true,
+    descripcionDetallada: "El sistema sigue un calendario gastronómico de picos del año: San Valentín, Día de la Madre/Padre, Semana Santa, comuniones, verano, vuelta al cole, Navidades, Nochevieja. Antes de cada uno, activa una campaña automática a tu base de clientes — los que ya han venido — con el mensaje y la oferta adecuada. Llenado anticipado del pico sin agencia, sin briefings y sin coste publicitario.",
+    summary: {
+      what_it_is: "Calendario automatizado de campañas de temporada dirigidas a base propia, sin agencia ni publicidad.",
+      for_who: ["Restaurantes con producto adaptable a temporadas", "Locales con base de habituales identificada", "Negocios que quieren llenar picos con clientes ya cualificados"],
+      requirements: ["Base de datos de comensales (módulo 3.1)", "WhatsApp/Email", "Calendario de oferta por temporada"],
+      output: "Picos del año llenados con clientes propios, sin coste publicitario, con anticipación suficiente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["CRM", "WhatsApp/Email", "Calendario gastronómico"]
+    },
+    how_it_works_steps: [
+      { title: "Calendario gastronómico", short: "Picos del año marcados.", detail: "Definimos juntos los picos relevantes para tu local (San Valentín, comuniones, eventos locales, etc.)." },
+      { title: "Activa anticipación", short: "3-4 semanas antes del pico.", detail: "Con tiempo suficiente, arranca la campaña: mensaje a la base segmentada, oferta de reserva anticipada." },
+      { title: "Mide y ajusta", short: "Qué pico funciona mejor.", detail: "Cada campaña deja datos: aperturas, reservas generadas, ticket medio. Aprendes para el siguiente año." }
+    ],
+    benefits: [
+      "Calendario de campañas ligado al calendario gastronómico",
+      "Sin agencia, sin briefings, sin coste publicitario",
+      "Llenado anticipado de los picos del año"
+    ],
+    pasos: [
+      "Definimos juntos el calendario gastronómico del local",
+      "Para cada pico, configuramos audiencia, mensaje y oferta",
+      "3-4 semanas antes, se activa la campaña automáticamente",
+      "El mensaje sale por el canal preferido de cada cliente",
+      "Medimos resultados y mejoramos para el siguiente ciclo"
+    ],
+    personalizacion: "Define qué picos del año son relevantes, el tono y oferta de cada uno, los canales preferidos y la frecuencia máxima de contacto por cliente.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Airtable / HubSpot", "WhatsApp Business / Resend", "Make/n8n", "OpenAI"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Llegamos tarde a campañas de Navidad / San Valentín",
+      "Pagamos publicidad para llenar fechas cuando ya tenemos clientes que vendrían",
+      "Las agencias tardan semanas en preparar una campaña simple"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
+    related_processes: ["gastro-segmentacion-eventos", "gastro-base-datos-comensales", "gastro-publicaciones-eventos"]
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SECTOR CENTROS DE SALUD — 21 procesos · 6 bloques
+  // Exclusivos de este sector. Copy adaptado a clínicas (dental, fisio,
+  // estética, médica, veterinaria). Tono RGPD-aware.
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── BLOQUE B1 · Captación y primera visita ──────────────────────────────
+  {
+    id: "SAL-1.1",
+    codigo: "1.1",
+    slug: "salud-voz-citas-247",
+    categoria: "B1",
+    categoriaNombre: "Captación y primera visita",
+    nombre: "Asistente de voz 24/7 para pedir cita",
+    tagline: "Una voz natural atiende cada llamada — incluso fuera de horario — y deja la cita confirmada en tu agenda.",
+    recomendado: true,
+    descripcionDetallada: "Una voz IA atiende las llamadas que entran cuando recepción está ocupada o cerrada. Pregunta motivo de consulta, urgencia, aseguradora y preferencia de profesional, comprueba disponibilidad en tu agenda y deja la cita creada. Si el motivo requiere triaje (dolor agudo, urgencia), deriva inmediatamente al teléfono de guardia.",
+    summary: {
+      what_it_is: "Recepcionista IA por voz que atiende 24/7, conectado a tu sistema de agenda, capaz de derivar urgencias.",
+      for_who: ["Clínicas con alto volumen de llamadas", "Centros con horario partido", "Grupos con varios centros"],
+      requirements: ["Software de gestión clínica con API o agenda compartida", "Línea telefónica derivable"],
+      output: "Cita creada y confirmada al paciente por WhatsApp/SMS sin intervención humana."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Telefonía", "Software de gestión clínica", "WhatsApp/SMS"]
+    },
+    how_it_works_steps: [
+      { title: "Atiende la llamada", short: "Voz natural en castellano.", detail: "El asistente responde con la identidad del centro y pregunta en qué puede ayudar." },
+      { title: "Cualifica al paciente", short: "Motivo, urgencia, aseguradora.", detail: "Recoge los datos necesarios para asignar el profesional y la duración correctos." },
+      { title: "Reserva en agenda", short: "Hueco real, no provisional.", detail: "Consulta disponibilidad real, propone fechas y deja la cita creada en tu sistema." },
+      { title: "Confirma al paciente", short: "WhatsApp/SMS al instante.", detail: "El paciente recibe confirmación por su canal preferido con los datos de la cita." }
+    ],
+    benefits: [
+      "Atiende 24/7 sin recepción nocturna",
+      "Cualifica al paciente antes de bloquear agenda",
+      "Voz natural en castellano, no suena a robot"
+    ],
+    pasos: [
+      "La llamada entra al número del centro (o se desvía a la IA fuera de horario)",
+      "El asistente saluda con el nombre del centro y pregunta en qué puede ayudar",
+      "Si es una cita: recoge motivo, urgencia, aseguradora, preferencia de profesional",
+      "Comprueba disponibilidad real en tu agenda clínica",
+      "Crea la cita o deriva a urgencia si el motivo lo requiere",
+      "Envía confirmación al paciente por WhatsApp/SMS"
+    ],
+    personalizacion: "Define el tono de voz, qué motivos derivan a urgencia, qué aseguradoras admite el centro, horarios de cobertura IA vs. humanos y el canal de confirmación.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Vapi", "ElevenLabs", "Software de gestión clínica", "Twilio", "WhatsApp Business API"],
+    canales: ["Voz / Teléfono"],
+    dolores: [
+      "Perdemos pacientes porque no podemos atender el teléfono",
+      "Fuera de horario el contestador no sirve para nada",
+      "Recepción se satura cuando coinciden llamadas y mostrador"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
+    related_processes: ["salud-captura-multicanal", "salud-cualificacion-previa"]
+  },
+  {
+    id: "SAL-1.2",
+    codigo: "1.2",
+    slug: "salud-captura-multicanal",
+    categoria: "B1",
+    categoriaNombre: "Captación y primera visita",
+    nombre: "Captura unificada de peticiones desde todos los canales",
+    tagline: "WhatsApp, formulario web, Instagram DM, llamadas — todo cae en una sola bandeja con el origen identificado.",
+    recomendado: true,
+    descripcionDetallada: "Centralizamos todas las peticiones de cita entrantes en un único panel. El paciente escribe por WhatsApp, por Instagram DM, rellena el formulario de la web o llama por teléfono — y todo se unifica con el canal de origen marcado, sin duplicados y sin que recepción tenga que saltar entre 5 apps.",
+    summary: {
+      what_it_is: "Panel único de captación con todas las peticiones de cita entrantes etiquetadas por canal.",
+      for_who: ["Clínicas con presencia activa en Instagram", "Centros con formulario web operativo", "Negocios que reciben DMs pidiendo cita"],
+      requirements: ["Cuenta Instagram Business", "WhatsApp Business API", "Formulario web", "Sistema de gestión clínica"],
+      output: "Todas las peticiones en una sola vista, sin duplicados, con canal de origen identificado."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Instagram", "WhatsApp", "Web", "Software de gestión clínica"]
+    },
+    how_it_works_steps: [
+      { title: "Escucha multicanal", short: "Todos los canales a la vez.", detail: "Monitoriza en paralelo Instagram DM, WhatsApp, web y teléfono, detectando intención de cita." },
+      { title: "Centraliza en panel", short: "Una sola bandeja para todo.", detail: "Cada petición entra al panel con el canal de origen, fecha y datos disponibles del paciente." },
+      { title: "Detecta duplicados", short: "Si escribe por dos canales, uno solo.", detail: "Identifica al paciente por número o email y consolida peticiones del mismo paciente." }
+    ],
+    benefits: [
+      "Un único panel para todos los canales",
+      "Sin duplicados ni peticiones perdidas",
+      "El paciente contacta por donde ya está"
+    ],
+    pasos: [
+      "Conectamos Instagram DM, WhatsApp Business, web y llamadas",
+      "Detectamos qué mensajes son petición de cita real",
+      "Unificamos en un panel centralizado",
+      "Etiquetamos cada petición por canal de origen",
+      "Notificamos a recepción solo lo que requiere intervención humana"
+    ],
+    personalizacion: "Elige qué canales activar, qué cuenta como 'caso especial' (grupos, urgencias, peticiones VIP) y la asignación por defecto.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Instagram Business API", "WhatsApp Business API", "Make/n8n", "Software de gestión clínica"],
+    canales: ["Instagram", "WhatsApp", "Web", "Teléfono"],
+    dolores: [
+      "Los DMs de Instagram pidiendo cita se nos pasan",
+      "Recepción copia datos de WhatsApp al sistema a mano",
+      "Tenemos peticiones duplicadas por el mismo paciente"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2",
+    related_processes: ["salud-voz-citas-247", "salud-chatbot-info"]
+  },
+  {
+    id: "SAL-1.3",
+    codigo: "1.3",
+    slug: "salud-chatbot-info",
+    categoria: "B1",
+    categoriaNombre: "Captación y primera visita",
+    nombre: "Chatbot informativo del centro",
+    tagline: "Un asistente que conoce servicios, precios estimados, aseguradoras, ubicación y horarios — y responde al instante.",
+    recomendado: true,
+    descripcionDetallada: "Un asistente conversacional disponible en WhatsApp, Instagram DM y el chat de la web que tiene toda la información del centro: cartera de servicios, rangos de precio orientativos, aseguradoras con las que trabajáis, dirección y cómo llegar, parking, horarios, política de primera visita. Responde 24/7 con información actualizada y, cuando hay intención de cita, deriva o gestiona la reserva.",
+    summary: {
+      what_it_is: "Base de conocimiento conversacional del centro accesible por chat. Filtra preguntas habituales que ahogan a recepción.",
+      for_who: ["Clínicas con muchas preguntas repetidas", "Centros con cartera de servicios amplia", "Negocios con varias sedes o profesionales"],
+      requirements: ["Cartera de servicios actualizada", "WhatsApp Business o widget web", "Cuenta Instagram Business (opcional)"],
+      output: "Paciente informado al instante 24/7. Recepción libre de preguntas repetidas."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["WhatsApp", "Instagram", "Web", "IA / Base de conocimiento"]
+    },
+    how_it_works_steps: [
+      { title: "Carga la información", short: "Servicios, precios, aseguradoras.", detail: "Subimos cartera con servicios, rangos de precio, aseguradoras, horarios y datos del centro. Se actualiza cuando tú la actualizas." },
+      { title: "Responde 24/7", short: "Instantáneo, en el canal del paciente.", detail: "Da respuestas precisas a las preguntas habituales: '¿tenéis Adeslas?', '¿precio de limpieza?', '¿abrís sábados?'." },
+      { title: "Deriva a cita o humano", short: "Cuando hace falta intervención.", detail: "Si la conversación indica intención de cita, la gestiona. Si requiere humano (urgencia, queja), avisa al equipo con contexto." }
+    ],
+    benefits: [
+      "Cero preguntas repetidas para recepción",
+      "Información correcta y actualizada 24/7",
+      "Conversaciones que terminan en cita, no en silencio"
+    ],
+    pasos: [
+      "Recopilamos toda la información del centro y servicios",
+      "Entrenamos al asistente en el tono del centro",
+      "Lo conectamos a los canales donde te escriben los pacientes",
+      "Responde dudas al instante con información actualizada",
+      "Cuando detecta intención de cita, la gestiona o deriva con contexto"
+    ],
+    personalizacion: "Define el tono, qué información incluir, qué temas escalar siempre a humano (urgencias, quejas) y cuándo proponer activamente reservar cita.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["OpenAI / Claude", "WhatsApp Business API", "Instagram Business", "Make/n8n"],
+    canales: ["WhatsApp", "Instagram", "Web"],
+    dolores: [
+      "Todos los días respondemos las mismas 10 preguntas",
+      "Recepción está al teléfono y no atiende el mostrador",
+      "Damos información inconsistente según quién responda"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3",
+    related_processes: ["salud-captura-multicanal", "salud-voz-citas-247"]
+  },
+  {
+    id: "SAL-1.4",
+    codigo: "1.4",
+    slug: "salud-cualificacion-previa",
+    categoria: "B1",
+    categoriaNombre: "Captación y primera visita",
+    nombre: "Cualificación previa de paciente",
+    tagline: "Antes de bloquear agenda, pregunta motivo, urgencia, primera visita y aseguradora — y asigna el profesional correcto.",
+    recomendado: false,
+    descripcionDetallada: "Antes de ocupar agenda, el sistema cualifica al paciente: motivo de consulta, urgencia, si es primera visita o revisión, aseguradora, preferencia de profesional. Con esa información, asigna el profesional adecuado, la duración correcta y el tipo de visita. El profesional llega a consulta con el contexto, sin sorpresas en sala.",
+    summary: {
+      what_it_is: "Triage automatizado pre-agenda que asigna profesional, duración y tipo correctos según el motivo.",
+      for_who: ["Centros con varios profesionales y especialidades", "Clínicas con primera visita diferenciada", "Negocios con duraciones distintas según tratamiento"],
+      requirements: ["Software de gestión con asignación por profesional", "Reglas de asignación definidas"],
+      output: "Agenda mejor cargada: cada cita con profesional, duración y contexto correctos."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["Software de gestión clínica", "WhatsApp/Web"]
+    },
+    how_it_works_steps: [
+      { title: "Pregunta clave", short: "Motivo, urgencia, aseguradora.", detail: "En el canal por donde llega la petición, el sistema hace 3-5 preguntas concretas." },
+      { title: "Asigna profesional", short: "Según reglas y especialidad.", detail: "Aplica tus reglas para escoger profesional, duración y tipo de visita correctos." },
+      { title: "Reserva con contexto", short: "El profesional lo ve en su agenda.", detail: "La cita se crea con un resumen del motivo visible para el profesional antes de empezar." }
+    ],
+    benefits: [
+      "Llega a consulta con contexto, sin sorpresas",
+      "Evita huecos mal asignados (urgencias en revisiones)",
+      "Mejora la duración asignada por tipo de visita"
+    ],
+    pasos: [
+      "El paciente solicita cita por cualquier canal",
+      "El sistema hace 3-5 preguntas clave",
+      "Aplica reglas para asignar profesional + duración + tipo",
+      "Crea la cita con contexto visible para el profesional",
+      "Notifica al paciente la asignación"
+    ],
+    personalizacion: "Define qué preguntas hacer en cada canal, las reglas de asignación profesional/duración, qué motivos requieren triaje urgente.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "Make/n8n", "WhatsApp/Web"],
+    dolores: [
+      "Asignamos a un profesional y resulta no era su especialidad",
+      "Bloqueamos 30 minutos cuando hacían falta 60",
+      "El profesional descubre el motivo al ver al paciente"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4",
+    related_processes: ["salud-voz-citas-247", "salud-captura-multicanal"]
+  },
+
+  // ── BLOQUE B2 · Gestión de citas y ausencias ────────────────────────
+  {
+    id: "SAL-2.1",
+    codigo: "2.1",
+    slug: "salud-recordatorios-citas",
+    categoria: "B2",
+    categoriaNombre: "Gestión de citas y ausencias",
+    nombre: "Recordatorios automáticos pre-cita",
+    tagline: "Mensaje 24 horas y 2 horas antes. El paciente confirma con un toque, sin llamar.",
+    recomendado: true,
+    descripcionDetallada: "El sistema envía recordatorios automáticos 24 horas y 2 horas antes de la cita por WhatsApp o SMS. El paciente confirma con un solo toque. Si no responde, recepción recibe alerta para gestión activa. Resultado típico: ausencias del 15-25% bajan al 5-10%.",
+    summary: {
+      what_it_is: "Recordatorios automáticos pre-cita con confirmación de un toque y alerta a recepción si no hay respuesta.",
+      for_who: ["Clínicas con problema de ausencias", "Centros con citas de coste alto (estética, dental)", "Negocios con agenda apretada"],
+      requirements: ["Software de gestión con datos de contacto", "WhatsApp Business o SMS"],
+      output: "Bajada del 50-70% en ausencias con cero llamadas de recepción para confirmar."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/SMS", "Software de gestión clínica"]
+    },
+    how_it_works_steps: [
+      { title: "24h antes", short: "Mensaje amable de recordatorio.", detail: "Recordatorio con fecha, hora, profesional y opción de confirmar/cancelar con un toque." },
+      { title: "2h antes", short: "Último aviso si no ha confirmado.", detail: "Para quienes no confirmaron, último mensaje para que respondan o llamen si hay problema." },
+      { title: "Alerta a recepción", short: "Si nadie responde.", detail: "Si tras los 2 recordatorios el paciente no ha respondido, recepción recibe alerta para llamar." }
+    ],
+    benefits: [
+      "Recordatorio 24h y 2h antes por WhatsApp/SMS",
+      "Confirmación de un solo toque",
+      "Aviso a recepción si el paciente no responde"
+    ],
+    pasos: [
+      "Detectamos las citas del día siguiente y del turno",
+      "Enviamos recordatorio amable por el canal del paciente",
+      "Si confirma → cita asegurada. Si responde 'no puedo' → libera y reagenda",
+      "Si no responde tras 2 mensajes, alerta a recepción",
+      "Registramos el patrón para análisis de ausencias"
+    ],
+    personalizacion: "Define cuándo se envía (24h, 2h, ambos), el tono del recordatorio, qué canales usar y qué hacer ante no-respuesta.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["WhatsApp Business API", "Twilio", "Software de gestión clínica", "Make/n8n"],
+    canales: ["WhatsApp", "SMS"],
+    dolores: [
+      "Cada día tenemos pacientes que no aparecen sin avisar",
+      "Recepción pasa horas confirmando citas por teléfono",
+      "Las ausencias en menú de tratamiento caro son enormes"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
+    related_processes: ["salud-reprogramacion-citas", "salud-lista-espera"]
+  },
+  {
+    id: "SAL-2.2",
+    codigo: "2.2",
+    slug: "salud-reprogramacion-citas",
+    categoria: "B2",
+    categoriaNombre: "Gestión de citas y ausencias",
+    nombre: "Confirmación y reprogramación sin llamar",
+    tagline: "Si el paciente no puede venir, propone fechas alternativas y reprograma sin pasar por recepción.",
+    recomendado: false,
+    descripcionDetallada: "Cuando el paciente responde 'no puedo' al recordatorio, el sistema le propone automáticamente 3 fechas alternativas en función de su preferencia y la agenda del profesional. El paciente elige una con un toque y la cita se reagenda. La cita anterior queda liberada al instante para lista de espera.",
+    summary: {
+      what_it_is: "Sistema de reprogramación autónoma para que el paciente cambie su cita sin pasar por recepción.",
+      for_who: ["Clínicas que pierden tiempo en reagendas", "Centros con agenda apretada", "Negocios con políticas de cancelación claras"],
+      requirements: ["Software de gestión clínica", "WhatsApp Business"],
+      output: "Reprogramaciones sin llamada + hueco liberado al instante para lista de espera."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["WhatsApp", "Software de gestión clínica"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta intención de cambio", short: "El paciente responde 'no puedo'.", detail: "Cuando el paciente responde al recordatorio que no puede venir, arranca el flujo de reprogramación." },
+      { title: "Propone alternativas", short: "3 fechas según preferencia.", detail: "Consulta agenda del profesional preferido y propone 3 opciones." },
+      { title: "Reagenda con un toque", short: "El paciente elige y listo.", detail: "El paciente elige una opción. La cita se reagenda y la anterior se libera." }
+    ],
+    benefits: [
+      "Propone alternativas según disponibilidad",
+      "Reprograma sin intervención humana",
+      "Libera el hueco anterior al instante"
+    ],
+    pasos: [
+      "Detectamos cuándo un paciente quiere cambiar su cita",
+      "Consultamos su preferencia y la disponibilidad del profesional",
+      "Proponemos 3 opciones alternativas",
+      "El paciente elige y la cita se reagenda automáticamente",
+      "Liberamos el hueco anterior para lista de espera"
+    ],
+    personalizacion: "Define qué profesionales aceptan reagenda automática, cuánta antelación se requiere y reglas de cancelación.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["WhatsApp Business API", "Software de gestión clínica", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Recepción pasa el día reagendando citas",
+      "Cuando alguien cambia su cita, su hueco se queda perdido",
+      "Los pacientes prefieren no avisar antes que llamar"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
+    related_processes: ["salud-recordatorios-citas", "salud-lista-espera"]
+  },
+  {
+    id: "SAL-2.3",
+    codigo: "2.3",
+    slug: "salud-lista-espera",
+    categoria: "B2",
+    categoriaNombre: "Gestión de citas y ausencias",
+    nombre: "Lista de espera activa",
+    tagline: "Cuando alguien cancela, el hueco se ofrece automáticamente al primero de la lista por WhatsApp.",
+    recomendado: true,
+    descripcionDetallada: "Cuando una cita se libera (cancelación, reprogramación), el sistema ofrece automáticamente ese hueco al primer paciente de la lista de espera por WhatsApp. El paciente puede aceptar con un toque y la cita queda ocupada en minutos. Si no responde en X tiempo, pasa al siguiente.",
+    summary: {
+      what_it_is: "Lista de espera realmente operativa que llena cancelaciones en tiempo real.",
+      for_who: ["Centros con lista de espera frecuente", "Clínicas con tratamientos especialistas (limitada disponibilidad)", "Negocios con agenda muy demandada"],
+      requirements: ["Software de gestión clínica", "WhatsApp Business", "Lista de espera mantenida"],
+      output: "Cancelaciones rescatadas en minutos sin llamadas de recepción."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["WhatsApp", "Software de gestión clínica"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta hueco libre", short: "Cancelación o reprograma.", detail: "Cuando una cita se libera, arranca el flujo de rescate." },
+      { title: "Ofrece al siguiente", short: "WhatsApp con respuesta directa.", detail: "Envía mensaje al primero de la lista con el hueco disponible y respuesta de un toque." },
+      { title: "Avanza si no responde", short: "Cadena automática.", detail: "Si no responde en el tiempo definido, pasa al siguiente automáticamente." }
+    ],
+    benefits: [
+      "El hueco vuela al instante al siguiente",
+      "Mensaje con respuesta directa, sin llamada",
+      "Llena la agenda incluso con cancelaciones"
+    ],
+    pasos: [
+      "Recibimos aviso de hueco libre",
+      "Identificamos al primer candidato de la lista de espera",
+      "Le enviamos el hueco por WhatsApp con respuesta directa",
+      "Si acepta → cita creada. Si no responde → siguiente candidato",
+      "El proceso se repite hasta llenar el hueco"
+    ],
+    personalizacion: "Define criterio de orden en la lista (FIFO, urgencia, fidelidad), tiempo de respuesta antes de avanzar y máximo de pacientes a contactar.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["WhatsApp Business API", "Software de gestión clínica", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Tenemos lista de espera pero no la usamos en cancelaciones",
+      "Cuando se cae una cita, el hueco se queda vacío",
+      "Llamar a 10 pacientes de la lista lleva horas"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3",
+    related_processes: ["salud-recordatorios-citas", "salud-reprogramacion-citas"]
+  },
+  {
+    id: "SAL-2.4",
+    codigo: "2.4",
+    slug: "salud-reasignacion-profesional",
+    categoria: "B2",
+    categoriaNombre: "Gestión de citas y ausencias",
+    nombre: "Reasignación inteligente de profesional",
+    tagline: "Si un profesional se da de baja, reasigna sus citas según especialidad y disponibilidad — y avisa a todos.",
+    recomendado: false,
+    descripcionDetallada: "Si un profesional se da de baja repentina, el sistema reasigna sus citas del día / semana según especialidad, disponibilidad de otros profesionales y preferencias del paciente. Notifica a cada paciente afectado con la nueva asignación y opciones para mantener, cambiar o cancelar.",
+    summary: {
+      what_it_is: "Reasignación masiva de citas cuando un profesional no puede atender, con notificación coordinada.",
+      for_who: ["Centros con varios profesionales", "Clínicas con bajas frecuentes", "Grupos con rotación de personal"],
+      requirements: ["Software de gestión con datos de profesionales y especialidades", "WhatsApp Business"],
+      output: "Cero citas tiradas por baja imprevista, con paciente informado al instante."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media-Alta",
+      integrations: ["Software de gestión clínica", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la baja", short: "Manual o automática.", detail: "Recepción marca al profesional como no disponible, o se detecta vía calendario sincronizado." },
+      { title: "Reasigna las citas", short: "Por especialidad y disponibilidad.", detail: "Para cada cita afectada, busca un profesional compatible y la reasigna." },
+      { title: "Notifica al paciente", short: "Con opciones claras.", detail: "Mensaje al paciente con la nueva asignación y posibilidad de mantener, cambiar o cancelar." }
+    ],
+    benefits: [
+      "Detecta automáticamente bajas e imprevistos",
+      "Reasigna por especialidad y disponibilidad",
+      "Notifica al paciente y al equipo a la vez"
+    ],
+    pasos: [
+      "Se marca al profesional como no disponible",
+      "El sistema localiza sus citas afectadas",
+      "Busca profesional compatible (especialidad + hueco)",
+      "Reasigna y notifica al paciente con opciones",
+      "Recepción ve el panel consolidado de cambios"
+    ],
+    personalizacion: "Define reglas de compatibilidad de profesionales, qué tipo de citas se pueden reasignar y qué pacientes prefieren cancelar siempre.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp Business API", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Cuando se da de baja un profesional, perdemos un día entero de citas",
+      "Reagendar 15 pacientes por baja imprevista es un caos",
+      "Los pacientes se enteran tarde y se enfadan"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4",
+    related_processes: ["salud-recordatorios-citas", "salud-comunicacion-turnos"]
+  },
+
+  // ── BLOQUE B3 · Reputación y reseñas ────────────────────────────────────
+  {
+    id: "SAL-3.1",
+    codigo: "3.1",
+    slug: "salud-solicitud-resenas",
+    categoria: "B3",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Solicitud automática de reseñas post-visita",
+    tagline: "24-48h después de la visita, los pacientes contentos reciben enlace a Google. Los descontentos van a privado.",
+    recomendado: true,
+    descripcionDetallada: "Después de la visita, el sistema detecta el momento óptimo para pedir reseña (24-48h, no en caliente). Envía un mensaje breve. Si responde positivamente, enlace directo a Google. Si detecta señales de descontento, deriva la conversación al responsable en privado para gestionarlo antes de que se convierta en reseña pública negativa.",
+    summary: {
+      what_it_is: "Sistema automático de solicitud de reseñas con filtro de descontento — más reseñas positivas, menos sorpresas públicas.",
+      for_who: ["Centros que quieren crecer en Google Maps y Doctoralia", "Clínicas que ya dan buen trato pero tienen pocas reseñas", "Negocios que protegen reputación online"],
+      requirements: ["Software de gestión clínica", "WhatsApp/Email", "Ficha Google Business activa"],
+      output: "Crecimiento orgánico de reseñas reales + protección frente a reseñas negativas sorpresivas."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Business", "Doctoralia (opcional)"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el momento", short: "24-48h después de la visita.", detail: "Tras la visita esperamos el momento de satisfacción procesada para pedir reseña." },
+      { title: "Pregunta breve", short: "Una sola pregunta sencilla.", detail: "Mensaje corto y personal. Si responde bien → enlace a Google. Si responde mal → conversación privada." },
+      { title: "Gestión de descontentos", short: "En privado, no en público.", detail: "Si el paciente menciona algo negativo, lo derivamos al responsable con todo el contexto." }
+    ],
+    benefits: [
+      "Más reseñas 5★ pidiendo en el momento de máxima satisfacción",
+      "Filtro de descontentos a canal privado — protege reputación",
+      "Crecimiento orgánico de reseñas reales en Google Maps"
+    ],
+    pasos: [
+      "Detectamos las visitas realizadas del día anterior",
+      "Enviamos mensaje breve de seguimiento al paciente",
+      "Si la respuesta es positiva → enlace a reseña Google",
+      "Si la respuesta es negativa → conversación privada con el responsable",
+      "Registramos la interacción para análisis"
+    ],
+    personalizacion: "Define cuándo se envía (24h, 48h), el tono, el canal (WhatsApp/email) y quién recibe los descontentos.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["WhatsApp Business API", "Resend/SendGrid", "Google Business API", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Damos buen servicio pero tenemos pocas reseñas",
+      "Solo nos dejan reseña las quejas",
+      "La competencia tiene 500 reseñas y nosotros 50"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
+    related_processes: ["salud-alertas-resenas-negativas"]
+  },
+  {
+    id: "SAL-3.2",
+    codigo: "3.2",
+    slug: "salud-alertas-resenas-negativas",
+    categoria: "B3",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Alertas de reseñas negativas en tiempo real",
+    tagline: "Cuando alguien publica reseña <3★, recibes alerta con borrador de respuesta listo para revisar.",
+    recomendado: false,
+    descripcionDetallada: "Monitorizamos Google Business, Doctoralia, Top Doctors y otras plataformas. Cuando aparece una reseña por debajo de 3 estrellas, el responsable recibe una alerta inmediata con la reseña, el contexto del paciente y un borrador de respuesta generado por IA en el tono del centro.",
+    summary: {
+      what_it_is: "Monitorización + alerta + asistencia de respuesta para reseñas negativas en todas las plataformas relevantes.",
+      for_who: ["Centros presentes en Google + Doctoralia + Top Doctors", "Clínicas que cuidan reputación online", "Grupos que necesitan visibilidad consolidada multi-centro"],
+      requirements: ["Acceso a Google Business", "Cuenta Doctoralia/Top Doctors (opcional)"],
+      output: "100% de las reseñas <3★ con respuesta en menos de 24h, en el tono del centro."
+    },
+    indicators: {
+      time_estimate: "1 semana",
+      complexity: "Baja",
+      integrations: ["Google Business", "Doctoralia", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza 24/7", short: "Todas las plataformas.", detail: "Vigilamos Google, Doctoralia, Top Doctors y cualquier otra plataforma donde estés presente." },
+      { title: "Alerta inmediata", short: "Aviso con contexto y borrador.", detail: "Si aparece una reseña <3★, llega notificación con la reseña, el contexto del paciente y un borrador IA." },
+      { title: "Respuesta humana asistida", short: "Tú revisas y publicas.", detail: "El borrador respeta el tono del centro. Solo revisas, ajustas si quieres y publicas." }
+    ],
+    benefits: [
+      "Alerta inmediata cuando publican una reseña <3★",
+      "Borrador de respuesta generado con IA en el tono del centro",
+      "Cero reseñas malas sin responder ni respuestas tardías"
+    ],
+    pasos: [
+      "Monitorizamos las plataformas de reseñas en tiempo real",
+      "Detectamos reseñas por debajo del umbral (por defecto 3★)",
+      "Buscamos contexto del paciente en tu sistema",
+      "Generamos borrador de respuesta personalizado",
+      "Te enviamos alerta con todo + opción de aprobar/editar"
+    ],
+    personalizacion: "Define el umbral de estrellas, las plataformas, el tono de la respuesta IA y quién recibe la alerta.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Google Business API", "Doctoralia API", "OpenAI", "WhatsApp Business / Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Nos enteramos de las reseñas malas días después",
+      "No sabemos qué responder ni con qué tono",
+      "Cuando respondemos, ya nadie las ve"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
+    related_processes: ["salud-solicitud-resenas"]
+  },
+
+  // ── BLOQUE B4 · Seguimiento clínico y fidelización ──────────────────────
+  {
+    id: "SAL-4.1",
+    codigo: "4.1",
+    slug: "salud-recordatorios-revision",
+    categoria: "B4",
+    categoriaNombre: "Seguimiento clínico y fidelización",
+    nombre: "Recordatorios de revisión periódica",
+    tagline: "El sistema sabe cuándo cada paciente debe volver y le envía un recordatorio con opción de reservar al toque.",
+    recomendado: true,
+    descripcionDetallada: "Para cada paciente, el sistema sabe cuándo toca su próxima revisión (limpieza dental anual, control de mantenimiento, chequeo periódico) y envía un recordatorio amable en ese momento, con opción de reservar directamente desde el mensaje. Sin que recepción tenga que llamar a 200 pacientes al mes.",
+    summary: {
+      what_it_is: "Sistema de recordatorios de revisión periódica que mantiene a los pacientes volviendo sin esfuerzo de recepción.",
+      for_who: ["Clínicas dentales (limpiezas anuales)", "Centros con tratamientos de mantenimiento", "Veterinarias con vacunación periódica"],
+      requirements: ["Software de gestión con histórico de visitas", "WhatsApp/Email"],
+      output: "Tasa de retorno a revisión periódica del 60-80% sin esfuerzo humano."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["Software de gestión clínica", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Calendario individual", short: "Por paciente y tratamiento.", detail: "Para cada paciente, sabemos cuándo le toca su próxima revisión según tipo y última visita." },
+      { title: "Recordatorio amable", short: "Con motivo concreto.", detail: "En el momento adecuado, mensaje personal con motivo claro y opción de reservar." },
+      { title: "Reserva al toque", short: "Sin llamar a recepción.", detail: "Desde el mensaje el paciente puede ver huecos disponibles y reservar al instante." }
+    ],
+    benefits: [
+      "Calendario de revisiones personalizado",
+      "Recordatorio en el momento adecuado",
+      "Reserva con un toque desde el mensaje"
+    ],
+    pasos: [
+      "Identificamos para cada paciente cuándo toca revisión",
+      "En el momento adecuado, enviamos recordatorio amable",
+      "Incluimos opción de reservar directa con un toque",
+      "Si reserva → cita creada. Si no responde → segundo recordatorio en X días",
+      "Pasamos a recepción solo los casos persistentes"
+    ],
+    personalizacion: "Define la periodicidad por tipo de tratamiento, el tono del recordatorio y cuántos avisos máximos por paciente.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp Business", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Pacientes habituales no vuelven a su revisión y nadie los avisa",
+      "Recepción no tiene tiempo de llamar a 200 personas al mes",
+      "Perdemos pacientes recurrentes que se van a la competencia"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
+    related_processes: ["salud-reactivacion-pacientes", "salud-mensajes-programados"]
+  },
+  {
+    id: "SAL-4.2",
+    codigo: "4.2",
+    slug: "salud-reactivacion-pacientes",
+    categoria: "B4",
+    categoriaNombre: "Seguimiento clínico y fidelización",
+    nombre: "Reactivación de pacientes inactivos",
+    tagline: "Si un paciente habitual lleva más tiempo del normal sin venir, le enviamos un mensaje personal — no campaña masiva.",
+    recomendado: false,
+    descripcionDetallada: "El sistema detecta automáticamente cuándo un paciente habitual lleva más tiempo del normal sin visitar el centro. En ese momento, le envía un mensaje personal con un motivo concreto para volver: una novedad del centro, un cambio en cartera, una mención cercana a su última visita. Recupera entre el 15% y el 25% de la base inactiva sin coste publicitario.",
+    summary: {
+      what_it_is: "Detección de pacientes que se enfrían + envío de mensajes personales de reactivación.",
+      for_who: ["Clínicas con base de habituales identificada", "Centros maduros con historial", "Negocios con ticket alto donde un paciente perdido cuesta"],
+      requirements: ["Software de gestión con histórico", "WhatsApp/Email"],
+      output: "Recuperación del 15-25% de pacientes inactivos con mensajes personales."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["Software de gestión clínica", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta pacientes fríos", short: "Más tiempo del normal sin venir.", detail: "Calcula para cada paciente su frecuencia habitual y detecta cuándo se está saliendo del patrón." },
+      { title: "Mensaje personal", short: "Con motivo concreto.", detail: "Genera mensaje individual con gancho real: cambio en cartera, novedad, mención a última visita." },
+      { title: "Mide la respuesta", short: "Qué funciona, qué no.", detail: "Trackea quién vuelve, qué tipo de mensaje convierte mejor, aprende y mejora." }
+    ],
+    benefits: [
+      "Detección automática de patrones de visita",
+      "Mensaje personal, no campaña masiva",
+      "Recupera entre el 15% y el 25% de la base inactiva"
+    ],
+    pasos: [
+      "Calculamos la frecuencia normal de cada paciente",
+      "Detectamos cuándo alguien se sale del patrón",
+      "Generamos mensaje personal con motivo concreto",
+      "Lo enviamos por el canal preferido del paciente",
+      "Medimos respuesta y mejoramos en cada ciclo"
+    ],
+    personalizacion: "Define qué cuenta como 'inactivo' (umbral de tiempo), canales, tipos de gancho y frecuencia máxima de contacto.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp Business / Email", "OpenAI", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Teníamos pacientes habituales que han dejado de venir y no sabemos por qué",
+      "No hacemos nada cuando alguien deja de venir",
+      "Pagamos publicidad para captar nuevos en vez de recuperar los que ya tuvimos"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
+    related_processes: ["salud-recordatorios-revision", "salud-mensajes-programados"]
+  },
+  {
+    id: "SAL-3.3",
+    codigo: "3.3",
+    slug: "salud-encuestas-post-tratamiento",
+    categoria: "B3",
+    categoriaNombre: "Reputación y reseñas",
+    nombre: "Encuestas de satisfacción post-tratamiento",
+    tagline: "Después de un tratamiento concreto, encuesta breve para saber cómo fue — en el momento útil, con datos accionables.",
+    recomendado: false,
+    descripcionDetallada: "Tras un tratamiento concreto (no una visita rápida), el paciente recibe una encuesta breve para saber cómo fue la experiencia y el resultado. Te llega el resumen consolidado y alertas si algún caso requiere atención. Datos accionables — no NPS abstracto.",
+    summary: {
+      what_it_is: "Encuestas de satisfacción post-tratamiento con alertas y consolidado, útiles para mejora real.",
+      for_who: ["Clínicas con tratamientos diferenciados (estética, dental, fisio)", "Centros que quieren medir calidad real", "Negocios que aprenden de cada caso"],
+      requirements: ["Software de gestión con histórico de tratamientos", "WhatsApp/Email"],
+      output: "Feedback estructurado de pacientes en el momento útil, con alertas accionables."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["Software de gestión clínica", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta tratamientos clave", short: "No cada visita, sólo las importantes.", detail: "Identifica las visitas que ameritan encuesta (no una limpieza rápida)." },
+      { title: "Encuesta breve", short: "5 preguntas máximo.", detail: "Mensaje sencillo con preguntas concretas sobre la experiencia y el resultado." },
+      { title: "Consolida y alerta", short: "Resumen + casos a revisar.", detail: "Te llega el resumen + alerta inmediata si alguien menciona algo grave." }
+    ],
+    benefits: [
+      "Encuesta en el momento de la verdad",
+      "Detección automática de pacientes a contactar",
+      "Datos accionables, no solo NPS abstracto"
+    ],
+    pasos: [
+      "Identificamos las visitas que ameritan encuesta",
+      "Enviamos encuesta breve al paciente",
+      "Consolidamos las respuestas semanalmente",
+      "Si hay alerta, notificación inmediata al responsable",
+      "Te llega el resumen con datos accionables"
+    ],
+    personalizacion: "Define qué visitas activan encuesta, las preguntas, el formato y los umbrales que generan alerta.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp Business / Resend", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "No sabemos cómo de satisfechos están realmente los pacientes",
+      "Solo nos enteramos cuando hay queja en Google",
+      "Las encuestas que enviamos no responde nadie"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
+    related_processes: ["salud-solicitud-resenas", "salud-reactivacion-pacientes"]
+  },
+  {
+    id: "SAL-4.3",
+    codigo: "4.3",
+    slug: "salud-mensajes-programados",
+    categoria: "B4",
+    categoriaNombre: "Seguimiento clínico y fidelización",
+    nombre: "Mensajes programados a pacientes",
+    tagline: "Defines una vez las comunicaciones que quieres mantener vivas con tus pacientes — el sistema las envía en el momento adecuado a quien corresponda.",
+    recomendado: false,
+    descripcionDetallada: "Un calendario único de comunicaciones programadas hacia tu base de pacientes: felicitaciones de cumpleaños, aniversarios de tratamiento, recordatorios estacionales (cambio de estación, vuelta de vacaciones), seguimiento post-tratamiento, novedades del centro. El sistema segmenta automáticamente por tipo de paciente y envía en el momento adecuado, siempre con consentimiento RGPD y sin saturar.",
+    summary: {
+      what_it_is: "Calendario central de comunicaciones programadas a pacientes, segmentadas y RGPD-compliant.",
+      for_who: ["Centros que cuidan la relación a largo plazo", "Clínicas con varios tipos de paciente", "Negocios que quieren mantener vínculo sin saturar"],
+      requirements: ["Base de pacientes con consentimientos", "WhatsApp/Email", "Calendario de comunicaciones definido"],
+      output: "Comunicaciones automáticas en el momento adecuado, segmentadas por tipo de paciente, sin trabajo manual."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["Software de gestión clínica", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Calendario de mensajes", short: "Defines una vez, se ejecuta solo.", detail: "Configuramos juntos qué comunicaciones quieres mantener vivas y cuándo se disparan (fechas fijas, eventos, hitos por paciente)." },
+      { title: "Segmenta destinatarios", short: "A quién aplica cada uno.", detail: "Cada mensaje sólo llega al perfil que encaja (consentimiento, tipo de tratamiento, frecuencia de visita)." },
+      { title: "Envía y mide", short: "Sin saturar, con control.", detail: "El sistema respeta la frecuencia máxima por paciente y registra bajas para no insistir." }
+    ],
+    benefits: [
+      "Un solo calendario para todas las comunicaciones del centro",
+      "Segmentación automática por tipo de paciente",
+      "Tono humano, RGPD-compliant, sin saturar"
+    ],
+    pasos: [
+      "Definimos juntos el calendario de comunicaciones del centro",
+      "Configuramos disparadores: fechas fijas o eventos del paciente",
+      "Segmentamos audiencias por consentimiento y tipo de tratamiento",
+      "El sistema envía cada mensaje en su momento al perfil correcto",
+      "Medimos respuesta y bajas para ajustar frecuencia"
+    ],
+    personalizacion: "Define el calendario de comunicaciones, segmentación por tipo de paciente, canales, frecuencia máxima y reglas RGPD.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp Business / Resend", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Queremos mantener vivo el vínculo pero no tenemos tiempo",
+      "Las comunicaciones que enviamos no están coordinadas",
+      "Saturamos al paciente o desaparecemos completamente — sin término medio"
+    ],
+    integration_domains: ["COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
+    related_processes: ["salud-reactivacion-pacientes", "salud-recordatorios-revision"]
+  },
+
+  // ── BLOQUE B5 · Administración y facturación ────────────────────────────
+  {
+    id: "SAL-5.1",
+    codigo: "5.1",
+    slug: "salud-facturacion-mutuas",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Facturación automática a mutuas y aseguradoras",
+    tagline: "Adeslas, Sanitas, Asisa, DKV — cada una con su formato. Lo preparamos, enviamos y hacemos seguimiento de cobro.",
+    recomendado: true,
+    descripcionDetallada: "El sistema prepara las facturas a cada aseguradora con el formato y los códigos que cada una requiere. Las envía por su canal (portal, email, EDI), mantiene seguimiento del estado de cobro y avisa cuando una factura ha sido rechazada o lleva demasiado tiempo pendiente.",
+    summary: {
+      what_it_is: "Facturación automatizada a aseguradoras adaptada al formato de cada una, con seguimiento de cobro.",
+      for_who: ["Clínicas que trabajan con mutuas (Adeslas, Sanitas, Asisa, DKV)", "Centros con volumen alto de seguros", "Negocios que pierden ingresos por facturas mal rechazadas"],
+      requirements: ["Software de gestión clínica con datos de aseguradora", "Acceso a portales o EDI de aseguradoras"],
+      output: "Cobro más rápido + visibilidad del estado de cada factura por aseguradora."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media-Alta",
+      integrations: ["Software de gestión clínica", "Portales de aseguradoras", "Email/EDI"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta facturas a generar", short: "Tras la visita.", detail: "Cuando una visita se cierra, identifica si va a paciente o a aseguradora." },
+      { title: "Formato por aseguradora", short: "Cada una con sus códigos.", detail: "Aplica el formato y los códigos que cada aseguradora requiere." },
+      { title: "Envía y trackea", short: "Estado de cada factura.", detail: "Envía por el canal de cada aseguradora y mantiene visibilidad del estado de cobro." }
+    ],
+    benefits: [
+      "Adapta el formato a cada aseguradora",
+      "Seguimiento del estado de cobro",
+      "Avisos automáticos de impagos"
+    ],
+    pasos: [
+      "Identificamos visitas facturables a aseguradora",
+      "Preparamos la factura con el formato correcto",
+      "Enviamos por el canal de cada aseguradora",
+      "Trackeamos el estado de cobro de cada una",
+      "Avisamos de rechazos o impagos para acción"
+    ],
+    personalizacion: "Define con qué aseguradoras trabajáis, el formato/código de cada una y los umbrales que activan aviso de impago.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "Portales aseguradoras", "Make/n8n", "Email/EDI"],
+    dolores: [
+      "Cada aseguradora tiene su formato y enviamos las facturas mal",
+      "Nos rechazan facturas y nos enteramos meses después",
+      "No sabemos qué tenemos pendiente de cobro de cada mutua"
+    ],
+    integration_domains: ["ERP"],
+    landing_slug: "salud",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
+    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"]
+  },
+  {
+    id: "SAL-5.2",
+    codigo: "5.2",
+    slug: "salud-seguimiento-cobros",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Seguimiento de facturas pendientes de cobro",
+    tagline: "Recordatorios escalonados antes y después del vencimiento para que ninguna factura se convierta en impago.",
+    recomendado: false,
+    descripcionDetallada: "Vigilancia diaria de facturas emitidas (a pacientes y aseguradoras). Cuando una factura está próxima a vencer o ha vencido, envía recordatorios escalonados según el tipo de cliente y el importe. Cero facturas olvidadas. Cobros más rápidos sin perseguir manualmente.",
+    summary: {
+      what_it_is: "Sistema de recordatorios escalonados que reduce impagos y acelera cobros sin esfuerzo humano.",
+      for_who: ["Clínicas con facturas a paciente directo", "Centros con cobro retrasado de mutuas", "Negocios que quieren mejorar cash flow"],
+      requirements: ["Software de gestión con facturas y estados", "WhatsApp/Email/SMS"],
+      output: "Cero facturas olvidadas + reducción del DSO (días de cobro)."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja-Media",
+      integrations: ["Software de gestión", "WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Vigila vencimientos", short: "Cada día revisa el estado.", detail: "Cada noche revisa facturas próximas y vencidas, calcula urgencia." },
+      { title: "Recordatorio escalonado", short: "Tono según urgencia.", detail: "Primero amable, luego más firme. Diferente para paciente directo vs aseguradora." },
+      { title: "Escala si hace falta", short: "A humano si no responde.", detail: "Si tras X recordatorios sigue sin pagar, deriva al responsable con todo el contexto." }
+    ],
+    benefits: [
+      "Recordatorios escalonados antes del vencimiento",
+      "Visibilidad del estado de cada factura",
+      "Notifica solo cuando hace falta intervenir"
+    ],
+    pasos: [
+      "Cada día revisamos vencimientos próximos y vencidos",
+      "Enviamos recordatorios escalonados por canal del cliente",
+      "Aplicamos tono diferente según urgencia",
+      "Si tras varios avisos no paga, escalamos al responsable",
+      "Actualizamos estado en el sistema"
+    ],
+    personalizacion: "Define la cadencia de recordatorios, los tonos por etapa y qué umbral escala a humano.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "WhatsApp/Email", "Make/n8n"],
+    canales: ["WhatsApp", "Email", "SMS"],
+    dolores: [
+      "Tenemos facturas vencidas y nadie las persigue",
+      "Olvidamos cobrar a algunos pacientes",
+      "El cash flow sufre por cobros que llegan tarde"
+    ],
+    integration_domains: ["ERP", "COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2",
+    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"]
+  },
+  {
+    id: "SAL-5.3",
+    codigo: "5.3",
+    slug: "salud-registro-gastos",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Registro automático de gastos",
+    tagline: "Foto al ticket o reenvío de factura — extraemos datos, registramos en ERP y archivamos en la nube.",
+    recomendado: false,
+    descripcionDetallada: "El equipo hace foto a un ticket o reenvía la factura por email. El sistema extrae proveedor, importe, fecha, IVA y partida de gasto, lo registra en el ERP y archiva el justificante en la nube. Adiós a cajas de tickets, adiós a buscar a fin de mes qué se compró.",
+    summary: {
+      what_it_is: "Captura automatizada de tickets y facturas + clasificación contable + archivo en la nube.",
+      for_who: ["Centros con varias categorías de gasto", "Negocios con compras descentralizadas", "Centros que quieren cerrar mes en horas"],
+      requirements: ["Móvil del equipo o email", "ERP", "Almacenamiento en la nube"],
+      output: "Cierre de mes en horas + trazabilidad completa de cada gasto."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["OCR / IA", "ERP", "Google Drive / Dropbox"]
+    },
+    how_it_works_steps: [
+      { title: "Captura el justificante", short: "Foto del ticket o email.", detail: "Cualquiera del equipo hace foto o reenvía factura. Sin app especial." },
+      { title: "Extrae los datos", short: "OCR + IA leen todo.", detail: "Extrae proveedor, importe, fecha, IVA y propone partida de gasto según tu plan contable." },
+      { title: "Registra y archiva", short: "ERP + nube.", detail: "Anota el gasto en ERP con clasificación y guarda el justificante en la nube." }
+    ],
+    benefits: [
+      "Cero tickets perdidos",
+      "Cierre de mes en horas, no en días",
+      "Trazabilidad total de cada gasto"
+    ],
+    pasos: [
+      "El equipo hace foto al ticket o reenvía la factura por email",
+      "Extraemos proveedor, importe, fecha, IVA",
+      "Clasificamos por partida según tu plan contable",
+      "Registramos en el ERP",
+      "Archivamos justificante en la nube"
+    ],
+    personalizacion: "Define las partidas de gasto según tu plan contable, el sistema de archivo en la nube y qué emails de proveedor conectar.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Mindee / OCR", "Holded / Anfix", "Google Drive / Dropbox", "Make/n8n"],
+    dolores: [
+      "Los tickets de proveedores se pierden o no se registran",
+      "El cierre de mes es buscar justificantes",
+      "No sabemos cuánto gastamos por partida hasta meses después"
+    ],
+    integration_domains: ["ERP", "DOCS"],
+    landing_slug: "salud",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3",
+    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"]
+  },
+  {
+    id: "SAL-5.4",
+    codigo: "5.4",
+    slug: "salud-reporte-diario",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Reporte diario por clínica",
+    tagline: "Cada mañana, parte único con pacientes atendidos, ingresos, ausencias y reseñas del día anterior.",
+    recomendado: true,
+    descripcionDetallada: "Cada mañana llega un parte consolidado del día anterior por clínica: pacientes atendidos, ingresos, ticket medio, ausencias, reseñas nuevas. Para grupos con varios centros, parte individual por centro + consolidado del grupo. Sin esperar al cierre del gestor.",
+    summary: {
+      what_it_is: "Informe diario operativo y financiero consolidado, listo antes de abrir el ordenador.",
+      for_who: ["Directores de clínica", "Grupos con varios centros", "Propietarios que quieren visibilidad sin perseguir al gestor"],
+      requirements: ["Software de gestión clínica", "Email/WhatsApp"],
+      output: "Un mensaje matutino con todos los KPIs clave del día anterior."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Media",
+      integrations: ["Software de gestión clínica", "Email/WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Recopila overnight", short: "De todas las fuentes.", detail: "Durante la noche el sistema recoge pacientes, ingresos, reseñas, ausencias." },
+      { title: "Consolida por centro", short: "Un mensaje, no cinco.", detail: "Une todos los datos en parte claro por centro + consolidado del grupo." },
+      { title: "Envía al equipo", short: "WhatsApp o email a primera hora.", detail: "Llega al canal y hora que defines sin que nadie lo prepare." }
+    ],
+    benefits: [
+      "Llega por WhatsApp o email a primera hora",
+      "Multi-clínica en un único parte consolidado",
+      "Sin esperar al cierre del gestor"
+    ],
+    pasos: [
+      "Conectamos software de gestión y reseñas",
+      "Definimos el horario y formato del parte",
+      "Cada mañana se generan los datos del día anterior",
+      "Se consolidan en un mensaje único por centro y grupo",
+      "Se envía por WhatsApp o email"
+    ],
+    personalizacion: "Define qué KPIs incluir, formato, hora, destinatarios por centro y por grupo.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión clínica", "Make/n8n", "WhatsApp/Email"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Llamo al encargado para saber cómo fue el día",
+      "Tengo varios centros y no consigo visión consolidada",
+      "Los informes que pido tardan semanas"
+    ],
+    integration_domains: ["ERP", "OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.4",
+    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"]
+  },
+
+  // ── BLOQUE B6 · Gestión del equipo clínico ──────────────────────────────
+  {
+    id: "SAL-6.1",
+    codigo: "6.1",
+    slug: "salud-comunicacion-turnos",
+    categoria: "B6",
+    categoriaNombre: "Gestión del equipo clínico",
+    nombre: "Comunicación automática de turnos",
+    tagline: "Cada miembro recibe su turno individual por WhatsApp con confirmación de lectura. Cambios solo a quien afecta.",
+    recomendado: true,
+    descripcionDetallada: "Cada semana, cada persona del equipo recibe su turno individualizado por WhatsApp con confirmación de lectura. Los cambios se notifican al instante solo a quien afecta — fin del grupo caótico donde todos reciben todo.",
+    summary: {
+      what_it_is: "Comunicación de turnos individual con confirmación, sin grupos de WhatsApp ingobernables.",
+      for_who: ["Centros con equipos de 5+ personas", "Clínicas con turnos rotativos", "Grupos con varios profesionales"],
+      requirements: ["Cuadrante de turnos", "WhatsApp del equipo"],
+      output: "Cero malentendidos de turnos + comunicación clara sin saturar."
+    },
+    indicators: {
+      time_estimate: "2 semanas",
+      complexity: "Media",
+      integrations: ["WhatsApp Business", "Software de turnos / Excel"]
+    },
+    how_it_works_steps: [
+      { title: "Envía turnos individuales", short: "Cada uno el suyo.", detail: "Cada semana, cada persona recibe su turno individualizado con confirmación de lectura." },
+      { title: "Gestiona cambios", short: "Solo a quien afecta.", detail: "Si hay cambio, se notifica solo a las personas afectadas." },
+      { title: "Sustituciones inteligentes", short: "Propone candidatos.", detail: "Si alguien no puede, propone sustituto según rol y disponibilidad." }
+    ],
+    benefits: [
+      "Turnos individuales con confirmación de lectura",
+      "Cambios notificados solo a quien afectan",
+      "Fin del grupo de WhatsApp ingobernable"
+    ],
+    pasos: [
+      "Conectamos el cuadrante de turnos",
+      "Enviamos a cada persona su turno individual",
+      "Detectamos confirmación de lectura",
+      "Notificamos cambios solo a afectados",
+      "Si alguien falta, proponemos sustituto"
+    ],
+    personalizacion: "Define día/hora de envío, criterios de sustitución y confirmaciones a pedir.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["WhatsApp Business API", "Sesame / Factorial", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Los grupos de WhatsApp del equipo son ingobernables",
+      "Cada cambio de turno requiere 20 llamadas",
+      "Cuando alguien falta, perdemos una hora buscando sustituto"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    related_processes: ["salud-onboarding-personal", "salud-sustituciones-bajas"]
+  },
+  {
+    id: "SAL-6.2",
+    codigo: "6.2",
+    slug: "salud-onboarding-personal",
+    categoria: "B6",
+    categoriaNombre: "Gestión del equipo clínico",
+    nombre: "Onboarding automático de personal sanitario",
+    tagline: "Cuando entra alguien nuevo (auxiliar, higienista, recepción), recibe documentos, protocolos y formación inicial.",
+    recomendado: false,
+    descripcionDetallada: "Cuando se incorpora una persona nueva al equipo clínico, recibe automáticamente toda la información que necesita: contrato y documentación, protocolos del centro (apertura, cierre, esterilización, atención al paciente, RGPD), vídeos de procedimientos, contactos del equipo y normas básicas. Operativa desde el primer día sin saturar al coordinador.",
+    summary: {
+      what_it_is: "Onboarding automatizado para personal nuevo con todo el material clínico y administrativo.",
+      for_who: ["Clínicas con rotación alta", "Centros con múltiples sedes", "Negocios donde el coordinador pierde tiempo explicando lo mismo"],
+      requirements: ["Carpeta con protocolos y documentos", "WhatsApp/Email del nuevo"],
+      output: "Persona nueva operativa desde el primer turno sin saturar al coordinador."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["WhatsApp/Email", "Google Drive / Notion"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta el alta", short: "Nuevo en el sistema.", detail: "Al registrar al nuevo (o añadirlo manualmente), arranca el flujo de onboarding." },
+      { title: "Envía paquete inicial", short: "Documentos, protocolos, vídeos.", detail: "Mensaje organizado con todo: contrato, protocolos, vídeos, contactos del equipo, normas." },
+      { title: "Seguimiento", short: "¿Tiene dudas?", detail: "A los pocos días pregunta si todo está claro y deriva al coordinador si hay dudas." }
+    ],
+    benefits: [
+      "Documentos, protocolos y vídeos enviados al instante",
+      "Coordinador deja de repetir lo mismo cada vez",
+      "Persona nueva operativa el primer día"
+    ],
+    pasos: [
+      "Se detecta el alta de personal nuevo",
+      "Se le envía el paquete de onboarding por WhatsApp/email",
+      "Recibe documentos, protocolos, vídeos de procedimientos",
+      "Seguimiento a los pocos días para detectar dudas",
+      "Notificación al coordinador si hay puntos pendientes"
+    ],
+    personalizacion: "Define qué materiales incluir, en qué orden, canal y días de seguimiento.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Google Drive / Notion", "WhatsApp Business", "Make/n8n"],
+    canales: ["WhatsApp", "Email"],
+    dolores: [
+      "Cada vez que entra alguien nuevo el coordinador pierde un día",
+      "El personal nuevo empieza sin saber dónde está nada",
+      "Repetimos la misma explicación 30 veces al año"
+    ],
+    integration_domains: ["DOCS", "COMMS"],
+    landing_slug: "salud",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
+    related_processes: ["salud-comunicacion-turnos", "salud-sustituciones-bajas"]
+  },
+  {
+    id: "SAL-6.3",
+    codigo: "6.3",
+    slug: "salud-sustituciones-bajas",
+    categoria: "B6",
+    categoriaNombre: "Gestión del equipo clínico",
+    nombre: "Sustituciones inteligentes y gestión de bajas",
+    tagline: "Si un profesional se da de baja, propone sustitutos según rol y reasigna citas afectadas en bloque.",
+    recomendado: false,
+    descripcionDetallada: "Cuando un miembro del equipo no puede venir (baja imprevista, enfermedad), el sistema propone sustitutos según rol, disponibilidad y experiencia, gestiona el aviso al equipo y reasigna las citas afectadas en bloque. Cobertura sin estrés.",
+    summary: {
+      what_it_is: "Sistema de gestión de bajas e imprevistos con propuesta automática de sustitutos y reasignación masiva.",
+      for_who: ["Centros con bajas frecuentes", "Clínicas con equipos pequeños donde una baja desorganiza el día", "Grupos con personal rotativo"],
+      requirements: ["Lista de personal con rol y disponibilidad", "Software de gestión", "WhatsApp"],
+      output: "Cero días tirados por bajas imprevistas + reasignación coordinada."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media-Alta",
+      integrations: ["Software de gestión", "WhatsApp", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la baja", short: "Comunicada o detectada.", detail: "Coordinación marca la baja o se detecta vía calendario." },
+      { title: "Propone sustituto", short: "Por rol y disponibilidad.", detail: "Busca candidatos según rol, disponibilidad y preferencias del paciente." },
+      { title: "Reasigna y notifica", short: "En bloque y coordinado.", detail: "Reasigna citas, notifica a pacientes y al equipo de forma coordinada." }
+    ],
+    benefits: [
+      "Propuesta automática de sustitutos por rol",
+      "Reasignación masiva de citas afectadas",
+      "Notificación coordinada al equipo y pacientes"
+    ],
+    pasos: [
+      "Se detecta o registra la baja del profesional",
+      "Identificamos sus citas afectadas",
+      "Buscamos sustituto compatible (rol + disponibilidad)",
+      "Reasignamos las citas",
+      "Notificamos a pacientes y equipo de forma coordinada"
+    ],
+    personalizacion: "Define criterios de compatibilidad por rol, qué citas se pueden reasignar y cuáles cancelar.",
+    sectores: ["Centros de Salud"],
+    herramientas: ["Software de gestión", "WhatsApp Business API", "Make/n8n"],
+    canales: ["WhatsApp"],
+    dolores: [
+      "Una baja imprevista nos desorganiza el día entero",
+      "Reasignar pacientes manualmente lleva horas",
+      "Los pacientes se enteran tarde y se enfadan"
+    ],
+    integration_domains: ["COMMS", "OTHER"],
+    landing_slug: "salud",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.3",
+    related_processes: ["salud-comunicacion-turnos", "salud-reasignacion-profesional"]
+  },
+  // ─── Academias / Formación ───────────────────────────────────────────────
+  {
+    id: "ACA-1.1",
+    codigo: "1.1",
+    slug: "academias-voz-cursos-247",
+    nombre: "Atención de consultas de cursos 24/7 por voz",
+    tagline: "Un sistema automatizado que atiende llamadas fuera de horario, cualifica al interesado y lo prepara para matriculación",
+    one_liner: "Recibe llamadas de alumnos potenciales las 24 horas y cualifícalos automáticamente",
+    descripcionDetallada: "Muchas academias pierden alumnos potenciales porque no pueden atender llamadas fuera del horario de secretaría. Un sistema de atención de voz automatizada recoge la consulta, detecta el interés (idiomas, oposiciones, formación profesional), cualifica al interesado y lo prepara para que el asesor lo contacte en horario de oficina con toda la información necesaria.",
+    categoria: "B1",
+    categoriaNombre: "Captación de alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1",
+    dolores: [
+      "Llamadas perdidas fuera del horario de secretaría",
+      "Alumnos que llaman y no encuentran atención",
+      "El equipo no puede atender consultas 24/7"
+    ],
+    pasos: [
+      "El alumno potencial llama a la academia",
+      "El sistema de voz recibe la llamada y recoge datos básicos",
+      "Se cualifica el interés y modalidad del curso",
+      "Se notifica al asesor con toda la información lista para el seguimiento"
+    ],
+    personalizacion: "Se adapta al catálogo de cursos y horarios de cada academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 5,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["COMMS", "CRM"],
+    related_processes: ["academias-captura-multicanal", "academias-cualificacion-alumno"]
+  },
+  {
+    id: "ACA-1.2",
+    codigo: "1.2",
+    slug: "academias-captura-multicanal",
+    nombre: "Captura y centralización de leads multicanal",
+    tagline: "Unifica en una sola bandeja de entrada todos los canales de contacto: teléfono, WhatsApp, web e Instagram",
+    one_liner: "Centraliza todos los canales de captación en un único flujo de matriculación",
+    descripcionDetallada: "Un alumno potencial puede llegar por llamada, WhatsApp, formulario web, DM de Instagram o incluso TikTok. Sin un sistema unificado, estos leads se pierden en bandejas de entrada distintas. Este proceso centraliza todos los canales en un único CRM con calificación automática y asignación al asesor correcto.",
+    categoria: "B1",
+    categoriaNombre: "Captación de alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2",
+    dolores: [
+      "Leads que llegan por canales distintos y se pierden",
+      "Sin visibilidad de qué canal genera más matriculaciones",
+      "Mensajes de Instagram sin responder durante horas"
+    ],
+    pasos: [
+      "El interesado contacta por cualquier canal disponible",
+      "El sistema unifica la conversación en el CRM",
+      "Se asigna automáticamente al asesor según disponibilidad",
+      "El asesor ve el historial completo del lead en un solo lugar"
+    ],
+    personalizacion: "Integrable con los canales activos de cada academia",
+    summary: {
+      tiempo_implementacion: "2-4 semanas",
+      ahorro_horas_semana: 6,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["COMMS", "CRM"],
+    related_processes: ["academias-voz-cursos-247", "academias-chatbot-info"]
+  },
+  {
+    id: "ACA-1.3",
+    codigo: "1.3",
+    slug: "academias-chatbot-info",
+    nombre: "Chatbot informativo de cursos y horarios",
+    tagline: "Responde automáticamente preguntas frecuentes sobre cursos, precios, horarios y modalidades en web y WhatsApp",
+    one_liner: "Un chatbot que responde consultas de cursos y filtra interesados reales",
+    descripcionDetallada: "El 80% de las consultas que recibe una academia son siempre las mismas: ¿qué cursos tenéis?, ¿cuánto cuesta?, ¿hay plazas?. Un chatbot bien configurado responde estas preguntas al instante, filtra a quienes tienen interés real y los prepara para hablar con un asesor.",
+    categoria: "B1",
+    categoriaNombre: "Captación de alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3",
+    dolores: [
+      "El equipo pierde tiempo respondiendo las mismas preguntas",
+      "Interesados que no reciben respuesta y se van a otra academia",
+      "Sin filtro previo, el asesor habla con personas sin interés real"
+    ],
+    pasos: [
+      "El visitante entra a la web o escribe por WhatsApp",
+      "El chatbot responde preguntas frecuentes al instante",
+      "Si hay interés real, recoge datos de contacto",
+      "Deriva al asesor solo los leads cualificados"
+    ],
+    personalizacion: "Adaptado al catálogo de cursos y FAQs de cada academia",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 4,
+      roi_estimado: "Alto",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "CRM"],
+    related_processes: ["academias-captura-multicanal", "academias-cualificacion-alumno"]
+  },
+  {
+    id: "ACA-1.4",
+    codigo: "1.4",
+    slug: "academias-cualificacion-alumno",
+    nombre: "Cualificación automática de alumnos potenciales",
+    tagline: "Filtra y puntúa automáticamente a los interesados según objetivo, nivel y modalidad antes de que lleguen al asesor",
+    one_liner: "Prioriza los leads con más probabilidad de matricularse",
+    descripcionDetallada: "No todos los interesados tienen el mismo potencial de conversión. Este proceso asigna una puntuación automática a cada lead según los datos recogidos (objetivo, nivel previo, modalidad preferida, urgencia) para que el asesor priorice su tiempo en los más propensos a matricularse.",
+    categoria: "B1",
+    categoriaNombre: "Captación de alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4",
+    dolores: [
+      "Asesores que invierten tiempo igual en todos los leads",
+      "Sin criterio claro para priorizar a quién llamar primero",
+      "Tasa de conversión baja por falta de filtro previo"
+    ],
+    pasos: [
+      "El lead llega por cualquier canal",
+      "El sistema recoge datos clave mediante preguntas automatizadas",
+      "Se asigna una puntuación de cualificación",
+      "Los leads de mayor puntuación se priorizan para el asesor"
+    ],
+    personalizacion: "Los criterios de puntuación se adaptan al tipo de academia y curso",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 3,
+      roi_estimado: "Medio",
+      complejidad: "Media"
+    },
+    integration_domains: ["CRM", "OTHER"],
+    related_processes: ["academias-captura-multicanal", "academias-matricula-digital"]
+  },
+  {
+    id: "ACA-2.1",
+    codigo: "2.1",
+    slug: "academias-matricula-digital",
+    nombre: "Matriculación 100% digital",
+    tagline: "El alumno firma el contrato, sube documentación y completa la matrícula sin visitar la academia ni imprimir nada",
+    one_liner: "Matricula a nuevos alumnos sin papeleo ni visita presencial",
+    descripcionDetallada: "La matriculación manual implica citas presenciales, impresión de contratos, recogida de documentos y entrada manual de datos. Todo este proceso se puede digitalizar: el alumno recibe un enlace, firma digitalmente, sube los documentos requeridos y queda matriculado en minutos, sin que el equipo tenga que intervenir.",
+    categoria: "B2",
+    categoriaNombre: "Matriculación y onboarding del alumno",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1",
+    dolores: [
+      "Proceso de matriculación lento que depende de visita presencial",
+      "Contratos en papel que se pierden o deterioran",
+      "El equipo pierde horas gestionando papeleo administrativo"
+    ],
+    pasos: [
+      "El alumno recibe un enlace de matriculación personalizado",
+      "Firma digitalmente el contrato y acepta condiciones",
+      "Sube la documentación requerida (DNI, foto, etc.)",
+      "Queda matriculado automáticamente en el sistema"
+    ],
+    personalizacion: "Se adapta a los requisitos de documentación de cada academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 6,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["ADMIN", "CRM"],
+    related_processes: ["academias-welcome-pack", "academias-pago-fraccionado"]
+  },
+  {
+    id: "ACA-2.2",
+    codigo: "2.2",
+    slug: "academias-welcome-pack",
+    nombre: "Welcome pack automático al nuevo alumno",
+    tagline: "El alumno recibe al instante acceso a plataforma, materiales de bienvenida y toda la información que necesita para empezar",
+    one_liner: "Onboarding digital completo para que el alumno empiece sin fricción",
+    descripcionDetallada: "Cuando un alumno se matricula, espera recibir la información de acceso, los materiales del curso y las instrucciones de funcionamiento de inmediato. Sin automatización, esto depende de que alguien del equipo lo gestione manualmente. Con este proceso, el welcome pack se envía automáticamente en el momento en que se confirma la matrícula.",
+    categoria: "B2",
+    categoriaNombre: "Matriculación y onboarding del alumno",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2",
+    dolores: [
+      "Alumnos que no saben cómo empezar tras matricularse",
+      "El equipo envía manualmente la bienvenida a cada nuevo alumno",
+      "Primeras impresiones negativas por falta de comunicación"
+    ],
+    pasos: [
+      "Se confirma la matriculación del alumno",
+      "El sistema genera automáticamente el welcome pack personalizado",
+      "El alumno recibe acceso a plataforma, materiales y calendario",
+      "Se registra la entrega y se marca como onboarding completado"
+    ],
+    personalizacion: "Contenido personalizado según el curso y modalidad",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 3,
+      roi_estimado: "Alto",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "ADMIN"],
+    related_processes: ["academias-matricula-digital", "academias-pago-fraccionado"]
+  },
+  {
+    id: "ACA-2.3",
+    codigo: "2.3",
+    slug: "academias-pago-fraccionado",
+    nombre: "Control de cuotas y pagos fraccionados",
+    tagline: "Gestión automática de mensualidades, recordatorios de pago y seguimiento de impagos sin intervención manual",
+    one_liner: "Automatiza el cobro de cuotas y elimina la persecución manual de pagos",
+    descripcionDetallada: "Las academias que ofrecen pago fraccionado dedican horas a recordar mensualidades, perseguir impagos y actualizar hojas de cálculo. Este proceso automatiza el ciclo completo: recordatorio previo al vencimiento, notificación el día del cobro y escalonado de alertas para impagos, con registro automático en el sistema.",
+    categoria: "B2",
+    categoriaNombre: "Matriculación y onboarding del alumno",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3",
+    dolores: [
+      "Horas semanales persiguiendo impagos manualmente",
+      "Sin registro claro de qué alumnos han pagado",
+      "Relación incómoda con alumnos cuando hay que reclamar pagos"
+    ],
+    pasos: [
+      "El sistema identifica las cuotas próximas a vencer",
+      "Se envía recordatorio automático 3 días antes",
+      "En caso de impago, se activa una secuencia de recordatorios escalonados",
+      "El estado de pago se actualiza automáticamente en el CRM"
+    ],
+    personalizacion: "Configurable según política de pagos y tolerancia de cada academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 4,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["FINANCE", "COMMS"],
+    related_processes: ["academias-recordatorio-mensualidad", "academias-matricula-digital"]
+  },
+  {
+    id: "ACA-3.1",
+    codigo: "3.1",
+    slug: "academias-avisos-faltas",
+    nombre: "Avisos automáticos de faltas a padres",
+    tagline: "Notifica automáticamente a los padres cuando su hijo no asiste a clase, sin que el equipo tenga que hacerlo manualmente",
+    one_liner: "Mantén informados a los padres de asistencia sin llamadas manuales",
+    descripcionDetallada: "En academias con alumnos menores, los padres quieren saber si su hijo ha asistido. Hacer esto de forma manual consume tiempo del equipo y genera errores. Este proceso envia avisos automáticos de falta por WhatsApp o email tan pronto como se registra la ausencia en el sistema.",
+    categoria: "B3",
+    categoriaNombre: "Comunicación con padres y alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1",
+    dolores: [
+      "Padres que llaman para preguntar si su hijo ha ido a clase",
+      "El equipo pierde tiempo en llamadas de seguimiento de asistencia",
+      "Faltas no comunicadas que generan conflictos"
+    ],
+    pasos: [
+      "El profesor registra la falta en el sistema",
+      "El sistema detecta la ausencia en tiempo real",
+      "Se envía aviso automático al padre/tutor por WhatsApp o email",
+      "El aviso queda registrado en el historial del alumno"
+    ],
+    personalizacion: "Canal de aviso configurable según preferencia de cada familia",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 3,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "OTHER"],
+    related_processes: ["academias-comunicacion-calendario", "academias-mensajes-fechas-clave"]
+  },
+  {
+    id: "ACA-3.2",
+    codigo: "3.2",
+    slug: "academias-comunicacion-calendario",
+    nombre: "Comunicación de calendario y exámenes",
+    tagline: "Envía recordatorios de exámenes, cambios de horario y fechas clave con la antelación suficiente para que alumnos y padres no se pillen por sorpresa",
+    one_liner: "Que nadie llegue a un examen sin saberlo con tiempo suficiente",
+    descripcionDetallada: "Las academias cambian horarios, programan exámenes y modifican el calendario con frecuencia. Sin comunicación proactiva, estas novedades llegan tarde o no llegan. Este proceso envía automáticamente avisos con la antelación configurada para cada tipo de evento.",
+    categoria: "B3",
+    categoriaNombre: "Comunicación con padres y alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2",
+    dolores: [
+      "Alumnos que llegan sin saber que había examen",
+      "Padres que no se enteran de los cambios de horario",
+      "El equipo envía mensajes de recordatorio de forma manual"
+    ],
+    pasos: [
+      "Se registra el evento en el calendario de la academia",
+      "El sistema calcula el momento de envío del aviso",
+      "Se envía el recordatorio al grupo correspondiente",
+      "Se confirma la recepción y se registra el envío"
+    ],
+    personalizacion: "Antelación del aviso configurable por tipo de evento",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "OTHER"],
+    related_processes: ["academias-avisos-faltas", "academias-mensajes-fechas-clave"]
+  },
+  {
+    id: "ACA-3.3",
+    codigo: "3.3",
+    slug: "academias-encuesta-post-clase",
+    nombre: "Encuesta de satisfacción post-clase",
+    tagline: "Recoge feedback de alumnos y padres de forma automática tras cada clase para detectar problemas antes de que escalen",
+    one_liner: "Detecta problemas de calidad en tiempo real antes de que el alumno se vaya",
+    descripcionDetallada: "Sin un sistema de feedback regular, los problemas de calidad solo se detectan cuando el alumno ya se ha dado de baja. Una encuesta breve enviada de forma automática tras cada sesión permite identificar tendencias, actuar sobre profesores con valoraciones bajas y retener alumnos insatisfechos a tiempo.",
+    categoria: "B3",
+    categoriaNombre: "Comunicación con padres y alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3",
+    dolores: [
+      "No hay visibilidad sobre la satisfacción de los alumnos",
+      "Los problemas de calidad se detectan demasiado tarde",
+      "Bajas sin aviso previo que podrían haberse evitado"
+    ],
+    pasos: [
+      "Finaliza la clase y se registra en el sistema",
+      "Se envía automáticamente una encuesta breve al alumno/padre",
+      "Las respuestas se agregan en un dashboard de calidad",
+      "Las valoraciones bajas generan alerta automática al coordinador"
+    ],
+    personalizacion: "Frecuencia y canal de encuesta configurables por academia",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "OTHER"],
+    related_processes: ["academias-deteccion-riesgo-baja", "academias-avisos-faltas"]
+  },
+  {
+    id: "ACA-3.4",
+    codigo: "3.4",
+    slug: "academias-mensajes-fechas-clave",
+    nombre: "Mensajes automáticos en fechas clave",
+    tagline: "Felicitaciones de cumpleaños, inicio de curso, fin de trimestre y otras fechas importantes enviadas automáticamente para mantener el vínculo con el alumno",
+    one_liner: "Mantén el vínculo emocional con alumnos y familias sin trabajo manual",
+    descripcionDetallada: "Las pequeñas atenciones — un mensaje de cumpleaños, una felicitación al terminar el trimestre, un recordatorio del inicio de curso — generan vínculos que fidelizan. Este proceso los gestiona automáticamente para que ninguna fecha importante pase sin un mensaje personalizado.",
+    categoria: "B3",
+    categoriaNombre: "Comunicación con padres y alumnos",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.4",
+    dolores: [
+      "Fechas importantes pasan sin ninguna comunicación",
+      "Los alumnos no sienten que la academia se preocupa por ellos",
+      "Sin fidelización, la renovación depende solo del precio"
+    ],
+    pasos: [
+      "El sistema sincroniza las fechas clave de cada alumno",
+      "Se programan los mensajes con antelación configurable",
+      "Los mensajes se envían automáticamente en la fecha correcta",
+      "Se registra el envío para seguimiento de engagement"
+    ],
+    personalizacion: "Calendario de fechas clave y tono de mensaje configurables",
+    summary: {
+      tiempo_implementacion: "1 semana",
+      ahorro_horas_semana: 1,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "CRM"],
+    related_processes: ["academias-comunicacion-calendario", "academias-encuesta-post-clase"]
+  },
+  {
+    id: "ACA-4.1",
+    codigo: "4.1",
+    slug: "academias-deteccion-riesgo-baja",
+    nombre: "Detección automática de alumnos en riesgo de baja",
+    tagline: "Identifica patrones de abandono antes de que el alumno pida la baja y activa una intervención personalizada",
+    one_liner: "Actúa antes de que el alumno decida irse",
+    descripcionDetallada: "Un alumno que empieza a faltar más, no abre los mensajes o lleva semanas sin conectarse a la plataforma está enviando señales de abandono. Este sistema detecta esas señales de forma automática y activa una respuesta personalizada — una llamada del coordinador, un descuento de renovación o una sesión de tutoría — antes de que el alumno tome la decisión de irse.",
+    categoria: "B4",
+    categoriaNombre: "Retención y reactivación",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1",
+    dolores: [
+      "Bajas que llegan de sorpresa sin señales previas visibles",
+      "Sin sistema para detectar alumnos desmotivados a tiempo",
+      "Captación que cuesta más que lo que cuesta retener"
+    ],
+    pasos: [
+      "El sistema monitoriza señales de riesgo: faltas, engagement, pagos",
+      "Al superar el umbral configurado, se activa una alerta",
+      "Se lanza automáticamente una acción de retención personalizada",
+      "El coordinador recibe un aviso para seguimiento humano si es necesario"
+    ],
+    personalizacion: "Umbrales de riesgo y acciones de retención configurables",
+    summary: {
+      tiempo_implementacion: "3-4 semanas",
+      ahorro_horas_semana: 4,
+      roi_estimado: "Muy alto",
+      complejidad: "Alta"
+    },
+    integration_domains: ["CRM", "COMMS"],
+    related_processes: ["academias-reactivacion-exalumnos", "academias-encuesta-post-clase"]
+  },
+  {
+    id: "ACA-4.2",
+    codigo: "4.2",
+    slug: "academias-reactivacion-exalumnos",
+    nombre: "Reactivación de exalumnos",
+    tagline: "Recupera alumnos que dejaron el curso con una secuencia de mensajes personalizados en el momento adecuado",
+    one_liner: "Recupera alumnos que se fueron antes de que la competencia los capture definitivamente",
+    descripcionDetallada: "Un exalumno que dejó el curso hace 3 o 6 meses es mucho más fácil de recuperar que captar uno nuevo. Este proceso identifica exalumnos según el tiempo transcurrido desde la baja y lanza una secuencia de reactivación con un motivo personalizado y concreto para volver.",
+    categoria: "B4",
+    categoriaNombre: "Retención y reactivación",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2",
+    dolores: [
+      "Exalumnos que se fueron y no han recibido ningún contacto desde entonces",
+      "Base de datos de bajas que no se aprovecha",
+      "Coste de captación alto cuando hay potencial de reactivación sin explotar"
+    ],
+    pasos: [
+      "El sistema identifica exalumnos según criterios de tiempo y motivo de baja",
+      "Se selecciona el mensaje de reactivación más adecuado",
+      "Se lanza la secuencia personalizada por WhatsApp o email",
+      "Los interesados en volver entran directamente al flujo de matriculación"
+    ],
+    personalizacion: "Criterios de segmentación y mensajes configurables por academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["CRM", "COMMS"],
+    related_processes: ["academias-deteccion-riesgo-baja", "academias-programa-referidos"]
+  },
+  {
+    id: "ACA-4.3",
+    codigo: "4.3",
+    slug: "academias-programa-referidos",
+    nombre: "Programa de referidos para alumnos satisfechos",
+    tagline: "Convierte a los alumnos más satisfechos en embajadores que traen nuevos alumnos a cambio de incentivos automáticos",
+    one_liner: "Genera nuevas matriculaciones sin publicidad pagada a través de tus propios alumnos",
+    descripcionDetallada: "Un alumno satisfecho es la mejor publicidad que tiene una academia. Un programa de referidos bien estructurado — con incentivos claros, seguimiento automático y comunicación proactiva — puede generar entre el 15 y el 25% de nuevas matriculaciones sin coste de adquisición.",
+    categoria: "B4",
+    categoriaNombre: "Retención y reactivación",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3",
+    dolores: [
+      "Alto coste de captación por dependencia de publicidad pagada",
+      "Alumnos satisfechos que no recomiendan porque no se les pide",
+      "Sin sistema para rastrear de dónde vienen las recomendaciones"
+    ],
+    pasos: [
+      "El sistema identifica alumnos con alta satisfacción",
+      "Se les invita automáticamente al programa de referidos",
+      "Se genera un código o enlace de referido personalizado",
+      "El incentivo se aplica automáticamente cuando el referido se matricula"
+    ],
+    personalizacion: "Incentivos y criterios de elegibilidad configurables",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["CRM", "COMMS"],
+    related_processes: ["academias-deteccion-riesgo-baja", "academias-reactivacion-exalumnos"]
+  },
+  {
+    id: "ACA-5.1",
+    codigo: "5.1",
+    slug: "academias-recordatorio-mensualidad",
+    nombre: "Recordatorios escalonados de mensualidad",
+    tagline: "Gestión automática del ciclo de cobro: aviso previo, confirmación de pago y escalado de impagos sin intervención del equipo",
+    one_liner: "Elimina la persecución manual de pagos y reduce la tasa de impago",
+    descripcionDetallada: "El seguimiento manual de mensualidades en academias con decenas o cientos de alumnos es ineficiente y fuente de tensiones. Este proceso automatiza el ciclo completo: aviso 3 días antes del vencimiento, confirmación el día del cobro y secuencia escalonada de recordatorios para impagos, con escalado a gestión humana si no se resuelve.",
+    categoria: "B5",
+    categoriaNombre: "Administración y finanzas",
+    sectores: ["Academias / Formación"],
+    recomendado: true,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1",
+    dolores: [
+      "Horas semanales persiguiendo impagos por teléfono",
+      "Sin registro centralizado del estado de pagos",
+      "Relación tensa con alumnos cuando hay reclamaciones de pago"
+    ],
+    pasos: [
+      "El sistema identifica cuotas próximas a vencer",
+      "Se envía aviso previo automático 3 días antes",
+      "En caso de impago, se activa secuencia escalonada de recordatorios",
+      "Si persiste, se escala a gestión humana con historial completo"
+    ],
+    personalizacion: "Plazos y canales de recordatorio configurables por academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 5,
+      roi_estimado: "Alto",
+      complejidad: "Media"
+    },
+    integration_domains: ["FINANCE", "COMMS"],
+    related_processes: ["academias-pago-fraccionado", "academias-reporte-diario"]
+  },
+  {
+    id: "ACA-5.2",
+    codigo: "5.2",
+    slug: "academias-registro-gastos",
+    nombre: "Captura de gastos con foto sin tecleo manual",
+    tagline: "El equipo fotografía cualquier ticket o factura y el gasto queda registrado automáticamente en la categoría correcta",
+    one_liner: "Registra gastos de material y operativos con una foto, sin formularios",
+    descripcionDetallada: "Las academias tienen gastos continuos de material didáctico, mantenimiento e imprevistos. Registrarlos manualmente — con formularios, Excel o notas de papel — genera retrasos y errores. Con este proceso, cualquier miembro del equipo fotografía el ticket y el sistema extrae los datos, categoriza el gasto y lo registra automáticamente.",
+    categoria: "B5",
+    categoriaNombre: "Administración y finanzas",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2",
+    dolores: [
+      "Gastos que no se registran hasta fin de mes",
+      "Tickets perdidos que no entran en la contabilidad",
+      "El equipo dedica tiempo a formularios de gastos"
+    ],
+    pasos: [
+      "El empleado fotografía el ticket desde el móvil",
+      "El sistema extrae los datos con OCR automático",
+      "El gasto se categoriza y registra automáticamente",
+      "Queda disponible para el reporte financiero del mes"
+    ],
+    personalizacion: "Categorías de gasto adaptadas a la estructura de cada academia",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["FINANCE", "ADMIN"],
+    related_processes: ["academias-reporte-diario", "academias-recordatorio-mensualidad"]
+  },
+  {
+    id: "ACA-5.3",
+    codigo: "5.3",
+    slug: "academias-reporte-diario",
+    nombre: "Reporte diario con cifras clave de la academia",
+    tagline: "Recibe cada mañana un resumen automático con alumnos activos, cobros del día, faltas y alertas relevantes sin necesidad de abrir ningún sistema",
+    one_liner: "Toma decisiones con datos frescos sin tener que extraerlos manualmente",
+    descripcionDetallada: "La dirección de una academia necesita visibilidad diaria sin tener que acceder a múltiples sistemas. Este proceso genera automáticamente un reporte matutino con los indicadores más relevantes: alumnos activos, cobros esperados del día, faltas registradas, alertas de impago y cualquier dato configurado como prioritario.",
+    categoria: "B5",
+    categoriaNombre: "Administración y finanzas",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3",
+    dolores: [
+      "Sin visibilidad diaria del estado real de la academia",
+      "Los reportes se generan manualmente con retraso",
+      "Decisiones tomadas sin datos actualizados"
+    ],
+    pasos: [
+      "El sistema recoge datos de todos los módulos activos",
+      "Se genera el reporte automáticamente a la hora configurada",
+      "Se envía por WhatsApp o email al director/coordinador",
+      "Incluye alertas destacadas que requieren atención inmediata"
+    ],
+    personalizacion: "KPIs y hora de envío configurables por academia o sede",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["ADMIN", "COMMS"],
+    related_processes: ["academias-registro-gastos", "academias-recordatorio-mensualidad"]
+  },
+  {
+    id: "ACA-6.1",
+    codigo: "6.1",
+    slug: "academias-comunicacion-turnos",
+    nombre: "Comunicación individual de horarios con confirmación",
+    tagline: "Cada profesor recibe su horario semanal por WhatsApp con confirmación de lectura, eliminando los grupos caóticos de equipo",
+    one_liner: "Elimina los grupos de WhatsApp del equipo docente y envía horarios de forma ordenada",
+    descripcionDetallada: "Los grupos de WhatsApp de profesores son un caos: mensajes importantes enterrados bajo conversaciones irrelevantes, confirmaciones de lectura imposibles de rastrear. Este proceso envía el horario semanal de forma individual a cada profesor con confirmación y alerta automática al coordinador si no hay respuesta.",
+    categoria: "B6",
+    categoriaNombre: "Gestión del profesorado",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1",
+    dolores: [
+      "Grupos de WhatsApp de profesores ingobernables",
+      "Sin confirmación de que el profesor ha visto su horario",
+      "Confusión de turnos por mensajes malinterpretados en grupos"
+    ],
+    pasos: [
+      "El coordinador publica el horario en el sistema",
+      "El sistema envía el horario individual a cada profesor",
+      "El profesor confirma con un botón de respuesta",
+      "Las no-respuestas generan alerta automática al coordinador"
+    ],
+    personalizacion: "Formato de horario y canal de envío configurables",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 2,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["COMMS", "ADMIN"],
+    related_processes: ["academias-sustituciones-inteligentes", "academias-onboarding-profesor"]
+  },
+  {
+    id: "ACA-6.2",
+    codigo: "6.2",
+    slug: "academias-onboarding-profesor",
+    nombre: "Onboarding automático de nuevo profesor",
+    tagline: "El profesor nuevo recibe automáticamente toda la documentación, protocolos y asignaciones del primer día sin que el coordinador tenga que enviarlo manualmente",
+    one_liner: "Incorpora a un nuevo profesor en un día sin trabajo manual del coordinador",
+    descripcionDetallada: "Cada vez que se incorpora un nuevo profesor, el coordinador dedica horas a explicar protocolos, enviar documentación y asignar las primeras clases. Este proceso lo automatiza: en cuanto se da de alta al profesor en el sistema, se lanza una secuencia de onboarding con todo lo que necesita para arrancar operativo.",
+    categoria: "B6",
+    categoriaNombre: "Gestión del profesorado",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2",
+    dolores: [
+      "Incorporación de nuevos profesores que depende de tiempo del coordinador",
+      "Profesores que arrancan sin tener toda la información necesaria",
+      "Documentación de protocolos dispersa y difícil de encontrar"
+    ],
+    pasos: [
+      "Se da de alta al nuevo profesor en el sistema",
+      "Se lanza automáticamente la secuencia de onboarding",
+      "El profesor recibe documentación, protocolos y accesos",
+      "Las primeras clases se asignan automáticamente según disponibilidad"
+    ],
+    personalizacion: "Contenido de onboarding adaptado al tipo de academia y área de enseñanza",
+    summary: {
+      tiempo_implementacion: "1-2 semanas",
+      ahorro_horas_semana: 3,
+      roi_estimado: "Medio",
+      complejidad: "Baja"
+    },
+    integration_domains: ["ADMIN", "COMMS"],
+    related_processes: ["academias-comunicacion-turnos", "academias-sustituciones-inteligentes"]
+  },
+  {
+    id: "ACA-6.3",
+    codigo: "6.3",
+    slug: "academias-sustituciones-inteligentes",
+    nombre: "Gestión inteligente de sustituciones",
+    tagline: "Cuando un profesor no puede dar clase, el sistema identifica automáticamente el sustituto más adecuado según disponibilidad y nivel, sin llamadas urgentes del coordinador",
+    one_liner: "Resuelve ausencias de profesores sin el caos habitual de llamadas y grupos",
+    descripcionDetallada: "Una baja de última hora de un profesor puede arruinar el día del coordinador: llamadas urgentes, grupos de WhatsApp, negociaciones de disponibilidad. Este sistema gestiona las sustituciones de forma automática: detecta la ausencia, identifica al sustituto óptimo según disponibilidad y competencia, lo notifica y confirma la sustitución.",
+    categoria: "B6",
+    categoriaNombre: "Gestión del profesorado",
+    sectores: ["Academias / Formación"],
+    recomendado: false,
+    hidden: false,
+    landing_slug: "academias",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.3",
+    dolores: [
+      "Horas del coordinador gestionando sustituciones de última hora",
+      "Sin criterio claro para elegir el sustituto más adecuado",
+      "Los alumnos se enteran tarde de los cambios de profesor"
+    ],
+    pasos: [
+      "Se registra la ausencia del profesor (manual o automática)",
+      "El sistema identifica el sustituto óptimo disponible",
+      "Se notifica al sustituto y se solicita confirmación",
+      "Se avisa automáticamente a los alumnos del cambio"
+    ],
+    personalizacion: "Criterios de selección de sustituto configurables por academia",
+    summary: {
+      tiempo_implementacion: "2-3 semanas",
+      ahorro_horas_semana: 3,
+      roi_estimado: "Medio",
+      complejidad: "Media"
+    },
+    integration_domains: ["ADMIN", "COMMS"],
+    related_processes: ["academias-comunicacion-turnos", "academias-onboarding-profesor"]
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SECTOR INDUSTRIAL / PRODUCCIÓN — 24 procesos · 6 bloques
+  // Exclusivos de este sector. landing_slug: "industrial"
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── BLOQUE B1 · Clientes y presupuestos ─────────────────────────────────
+  {
+    id: "IND-1.1",
+    codigo: "1.1",
+    slug: "industrial-captacion-peticiones-oferta",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Captación de peticiones de oferta",
+    tagline: "Cada petición de presupuesto que llega por email, web o WhatsApp queda registrada automáticamente como oportunidad con los datos ya extraídos.",
+    recomendado: true,
+    descripcionDetallada: "El comercial de una industrial pierde tiempo buscando los datos de cada petición que llega dispersa entre bandejas de email, mensajes de WhatsApp y formularios web. Este proceso centraliza todas las entradas, extrae automáticamente producto, cantidad, plazo y datos del cliente, y crea una ficha de oportunidad asignada al responsable correcto. Ninguna petición se pierde y el comercial solo tiene que revisar, no construir desde cero.",
+    summary: {
+      what_it_is: "Sistema de captura y cualificación automática de peticiones de oferta desde cualquier canal.",
+      for_who: ["Industriales con comercial propio", "Empresas que reciben peticiones por múltiples canales", "Equipos donde las peticiones se pierden o llegan tarde"],
+      requirements: ["Email corporativo", "WhatsApp Business (opcional)", "Formulario web o canal habitual de entrada"],
+      output: "Ficha de oportunidad creada y asignada al responsable en menos de 5 minutos desde la recepción."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["Email", "WhatsApp Business", "CRM / ERP"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge la petición", short: "Desde cualquier canal.", detail: "Email, WhatsApp, formulario web — todas las entradas llegan a un único punto de procesamiento." },
+      { title: "Extrae los datos", short: "Producto, cantidad, plazo.", detail: "IA extrae automáticamente los campos clave de la petición y los estructura en la ficha." },
+      { title: "Asigna y notifica", short: "Al comercial correcto.", detail: "La ficha creada se asigna al responsable y este recibe una notificación con todo listo para responder." }
+    ],
+    benefits: [
+      "Cero peticiones perdidas entre bandejas y canales",
+      "Datos extraídos automáticamente, sin teclear a mano",
+      "El comercial actúa más rápido con la información estructurada"
+    ],
+    pasos: [
+      "Se detecta la entrada de una petición de oferta por cualquier canal",
+      "La IA extrae producto, cantidad, plazo y datos de contacto",
+      "Se crea la ficha de oportunidad en el CRM o ERP",
+      "Se asigna al comercial responsable y se le notifica",
+      "El comercial recibe la ficha lista para empezar a trabajar"
+    ],
+    personalizacion: "Define qué campos extraer, cómo asignar por producto o zona, el canal de notificación al comercial y si requiere validación antes de crear la ficha.",
+    sectores: ["Industrial"],
+    herramientas: ["Email", "WhatsApp Business API", "CRM / ERP", "IA"],
+    canales: ["Email", "WhatsApp"],
+    dolores: [
+      "Las peticiones llegan por tres sitios y alguna siempre se nos escapa",
+      "El comercial pierde tiempo buscando datos antes de poder responder"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.1"
+  },
+  {
+    id: "IND-1.2",
+    codigo: "1.2",
+    slug: "industrial-presupuestos-automaticos",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Generación de presupuestos automáticos",
+    tagline: "El sistema prepara el presupuesto con precios actualizados, especificaciones y plazos sin que el comercial tenga que buscar cada dato a mano.",
+    recomendado: true,
+    descripcionDetallada: "Preparar un presupuesto en una industrial implica consultar la tarifa de precios, calcular el tiempo de producción, revisar el stock de materia prima y maquetar el documento en el formato correcto. Este proceso automatiza toda esa cadena: extrae los datos de la petición cualificada, los cruza con las tarifas vigentes y los plazos de producción, y genera el documento listo para revisar y aprobar. El comercial solo necesita unos minutos para personalizar y enviar.",
+    summary: {
+      what_it_is: "Generador automático de presupuestos con datos actualizados de precio, plazo y especificaciones.",
+      for_who: ["Industriales con catálogo de productos o procesos parametrizables", "Comerciales que invierten horas en preparar cada presupuesto", "Empresas con tarifas frecuentemente actualizadas"],
+      requirements: ["Tarifa de precios actualizada", "Datos de plazos de producción por producto", "Plantilla de presupuesto en formato de la empresa"],
+      output: "Presupuesto en formato PDF o Word listo para revisar y enviar al cliente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP / CRM", "Tarifas de precio", "Generador de documentos"]
+    },
+    how_it_works_steps: [
+      { title: "Toma los datos de la petición", short: "Producto, cantidad, condiciones.", detail: "Recoge la ficha de oportunidad creada en el paso anterior con todos los campos estructurados." },
+      { title: "Calcula precio y plazo", short: "Con datos siempre actualizados.", detail: "Cruza con la tarifa vigente, calcula el tiempo de producción y comprueba disponibilidad de materiales." },
+      { title: "Genera el documento", short: "En el formato de la empresa.", detail: "Produce el presupuesto en PDF o Word con el diseño corporativo, listo para que el comercial revise y apruebe." }
+    ],
+    benefits: [
+      "Presupuesto listo en minutos, no en horas",
+      "Precios siempre actualizados desde la tarifa vigente",
+      "El comercial invierte su tiempo en vender, no en formatear documentos"
+    ],
+    pasos: [
+      "Se recoge la ficha de oportunidad con los datos de la petición",
+      "El sistema cruza con la tarifa de precios actualizada",
+      "Calcula plazos de producción y disponibilidad de materiales",
+      "Genera el documento de presupuesto en formato corporativo",
+      "El comercial revisa, personaliza si necesita y envía"
+    ],
+    personalizacion: "Define las variables de precio (volumen, descuentos, condiciones de pago), el formato del documento y si quiere aprobación de un segundo nivel antes del envío.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP / CRM", "Generador de documentos", "IA"],
+    dolores: [
+      "Preparar un presupuesto nos lleva entre 2 y 4 horas",
+      "A veces enviamos presupuestos con precios desfasados",
+      "El comercial pierde más tiempo en el documento que con el cliente"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.2"
+  },
+  {
+    id: "IND-1.3",
+    codigo: "1.3",
+    slug: "industrial-seguimiento-ofertas",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Seguimiento de ofertas abiertas",
+    tagline: "Alerta cuando una oferta lleva demasiado tiempo sin respuesta del cliente y registra el resultado automáticamente al cierre.",
+    recomendado: false,
+    descripcionDetallada: "Una oferta enviada que no tiene seguimiento es una oferta que se pierde al silencio. Este proceso monitoriza cada presupuesto enviado, detecta cuando supera el tiempo de respuesta habitual y lanza un recordatorio al comercial con el contexto completo para que pueda hacer un seguimiento efectivo. Al cierre — ganada, perdida o pausada — registra el resultado automáticamente para construir el histórico de conversión.",
+    summary: {
+      what_it_is: "Sistema de seguimiento automático de ofertas pendientes con alertas y registro de resultado al cierre.",
+      for_who: ["Comerciales con múltiples ofertas abiertas a la vez", "Empresas que pierden ofertas por falta de seguimiento", "Industrias con ciclo de venta largo"],
+      requirements: ["CRM o ERP donde se registran los presupuestos", "Canal de notificación al comercial"],
+      output: "Tasa de seguimiento del 100% de ofertas abiertas y histórico de conversión por producto y cliente."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["CRM / ERP", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza cada oferta", short: "Desde el envío hasta el cierre.", detail: "Sigue el estado de cada presupuesto enviado y cuenta los días transcurridos desde el envío." },
+      { title: "Alerta al comercial", short: "Cuando lleva demasiado sin respuesta.", detail: "En función del tipo de cliente y producto, lanza un recordatorio al comercial con el contexto de la oferta." },
+      { title: "Registra el resultado", short: "Ganada, perdida o pausada.", detail: "Al cierre, el comercial indica el resultado y el sistema lo registra en el histórico con el motivo." }
+    ],
+    benefits: [
+      "Ninguna oferta cae en el olvido por falta de seguimiento",
+      "El comercial actúa en el momento correcto con el contexto completo",
+      "Histórico de conversión por producto, cliente y motivo de pérdida"
+    ],
+    pasos: [
+      "Se marca la oferta como enviada en el sistema",
+      "El proceso monitoriza los días sin respuesta",
+      "Al superar el umbral configurado, alerta al comercial",
+      "El comercial contacta con el cliente y actualiza el estado",
+      "Al cierre, el resultado queda registrado automáticamente"
+    ],
+    personalizacion: "Define los umbrales de alerta por tipo de producto o importe, el canal de notificación y qué campos registrar al cierre.",
+    sectores: ["Industrial"],
+    herramientas: ["CRM / ERP", "Email", "Make/n8n"],
+    dolores: [
+      "Enviamos presupuestos y luego no sabemos en qué estado están",
+      "El comercial tiene tantas ofertas abiertas que olvida hacer seguimiento"
+    ],
+    integration_domains: ["CRM", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.3"
+  },
+  {
+    id: "IND-1.4",
+    codigo: "1.4",
+    slug: "industrial-portal-estado-pedido",
+    categoria: "B1",
+    categoriaNombre: "Clientes y presupuestos",
+    nombre: "Portal de estado de pedido para el cliente",
+    tagline: "El cliente puede consultar en tiempo real en qué fase está su pedido, cuándo se entrega y qué documentación tiene disponible, sin llamar.",
+    recomendado: false,
+    descripcionDetallada: "El cliente industrial llama para saber si su pedido está listo porque no tiene otra forma de saberlo. Esas llamadas consumen tiempo del administrativo y del comercial, y no siempre tienen la información actualizada. Este portal da al cliente una visión en tiempo real del estado de su pedido — confirmado, en producción, en control de calidad, enviado — y acceso a toda la documentación asociada sin que nadie tenga que gestionarlo manualmente.",
+    summary: {
+      what_it_is: "Portal web para que el cliente consulte el estado de sus pedidos y descargue documentación sin llamar.",
+      for_who: ["Industriales cuyos clientes llaman frecuentemente a preguntar por pedidos", "Empresas que quieren reducir la carga administrativa", "Clientes habituales con varios pedidos activos a la vez"],
+      requirements: ["Sistema de gestión de pedidos actualizado", "Datos de cliente para acceso al portal"],
+      output: "Reducción del volumen de llamadas de estado de pedido y mayor satisfacción del cliente."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP / Sistema de producción", "Portal web", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "El cliente accede al portal", short: "Por link sin contraseñas complicadas.", detail: "Al confirmar el pedido, el cliente recibe un link de acceso personalizado a su espacio de seguimiento." },
+      { title: "Ve el estado en tiempo real", short: "Actualizado desde producción.", detail: "El estado del pedido se sincroniza con el sistema de producción: confirmado, en fabricación, QC, expedición." },
+      { title: "Descarga su documentación", short: "Albarán, certificado, factura.", detail: "La documentación disponible aparece automáticamente en el portal en cuanto se genera." }
+    ],
+    benefits: [
+      "Clientes informados sin que nadie tenga que atender sus llamadas",
+      "Reducción significativa de llamadas de 'cómo va mi pedido'",
+      "Imagen profesional y servicio diferenciado respecto a la competencia"
+    ],
+    pasos: [
+      "Al confirmar el pedido, el cliente recibe acceso al portal",
+      "El estado del pedido se actualiza automáticamente desde producción",
+      "El cliente ve la fase en tiempo real: confirmado, en producción, enviado",
+      "La documentación aparece en el portal al generarse",
+      "El cliente descarga lo que necesita sin llamar"
+    ],
+    personalizacion: "Define qué información mostrar en cada fase, qué documentos son visibles y cuándo, y si quieres añadir chat de soporte integrado.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Portal web", "Make/n8n"],
+    dolores: [
+      "Los clientes llaman todo el día a preguntar por sus pedidos",
+      "El administrativo pierde horas al día dando el mismo tipo de información"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B1",
+    modulo_codigo: "1.4"
+  },
+
+  // ── BLOQUE B2 · Pedidos y producción ──────────────────────────────────────
+  {
+    id: "IND-2.1",
+    codigo: "2.1",
+    slug: "industrial-entrada-pedido-produccion",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Entrada de pedido y planificación de producción",
+    tagline: "Cuando entra un pedido confirmado, el sistema lo convierte en una orden de fabricación, reserva los materiales y lo ubica en la cola de producción.",
+    recomendado: true,
+    descripcionDetallada: "El traslado manual de un pedido confirmado a una orden de producción es uno de los cuellos de botella más habituales en la industria. Alguien tiene que introducir los datos en el sistema de producción, comprobar los materiales disponibles, reservarlos y asignar la posición en la cola. Si hay errores en ese paso, los plazos se incumplen y planta trabaja con información incorrecta. Este proceso cierra ese gap de forma automática y sin intervención humana.",
+    summary: {
+      what_it_is: "Automatización del puente entre la confirmación de pedido y la creación de la orden de fabricación con materiales reservados.",
+      for_who: ["Industriales donde el paso de pedido a producción es manual", "Empresas con errores frecuentes en la transferencia de información", "Fábricas donde el jefe de planta recibe datos tarde o incompletos"],
+      requirements: ["Sistema de gestión de pedidos", "Sistema de planificación de producción (ERP / MES)", "Gestión de stock de materiales"],
+      output: "Orden de fabricación creada al instante con materiales reservados y posicionada en la cola de producción."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Alta",
+      integrations: ["ERP / CRM", "MES / Sistema de producción", "Gestión de stock"]
+    },
+    how_it_works_steps: [
+      { title: "Pedido confirmado", short: "Arranca el flujo de producción.", detail: "Al confirmarse el pedido, el sistema crea automáticamente la orden de fabricación con los datos del pedido." },
+      { title: "Reserva materiales", short: "Comprueba stock y reserva.", detail: "Verifica disponibilidad de materias primas y reserva las cantidades necesarias en el almacén." },
+      { title: "Planifica la producción", short: "Posiciona en la cola con el plazo.", detail: "Ubica la orden en la cola de producción según capacidad disponible y plazo comprometido al cliente." }
+    ],
+    benefits: [
+      "Orden de fabricación creada automáticamente, sin introducción manual",
+      "Materiales reservados antes de que planta empiece a trabajar",
+      "El jefe de planta recibe la información completa y a tiempo"
+    ],
+    pasos: [
+      "El pedido se confirma en el sistema de gestión",
+      "Se crea automáticamente la orden de fabricación",
+      "Se comprueba el stock de materiales necesarios",
+      "Se reservan los materiales para la orden",
+      "La orden se posiciona en la cola de producción según plazo"
+    ],
+    personalizacion: "Define los criterios de posicionamiento en cola (FIFO, por fecha de entrega, por cliente prioritario), qué hacer si faltan materiales y cómo notificar a planta.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "MES / Sistema de producción", "Make/n8n"],
+    dolores: [
+      "De la confirmación del pedido a la orden de producción pueden pasar horas o días",
+      "Planta empieza a trabajar con datos incorrectos o incompletos",
+      "Los errores de transferencia nos generan retrabajos y retrasos"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.1"
+  },
+  {
+    id: "IND-2.2",
+    codigo: "2.2",
+    slug: "industrial-control-avance-linea",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Control de avance de línea en tiempo real",
+    tagline: "Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.",
+    recomendado: true,
+    descripcionDetallada: "El jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente. Este panel muestra en tiempo real el avance de cada orden, los operarios asignados, los tiempos invertidos y una alerta automática si alguna orden supera el tiempo previsto. Comercial y dirección pueden ver también el estado sin interrumpir a planta.",
+    summary: {
+      what_it_is: "Dashboard en tiempo real del estado de todas las órdenes de producción activas, con alertas por desviación de plazo.",
+      for_who: ["Jefes de producción sin visibilidad en tiempo real", "Empresas que se enteran del retraso cuando ya no hay margen", "Organizaciones donde comercial y producción no comparten información"],
+      requirements: ["Registro de avance por parte de los operarios (tablet o terminal)", "Sistema de órdenes de fabricación"],
+      output: "Visibilidad completa del estado de planta en tiempo real para producción, comercial y dirección."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["MES / Sistema de producción", "Dashboard", "Alertas por WhatsApp/Email"]
+    },
+    how_it_works_steps: [
+      { title: "Operarios reportan avance", short: "Desde tablet o terminal en planta.", detail: "Al completar cada fase de la orden, el operario registra el avance en menos de 30 segundos." },
+      { title: "Panel actualizado al instante", short: "Estado de cada orden en tiempo real.", detail: "El dashboard refleja el avance, el tiempo invertido y el tiempo restante estimado por orden." },
+      { title: "Alerta si hay desviación", short: "Antes de que el problema escale.", detail: "Si una orden supera el tiempo previsto, alerta automáticamente al jefe de producción y al comercial." }
+    ],
+    benefits: [
+      "Visibilidad completa de planta sin interrumpir el trabajo",
+      "Alertas antes de que el retraso sea inevitable",
+      "Comercial puede informar al cliente con datos reales, no con estimaciones"
+    ],
+    pasos: [
+      "Los operarios reportan el avance de cada fase desde planta",
+      "El sistema actualiza el estado de cada orden en tiempo real",
+      "Se calcula el tiempo restante estimado por orden",
+      "Se lanza alerta si hay desviación respecto al plazo comprometido",
+      "Jefe de producción y comercial reciben la alerta y pueden actuar"
+    ],
+    personalizacion: "Define los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).",
+    sectores: ["Industrial"],
+    herramientas: ["MES / Sistema de producción", "Dashboard", "Make/n8n"],
+    dolores: [
+      "Nos enteramos de los retrasos cuando ya es demasiado tarde",
+      "El comercial llama a planta para saber el estado y los interrumpe"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.2"
+  },
+  {
+    id: "IND-2.3",
+    codigo: "2.3",
+    slug: "industrial-cambios-pedido-curso",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Gestión de cambios de pedido en curso",
+    tagline: "Cuando el cliente modifica un pedido ya en marcha, el proceso recalcula el impacto en plazo y coste y notifica a todos los afectados antes de validar.",
+    recomendado: false,
+    descripcionDetallada: "Un cambio en un pedido que ya está en producción es una de las situaciones más costosas y caóticas en una industrial. El cliente lo pide como si fuera fácil, pero el impacto en materiales, cola de producción y plazo puede ser significativo. Este proceso obliga a cuantificar ese impacto antes de aceptar el cambio, coordina la comunicación con todos los afectados (producción, compras, comercial) y registra la modificación de forma trazable.",
+    summary: {
+      what_it_is: "Flujo de gestión de modificaciones de pedidos en curso con cálculo de impacto y aprobación coordinada.",
+      for_who: ["Industriales que gestionan cambios de pedido de forma manual", "Empresas con clientes que modifican pedidos con frecuencia", "Fábricas donde los cambios generan caos y errores de comunicación"],
+      requirements: ["Sistema de gestión de órdenes de fabricación", "Datos de coste de producción por tipo de cambio"],
+      output: "Cambios gestionados con impacto cuantificado, aprobación registrada y notificación coordinada a todos los afectados."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Se recibe la solicitud de cambio", short: "Del comercial o del cliente.", detail: "El comercial introduce la modificación solicitada en el sistema con los detalles del cambio." },
+      { title: "Calcula el impacto", short: "En plazo, coste y materiales.", detail: "El sistema calcula automáticamente cómo afecta el cambio al plazo de entrega, al coste y a los materiales reservados." },
+      { title: "Coordina la aprobación", short: "Y notifica a todos los afectados.", detail: "El cambio aprobado se comunica automáticamente a producción, compras y al cliente, y queda registrado." }
+    ],
+    benefits: [
+      "El impacto del cambio se calcula antes de aceptarlo, no después",
+      "Cero cambios que llegan a planta sin que compras lo sepa",
+      "Trazabilidad completa de cada modificación para facturación y disputas"
+    ],
+    pasos: [
+      "Se registra la solicitud de cambio con los detalles de la modificación",
+      "El sistema calcula el impacto en plazo, coste y materiales",
+      "El responsable revisa y aprueba o rechaza el cambio",
+      "Al aprobarse, se notifica a producción, compras y al cliente",
+      "La modificación queda registrada en el expediente del pedido"
+    ],
+    personalizacion: "Define quién aprueba según el tipo de cambio, los criterios de cálculo de coste adicional y el canal de notificación a cada parte.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Email", "Make/n8n"],
+    dolores: [
+      "Los cambios de pedido en curso generan caos en planta",
+      "No sabemos el coste de cada modificación hasta que ya está hecha"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.3"
+  },
+  {
+    id: "IND-2.4",
+    codigo: "2.4",
+    slug: "industrial-cierre-orden-documentacion",
+    categoria: "B2",
+    categoriaNombre: "Pedidos y producción",
+    nombre: "Cierre de orden y entrega de documentación",
+    tagline: "Al terminar la producción, el sistema genera automáticamente el albarán, el certificado de calidad y la documentación técnica, y los envía al cliente en un solo paso.",
+    recomendado: false,
+    descripcionDetallada: "Cuando una orden termina, empieza otra carrera: generar el albarán, crear el certificado de calidad, adjuntar la ficha técnica del lote y enviarlo todo al cliente antes de que llame preguntando. Si este proceso es manual, el margen de error es alto y el retraso habitual. Este proceso genera toda la documentación de cierre automáticamente al marcar la orden como completada y la envía al cliente en un único paquete coordinado.",
+    summary: {
+      what_it_is: "Generación y envío automático de toda la documentación de cierre al completar una orden de fabricación.",
+      for_who: ["Industriales con procesos de documentación de entrega manual", "Empresas que envían documentación con retraso respecto a la entrega física", "Sectores que requieren certificados de calidad o fichas técnicas de lote"],
+      requirements: ["Sistema de gestión de órdenes con cierre de estado", "Plantillas de albarán y certificado de calidad", "Email del cliente"],
+      output: "Documentación completa enviada al cliente automáticamente en el momento del cierre de producción."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Generador de documentos", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "Se cierra la orden", short: "Al marcar producción como completada.", detail: "El operario o el jefe de producción marca la orden como completada en el sistema." },
+      { title: "Genera la documentación", short: "Albarán, certificado, ficha técnica.", detail: "El sistema genera automáticamente todos los documentos requeridos con los datos del lote y la orden." },
+      { title: "Envía al cliente", short: "En un paquete coordinado.", detail: "El cliente recibe por email todos los documentos en el mismo momento, sin que nadie tenga que gestionarlo." }
+    ],
+    benefits: [
+      "Documentación enviada al cliente en el mismo momento del cierre de producción",
+      "Sin errores por datos introducidos a mano en cada documento",
+      "El cliente tiene todo lo que necesita antes de que llegue el camión"
+    ],
+    pasos: [
+      "Se marca la orden de fabricación como completada",
+      "El sistema extrae los datos del lote y la orden",
+      "Genera el albarán, el certificado de calidad y la ficha técnica",
+      "Envía el paquete de documentación al cliente por email",
+      "Archiva los documentos en el expediente del pedido"
+    ],
+    personalizacion: "Define qué documentos generar por tipo de producto, el formato y el canal de envío, y si quiere confirmación de recepción por parte del cliente.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Generador de documentos", "Email"],
+    dolores: [
+      "Enviamos el albarán días después de que el producto ya llegó",
+      "El certificado de calidad siempre se demora o llega con errores"
+    ],
+    integration_domains: ["DOCS", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B2",
+    modulo_codigo: "2.4"
+  },
+
+  // ── BLOQUE B3 · Calidad, entregas y trazabilidad ──────────────────────────
+  {
+    id: "IND-3.1",
+    codigo: "3.1",
+    slug: "industrial-control-calidad-proceso",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Control de calidad en proceso",
+    tagline: "Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.",
+    recomendado: true,
+    descripcionDetallada: "El control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.",
+    summary: {
+      what_it_is: "Sistema de control de calidad digital integrado en el proceso de producción con bloqueo automático ante desviaciones.",
+      for_who: ["Industriales con controles de calidad en papel o memoria", "Empresas con problemas de calidad detectados tarde", "Sectores con requisitos de certificación ISO o de cliente"],
+      requirements: ["Puntos de control definidos por tipo de producto", "Terminal o tablet en planta para el registro"],
+      output: "Control de calidad registrado en cada fase con trazabilidad completa y bloqueo automático ante desviaciones."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["MES / Sistema de producción", "Tablet / Terminal en planta", "Alertas"]
+    },
+    how_it_works_steps: [
+      { title: "Define los puntos de control", short: "Por tipo de producto y fase.", detail: "Se configuran los puntos de inspección, los valores esperados y las tolerancias para cada tipo de producción." },
+      { title: "Operario registra valores", short: "Desde la tablet en planta.", detail: "Al llegar al punto de control, el operario introduce los valores medidos en menos de un minuto." },
+      { title: "Sistema valida y bloquea", short: "Si hay desviación, para el avance.", detail: "Si los valores están fuera de tolerancia, se bloquea el avance y se notifica al responsable de calidad." }
+    ],
+    benefits: [
+      "Los problemas de calidad se detectan en planta, no en el cliente",
+      "Trazabilidad completa de cada inspección por lote y operario",
+      "Cumplimiento de requisitos de certificación sin más burocracia"
+    ],
+    pasos: [
+      "Se definen los puntos de control y tolerancias por tipo de producto",
+      "El operario registra los valores medidos en cada punto de control",
+      "El sistema compara con los valores esperados",
+      "Si hay desviación, bloquea el avance y alerta al responsable",
+      "El responsable valida o rechaza antes de permitir continuar"
+    ],
+    personalizacion: "Define los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.",
+    sectores: ["Industrial"],
+    herramientas: ["MES / Sistema de producción", "Tablet", "Make/n8n"],
+    dolores: [
+      "El control de calidad se hace de memoria y la trazabilidad es muy mala",
+      "Detectamos los problemas cuando el producto ya está en el cliente"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.1"
+  },
+  {
+    id: "IND-3.2",
+    codigo: "3.2",
+    slug: "industrial-trazabilidad-lote-serie",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Trazabilidad de lote y número de serie",
+    tagline: "Rastrea cada pieza o lote desde la materia prima hasta el cliente final. Consulta el histórico completo en segundos cuando hay una reclamación o auditoría.",
+    recomendado: true,
+    descripcionDetallada: "Cuando llega una reclamación de cliente o una auditoría de certificación, el tiempo que se tarda en reconstruir el histórico de un lote determina si el problema se resuelve en horas o en semanas. Este proceso registra automáticamente cada movimiento de cada lote o número de serie — materias primas, operaciones, controles de calidad, expedición — y lo hace consultable en segundos con el número de lote o serie como punto de entrada.",
+    summary: {
+      what_it_is: "Sistema de trazabilidad completa de lote y número de serie desde materia prima hasta cliente final.",
+      for_who: ["Industriales con requisitos de trazabilidad por cliente o certificación", "Empresas que tardan días en reconstruir el histórico de un lote", "Sectores con reclamaciones frecuentes que requieren investigación rápida"],
+      requirements: ["Codificación de lotes en producción", "Registro de movimientos de materiales"],
+      output: "Árbol de trazabilidad completo por lote o número de serie, consultable en segundos."
+    },
+    indicators: {
+      time_estimate: "4-6 semanas",
+      complexity: "Alta",
+      integrations: ["ERP", "MES", "Gestión de almacén", "Códigos QR / escáneres"]
+    },
+    how_it_works_steps: [
+      { title: "Asigna identificación a cada lote", short: "Código QR o número de serie.", detail: "Cada lote de materia prima y cada producto terminado recibe un identificador único desde el inicio." },
+      { title: "Registra cada movimiento", short: "Automáticamente en cada paso.", detail: "Entradas de almacén, operaciones de producción, controles de calidad y expedición se registran vinculados al lote." },
+      { title: "Consulta en segundos", short: "Árbol completo por lote o serie.", detail: "Con el número de lote, se obtiene inmediatamente toda la cadena: materia prima → proceso → cliente." }
+    ],
+    benefits: [
+      "Reclamaciones investigadas en horas, no en semanas",
+      "Cumplimiento de requisitos de clientes y certificaciones sin esfuerzo adicional",
+      "Retiradas de lote ejecutadas con precisión sin afectar a otros clientes"
+    ],
+    pasos: [
+      "Se asigna un identificador único a cada lote de material o producto",
+      "Cada operación y movimiento se registra vinculado al identificador",
+      "Los controles de calidad se asocian al lote correspondiente",
+      "Al expedir, se registra el cliente y la cantidad por lote",
+      "Ante una reclamación, se obtiene el árbol completo en segundos"
+    ],
+    personalizacion: "Define la granularidad de trazabilidad (lote, sublote, unidad), los puntos de registro y el formato de exportación para auditorías.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "MES", "Códigos QR / escáneres", "Make/n8n"],
+    dolores: [
+      "Cuando un cliente reclama, tardamos días en saber qué pasó y con qué material",
+      "Una auditoría de cliente nos genera semanas de trabajo de reconstrucción"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.2"
+  },
+  {
+    id: "IND-3.3",
+    codigo: "3.3",
+    slug: "industrial-devoluciones-no-conformidades",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Gestión de devoluciones y no conformidades",
+    tagline: "Abre el expediente de no conformidad automáticamente al recibir una reclamación, asígnalo al responsable y sigue hasta el cierre formal con el cliente.",
+    recomendado: false,
+    descripcionDetallada: "Una reclamación de cliente que no tiene un expediente formal asignado y seguido tiende a resolverse tarde, mal o a repetirse porque nadie investiga la causa raíz. Este proceso abre el expediente automáticamente, lo asigna al responsable de calidad, documenta la investigación, registra las acciones correctivas y cierra formalmente con el cliente una vez resuelto.",
+    summary: {
+      what_it_is: "Sistema de gestión de no conformidades y devoluciones con expediente automático, seguimiento y cierre formal.",
+      for_who: ["Industriales que gestionan reclamaciones sin sistema formal", "Empresas con reclamaciones recurrentes que no se analizan", "Sectores con clientes que exigen respuesta formal a no conformidades"],
+      requirements: ["Canal de recepción de reclamaciones definido", "Responsable de calidad identificado"],
+      output: "100% de reclamaciones con expediente abierto, investigado y cerrado formalmente."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Email", "CRM / ERP", "Generador de documentos"]
+    },
+    how_it_works_steps: [
+      { title: "Llega la reclamación", short: "Por email, llamada o portal.", detail: "Se recibe la reclamación del cliente por el canal habitual y se abre el expediente automáticamente." },
+      { title: "Se investiga y se actúa", short: "Responsable asignado con seguimiento.", detail: "El responsable de calidad investiga la causa raíz, define la acción correctiva y la ejecuta dentro del plazo." },
+      { title: "Se cierra con el cliente", short: "Informe formal y confirmación.", detail: "Se envía al cliente el informe de resolución y se registra el cierre formal en el expediente." }
+    ],
+    benefits: [
+      "Cero reclamaciones sin expediente y sin responsable asignado",
+      "Las causas raíz se identifican y atacan, reduciendo recurrencia",
+      "Los clientes reciben respuesta formal en plazo, mejorando la relación"
+    ],
+    pasos: [
+      "Se recibe la reclamación y se abre el expediente automáticamente",
+      "Se asigna al responsable de calidad con plazo de investigación",
+      "El responsable documenta la causa raíz y la acción correctiva",
+      "Se ejecuta la acción correctiva y se verifica su eficacia",
+      "Se cierra el expediente formalmente y se notifica al cliente"
+    ],
+    personalizacion: "Define los plazos de respuesta por tipo de reclamación, el flujo de aprobación de acciones correctivas y el formato del informe al cliente.",
+    sectores: ["Industrial"],
+    herramientas: ["Email", "CRM / ERP", "Generador de documentos", "Make/n8n"],
+    dolores: [
+      "Las reclamaciones de clientes se gestionan de forma informal y sin seguimiento",
+      "Los mismos problemas se repiten porque nunca investigamos la causa raíz"
+    ],
+    integration_domains: ["CRM", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.3"
+  },
+  {
+    id: "IND-3.4",
+    codigo: "3.4",
+    slug: "industrial-preparacion-seguimiento-envios",
+    categoria: "B3",
+    categoriaNombre: "Calidad, entregas y trazabilidad",
+    nombre: "Preparación y seguimiento de envíos",
+    tagline: "Coordina la preparación del pedido, genera la documentación de transporte y envía al cliente el número de seguimiento en cuanto sale de planta.",
+    recomendado: false,
+    descripcionDetallada: "El proceso de expedición en muchas industriales es manual: alguien busca el número del transportista, genera el albarán, llama al cliente para avisar de que el pedido sale. Este proceso automatiza la coordinación de expedición, genera la documentación de transporte al confirmar la recogida, envía automáticamente el número de seguimiento al cliente y alerta al comercial si el transportista registra alguna incidencia en la entrega.",
+    summary: {
+      what_it_is: "Automatización del proceso de expedición: documentación de transporte, notificación al cliente y seguimiento de entrega.",
+      for_who: ["Industriales con proceso de expedición manual", "Empresas cuyos clientes llaman para saber cuándo llega su pedido", "Negocios con volumen de envíos que no pueden gestionar manualmente"],
+      requirements: ["Transportistas habituales con API o acceso web", "Email o WhatsApp del contacto del cliente"],
+      output: "Documentación de transporte generada automáticamente y cliente notificado en cuanto el pedido sale de planta."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Transportistas (API)", "Email", "WhatsApp", "ERP"]
+    },
+    how_it_works_steps: [
+      { title: "Confirma la recogida", short: "Con el transportista habitual.", detail: "Al confirmar que el pedido está listo para expedir, el sistema solicita recogida al transportista." },
+      { title: "Genera la documentación", short: "CMR, albarán, etiquetas.", detail: "La documentación de transporte se genera automáticamente con los datos del pedido y el destinatario." },
+      { title: "Notifica al cliente", short: "Con el número de seguimiento.", detail: "En cuanto el transportista registra la recogida, el cliente recibe el número de seguimiento automáticamente." }
+    ],
+    benefits: [
+      "El cliente siempre sabe cuándo llega su pedido sin llamar",
+      "Documentación de transporte generada sin intervención manual",
+      "Alertas al comercial ante incidencias del transportista antes de que llame el cliente"
+    ],
+    pasos: [
+      "Se confirma que el pedido está listo para expedir",
+      "El sistema solicita recogida al transportista",
+      "Se genera la documentación de transporte automáticamente",
+      "El transportista recoge y registra la incidencia de recogida",
+      "El cliente recibe el número de seguimiento por email o WhatsApp"
+    ],
+    personalizacion: "Define los transportistas habituales, el canal de notificación al cliente y las alertas en caso de incidencia de entrega.",
+    sectores: ["Industrial"],
+    herramientas: ["API de transportistas", "Email", "WhatsApp Business", "ERP"],
+    dolores: [
+      "El cliente llama para saber si su pedido salió cuando ya deberíamos haberlo avisado",
+      "Generamos la documentación de transporte a mano y a veces hay errores"
+    ],
+    integration_domains: ["COMMS", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B3",
+    modulo_codigo: "3.4"
+  },
+
+  // ── BLOQUE B4 · Compras y proveedores ─────────────────────────────────────
+  {
+    id: "IND-4.1",
+    codigo: "4.1",
+    slug: "industrial-solicitud-materiales-pedidos",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Solicitud de materiales y generación de pedidos",
+    tagline: "Cuando la planificación detecta que faltan materiales, lanza automáticamente la solicitud de compra con el proveedor preferente seleccionado.",
+    recomendado: true,
+    descripcionDetallada: "En muchas industriales, la generación de pedidos de compra es un proceso manual que depende de que alguien revise el stock o que producción avise cuando falta algo. Este proceso monitoriza las necesidades de materiales en función de las órdenes planificadas, detecta automáticamente las necesidades de compra y genera la solicitud con el proveedor preferente, las cantidades correctas y el plazo necesario, lista para que compras solo tenga que aprobar.",
+    summary: {
+      what_it_is: "Generación automática de solicitudes de compra a partir de las necesidades detectadas en planificación de producción.",
+      for_who: ["Industriales donde los pedidos de compra se gestionan manualmente", "Empresas con roturas de stock por retrasos en la generación de pedidos", "Departamentos de compras que pasan más tiempo recopilando necesidades que negociando"],
+      requirements: ["Sistema de planificación de producción", "Catálogo de proveedores con condiciones", "Stock mínimo definido por material"],
+      output: "Solicitud de compra generada automáticamente con proveedor, cantidad y plazo, lista para aprobación."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Gestión de stock", "Email al proveedor"]
+    },
+    how_it_works_steps: [
+      { title: "Detecta la necesidad", short: "Por planificación o por stock mínimo.", detail: "El sistema calcula las necesidades de material en función de las órdenes planificadas o el nivel de stock." },
+      { title: "Genera la solicitud", short: "Con proveedor y cantidad correctos.", detail: "Crea la solicitud de compra con el proveedor preferente, la cantidad necesaria y el plazo requerido." },
+      { title: "Aprobación de un clic", short: "Para el responsable de compras.", detail: "El responsable recibe la solicitud por email o en el sistema, revisa y aprueba en un solo paso." }
+    ],
+    benefits: [
+      "Cero roturas de stock por retrasos en la generación de pedidos",
+      "El departamento de compras invierte su tiempo en negociar, no en recopilar necesidades",
+      "Proveedor preferente seleccionado automáticamente con el mejor plazo"
+    ],
+    pasos: [
+      "El sistema detecta la necesidad de material por planificación o stock",
+      "Calcula la cantidad a pedir y el plazo necesario",
+      "Selecciona el proveedor preferente según condiciones configuradas",
+      "Genera la solicitud de compra lista para aprobación",
+      "El responsable de compras aprueba y el pedido se envía al proveedor"
+    ],
+    personalizacion: "Define los criterios de selección de proveedor (precio, plazo, calidad histórica), los niveles de aprobación y si quiere envío automático al proveedor tras la aprobación.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de stock", "Email", "Make/n8n"],
+    dolores: [
+      "Nos quedamos sin material porque nadie generó el pedido a tiempo",
+      "Compras pasa más tiempo recopilando necesidades que negociando con proveedores"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.1"
+  },
+  {
+    id: "IND-4.2",
+    codigo: "4.2",
+    slug: "industrial-evaluacion-proveedores",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Evaluación y homologación de proveedores",
+    tagline: "Recoge automáticamente los datos de entrega, calidad y precio por proveedor y genera el informe periódico para decidir con quién seguir trabajando.",
+    recomendado: false,
+    descripcionDetallada: "La evaluación de proveedores en muchas industriales se hace de forma subjetiva o directamente no se hace. Este proceso recoge automáticamente los datos reales de cada proveedor — plazos de entrega cumplidos, tasa de material rechazado, desviaciones de precio — y genera un scorecard periódico que sirve de base objetiva para las decisiones de compras: homologar proveedores nuevos, renegociar condiciones o buscar alternativas.",
+    summary: {
+      what_it_is: "Sistema automático de evaluación de proveedores con datos reales de entrega, calidad y precio.",
+      for_who: ["Industriales sin sistema formal de evaluación de proveedores", "Empresas con problemas de calidad o plazo recurrentes con los mismos proveedores", "Departamentos de compras que necesitan datos objetivos para negociar"],
+      requirements: ["Registro de pedidos de compra con fechas comprometidas y reales", "Registro de incidencias de calidad por proveedor"],
+      output: "Scorecard periódico por proveedor con métricas objetivas de rendimiento."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Gestión de compras", "Dashboard"]
+    },
+    how_it_works_steps: [
+      { title: "Recoge los datos reales", short: "Automaticamente de cada operación.", detail: "Extrae de los pedidos cerrados los plazos reales, las incidencias de calidad y las desviaciones de precio." },
+      { title: "Calcula el scorecard", short: "Por proveedor y periodo.", detail: "Puntúa a cada proveedor en las dimensiones configuradas y genera el ranking comparativo." },
+      { title: "Genera el informe periódico", short: "Para la reunión de compras.", detail: "El informe se genera automáticamente con la frecuencia definida y se envía al responsable de compras." }
+    ],
+    benefits: [
+      "Decisiones de compras basadas en datos reales, no en percepciones",
+      "Proveedores problemáticos identificados antes de que el impacto sea mayor",
+      "Base objetiva para renegociaciones y decisiones de homologación"
+    ],
+    pasos: [
+      "El sistema recoge automáticamente los datos de cada pedido cerrado",
+      "Calcula las métricas de rendimiento por proveedor: plazo, calidad, precio",
+      "Genera el scorecard comparativo por proveedor",
+      "Envía el informe al responsable de compras con la frecuencia definida",
+      "Las decisiones de homologación y renegociación se basan en el scorecard"
+    ],
+    personalizacion: "Define las métricas y su ponderación (plazo, calidad, precio, servicio), la frecuencia del informe y los umbrales que activan una revisión de proveedor.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Dashboard", "Make/n8n"],
+    dolores: [
+      "No tenemos datos objetivos para evaluar a nuestros proveedores",
+      "Seguimos trabajando con proveedores problemáticos porque no tenemos alternativa documentada"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.2"
+  },
+  {
+    id: "IND-4.3",
+    codigo: "4.3",
+    slug: "industrial-recepcion-verificacion-materiales",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Recepción y verificación de materiales",
+    tagline: "Guía al almacén en la recepción de materiales, comprueba que lo recibido coincide con el pedido y registra las incidencias antes de dar entrada al stock.",
+    recomendado: false,
+    descripcionDetallada: "Recibir materiales sin un proceso de verificación estructurado significa que errores del proveedor — cantidades incorrectas, materiales fuera de especificación, daños de transporte — entran en el stock y se detectan cuando ya están en producción, mucho más tarde y con mucho más impacto. Este proceso guía al personal de almacén en la recepción con una checklist vinculada al pedido, registra las incidencias en el momento y bloquea la entrada al stock hasta que están resueltas.",
+    summary: {
+      what_it_is: "Proceso guiado de recepción y verificación de materiales con registro de incidencias y control de entrada al stock.",
+      for_who: ["Almacenes que reciben sin proceso de verificación formal", "Industriales con problemas de material incorrecto o dañado detectado tarde", "Empresas que pierden tiempo reconciliando diferencias con proveedores sin documentación"],
+      requirements: ["Pedidos de compra en el sistema con cantidades y especificaciones", "Terminal o tablet en almacén"],
+      output: "Recepción verificada, incidencias documentadas en el momento y entrada al stock controlada."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["ERP", "Gestión de almacén", "Tablet"]
+    },
+    how_it_works_steps: [
+      { title: "Identifica el pedido entrante", short: "Escaneando albarán o código.", detail: "El personal de almacén identifica el pedido en el sistema para cargar la checklist de recepción." },
+      { title: "Verifica cantidad y estado", short: "Guiado por el sistema.", detail: "La checklist guía la verificación: cantidad, referencia, estado del embalaje, documentación requerida." },
+      { title: "Registra incidencias y da entrada", short: "Solo si todo está correcto.", detail: "Las incidencias se registran al momento y se notifica al proveedor. La entrada al stock solo se permite si la recepción es correcta." }
+    ],
+    benefits: [
+      "Los errores del proveedor se detectan en almacén, no en producción",
+      "Incidencias documentadas automáticamente para reclamación al proveedor",
+      "Stock correcto desde el primer día, sin sorpresas en producción"
+    ],
+    pasos: [
+      "El personal de almacén identifica el pedido entrante en el sistema",
+      "La checklist guía la verificación de cantidad, referencia y estado",
+      "Las incidencias detectadas se registran en el sistema con foto",
+      "Se notifica automáticamente al proveedor de las incidencias",
+      "La entrada al stock solo se aprueba cuando la recepción es correcta"
+    ],
+    personalizacion: "Define qué verificar por tipo de material, los criterios de aceptación/rechazo y el flujo de notificación al proveedor en caso de incidencia.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de almacén", "Tablet", "Make/n8n"],
+    dolores: [
+      "Recibimos material incorrecto o dañado y lo detectamos cuando ya está en producción",
+      "No tenemos documentación de las incidencias para reclamar al proveedor"
+    ],
+    integration_domains: ["OTHER"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.3"
+  },
+  {
+    id: "IND-4.4",
+    codigo: "4.4",
+    slug: "industrial-stock-minimo-alertas",
+    categoria: "B4",
+    categoriaNombre: "Compras y proveedores",
+    nombre: "Control de stock mínimo y alertas de reposición",
+    tagline: "Monitoriza el nivel de cada material y lanza una alerta cuando baja del mínimo definido, con el tiempo de antelación necesario para recibir el pedido antes de que afecte a producción.",
+    recomendado: false,
+    descripcionDetallada: "Una rotura de stock en una referencia crítica puede parar una línea de producción entera. Y el stock mínimo que se configuró hace dos años ya no refleja el ritmo de consumo actual. Este proceso monitoriza en tiempo real el nivel de cada referencia de material, ajusta dinámicamente las alertas según el consumo reciente y el plazo de entrega del proveedor, y lanza la alerta con la antelación suficiente para recibir el pedido antes de que la producción se vea afectada.",
+    summary: {
+      what_it_is: "Sistema de monitorización de niveles de stock con alertas de reposición adaptadas al consumo real y al plazo del proveedor.",
+      for_who: ["Industriales con roturas de stock recurrentes", "Almacenes con stocks mínimos desactualizados", "Empresas donde la rotura de stock es un evento que paraliza la actividad"],
+      requirements: ["Sistema de gestión de stock actualizado", "Plazos de entrega por proveedor y referencia definidos"],
+      output: "Alertas de reposición con la antelación correcta para que nunca haya rotura de stock por falta de previsión."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["ERP", "Gestión de stock", "Email / WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Monitoriza el nivel de stock", short: "En tiempo real por referencia.", detail: "Sigue el nivel de cada material actualizado en el sistema de gestión de stock." },
+      { title: "Calcula el punto de reposición", short: "Según consumo y plazo del proveedor.", detail: "Calcula dinámicamente cuándo lanzar la alerta para que el pedido llegue antes de que se agote el stock." },
+      { title: "Lanza la alerta", short: "Con propuesta de pedido incluida.", detail: "Notifica al responsable de compras con la referencia, la cantidad sugerida y el proveedor habitual." }
+    ],
+    benefits: [
+      "Cero roturas de stock por falta de previsión",
+      "Alertas con la antelación correcta, no cuando ya es tarde",
+      "Stock mínimo actualizado dinámicamente según consumo real"
+    ],
+    pasos: [
+      "El sistema monitoriza el nivel de stock por referencia en tiempo real",
+      "Calcula el punto de reposición según consumo y plazo del proveedor",
+      "Cuando el nivel baja del punto de reposición, lanza la alerta",
+      "La alerta incluye la cantidad sugerida y el proveedor habitual",
+      "El responsable de compras genera el pedido en un clic"
+    ],
+    personalizacion: "Define los stocks mínimos por referencia, la sensibilidad de ajuste dinámico y el canal de alerta al responsable de compras.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Gestión de stock", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Nos quedamos sin material y paramos producción cuando ya es tarde",
+      "Los stocks mínimos que tenemos configurados están desactualizados"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4"
+  },
+
+  // ── BLOQUE B5 · Administración y facturación ───────────────────────────────
+  {
+    id: "IND-5.1",
+    codigo: "5.1",
+    slug: "industrial-facturacion-automatica",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Facturación automática al cierre de entrega",
+    tagline: "En cuanto el albarán está firmado, el sistema genera la factura, la envía al cliente y la registra en contabilidad sin intervención manual.",
+    recomendado: true,
+    descripcionDetallada: "En una industrial que factura a plazos largos (60 o 90 días), cualquier retraso en la emisión de la factura se traduce directamente en retraso del cobro. Si el albarán tarda tres días en procesarse y convertirse en factura, esos tres días se suman al plazo de cobro. Este proceso elimina ese retraso: desde la firma del albarán hasta la factura enviada al cliente en cuestión de minutos, con los datos correctos y el registro automático en el sistema contable.",
+    summary: {
+      what_it_is: "Automatización completa del ciclo albarán → factura → envío → registro contable.",
+      for_who: ["Industriales con facturación a plazos largos", "Empresas donde el proceso de facturación es manual y lento", "Negocios con errores frecuentes en facturas por datos introducidos a mano"],
+      requirements: ["Sistema de albaranes actualizado", "Software de facturación o ERP con módulo de facturación", "Email del cliente para envío"],
+      output: "Factura generada, enviada al cliente y registrada en contabilidad en minutos desde la firma del albarán."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Software de facturación", "Email", "Contabilidad"]
+    },
+    how_it_works_steps: [
+      { title: "Albarán firmado y registrado", short: "Arranca el proceso de facturación.", detail: "Al registrarse el albarán firmado en el sistema, arranca automáticamente el flujo de facturación." },
+      { title: "Genera la factura", short: "Con los datos del pedido y el albarán.", detail: "La factura se genera con los datos correctos del pedido, condiciones de pago y detalles del cliente." },
+      { title: "Envía y registra", short: "Al cliente y en contabilidad.", detail: "La factura se envía al cliente por email y se registra automáticamente en el sistema contable." }
+    ],
+    benefits: [
+      "El cobro empieza antes porque la factura llega antes",
+      "Cero errores por datos introducidos manualmente",
+      "El administrativo libera horas de tecleo para tareas de más valor"
+    ],
+    pasos: [
+      "El albarán firmado queda registrado en el sistema",
+      "El proceso detecta el cierre y arranca la facturación",
+      "Se genera la factura con los datos del pedido y las condiciones acordadas",
+      "La factura se envía automáticamente al cliente por email",
+      "Se registra en el sistema contable sin intervención manual"
+    ],
+    personalizacion: "Define las condiciones de facturación por cliente (plazo, divisa, formato), los campos de validación requeridos y si quiere revisión humana antes del envío para pedidos de gran importe.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Software de facturación", "Email", "Contabilidad"],
+    dolores: [
+      "El albarán tarda días en convertirse en factura y perdemos días de cobro",
+      "Las facturas tienen errores por los datos introducidos a mano"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.1"
+  },
+  {
+    id: "IND-5.2",
+    codigo: "5.2",
+    slug: "industrial-seguimiento-cobros",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Seguimiento de cobros y reclamación de impagados",
+    tagline: "Controla el estado de cada factura emitida, lanza recordatorios automáticos antes del vencimiento y escala si el pago no llega en plazo.",
+    recomendado: true,
+    descripcionDetallada: "En industria, los plazos de cobro son largos y las facturas son muchas. Llevar el seguimiento manual de cuáles están cobradas, cuáles están próximas a vencer y cuáles han vencido sin cobrar es un trabajo que consume horas del administrativo cada semana. Este proceso automatiza toda la cadena: recordatorio preventivo antes del vencimiento, seguimiento tras el vencimiento y escalado a la dirección si la situación persiste.",
+    summary: {
+      what_it_is: "Sistema de seguimiento automatizado de cobros con recordatorios escalonados y gestión de impagados.",
+      for_who: ["Industriales con volumen de facturas difícil de gestionar manualmente", "Empresas con tensiones de tesorería por cobros retrasados", "Departamentos administrativos que dedican demasiado tiempo al seguimiento de cobros"],
+      requirements: ["Sistema de facturación actualizado con fechas de vencimiento", "Email o teléfono del responsable de pagos del cliente"],
+      output: "Reducción de días de cobro y del volumen de facturas vencidas sin gestión activa."
+    },
+    indicators: {
+      time_estimate: "1-2 semanas",
+      complexity: "Baja",
+      integrations: ["ERP / Software de facturación", "Email", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Recordatorio preventivo", short: "Días antes del vencimiento.", detail: "El cliente recibe un recordatorio amable días antes del vencimiento con los datos de la factura." },
+      { title: "Seguimiento post-vencimiento", short: "Escalado si no hay respuesta.", detail: "Si la factura vence sin cobrar, los recordatorios se escalan en tono y frecuencia hasta obtener respuesta." },
+      { title: "Alerta a dirección", short: "Si supera el umbral crítico.", detail: "Cuando una factura supera los días de retraso definidos, alerta a dirección para la gestión directa." }
+    ],
+    benefits: [
+      "Reducción del tiempo medio de cobro sin gestión manual adicional",
+      "Cero facturas vencidas sin ningún seguimiento activo",
+      "El administrativo invierte su tiempo en casos complejos, no en recordatorios rutinarios"
+    ],
+    pasos: [
+      "El sistema monitoriza el estado de cada factura emitida",
+      "Días antes del vencimiento, envía recordatorio al cliente",
+      "Al vencer sin cobrar, inicia el proceso de seguimiento escalonado",
+      "Si persiste sin pago, escala a un nivel de comunicación más directo",
+      "Cuando supera el umbral crítico, alerta a dirección para gestión directa"
+    ],
+    personalizacion: "Define los umbrales de recordatorio, el tono de cada escalado, quién recibe las alertas en dirección y si integra con el departamento legal para casos extremos.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP / Software de facturación", "Email", "WhatsApp Business", "Make/n8n"],
+    dolores: [
+      "Las facturas se cobran tarde porque nadie lleva el seguimiento de forma sistemática",
+      "Tenemos facturas vencidas de hace meses que descubrimos por casualidad"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.2"
+  },
+  {
+    id: "IND-5.3",
+    codigo: "5.3",
+    slug: "industrial-cuadro-mando-financiero",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Cuadro de mando financiero",
+    tagline: "Consolidada facturación, cobros pendientes, coste de producción y margen por orden en un informe accesible en tiempo real, sin esperar al gestor.",
+    recomendado: false,
+    descripcionDetallada: "La dirección de una industrial no puede tomar decisiones operativas si los datos financieros del mes actual solo están disponibles cuando el gestor cierra los libros. Este cuadro de mando consolida en tiempo real los datos de facturación, cobros pendientes, costes de producción y margen por orden desde los sistemas operativos, y los presenta en un panel accesible para dirección sin necesidad de intervención del administrativo.",
+    summary: {
+      what_it_is: "Dashboard financiero en tiempo real con facturación, cobros, costes y márgenes consolidados.",
+      for_who: ["Directores que toman decisiones sin datos actualizados", "Empresas donde el cierre financiero llega semanas tarde", "Industriales que no conocen su margen real por orden o por cliente"],
+      requirements: ["Datos de facturación y cobros en el sistema", "Datos de costes de producción actualizados"],
+      output: "Panel financiero accesible en tiempo real para dirección con los indicadores clave del negocio."
+    },
+    indicators: {
+      time_estimate: "3-4 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Contabilidad", "Dashboard (Power BI / Looker / similar)"]
+    },
+    how_it_works_steps: [
+      { title: "Conecta las fuentes de datos", short: "ERP, facturación, contabilidad.", detail: "Se integran los sistemas operativos para extraer datos de facturación, cobros y costes en tiempo real." },
+      { title: "Consolida y calcula", short: "Márgenes, cobros pendientes, tendencias.", detail: "El sistema calcula automáticamente márgenes por orden, cobros pendientes y evolución frente al periodo anterior." },
+      { title: "Panel accesible para dirección", short: "Desde cualquier dispositivo.", detail: "El dashboard está disponible en tiempo real para dirección desde cualquier dispositivo, sin intervención del administrativo." }
+    ],
+    benefits: [
+      "Decisiones basadas en datos actuales, no en cierres del mes pasado",
+      "Margen real por orden y por cliente visible en tiempo real",
+      "Dirección autónoma para consultar sus KPIs sin depender de nadie"
+    ],
+    pasos: [
+      "Se integran los sistemas de datos (ERP, facturación, contabilidad)",
+      "El sistema extrae y consolida los datos en tiempo real",
+      "Calcula márgenes, cobros pendientes y variaciones respecto al periodo anterior",
+      "El panel se actualiza automáticamente y es accesible para dirección",
+      "Se configuran alertas si algún indicador supera los umbrales definidos"
+    ],
+    personalizacion: "Define los indicadores clave para tu negocio, los periodos de comparación y los umbrales que disparan alertas para dirección.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Contabilidad", "Power BI / Looker / similar", "Make/n8n"],
+    dolores: [
+      "No sabemos nuestro margen real hasta que el gestor cierra los libros, semanas tarde",
+      "Dirección toma decisiones con datos del mes pasado"
+    ],
+    integration_domains: ["ADMIN"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.3"
+  },
+  {
+    id: "IND-5.4",
+    codigo: "5.4",
+    slug: "industrial-informes-mensuales",
+    categoria: "B5",
+    categoriaNombre: "Administración y facturación",
+    nombre: "Informes mensuales de actividad y rendimiento",
+    tagline: "Genera automáticamente el informe mensual con métricas clave de producción, ventas, calidad y equipo, listo para presentar a dirección sin prepararlo desde cero.",
+    recomendado: false,
+    descripcionDetallada: "El informe mensual que se presenta en la reunión de dirección suele prepararse manualmente, extrayendo datos de varios sistemas y formateando el documento. Este proceso lo automatiza completamente: al cierre de cada mes, extrae los datos de producción, ventas, calidad y equipo de los sistemas operativos, genera el informe con el formato corporativo y lo envía a los destinatarios configurados listo para revisar y presentar.",
+    summary: {
+      what_it_is: "Generación automática del informe mensual de actividad y rendimiento con datos de todos los departamentos.",
+      for_who: ["Empresas donde el informe mensual se prepara manualmente", "Directores que necesitan datos consolidados de varios departamentos", "Industriales con reuniones de dirección mensuales o trimestrales"],
+      requirements: ["Fuentes de datos definidas por departamento", "Plantilla del informe en formato corporativo"],
+      output: "Informe mensual generado automáticamente al cierre de mes y enviado a los destinatarios configurados."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["ERP", "Sistema de producción", "Generador de documentos", "Email"]
+    },
+    how_it_works_steps: [
+      { title: "Se activa al cierre de mes", short: "Automáticamente en la fecha configurada.", detail: "Al cierre del periodo, el proceso arranca automáticamente sin que nadie tenga que iniciarlo." },
+      { title: "Extrae y consolida los datos", short: "De producción, ventas, calidad, equipo.", detail: "Recoge los KPIs de cada área desde sus sistemas respectivos y los consolida en el informe." },
+      { title: "Genera y envía el informe", short: "En formato corporativo por email.", detail: "El informe se genera en el formato definido y se envía a la lista de distribución configurada." }
+    ],
+    benefits: [
+      "Horas de trabajo manual eliminadas en la preparación del informe mensual",
+      "Datos siempre consistentes porque vienen del sistema, no de Excel manual",
+      "Dirección recibe el informe el mismo día del cierre, no una semana después"
+    ],
+    pasos: [
+      "Al cierre del mes, el proceso se activa automáticamente",
+      "Extrae KPIs de producción: órdenes, plazos, eficiencia",
+      "Extrae KPIs de ventas: facturación, nuevos pedidos, pipeline",
+      "Extrae KPIs de calidad: no conformidades, reclamaciones, rechazos",
+      "Genera el informe en formato corporativo y lo envía a la lista de distribución"
+    ],
+    personalizacion: "Define los KPIs de cada área, el formato del informe, la fecha de generación y la lista de distribución.",
+    sectores: ["Industrial"],
+    herramientas: ["ERP", "Sistema de producción", "Generador de documentos", "Email"],
+    dolores: [
+      "El informe mensual lo prepara alguien a mano y siempre llega tarde a la reunión",
+      "Los datos de distintos departamentos no cuadran porque cada uno tira de su Excel"
+    ],
+    integration_domains: ["ADMIN", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B5",
+    modulo_codigo: "5.4"
+  },
+
+  // ── BLOQUE B6 · Equipo y planta ──────────────────────────────────────────
+  {
+    id: "IND-6.1",
+    codigo: "6.1",
+    slug: "industrial-onboarding-trabajador",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Onboarding de nuevo trabajador",
+    tagline: "Cuando se incorpora un operario, el proceso organiza automáticamente la documentación, los accesos, el equipo de protección y la formación obligatoria del primer día.",
+    recomendado: false,
+    descripcionDetallada: "En una industrial, la incorporación de un nuevo operario implica coordinación entre RRHH, el responsable de planta, el responsable de seguridad y el responsable de sistemas: contrato, alta en nómina, ficha de formación PRL, entrega de EPIs, acceso a máquinas y sistemas. Si ese proceso no está automatizado, la mitad de las veces el nuevo llega y alguien está improvisando. Este proceso coordina automáticamente cada paso del onboarding desde el momento de la contratación.",
+    summary: {
+      what_it_is: "Proceso automatizado de incorporación de nuevo trabajador que coordina documentación, accesos, EPIs y formación.",
+      for_who: ["Industriales con incorporaciones frecuentes de personal", "Empresas donde el onboarding es caótico e improvisto", "Fábricas con requisitos de formación PRL obligatoria en el primer día"],
+      requirements: ["Datos del nuevo trabajador al confirmar la contratación", "Listado de accesos, EPIs y formaciones por puesto"],
+      output: "Nuevo trabajador operativo desde el primer día con toda la documentación, accesos y formaciones en orden."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["RRHH / Nómina", "Email / WhatsApp", "Gestión de formaciones", "Control de accesos"]
+    },
+    how_it_works_steps: [
+      { title: "Se confirma la contratación", short: "Arranca el flujo de onboarding.", detail: "Al registrar la nueva contratación, el proceso lanza automáticamente todos los pasos coordinados." },
+      { title: "Coordina acciones paralelas", short: "Documentación, EPIs, accesos, formación.", detail: "RRHH recibe la checklist de documentación, planta recibe la lista de EPIs a preparar, sistemas activa los accesos." },
+      { title: "El primer día está listo", short: "Sin que nadie improvise.", detail: "El nuevo llega y todo está preparado: su puesto, su equipo de protección, sus accesos y su agenda de formación del día." }
+    ],
+    benefits: [
+      "El primer día del nuevo trabajador funciona sin improvisación ni caos",
+      "Cero formaciones PRL olvidadas que generan incumplimiento normativo",
+      "El responsable de planta no pierde su tiempo gestionando el onboarding"
+    ],
+    pasos: [
+      "Se confirma la contratación en el sistema de RRHH",
+      "El proceso lanza la checklist de documentación a RRHH",
+      "Se preparan los EPIs y accesos necesarios para el puesto",
+      "Se programan las formaciones obligatorias del primer día",
+      "El nuevo trabajador llega con todo preparado y operativo"
+    ],
+    personalizacion: "Define la lista de acciones por tipo de puesto, los responsables de cada acción y el canal de comunicación para cada parte.",
+    sectores: ["Industrial"],
+    herramientas: ["RRHH / Nómina", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Cuando entra alguien nuevo siempre hay algo sin preparar: el acceso, los EPIs, la formación",
+      "El responsable de planta pierde media jornada el primer día del nuevo"
+    ],
+    integration_domains: ["ADMIN", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.1"
+  },
+  {
+    id: "IND-6.2",
+    codigo: "6.2",
+    slug: "industrial-control-presencia-turnos",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Control de presencia y turnos",
+    tagline: "Cada operario recibe su turno individual por WhatsApp con confirmación. Los cambios se gestionan automáticamente y la ausencia no justificada alerta al responsable.",
+    recomendado: false,
+    descripcionDetallada: "Los grupos de WhatsApp de turnos en una fábrica son ingobernables cuando el equipo supera los 10-15 operarios. Los cambios de turno generan confusión, las ausencias de última hora cogen a producción sin cobertura y el cuaderno de presencia en papel no permite análisis ni cruce con nómina. Este proceso digitaliza la comunicación de turnos, el registro de presencia y la gestión de ausencias con notificaciones automáticas al responsable.",
+    summary: {
+      what_it_is: "Sistema de comunicación de turnos individuales, registro de presencia y gestión de ausencias para equipos de producción.",
+      for_who: ["Fábricas con equipos de 10+ operarios", "Industriales con grupos de WhatsApp de turnos caóticos", "Empresas donde las ausencias cogen a producción sin cobertura"],
+      requirements: ["Cuadrante de turnos (Excel, software de RRHH)", "WhatsApp de cada operario", "Responsable de planta como punto de escalado"],
+      output: "Comunicación de turnos sin grupos caóticos, registro de presencia digital y alertas de ausencia a tiempo."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["Software de RRHH / Excel", "WhatsApp Business API", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Envía turnos individuales", short: "Cada operario recibe el suyo.", detail: "Al publicarse el cuadrante, cada operario recibe su turno individual por WhatsApp con confirmación de lectura." },
+      { title: "Gestiona cambios y ausencias", short: "Solo a quien afecta.", detail: "Los cambios se notifican solo a los afectados. Las ausencias detectadas alertan al responsable con tiempo para buscar cobertura." },
+      { title: "Sincroniza con nómina", short: "Registro digital de presencia.", detail: "El registro de entradas y salidas se sincroniza con el sistema de nómina, sin tecleo manual adicional." }
+    ],
+    benefits: [
+      "Fin del grupo de WhatsApp ingobernable de turnos",
+      "El responsable sabe la ausencia con tiempo suficiente para buscar cobertura",
+      "Registro de presencia digital sincronizado con nómina"
+    ],
+    pasos: [
+      "Se publica el cuadrante de turnos en el sistema",
+      "Cada operario recibe su turno individual por WhatsApp",
+      "Se registra la confirmación de lectura de cada turno",
+      "Los cambios y ausencias generan notificaciones solo a los afectados",
+      "El registro de presencia se sincroniza automáticamente con nómina"
+    ],
+    personalizacion: "Define el día y hora de envío del cuadrante, los criterios de sustitución por ausencia y el canal de escalado al responsable.",
+    sectores: ["Industrial"],
+    herramientas: ["WhatsApp Business API", "Software de RRHH / Excel", "Make/n8n"],
+    dolores: [
+      "El grupo de WhatsApp de turnos es un caos que nadie controla",
+      "Las ausencias de última hora nos pillan sin cobertura en planta"
+    ],
+    integration_domains: ["COMMS", "ADMIN"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.2"
+  },
+  {
+    id: "IND-6.3",
+    codigo: "6.3",
+    slug: "industrial-documentacion-laboral",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Gestión de documentación laboral",
+    tagline: "Centraliza contratos, certificados, permisos, formaciones PRL y revisiones médicas de cada trabajador, con alertas antes de que venza cualquier documento.",
+    recomendado: false,
+    descripcionDetallada: "En una industrial con obligaciones de PRL, los documentos laborales que caducan sin renovación son un riesgo legal directo. Una revisión médica vencida, un carné de carretillero caducado o una formación no actualizada pueden suponer sanciones significativas en una inspección de trabajo. Este proceso centraliza todos los documentos de cada trabajador, calcula automáticamente las fechas de vencimiento y lanza alertas con la antelación suficiente para gestionar la renovación sin urgencias.",
+    summary: {
+      what_it_is: "Gestión centralizada de documentación laboral con alertas automáticas de vencimiento por trabajador.",
+      for_who: ["Industriales con obligaciones de PRL y formación periódica", "Empresas con inspecciones de trabajo frecuentes", "RRHH que lleva el control de documentos en Excel o papel"],
+      requirements: ["Listado de documentos requeridos por puesto de trabajo", "Documentos actuales de cada trabajador digitalizados"],
+      output: "Expediente digital de cada trabajador actualizado con alertas de vencimiento antes de que sea un problema."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["RRHH / Nómina", "Gestión documental", "Email / WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Centraliza los documentos", short: "Por trabajador y tipo de documento.", detail: "Se crea el expediente digital de cada trabajador con todos los documentos laborales relevantes." },
+      { title: "Calcula fechas de vencimiento", short: "Por tipo de documento y normativa.", detail: "El sistema registra la fecha de cada documento y calcula cuándo caduca según la normativa o las condiciones del documento." },
+      { title: "Alerta antes del vencimiento", short: "Con tiempo suficiente para renovar.", detail: "RRHH recibe la alerta con la antelación configurada para gestionar la renovación sin urgencias." }
+    ],
+    benefits: [
+      "Cero documentos laborales vencidos que generen riesgo legal",
+      "RRHH no lleva el control en Excel — el sistema lo hace automáticamente",
+      "Preparación de inspecciones de trabajo en minutos, no en días"
+    ],
+    pasos: [
+      "Se crean los expedientes digitales de cada trabajador",
+      "Se registran todos los documentos con sus fechas de vencimiento",
+      "El sistema calcula las fechas de alerta según el tipo de documento",
+      "RRHH recibe la alerta antes del vencimiento para gestionar la renovación",
+      "El documento renovado sustituye al anterior en el expediente"
+    ],
+    personalizacion: "Define los tipos de documentos a controlar, las antelaciones de alerta por tipo y los destinatarios de cada alerta.",
+    sectores: ["Industrial"],
+    herramientas: ["RRHH / Nómina", "Gestión documental", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Hemos tenido sanciones por formaciones o revisiones médicas vencidas",
+      "El control de documentos laborales lo llevamos en un Excel que siempre está desactualizado"
+    ],
+    integration_domains: ["ADMIN", "DOCS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.3"
+  },
+  {
+    id: "IND-6.4",
+    codigo: "6.4",
+    slug: "industrial-mantenimiento-preventivo",
+    categoria: "B6",
+    categoriaNombre: "Equipo y planta",
+    nombre: "Mantenimiento preventivo de maquinaria",
+    tagline: "Planifica y registra las revisiones de cada máquina, avisa antes de que caduque un mantenimiento y deja trazabilidad de cada intervención para auditorías.",
+    recomendado: true,
+    descripcionDetallada: "El mantenimiento que 'está pendiente de programar' se convierte invariablemente en una avería en el peor momento. En una línea de producción, una parada no planificada tiene un coste por hora que supera fácilmente al coste del mantenimiento preventivo del año entero. Este proceso planifica automáticamente las revisiones de cada máquina según su plan de mantenimiento, lanza alertas antes de cada vencimiento y registra cada intervención con el responsable, el tiempo invertido y el resultado.",
+    summary: {
+      what_it_is: "Sistema de planificación y seguimiento de mantenimiento preventivo de maquinaria con alertas y trazabilidad de intervenciones.",
+      for_who: ["Industriales con paradas no planificadas frecuentes", "Empresas que gestionan el mantenimiento de memoria o en papel", "Fábricas con requisitos de trazabilidad de mantenimiento por certificación o cliente"],
+      requirements: ["Inventario de máquinas con su plan de mantenimiento", "Responsable de mantenimiento identificado"],
+      output: "Plan de mantenimiento preventivo ejecutado con alertas puntuales y trazabilidad completa de intervenciones."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Baja",
+      integrations: ["Gestión de mantenimiento (CMMS)", "Email / WhatsApp", "Make/n8n"]
+    },
+    how_it_works_steps: [
+      { title: "Define el plan por máquina", short: "Revisiones, frecuencia, responsable.", detail: "Se configura el plan de mantenimiento de cada máquina: tipo de revisión, frecuencia y responsable." },
+      { title: "Alerta antes del vencimiento", short: "Con la antelación correcta.", detail: "El sistema alerta al responsable con la antelación suficiente para planificar la intervención sin urgencias." },
+      { title: "Registra la intervención", short: "Responsable, tiempo, resultado.", detail: "Al completar el mantenimiento, se registra quién lo hizo, cuánto tardó y el resultado, con la próxima fecha calculada." }
+    ],
+    benefits: [
+      "Paradas no planificadas reducidas significativamente",
+      "Cada intervención registrada para auditorías internas, de cliente o de certificación",
+      "El responsable de mantenimiento actúa de forma planificada, no reactiva"
+    ],
+    pasos: [
+      "Se define el plan de mantenimiento por máquina con frecuencias y responsables",
+      "El sistema calcula las fechas de vencimiento de cada revisión",
+      "Alerta al responsable con la antelación configurada antes de cada revisión",
+      "El responsable ejecuta el mantenimiento y registra la intervención",
+      "El sistema calcula automáticamente la próxima fecha de revisión"
+    ],
+    personalizacion: "Define los tipos de mantenimiento por máquina, las frecuencias, los responsables y los umbrales de alerta para cada tipo de revisión.",
+    sectores: ["Industrial"],
+    herramientas: ["CMMS / Gestión de mantenimiento", "Email / WhatsApp", "Make/n8n"],
+    dolores: [
+      "Las averías siempre nos pillan en el peor momento porque el mantenimiento no está al día",
+      "El mantenimiento lo llevamos de memoria y no tenemos trazabilidad de intervenciones"
+    ],
+    integration_domains: ["OTHER", "COMMS"],
+    landing_slug: "industrial",
+    bloque_negocio: "B6",
+    modulo_codigo: "6.4"
+  }
 ];
 
 export const categories = [
