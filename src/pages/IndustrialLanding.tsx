@@ -1,8 +1,8 @@
-﻿import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { processes, type Process } from "@/data/processes";
-import { saludBlocks, type BlockId } from "@/data/saludBlocks";
-import { saludModules, getModulesByBlock } from "@/data/saludModules";
+import { industrialBlocks, type BlockId } from "@/data/industrialBlocks";
+import { industrialModules, getModulesByBlock } from "@/data/industrialModules";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
@@ -46,13 +46,13 @@ import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
-const ACCENT = "#0ea5e9";
-const AUDIT_URL = "/auditorias/salud";
+const ACCENT = "#eab308";
+const AUDIT_URL = "/auditorias/industrial";
 
-// Sector exclusivo: los procesos de salud tienen landing_slug propio
-const SALUD_LANDING_SLUG = "salud";
+// Sector exclusivo: los procesos industriales tienen landing_slug propio
+const INDUSTRIAL_LANDING_SLUG = "industrial";
 
-const SaludLanding = () => {
+const IndustrialLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -78,19 +78,19 @@ const SaludLanding = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const saludProcesses = useMemo(() => {
+  const industrialProcesses = useMemo(() => {
     return processes
-      .filter((p) => !p.hidden && p.landing_slug === SALUD_LANDING_SLUG)
+      .filter((p) => !p.hidden && p.landing_slug === INDUSTRIAL_LANDING_SLUG)
       .map((p) => {
         if (!p.bloque_negocio) return p;
-        const block = saludBlocks.find((b) => b.id === p.bloque_negocio);
+        const block = industrialBlocks.find((b) => b.id === p.bloque_negocio);
         return block ? { ...p, categoriaNombre: block.title } : p;
       });
   }, []);
 
   const filteredCatalog = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return saludProcesses.filter((p) => {
+    return industrialProcesses.filter((p) => {
       if (activeBlockTab !== "todos" && p.bloque_negocio !== activeBlockTab) return false;
       if (!q) return true;
       return (
@@ -99,19 +99,19 @@ const SaludLanding = () => {
         p.categoriaNombre.toLowerCase().includes(q)
       );
     });
-  }, [saludProcesses, activeBlockTab, searchQuery]);
+  }, [industrialProcesses, activeBlockTab, searchQuery]);
 
   const selectedProcesses = useMemo((): Process[] => {
     const real = processes.filter((p) => selectedProcessIds.has(p.id));
-    const modEntries = saludModules
+    const modEntries = industrialModules
       .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
       .map((m): Process => {
-        const block = saludBlocks.find((b) => b.id === m.bloque)!;
+        const block = industrialBlocks.find((b) => b.id === m.bloque)!;
         return {
           id: `mod-${m.codigo}`,
           codigo: m.codigo,
           slug: `mod-${m.codigo}`,
-          categoria: "salud",
+          categoria: "industrial",
           categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
           nombre: m.nombre,
           tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
@@ -119,8 +119,8 @@ const SaludLanding = () => {
           descripcionDetallada: m.descripcion,
           pasos: [],
           personalizacion: "",
-          landing_slug: "salud",
-          sectores: ["Centros de Salud"],
+          landing_slug: "industrial",
+          sectores: ["Industrial"],
           bloque_negocio: m.bloque,
           modulo_codigo: m.codigo,
         };
@@ -132,10 +132,10 @@ const SaludLanding = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const activeBlock = saludBlocks.find((b) => b.id === activeShowcaseBlock)!;
+  const activeBlock = industrialBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-sky-500/30 font-sans">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-yellow-500/30 font-sans">
       {/* ───────────────────── NAVIGATION ───────────────────── */}
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -148,14 +148,14 @@ const SaludLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-sky-600 hover:bg-sky-500 text-white border-sky-600 shadow-[0_0_20px_rgba(14,165,233,0.25)]"
+                      ? "bg-yellow-500 hover:bg-yellow-400 text-black border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.4)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Mi Selección</span>
                   {selectedProcessIds.size > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-white text-sky-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-yellow-400 text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {selectedProcessIds.size}
                     </span>
                   )}
@@ -168,7 +168,7 @@ const SaludLanding = () => {
                 <div className="h-full flex flex-col p-6">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
-                      <LayoutGrid className="w-6 h-6 text-sky-400" />
+                      <LayoutGrid className="w-6 h-6 text-yellow-400" />
                       Mi Selección
                     </SheetTitle>
                   </SheetHeader>
@@ -193,20 +193,20 @@ const SaludLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/salud/hero.png'), url('/salud-hero.jpg')" }}
+          style={{ backgroundImage: "url('/industrial/hero.svg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-sky-900/10 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-yellow-500/15 blur-[120px] rounded-full" />
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
-            De gestionar agenda a mano, <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500">
-              a liderar un negocio escalable
+            De gestionar planta a mano, <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
+              a operar con sistemas que no paran
             </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Vamos a recorrer juntos las áreas de tu centro de salud donde la automatización
+            Vamos a recorrer juntos las áreas de tu empresa industrial donde la automatización
             tiene más sentido. Sin tecnicismos, sin presión, sin recetas únicas.{" "}
             <span className="text-white">Tú decides por dónde empezar.</span>
           </p>
@@ -215,21 +215,21 @@ const SaludLanding = () => {
             <Button
               size="lg"
               onClick={() => scrollTo("modulos")}
-              className="bg-sky-600 hover:bg-sky-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-sky-900/30 transition-all hover:scale-[1.02]"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-yellow-500/30 transition-all hover:scale-[1.02]"
             >
               Empezar el recorrido <ChevronRight className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-5">
               <button
                 onClick={() => setShowCalendlyModal(true)}
-                className="text-sm text-gray-400 hover:text-sky-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-yellow-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
               </button>
               <span className="text-white/15 text-xs">·</span>
               <button
                 onClick={() => setShowContactForm(true)}
-                className="text-sm text-gray-400 hover:text-sky-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-yellow-300 transition-colors underline-offset-4 hover:underline"
               >
                 Contáctanos
               </button>
@@ -257,7 +257,7 @@ const SaludLanding = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-5 tracking-tight">
-              Las áreas donde un centro de salud <span className="text-sky-400">puede funcionar solo</span>
+              Las áreas donde una empresa industrial <span className="text-yellow-400">puede funcionar sin fricciones</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
               Seis áreas, cada una con un propósito claro. Pasa por encima de cada una para ver de qué va.
@@ -267,7 +267,7 @@ const SaludLanding = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto items-start">
             {/* Lista vertical de bloques (izquierda) */}
             <div className="lg:col-span-5 space-y-2">
-              {saludBlocks.map((b) => {
+              {industrialBlocks.map((b) => {
                 const Icon = b.icon;
                 const isActive = b.id === activeShowcaseBlock;
                 return (
@@ -390,29 +390,29 @@ const SaludLanding = () => {
         </div>
       </section>
 
-      {/* ───────────────────── AUDITORÍA (sustituye al diagnóstico) ───────────────────── */}
+      {/* ───────────────────── AUDITORÍA ───────────────────── */}
       <section id="auditoria" className="py-28 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 via-transparent to-amber-500/5 pointer-events-none" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-sky-500/10 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-amber-500/5 pointer-events-none" />
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Texto izquierda */}
             <div>
               <div className="inline-flex items-center gap-2 mb-4">
-                <FileText className="w-5 h-5 text-sky-400" />
-                <span className="text-sky-400 font-medium tracking-widest uppercase text-xs">
-                  Auditoría gratuita · 6 min
+                <FileText className="w-5 h-5 text-yellow-400" />
+                <span className="text-yellow-400 font-medium tracking-widest uppercase text-xs">
+                  Auditoría gratuita · 8 min
                 </span>
               </div>
               <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
                 ¿No sabes por dónde <br className="hidden md:block" />
-                empezar? <span className="text-sky-400">Te lo decimos nosotros.</span>
+                empezar? <span className="text-yellow-400">Te lo decimos nosotros.</span>
               </h2>
               <p className="text-gray-300 leading-relaxed mb-5 text-justify hyphens-auto">
-                Responde 18 preguntas sobre cómo opera tu centro hoy y te enviamos un{" "}
+                Responde 20 preguntas sobre cómo opera tu empresa hoy y te enviamos un{" "}
                 <span className="text-white font-semibold">informe personalizado en PDF</span> con tu
-                nivel de madurez operativa, los módulos donde se está escapando más tiempo y clientes, y
+                nivel de madurez operativa, los módulos donde se está escapando más tiempo y margen, y
                 los módulos que recomendamos activar primero.
               </p>
               <p className="text-gray-400 leading-relaxed mb-8 text-sm text-justify hyphens-auto">
@@ -422,8 +422,8 @@ const SaludLanding = () => {
 
               <div className="flex flex-wrap gap-3 mb-8">
                 {[
-                  { icon: Clock, label: "6 minutos" },
-                  { icon: ListChecks, label: "18 preguntas" },
+                  { icon: Clock, label: "8 minutos" },
+                  { icon: ListChecks, label: "20 preguntas" },
                   { icon: FileText, label: "Informe PDF" },
                   { icon: CheckCircle2, label: "Confidencial" },
                 ].map((it, i) => {
@@ -433,7 +433,7 @@ const SaludLanding = () => {
                       key={i}
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
                     >
-                      <Icon className="w-3.5 h-3.5 text-sky-400" /> {it.label}
+                      <Icon className="w-3.5 h-3.5 text-yellow-400" /> {it.label}
                     </div>
                   );
                 })}
@@ -442,7 +442,7 @@ const SaludLanding = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to={AUDIT_URL}
-                  className="inline-flex items-center justify-center bg-sky-600 hover:bg-sky-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-sky-900/30 transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center bg-yellow-500 hover:bg-yellow-400 text-black h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-yellow-500/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -454,52 +454,52 @@ const SaludLanding = () => {
               <div className="relative aspect-[4/5] max-w-sm mx-auto">
                 {/* Capas apiladas tipo PDF stack */}
                 <div
-                  className="absolute inset-0 rounded-2xl border border-white/10 bg-[#0c2a3a] rotate-3 translate-x-3 translate-y-3 opacity-40"
+                  className="absolute inset-0 rounded-2xl border border-white/10 bg-[#1a1500] rotate-3 translate-x-3 translate-y-3 opacity-40"
                   aria-hidden
                 />
                 <div
-                  className="absolute inset-0 rounded-2xl border border-white/15 bg-[#0c2a3a] rotate-1 translate-x-1 translate-y-1 opacity-70"
+                  className="absolute inset-0 rounded-2xl border border-white/15 bg-[#1a1500] rotate-1 translate-x-1 translate-y-1 opacity-70"
                   aria-hidden
                 />
-                <div className="relative rounded-2xl border border-white/20 bg-[#0c2a3a] overflow-hidden shadow-2xl shadow-black/60">
+                <div className="relative rounded-2xl border border-white/20 bg-[#1a1500] overflow-hidden shadow-2xl shadow-black/60">
                   <div className="p-6 md:p-8">
                     <div className="flex items-center justify-between mb-6">
                       <div className="font-bold text-lg">
                         <span className="text-white">immoral</span>
-                        <span className="text-sky-400">ia</span>
+                        <span className="text-yellow-400">ia</span>
                       </div>
                       <span className="text-[10px] tracking-widest text-amber-300/80 uppercase">
                         Confidencial
                       </span>
                     </div>
                     <div className="text-xs tracking-widest text-amber-300/80 mb-3 uppercase">
-                      Auditoría · Centros de Salud · 2026
+                      Auditoría · Industrial / Producción · 2026
                     </div>
                     <h4 className="text-xl font-bold mb-4 text-white leading-tight">
                       Auditoría de madurez operativa
                     </h4>
                     {/* Score circle simulado */}
                     <div className="flex items-center gap-5 mb-6 py-4 border-y border-white/10">
-                      <div className="relative w-20 h-20 rounded-full bg-[#082030] border-2 border-sky-400/30 flex flex-col items-center justify-center">
-                        <span className="text-3xl font-bold text-sky-400 leading-none">72</span>
+                      <div className="relative w-20 h-20 rounded-full bg-[#201600] border-2 border-yellow-400/30 flex flex-col items-center justify-center">
+                        <span className="text-3xl font-bold text-yellow-400 leading-none">58</span>
                         <span className="text-[8px] tracking-widest text-gray-400 mt-0.5">DE 100</span>
                       </div>
                       <div>
                         <div className="text-[10px] tracking-widest text-gray-400 uppercase mb-0.5">
                           Tu nivel
                         </div>
-                        <div className="font-bold text-white">Sistematizado</div>
+                        <div className="font-bold text-white">En transición</div>
                       </div>
                     </div>
                     {/* Bloques con barra */}
                     <div className="space-y-2.5">
                       {[
-                        { id: "B1", v: 88, c: "bg-emerald-400" },
-                        { id: "B2", v: 63, c: "bg-amber-400" },
-                        { id: "B3", v: 38, c: "bg-red-400" },
-                        { id: "B4", v: 88, c: "bg-emerald-400" },
-                        { id: "B5", v: 38, c: "bg-red-400" },
-                        { id: "B6", v: 38, c: "bg-red-400" },
+                        { id: "B1", v: 75, c: "bg-emerald-400" },
+                        { id: "B2", v: 45, c: "bg-amber-400" },
+                        { id: "B3", v: 30, c: "bg-red-400" },
+                        { id: "B4", v: 80, c: "bg-emerald-400" },
+                        { id: "B5", v: 35, c: "bg-red-400" },
+                        { id: "B6", v: 60, c: "bg-amber-400" },
                       ].map((b) => (
                         <div key={b.id} className="flex items-center gap-3">
                           <span className="text-[10px] text-gray-400 w-5">{b.id}</span>
@@ -527,7 +527,7 @@ const SaludLanding = () => {
       </section>
 
       {/* ───────────────────── ZOOM POR MÓDULO (alternado, con cariño) ───────────────────── */}
-      {saludBlocks.map((b, idx) => {
+      {industrialBlocks.map((b, idx) => {
         const Icon = b.icon;
         const modules = getModulesByBlock(b.id);
         const reverse = idx % 2 === 1;
@@ -598,7 +598,7 @@ const SaludLanding = () => {
                       >
                         <video
                           ref={videoRef}
-                          src="/salud/modulo1.mp4"
+                          src="/industrial/modulo1.mp4"
                           className="w-full h-full object-cover"
                           loop
                           playsInline
@@ -710,7 +710,7 @@ const SaludLanding = () => {
                               onClick={() => toggleProcess(`mod-${m.codigo}`)}
                               className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all mr-1 ${
                                 isModuleSelected
-                                  ? "bg-sky-500/20 border-sky-500/60 text-sky-400"
+                                  ? "bg-yellow-500/20 border-yellow-500/60 text-yellow-400"
                                   : "border-white/15 text-gray-600 hover:border-white/35 hover:text-gray-300"
                               }`}
                             >
@@ -770,11 +770,11 @@ const SaludLanding = () => {
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
-        <div className="absolute inset-0 bg-sky-600/5 -z-10" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-sky-500/10 blur-[100px] rounded-full" />
+        <div className="absolute inset-0 bg-yellow-600/5 -z-10" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-yellow-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
-            ¿Listo para escalar <br /> tu centro de salud?
+            ¿Listo para escalar <br /> tu empresa industrial?
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
             Solicita una propuesta personalizada con los módulos que te interesan, el orden recomendado de
@@ -784,7 +784,7 @@ const SaludLanding = () => {
             <Button
               size="lg"
               onClick={() => setShowContactForm(true)}
-              className="bg-sky-600 hover:bg-sky-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(14,165,233,0.35)] transition-all hover:scale-105"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,179,8,0.55)] transition-all hover:scale-105"
             >
               Solicitar propuesta
             </Button>
@@ -813,9 +813,9 @@ const SaludLanding = () => {
       {/* ───────────────────── FLOATING MODULE BAR ───────────────────── */}
       {selectedProcessIds.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300 px-4 w-full max-w-lg">
-          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-sky-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
+          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-yellow-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-2 h-2 rounded-full bg-sky-500 shrink-0 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-yellow-500 shrink-0 animate-pulse" />
               <span className="text-sm text-white font-semibold truncate">
                 {selectedProcessIds.size} proceso{selectedProcessIds.size > 1 ? "s" : ""} seleccionado{selectedProcessIds.size > 1 ? "s" : ""}
               </span>
@@ -823,7 +823,7 @@ const SaludLanding = () => {
             <Button
               size="sm"
               onClick={() => setShowContactForm(true)}
-              className="bg-sky-600 hover:bg-sky-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
             >
               Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
             </Button>
@@ -842,7 +842,7 @@ const SaludLanding = () => {
         />
       )}
 
-<ShareSelectionModal
+      <ShareSelectionModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
@@ -857,4 +857,4 @@ const SaludLanding = () => {
   );
 };
 
-export default SaludLanding;
+export default IndustrialLanding;

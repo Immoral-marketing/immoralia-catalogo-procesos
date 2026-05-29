@@ -452,8 +452,8 @@ const ConstruccionLanding = () => {
                   <div className="p-6 md:p-8">
                     <div className="flex items-center justify-between mb-6">
                       <div className="font-bold text-lg">
-                        <span className="text-white">im</span>
-                        <span className="text-green-400">moralia</span>
+                        <span className="text-white">immoral</span>
+                        <span className="text-green-400">ia</span>
                       </div>
                       <span className="text-[10px] tracking-widest text-green-300/80 uppercase">
                         Confidencial

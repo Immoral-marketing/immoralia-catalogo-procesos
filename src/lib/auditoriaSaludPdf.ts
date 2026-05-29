@@ -175,7 +175,7 @@ function buildPdfHtml(s: SaAuditState): string {
     <div style="position:absolute;left:-70px;top:-30px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#0D3535 0%,transparent 65%);opacity:.5"></div>
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:56px 56px 24px;position:relative;z-index:2">
       <div style="font-size:24px;font-weight:800;margin-bottom:56px">
-        <span style="color:#fff">im</span><span style="color:#14b8a6">moralia</span>
+        <span style="color:#fff">immoral</span><span style="color:#14b8a6">ia</span>
       </div>
       <div style="font-size:9px;letter-spacing:4px;color:#5EEAD4;text-transform:uppercase;margin-bottom:14px">Informe de Auditoría · Centros de Salud Privados · ${today}</div>
       <h1 style="font-size:38px;line-height:1.1;font-weight:800;max-width:500px;margin-bottom:14px;color:#fff">Auditoría de Madurez Operativa</h1>

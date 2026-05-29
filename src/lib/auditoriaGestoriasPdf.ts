@@ -174,7 +174,7 @@ function buildPdfHtml(s: GsAuditState): string {
     <div style="position:absolute;left:-70px;top:-30px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#3A2E00 0%,transparent 65%);opacity:.5"></div>
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:56px 56px 24px;position:relative;z-index:2">
       <div style="font-size:24px;font-weight:800;margin-bottom:56px">
-        <span style="color:#fff">im</span><span style="color:#c4a84c">moralia</span>
+        <span style="color:#fff">immoral</span><span style="color:#c4a84c">ia</span>
       </div>
       <div style="font-size:9px;letter-spacing:4px;color:#D4A843;text-transform:uppercase;margin-bottom:14px">Informe de Auditoría · Gestorías y Asesorías · ${today}</div>
       <h1 style="font-size:38px;line-height:1.1;font-weight:800;max-width:500px;margin-bottom:14px;color:#fff">Auditoría de Madurez Operativa</h1>
