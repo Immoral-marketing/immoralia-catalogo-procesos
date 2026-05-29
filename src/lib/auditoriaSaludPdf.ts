@@ -424,7 +424,7 @@ function buildPdfHtml(s: SaAuditState): string {
       <div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:10px">¿Por dónde empezamos?</div>
       <div style="font-size:13px;color:#99F6E4;max-width:460px;line-height:1.65;margin-bottom:28px">Una conversación de 30 minutos para ver qué frena tu captación de pacientes y la ocupación de agenda, qué ya tenéis montado y qué módulo puede generar impacto antes del próximo trimestre. Sin compromiso, sin presentaciones largas.</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="padding:12px 24px;background:#14b8a6;color:#071A1A;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">calendly.com/david-immoral/30min</div>
+        <div style="padding:12px 24px;background:#14b8a6;color:#071A1A;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">procesos.immoralia.es</div>
         <div style="padding:12px 24px;background:rgba(255,255,255,.08);color:#fff;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.3px;border:1px solid rgba(255,255,255,.15)">procesos.immoralia.es/sector/salud</div>
       </div>
     </div>

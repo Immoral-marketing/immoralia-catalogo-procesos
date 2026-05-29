@@ -421,7 +421,7 @@ function buildPdfHtml(s: AuditState): string {
       <div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:10px">¿Por dónde empezamos?</div>
       <div style="font-size:13px;color:#8FBFA8;max-width:460px;line-height:1.65;margin-bottom:28px">Una conversación de 30 minutos para ver qué duele más, qué ya tenéis montado, y qué se puede activar antes de que empiece la temporada. Sin compromiso, sin presentaciones largas.</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="padding:12px 24px;background:#E8500A;color:#fff;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">calendly.com/david-immoral/30min</div>
+        <div style="padding:12px 24px;background:#E8500A;color:#fff;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">procesos.immoralia.es</div>
         <div style="padding:12px 24px;background:rgba(255,255,255,.08);color:#fff;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.3px;border:1px solid rgba(255,255,255,.15)">procesos.immoralia.es/sector/gastronomia-hosteleria</div>
       </div>
     </div>

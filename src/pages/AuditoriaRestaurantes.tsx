@@ -955,7 +955,7 @@ const ResultScreen = ({
             <p className="text-white/85 mb-7 max-w-xl mx-auto leading-relaxed">{ctaSub}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://calendly.com/david-immoral/30min"
+                href="https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta"
                 target="_blank"
                 rel="noopener"
                 className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-white text-orange-700 font-bold hover:bg-white/90 transition-all"
