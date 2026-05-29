@@ -125,7 +125,6 @@ async function syncProcesses() {
     const processObj = {
       id: id,
       codigo: getValue('codigo') || id,
-      slug: getValue('slug'),
       categoria: getValue('categoria'),
       categoria_nombre: getValue('categoriaNombre'),
       nombre: getValue('nombre'),
@@ -139,9 +138,7 @@ async function syncProcesses() {
       dolores: getArray('dolores'),
       canales: getArray('canales') || [],
       landing_slug: getValue('landing_slug'),
-      integration_domains: getArray('integration_domains'),
-      bloque_negocio: getValue('bloque_negocio'),
-      modulo_codigo: getValue('modulo_codigo')
+      integration_domains: getArray('integration_domains')
     };
 
     // Validación básica para evitar errores de base de datos

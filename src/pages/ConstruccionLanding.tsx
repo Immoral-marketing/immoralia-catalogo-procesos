@@ -1,40 +1,37 @@
-﻿import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { processes, type Process } from "@/data/processes";
-import { construccionBlocks, type ConstruccionBlockId } from "@/data/construccionBlocks";
-import { construccionModules, getConstruccionModulesByBlock } from "@/data/construccionModules";
+import { processes } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   ChevronRight,
+  Users,
+  Zap,
+  MessageSquare,
+  ShieldCheck,
   ArrowRight,
+  TrendingDown,
+  Clock,
+  CheckCircle2,
   LayoutGrid,
+  List,
+  HardHat,
+  Calculator,
+  FileText,
   Sparkles,
   Search,
-  CheckCircle2,
-  Clock,
-  FileText,
-  ListChecks,
-  ChevronDown,
-  Plus,
-  Check,
+  Check
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
 } from "@/components/ui/sheet";
 import {
   Tabs,
@@ -43,6 +40,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
+import { isOnboardingCompleted } from "@/lib/onboarding-utils";
+import { useNavigate } from "react-router-dom";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
@@ -51,74 +50,50 @@ const ACCENT = "#22c55e";
 const CONSTRUCCION_LANDING_SLUG = "construccion";
 
 const ConstruccionLanding = () => {
+  const navigate = useNavigate();
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeBlockTab, setActiveBlockTab] = useState<"todos" | ConstruccionBlockId>("todos");
-  const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<ConstruccionBlockId>("B1");
-  const [expandedModule, setExpandedModule] = useState<string | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Construcción";
+    const timer = setTimeout(() => {
+      if (!isOnboardingCompleted()) {
+        setShowOnboarding(true);
+      }
+    }, 60000);
+    return () => clearTimeout(timer);
   }, []);
 
-  const construccionProcesses = useMemo(() => {
-    return processes
-      .filter((p) => !p.hidden && p.landing_slug === CONSTRUCCION_LANDING_SLUG)
-      .map((p) => {
-        if (!p.bloque_negocio) return p;
-        const block = construccionBlocks.find((b) => b.id === p.bloque_negocio);
-        return block ? { ...p, categoriaNombre: block.title } : p;
-      });
-  }, []);
+  // Filtrar procesos para Construcción & Reformas
+  const construccionProcesses = useMemo(() => 
+    processes.filter(p => !p.hidden && (p.landing_slug === "construccion" || p.sectores?.includes("Construcción & Reformas"))),
+    []
+  );
 
-  const filteredCatalog = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return construccionProcesses.filter((p) => {
-      if (activeBlockTab !== "todos" && p.bloque_negocio !== activeBlockTab) return false;
-      if (!q) return true;
-      return (
-        p.nombre.toLowerCase().includes(q) ||
-        p.tagline.toLowerCase().includes(q) ||
-        p.categoriaNombre.toLowerCase().includes(q)
-      );
+  const construccionCategories = useMemo(() => {
+    const catsMap = new Map();
+    construccionProcesses.forEach(p => {
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
+      }
     });
-  }, [construccionProcesses, activeBlockTab, searchQuery]);
+    return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
+  }, [construccionProcesses]);
 
-  const selectedProcesses = useMemo((): Process[] => {
-    const real = processes.filter((p) => selectedProcessIds.has(p.id));
-    const modEntries = construccionModules
-      .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
-      .map((m): Process => {
-        const block = construccionBlocks.find((b) => b.id === m.bloque)!;
-        return {
-          id: `mod-${m.codigo}`,
-          codigo: m.codigo,
-          slug: `mod-${m.codigo}`,
-          categoria: "construccion",
-          categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
-          nombre: m.nombre,
-          tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
-          recomendado: false,
-          descripcionDetallada: m.descripcion,
-          pasos: [],
-          personalizacion: "",
-          landing_slug: "construccion",
-          sectores: ["Construcción & Reformas"],
-          bloque_negocio: m.bloque,
-          modulo_codigo: m.codigo,
-        };
-      });
-    return [...real, ...modEntries];
+  const [activeCategory, setActiveCategory] = useState("todos");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+
+  const selectedProcesses = useMemo(() => {
+    return processes.filter(p => selectedProcessIds.has(p.id));
   }, [selectedProcessIds]);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToProcesses = () => {
+    const el = document.getElementById("procesos-grid");
+    el?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const activeBlock = construccionBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-green-500/30 font-sans">
@@ -147,11 +122,8 @@ const ConstruccionLanding = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white"
-              >
-                <div className="h-full flex flex-col p-6">
+              <SheetContent side="right" className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white">
+                <div className="h-full flex flex-col p-6 overflow-hidden">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                       <LayoutGrid className="w-6 h-6 text-green-400" />
@@ -164,9 +136,8 @@ const ConstruccionLanding = () => {
                     onShare={() => setShowShareModal(true)}
                     n8nHosting={n8nHosting}
                     onHostingChange={setN8nHosting}
-                    className="flex-1 min-h-0"
-                    accentColor={ACCENT}
-                    selectedProcesses={selectedProcesses}
+                    className="flex-1 overflow-hidden"
+                    accentColor="#d97706"
                   />
                 </div>
               </SheetContent>
@@ -175,11 +146,13 @@ const ConstruccionLanding = () => {
         </div>
       </nav>
 
-      {/* ───────────────────── HERO ───────────────────── */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
+      <StepIndicator currentStep={2} />
+
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/constructoras.png')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1920&q=80')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-blue-900/10 blur-[120px] rounded-full" />
@@ -191,10 +164,8 @@ const ConstruccionLanding = () => {
               a un proceso que construye solo
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Vamos a recorrer juntos las 6 fases del proceso comercial donde la automatización
-            tiene más impacto. Sin improvisar sobre plano, sin obras eternas.{" "}
-            <span className="text-white">Tú decides por dónde cimentar.</span>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            Automatizamos la captación de clientes, los presupuestos y el control de gastos para que tu equipo se centre en construir.
           </p>
 
           <div className="flex flex-col items-center gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
@@ -768,29 +739,40 @@ const ConstruccionLanding = () => {
             </Button>
           </div>
         </div>
-      )}
+      </section>
 
-      {/* ───────────────────── MODALES ───────────────────── */}
+      {/* Footnote */}
+      <footer className="py-12 border-t border-white/5 bg-black/50">
+        <div className="container mx-auto px-6 text-center">
+          <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
+          <p className="text-gray-600 text-sm">© 2026 Immoralia. Soluciones de Automatización para Construcción & Reformas.</p>
+        </div>
+      </footer>
+
+      {/* Overlays / Modals */}
+      
       {showContactForm && (
-        <ContactForm
+        <ContactForm 
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor={ACCENT}
+          accentColor="#d97706"
         />
       )}
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        prefilledSector="Construcción & Reformas"
+        accentColor="#d97706"
+      />
 
       <ShareSelectionModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
-        accentColor={ACCENT}
-      />
-
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
+        accentColor="#d97706"
       />
     </div>
   );

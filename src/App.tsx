@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ProcessDetail from "./pages/ProcessDetail";
 import ProcessDetailFacturasVencidas from "./pages/ProcessDetailFacturasVencidas";
@@ -12,6 +12,8 @@ import SaludLanding from "./pages/SaludLanding";
 import ConstruccionLanding from "./pages/ConstruccionLanding";
 import AcademiasLanding from "./pages/AcademiasLanding";
 import RestauracionLanding from "./pages/RestauracionLanding";
+import EcommerceLanding from "./pages/EcommerceLanding";
+import InmobiliariaLanding from "./pages/InmobiliariaLanding";
 import AgenciasLanding from "./pages/AgenciasLanding";
 import IndustrialLanding from "./pages/IndustrialLanding";
 import SectorSelector from "./pages/SectorSelector";
@@ -50,9 +52,9 @@ const App = () => (
             <Route path="/sector/salud" element={<SaludLanding />} />
             <Route path="/sector/construccion" element={<ConstruccionLanding />} />
             <Route path="/sector/academias" element={<AcademiasLanding />} />
-            <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
-            <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />
-            <Route path="/sector/inmobiliaria" element={<Navigate to="/sector/construccion" replace />} />
+            <Route path="/sector/restauracion" element={<RestauracionLanding />} />
+            <Route path="/sector/ecommerce" element={<EcommerceLanding />} />
+            <Route path="/sector/inmobiliaria" element={<InmobiliariaLanding />} />
             <Route path="/sector/agencias" element={<AgenciasLanding />} />
             <Route path="/sector/industrial" element={<IndustrialLanding />} />
             <Route path="/afiliado" element={<AfiliadoPage />} />

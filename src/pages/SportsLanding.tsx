@@ -6,35 +6,29 @@ import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  ChevronRight,
+import { 
+  ChevronRight, 
+  Target, 
+  Users, 
+  Zap, 
+  MessageSquare, 
+  ShieldCheck, 
   ArrowRight,
-  LayoutGrid,
-  Sparkles,
-  Search,
-  CheckCircle2,
-  ChevronDown,
-  Plus,
-  Check,
-  FileText,
+  TrendingDown,
   Clock,
-  ListChecks,
+  CheckCircle2,
+  LayoutGrid,
+  Sparkles
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
 } from "@/components/ui/sheet";
 import {
   Tabs,
@@ -43,6 +37,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
+import { isOnboardingCompleted, getOnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
@@ -91,90 +86,47 @@ const SLUG_TO_BLOQUE: Record<string, CentrosDeportivosBlockId> = {
 const SportsLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeBlockTab, setActiveBlockTab] = useState<"todos" | CentrosDeportivosBlockId>("todos");
-  const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<CentrosDeportivosBlockId>("B1");
-  const [expandedModule, setExpandedModule] = useState<string | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
-    document.title = "Immoralia · Catálogo para Centros Deportivos";
-    if (location.hash) {
-      // Scroll to anchor — delay to let the page render first
-      setTimeout(() => {
-        const el = document.getElementById(location.hash.replace("#", ""));
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 150);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [location.hash]);
+    window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Centros Deportivos";
+    // Popup after 15 seconds if onboarding not completed
+    const timer = setTimeout(() => {
+      if (!isOnboardingCompleted()) {
+        setShowOnboarding(true);
+      }
+    }, 60000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  // Procesos del sector centros deportivos
-  const sportsProcesses = useMemo(() =>
-    processes.filter((p) => !p.hidden && p.landing_slug === "centros-deportivos"),
+  // Filtrar procesos para Centros Deportivos
+  const sportsProcesses = useMemo(() => 
+    processes.filter(p => !p.hidden && p.landing_slug === "centros-deportivos"),
     []
   );
 
-  // Mapa modulo_codigo → Process para leer el nombre real desde processes.ts
-  const processMapByCode = useMemo(() => {
-    const map: Record<string, Process> = {};
-    processes
-      .filter((p) => p.landing_slug === "centros-deportivos" && p.modulo_codigo)
-      .forEach((p) => { map[p.modulo_codigo!] = p; });
-    return map;
-  }, []);
-
-  const filteredCatalog = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return sportsProcesses.filter((p) => {
-      if (activeBlockTab !== "todos") {
-        const bloque = SLUG_TO_BLOQUE[p.slug];
-        if (bloque !== activeBlockTab) return false;
+  const sportsCategories = useMemo(() => {
+    const catsMap = new Map();
+    sportsProcesses.forEach(p => {
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
       }
-      if (!q) return true;
-      return (
-        p.nombre.toLowerCase().includes(q) ||
-        p.tagline.toLowerCase().includes(q) ||
-        p.categoriaNombre.toLowerCase().includes(q)
-      );
     });
-  }, [sportsProcesses, activeBlockTab, searchQuery]);
+    return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
+  }, [sportsProcesses]);
 
-  const selectedProcesses = useMemo((): Process[] => {
-    const real = processes.filter((p) => selectedProcessIds.has(p.id));
-    const modEntries = centrosDeportivosModules
-      .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
-      .map((m): Process => {
-        const block = centrosDeportivosBlocks.find((b) => b.id === m.bloque)!;
-        return {
-          id: `mod-${m.codigo}`,
-          codigo: m.codigo,
-          slug: `mod-${m.codigo}`,
-          categoria: "centros-deportivos",
-          categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
-          nombre: processMapByCode[m.codigo]?.nombre ?? m.nombre,
-          tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
-          recomendado: false,
-          descripcionDetallada: m.descripcion,
-          pasos: [],
-          personalizacion: "",
-          landing_slug: "centros-deportivos",
-          sectores: ["Centros Deportivos"],
-          bloque_negocio: m.bloque,
-          modulo_codigo: m.codigo,
-        };
-      });
-    return [...real, ...modEntries];
+  const [activeCategory, setActiveCategory] = useState("todos");
+
+  const selectedProcesses = useMemo(() => {
+    return processes.filter(p => selectedProcessIds.has(p.id));
   }, [selectedProcessIds]);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToProcesses = () => {
+    const el = document.getElementById("procesos-grid");
+    el?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const activeBlock = centrosDeportivosBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-red-500/30 font-sans">
@@ -203,11 +155,8 @@ const SportsLanding = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white"
-              >
-                <div className="h-full flex flex-col p-6">
+              <SheetContent side="right" className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white">
+                <div className="h-full flex flex-col p-6 overflow-hidden">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                       <LayoutGrid className="w-6 h-6 text-red-400" />
@@ -220,9 +169,8 @@ const SportsLanding = () => {
                     onShare={() => setShowShareModal(true)}
                     n8nHosting={n8nHosting}
                     onHostingChange={setN8nHosting}
-                    className="flex-1 min-h-0"
-                    accentColor={ACCENT}
-                    selectedProcesses={selectedProcesses}
+                    className="flex-1 overflow-hidden"
+                    accentColor="#0891b2"
                   />
                 </div>
               </SheetContent>
@@ -231,11 +179,13 @@ const SportsLanding = () => {
         </div>
       </nav>
 
-      {/* ───────────────────── HERO ───────────────────── */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
+      <StepIndicator currentStep={2} />
+
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/centros-deportivos/hero.png')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1920&q=80')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-red-900/10 blur-[120px] rounded-full" />
@@ -247,10 +197,8 @@ const SportsLanding = () => {
               a liderar un centro que funciona solo
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Vamos a recorrer juntos las áreas de tu centro donde la automatización
-            tiene más impacto. Sin tecnicismos, sin presión.{" "}
-            <span className="text-white">Tú decides por dónde empezar.</span>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            Automatizamos la captación, las reservas y el seguimiento de tus alumnos para que tú te centres en lo que importa: su progreso.
           </p>
 
           <div className="flex flex-col items-center gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
@@ -822,29 +770,40 @@ const SportsLanding = () => {
             </Button>
           </div>
         </div>
-      )}
+      </section>
 
-      {/* ───────────────────── MODALES ───────────────────── */}
+      {/* Footnote */}
+      <footer className="py-12 border-t border-white/5 bg-black/50">
+        <div className="container mx-auto px-6 text-center">
+          <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
+          <p className="text-gray-600 text-sm">© 2026 Immoralia. Catálogo de Procesos para Centros Deportivos.</p>
+        </div>
+      </footer>
+
+      {/* Overlays / Modals */}
+      
       {showContactForm && (
-        <ContactForm
+        <ContactForm 
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor={ACCENT}
+          accentColor="#0891b2"
         />
       )}
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        prefilledSector="Centros Deportivos"
+        accentColor="#0891b2"
+      />
 
       <ShareSelectionModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
-        accentColor={ACCENT}
-      />
-
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
+        accentColor="#0891b2"
       />
     </div>
   );

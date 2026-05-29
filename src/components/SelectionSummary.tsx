@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { X, Share2 } from "lucide-react";
+import { X, Server, Database, Info, HelpCircle, ExternalLink, Share2 } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
+import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { useSelection } from "@/lib/SelectionContext";
 import { processes } from "@/data/processes";
-import { restauracionBlocks } from "@/data/restauracionBlocks";
 import { getCategoryColorClass } from "@/lib/category-colors";
 
 import { cn } from "@/lib/utils";
@@ -20,7 +22,6 @@ interface SelectionSummaryProps {
   variant?: 'card' | 'drawer';
   className?: string;
   accentColor?: string;
-  selectedProcesses?: Process[];
 }
 
 export const SelectionSummary = ({
@@ -32,10 +33,9 @@ export const SelectionSummary = ({
   variant = 'card',
   className,
   accentColor,
-  selectedProcesses: selectedProcessesProp,
 }: SelectionSummaryProps) => {
   const { selectedProcessIds, toggleProcess } = useSelection();
-  const selectedProcesses = selectedProcessesProp ?? processes.filter(p => selectedProcessIds.has(p.id));
+  const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
   const count = selectedProcesses.length;
 
   const [isShareHovered, setIsShareHovered] = useState(false);
@@ -52,57 +52,41 @@ export const SelectionSummary = ({
         <div className="space-y-2 mb-6 pr-1">
           {count === 0 ? (
             <p className="text-sm text-muted-foreground italic">
-              Selecciona los módulos o procesos que te interesan y te enviamos una propuesta.
+              Explora el catálogo y selecciona los procesos que quieras automatizar. ¡Puedes elegir tantos como necesites!
             </p>
           ) : (
-            selectedProcesses.map((process) => {
-              const block = process.bloque_negocio
-                ? restauracionBlocks.find((b) => b.id === process.bloque_negocio)
-                : null;
-              const Icon = block?.icon;
-              return (
-                <div
-                  key={process.id}
-                  className="flex items-center justify-between gap-2 p-3 bg-muted rounded-md group hover:bg-muted/80 transition-colors"
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    {Icon && block ? (
-                      <div
-                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                        style={{ backgroundColor: `${block.accent}20`, color: block.accent }}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </div>
-                    ) : null}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground leading-snug truncate">
-                        {process.nombre}
-                      </p>
-                      <p
-                        className="text-xs mt-0.5 truncate"
-                        style={{ color: accentColor ? `${accentColor}90` : undefined }}
-                      >
-                        {process.categoriaNombre}
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
-                    onClick={() => toggleProcess(process.id)}
-                    onMouseEnter={() => setHoveredRemoveId(process.id)}
-                    onMouseLeave={() => setHoveredRemoveId(null)}
-                    style={accentColor ? {
-                      backgroundColor: hoveredRemoveId === process.id ? accentColor : `${accentColor}1a`,
-                      color: hoveredRemoveId === process.id ? "#fff" : accentColor,
-                    } : {}}
+            selectedProcesses.map((process) => (
+              <div
+                key={process.id}
+                className="flex items-start justify-between gap-2 p-3 bg-muted rounded-md group hover:bg-muted/80 transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground leading-snug">
+                    {process.nombre}
+                  </p>
+                  <Badge
+                    variant="outline"
+                    className={cn("text-xs mt-1", getCategoryColorClass(process.categoriaNombre))}
                   >
-                    <X className="w-4 h-4 transition-colors" />
-                  </Button>
+                    {process.categoriaNombre}
+                  </Badge>
                 </div>
-              );
-            })
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+                  onClick={() => toggleProcess(process.id)}
+                  onMouseEnter={() => setHoveredRemoveId(process.id)}
+                  onMouseLeave={() => setHoveredRemoveId(null)}
+                  style={accentColor ? { 
+                    backgroundColor: hoveredRemoveId === process.id ? accentColor : `${accentColor}1a`,
+                    color: hoveredRemoveId === process.id ? "#fff" : accentColor
+                  } : {}}
+                >
+                  <X className="w-4 h-4 transition-colors" />
+                </Button>
+              </div>
+            ))
           )}
         </div>
 
@@ -131,7 +115,7 @@ export const SelectionSummary = ({
             </p>
             {count > 0 && (
               <p className="text-xs text-muted-foreground leading-snug">
-                Te enviamos una propuesta con los módulos seleccionados y el orden de implementación.
+                Analizaremos tu selección y el tipo de hosting para enviarte una propuesta detallada.
               </p>
             )}
           </div>
@@ -175,7 +159,7 @@ export const SelectionSummary = ({
 
   if (variant === 'drawer') {
     return (
-      <div className={cn("flex flex-col", className)}>
+      <div className={cn("flex flex-col h-full", className)}>
         {content}
       </div>
     );

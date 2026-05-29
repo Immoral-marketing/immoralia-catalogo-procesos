@@ -1,40 +1,35 @@
 ﻿import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { processes, type Process } from "@/data/processes";
-import { academiasBlocks, type BlockId } from "@/data/academiasBlocks";
-import { academiasModules, getModulesByBlock } from "@/data/academiasModules";
+import { processes } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  ChevronRight,
+import { 
+  ChevronRight, 
+  Users, 
+  Zap, 
+  MessageSquare, 
+  ShieldCheck, 
   ArrowRight,
-  LayoutGrid,
-  Sparkles,
-  Search,
-  CheckCircle2,
+  TrendingDown,
   Clock,
-  FileText,
-  ListChecks,
-  ChevronDown,
-  Plus,
-  Check,
+  CheckCircle2,
+  LayoutGrid,
+  GraduationCap,
+  BookOpen,
+  Calendar,
+  Sparkles,
+  Search
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
 } from "@/components/ui/sheet";
 import {
   Tabs,
@@ -43,6 +38,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
+import { isOnboardingCompleted } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
@@ -53,91 +49,53 @@ const AUDIT_URL = "/auditorias/academias";
 const ACADEMIAS_LANDING_SLUG = "academias";
 
 const AcademiasLanding = () => {
-  const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
+  const { selectedProcessIds, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeBlockTab, setActiveBlockTab] = useState<"todos" | BlockId>("todos");
-  const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<BlockId>("B1");
-  const [expandedModule, setExpandedModule] = useState<string | null>(null);
-  const [flippedBlock, setFlippedBlock] = useState<BlockId | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (flippedBlock === "B1" && videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    } else if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  }, [flippedBlock]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = "Immoralia - Catálogo de Procesos - Academias";
+    const timer = setTimeout(() => {
+      if (!isOnboardingCompleted()) {
+        setShowOnboarding(true);
+      }
+    }, 60000);
+    return () => clearTimeout(timer);
   }, []);
 
-  const academiasProcesses = useMemo(() => {
-    return processes
-      .filter((p) => !p.hidden && p.landing_slug === ACADEMIAS_LANDING_SLUG)
-      .map((p) => {
-        if (!p.bloque_negocio) return p;
-        const block = academiasBlocks.find((b) => b.id === p.bloque_negocio);
-        return block ? { ...p, categoriaNombre: block.title } : p;
-      });
-  }, []);
+  // Filtrar procesos para Academias / Formación
+  const academiasProcesses = useMemo(() => 
+    processes.filter(p => !p.hidden && (p.landing_slug === "academias" || p.sectores?.includes("Academias / Formación"))),
+    []
+  );
 
-  const filteredCatalog = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return academiasProcesses.filter((p) => {
-      if (activeBlockTab !== "todos" && p.bloque_negocio !== activeBlockTab) return false;
-      if (!q) return true;
-      return (
-        p.nombre.toLowerCase().includes(q) ||
-        p.tagline.toLowerCase().includes(q) ||
-        p.categoriaNombre.toLowerCase().includes(q)
-      );
+  const academiasCategories = useMemo(() => {
+    const catsMap = new Map();
+    academiasProcesses.forEach(p => {
+      if (!catsMap.has(p.categoriaNombre)) {
+        catsMap.set(p.categoriaNombre, p.categoriaNombre);
+      }
     });
-  }, [academiasProcesses, activeBlockTab, searchQuery]);
+    return Array.from(catsMap.entries()).map(([id, name]) => ({ id, name }));
+  }, [academiasProcesses]);
 
-  const selectedProcesses = useMemo((): Process[] => {
-    const real = processes.filter((p) => selectedProcessIds.has(p.id));
-    const modEntries = academiasModules
-      .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
-      .map((m): Process => {
-        const block = academiasBlocks.find((b) => b.id === m.bloque)!;
-        return {
-          id: `mod-${m.codigo}`,
-          codigo: m.codigo,
-          slug: `mod-${m.codigo}`,
-          categoria: "academias",
-          categoriaNombre: `M${m.codigo.split(".")[0]} · ${block.title}`,
-          nombre: m.nombre,
-          tagline: m.descripcion.length > 90 ? m.descripcion.substring(0, 90) + "…" : m.descripcion,
-          recomendado: false,
-          descripcionDetallada: m.descripcion,
-          pasos: [],
-          personalizacion: "",
-          landing_slug: "academias",
-          sectores: ["Academias / Formación"],
-          bloque_negocio: m.bloque,
-          modulo_codigo: m.codigo,
-        };
-      });
-    return [...real, ...modEntries];
+  const [activeCategory, setActiveCategory] = useState("todos");
+
+  const selectedProcesses = useMemo(() => {
+    return processes.filter(p => selectedProcessIds.has(p.id));
   }, [selectedProcessIds]);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToProcesses = () => {
+    const el = document.getElementById("procesos-grid");
+    el?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const activeBlock = academiasBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-violet-500/30 font-sans">
-      {/* ───────────────────── NAVIGATION ───────────────────── */}
-      <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
+      {/* Navigation / Header */}
+      <nav className="border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link to="/">
             <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
@@ -148,7 +106,7 @@ const AcademiasLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-violet-600 hover:bg-violet-500 text-white border-violet-600 shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                      ? "bg-violet-600 hover:bg-violet-500 text-white border-violet-600 shadow-[0_0_20px_rgba(139,92,246,0.2)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -161,11 +119,8 @@ const AcademiasLanding = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white"
-              >
-                <div className="h-full flex flex-col p-6">
+              <SheetContent side="right" className="bg-[#0d0d0d] border-white/5 w-full sm:max-w-md p-0 overflow-hidden text-white">
+                <div className="h-full flex flex-col p-6 overflow-hidden">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
                       <LayoutGrid className="w-6 h-6 text-violet-400" />
@@ -178,9 +133,8 @@ const AcademiasLanding = () => {
                     onShare={() => setShowShareModal(true)}
                     n8nHosting={n8nHosting}
                     onHostingChange={setN8nHosting}
-                    className="flex-1 min-h-0"
-                    accentColor={ACCENT}
-                    selectedProcesses={selectedProcesses}
+                    className="flex-1 overflow-hidden"
+                    accentColor="#7c3aed"
                   />
                 </div>
               </SheetContent>
@@ -189,57 +143,33 @@ const AcademiasLanding = () => {
         </div>
       </nav>
 
-      {/* ───────────────────── HERO ───────────────────── */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
+      <StepIndicator currentStep={2} />
+
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/academias/hero.png')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/75 to-[#0d0d0d]/30" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-violet-900/10 blur-[120px] rounded-full" />
-
-        <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
-            De gestionar la academia a mano, <br className="hidden md:block" />
+        <div className="relative z-10 container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+            De gestionar clases, <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-500">
-              a liderar un centro educativo escalable
+              a escalar tu centro educativo
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Vamos a recorrer juntos las áreas de tu academia donde la automatización
-            tiene más sentido. Sin tecnicismos, sin presión, sin recetas únicas.{" "}
-            <span className="text-white">Tú decides por dónde empezar.</span>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            Automatizamos la matriculación, el seguimiento de alumnos y la atención 24/7 para que tú te centres en la enseñanza.
           </p>
-
-          <div className="flex flex-col items-center gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            <Button
-              size="lg"
-              onClick={() => scrollTo("modulos")}
-              className="bg-violet-600 hover:bg-violet-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-violet-900/30 transition-all hover:scale-[1.02]"
-            >
-              Empezar el recorrido <ChevronRight className="w-5 h-5" />
+          <div className="flex flex-col md:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            <Button size="lg" onClick={scrollToProcesses} className="bg-violet-600 hover:bg-violet-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-violet-900/20 transition-all hover:scale-105">
+              Seleccionar mis procesos <ChevronRight className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-5">
-              <button
-                onClick={() => setShowCalendlyModal(true)}
-                className="text-sm text-gray-400 hover:text-violet-300 transition-colors underline-offset-4 hover:underline"
-              >
-                Agendar una llamada
-              </button>
-              <span className="text-white/15 text-xs">·</span>
-              <button
-                onClick={() => setShowContactForm(true)}
-                className="text-sm text-gray-400 hover:text-violet-300 transition-colors underline-offset-4 hover:underline"
-              >
-                Contáctanos
-              </button>
-            </div>
-          </div>
-
-          {/* Indicador de scroll */}
-          <div className="mt-16 flex flex-col items-center gap-2 text-gray-500 animate-bounce">
-            <span className="text-[11px] tracking-widest uppercase">Sigue bajando</span>
-            <ChevronDown className="w-4 h-4" />
+            <Button size="lg" variant="outline" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')} className="border-white/10 hover:bg-white/5 h-14 px-8 text-lg hover:text-white">
+              Agendar llamada
+            </Button>
           </div>
         </div>
       </section>
@@ -772,86 +702,56 @@ const AcademiasLanding = () => {
       <section className="py-32 relative overflow-hidden text-center">
         <div className="absolute inset-0 bg-violet-600/5 -z-10" />
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-violet-500/10 blur-[100px] rounded-full" />
-        <div className="container mx-auto px-6 text-center max-w-3xl">
-          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
             ¿Listo para escalar <br /> tu academia?
           </h2>
-          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Solicita una propuesta personalizada con los módulos que te interesan, el orden recomendado de
-            implementación y el coste de cada fase.
+          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+            Deja de perder tiempo en administración y empieza a construir un centro educativo de vanguardia. Pide tu consultoría estratégica gratuita.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              onClick={() => setShowContactForm(true)}
-              className="bg-violet-600 hover:bg-violet-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(139,92,246,0.35)] transition-all hover:scale-105"
-            >
-              Solicitar propuesta
+            <Button size="lg" onClick={() => setShowContactForm(true)} className="bg-violet-600 hover:bg-violet-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-all hover:scale-105">
+              Solicitar Oferta Ahora
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => setShowCalendlyModal(true)}
-            >
+            <Button size="lg" variant="outline" className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={() => window.open('https://calendly.com/david-immoral/30min', '_blank')}>
               Agendar llamada
             </Button>
           </div>
         </div>
       </section>
 
-      {/* ───────────────────── FOOTER ───────────────────── */}
+      {/* Footnote */}
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
           <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
-          <p className="text-xs text-gray-600">
-            immoralia · Automatización & IA · Parte de Immoral Group · www.immoral.es
-          </p>
+          <p className="text-gray-600 text-sm">© 2026 Immoralia. Soluciones de Automatización para Academias & Formación.</p>
         </div>
       </footer>
 
-      {/* ───────────────────── FLOATING MODULE BAR ───────────────────── */}
-      {selectedProcessIds.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300 px-4 w-full max-w-lg">
-          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-violet-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-2 h-2 rounded-full bg-violet-500 shrink-0 animate-pulse" />
-              <span className="text-sm text-white font-semibold truncate">
-                {selectedProcessIds.size} proceso{selectedProcessIds.size > 1 ? "s" : ""} seleccionado{selectedProcessIds.size > 1 ? "s" : ""}
-              </span>
-            </div>
-            <Button
-              size="sm"
-              onClick={() => setShowContactForm(true)}
-              className="bg-violet-600 hover:bg-violet-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
-            >
-              Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* ───────────────────── MODALES ───────────────────── */}
+      {/* Overlays / Modals */}
+      
       {showContactForm && (
-        <ContactForm
+        <ContactForm 
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
           selectedProcesses={selectedProcesses}
           n8nHosting={n8nHosting}
-          accentColor={ACCENT}
+          accentColor="#7c3aed"
         />
       )}
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        prefilledSector="Academias / Formación"
+        accentColor="#7c3aed"
+      />
 
       <ShareSelectionModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         selectedProcesses={selectedProcesses}
-        accentColor={ACCENT}
-      />
-
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
+        accentColor="#7c3aed"
       />
     </div>
   );
