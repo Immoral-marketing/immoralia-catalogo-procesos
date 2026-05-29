@@ -5,10 +5,6 @@ import {
   Briefcase,
   Stethoscope,
   Utensils,
-  ShoppingBag,
-  Home,
-  Users,
-  ChevronRight,
   HardHat,
   GraduationCap,
   Factory,
@@ -18,10 +14,6 @@ import {
   CheckCircle2,
   MessageCircle,
 } from "lucide-react";
-import { StepIndicator } from "@/components/StepIndicator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { processes } from "@/data/processes";
 import { LeadCaptureModal } from "@/components/LeadCaptureModal";
@@ -29,8 +21,9 @@ import { LeadCaptureModal } from "@/components/LeadCaptureModal";
 const sectors = [
   {
     id: "sports",
+    number: "01",
     title: "Centros Deportivos",
-    description: "Gimnasios, centros de yoga, crossfit y academias deportivas.",
+    description: "Gimnasios, crossfit, centros de yoga, artes marciales y academias deportivas.",
     icon: Dumbbell,
     path: "/sector/centros-deportivos",
     accent: "#dc2626",
@@ -43,30 +36,39 @@ const sectors = [
   },
   {
     id: "gestorias",
+    number: "02",
     title: "Gestorías",
-    description: "Despachos profesionales, asesorías fiscales y laborales.",
+    description: "Despachos profesionales, asesorías fiscales, laborales y contables.",
     icon: Briefcase,
     path: "/sector/gestorias",
-    status: "active",
-    accent: "from-teal-500/20 to-cyan-600/20",
+    accent: "#c4a84c",
+    accentClass: "bg-yellow-600/10 border-yellow-600/25 text-yellow-500",
+    accentGlow: "rgba(196,168,76,0.25)",
+    accentBar: "bg-yellow-500",
+    heroImage: "/gestorias/hero.png",
     landingSlug: "gestorias",
     sectorNames: ["Gestoria"],
   },
   {
     id: "health",
+    number: "03",
     title: "Centros de Salud",
-    description: "Centros de fisioterapia, estética, consultas médicas, clínicas dentales y centros veterinarios.",
+    description: "Clínicas, fisioterapia, estética, dental y centros veterinarios.",
     icon: Stethoscope,
     path: "/sector/salud",
-    status: "active",
-    accent: "from-blue-500/20 to-indigo-500/20",
+    accent: "#2563eb",
+    accentClass: "bg-blue-600/10 border-blue-600/25 text-blue-400",
+    accentGlow: "rgba(37,99,235,0.25)",
+    accentBar: "bg-blue-500",
+    heroImage: "/salud/hero.png",
     landingSlug: "salud",
-    sectorNames: ["Clínicas / Salud / Dental / Veterinaria"],
+    sectorNames: ["Centros de Salud"],
   },
   {
     id: "construction",
-    title: "Construcción & Reformas",
-    description: "Constructoras, estudios de arquitectura, empresas de reformas y mantenimiento.",
+    number: "04",
+    title: "Constructoras e Inmobiliarias",
+    description: "Constructoras, empresas de reformas, arquitectura, agencias inmobiliarias y gestión de propiedades.",
     icon: HardHat,
     path: "/sector/construccion",
     accent: "#16a34a",
@@ -75,62 +77,37 @@ const sectors = [
     accentBar: "bg-green-500",
     heroImage: "/constructoras.png" as string | null,
     landingSlug: "construccion",
-    sectorNames: ["Construcción & Reformas"],
+    sectorNames: ["Construcción & Reformas", "Constructoras / Obra Nueva", "Inmobiliaria", "Inmobiliarias"],
   },
   {
     id: "academias",
-    title: "Academias / Formación",
-    description: "Academias de idiomas, centros de formación, autoescuelas y formación profesional.",
+    number: "05",
+    title: "Academias y Formación",
+    description: "Academias de idiomas, autoescuelas y centros de formación profesional.",
     icon: GraduationCap,
     path: "/sector/academias",
-    status: "active",
-    accent: "from-violet-500/20 to-purple-500/20",
+    accent: "#7c3aed",
+    accentClass: "bg-violet-600/10 border-violet-600/25 text-violet-400",
+    accentGlow: "rgba(124,58,237,0.25)",
+    accentBar: "bg-violet-500",
+    heroImage: "/academias/hero.png" as string | null,
     landingSlug: "academias",
     sectorNames: ["Academias / Formación"],
   },
   {
     id: "food",
-    title: "Gastronomía y Hotelería",
+    number: "06",
+    title: "Gastronomía y Hostelería",
     description: "Restaurantes, bares, cafeterías, hoteles y negocios de hostelería.",
     icon: Utensils,
-    path: "/sector/restauracion",
-    status: "active",
-    accent: "from-orange-500/20 to-red-500/20",
-    landingSlug: "restauracion",
-    sectorNames: ["Restauración", "Restaurantes"],
-  },
-  {
-    id: "ecommerce",
-    title: "Tienda Online / Retail",
-    description: "Tiendas online, moda y comercio minorista.",
-    icon: ShoppingBag,
-    path: "/sector/ecommerce",
-    status: "active",
-    accent: "from-blue-500/20 to-cyan-500/20",
-    landingSlug: "ecommerce",
-    sectorNames: ["E-commerce", "Retail"],
-  },
-  {
-    id: "realestate",
-    title: "Inmobiliarias",
-    description: "Agencias inmobiliarias y gestión de propiedades.",
-    icon: Home,
-    path: "/sector/inmobiliaria",
-    status: "active",
-    accent: "from-emerald-500/20 to-green-600/20",
-    landingSlug: "inmobiliaria",
-    sectorNames: ["Inmobiliaria", "Inmobiliarias"],
-  },
-  {
-    id: "consultancy",
-    title: "Consultoría / Agencias",
-    description: "Agencias de marketing, consultoras y servicios B2B.",
-    icon: Users,
-    path: "/sector/agencias",
-    status: "active",
-    accent: "from-rose-500/20 to-pink-500/20",
-    landingSlug: "agencias",
-    sectorNames: ["Agencia/marketing", "Consultoría"],
+    path: "/sector/gastronomia-hosteleria",
+    accent: "#ea580c",
+    accentClass: "bg-orange-600/10 border-orange-600/25 text-orange-400",
+    accentGlow: "rgba(234,88,12,0.25)",
+    accentBar: "bg-orange-500",
+    heroImage: "/restauracion/hero.png" as string | null,
+    landingSlug: "gastronomia-hosteleria",
+    sectorNames: ["Gastronomía / Hostelería"],
   },
   {
     id: "industrial",
@@ -151,7 +128,8 @@ const sectors = [
 
 const SectorSelector = () => {
   useEffect(() => {
-    document.title = "Immoralia - Catálogo de Procesos - Seleccionador";
+    window.scrollTo(0, 0);
+    document.title = "Immoralia · Catálogo de Automatización por Sector";
   }, []);
 
   const sectorCounts = useMemo(() => {
@@ -171,56 +149,86 @@ const SectorSelector = () => {
   const [showLeadModal, setShowLeadModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-cyan-500/30 font-sans">
-      {/* Background Decor */}
-      <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-900/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/10 blur-[120px] rounded-full" />
-      </div>
+    <div className="min-h-screen bg-[#0d0d0d] text-white font-sans selection:bg-white/10">
 
-      <header className="container mx-auto px-6 py-12 flex flex-col items-center text-center">
-        <img
-          src={immoraliaLogo}
-          alt="Immoralia"
-          className="h-10 mb-12 animate-in fade-in slide-in-from-top-4 duration-700"
+      {/* ── NAV ── */}
+      <nav className="absolute top-0 left-0 right-0 z-30 px-6 py-5 flex items-center justify-between">
+        <img src={immoraliaLogo} alt="Immoralia" className="h-7 opacity-90" />
+      </nav>
+
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/home/hero.png')" }}
         />
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d0d0d]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
+        {/* Glow sutil centrado detrás del contenido */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 50% at 50% 55%, rgba(0,255,255,0.08) 0%, transparent 70%)" }} />
 
-        <div className="max-w-3xl space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Potencia tu negocio con <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-              automatización inteligente
-            </span>
+        {/* Content */}
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-7 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            Automatiza tu negocio.<br className="hidden md:block" />
+            <span style={{ color: "rgba(0,255,255,0.80)" }}> Empieza por tu sector.</span>
           </h1>
-          <p className="text-xl md:text-2xl font-semibold text-white animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            Tus herramientas, conectadas. Sin trabajo manual.
+
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+            Más de{" "}
+            <span className="font-semibold" style={{ color: "#00FFFF" }}>{totalProcesses} procesos listos para implementar</span>,
+            clasificados por sector y área operativa. Sin tecnicismos. Sin presión.
           </p>
-          <p className="text-sm text-gray-300 border border-cyan-500/30 bg-cyan-500/5 rounded-full px-6 py-2.5 inline-block animate-in fade-in duration-700 delay-500">
-            No sustituimos tus herramientas. Las conectamos y eliminamos el trabajo manual que hay entre ellas.
-          </p>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap items-center justify-center gap-8 mb-14 animate-in fade-in duration-700 delay-300">
+            {[
+              { icon: CheckCircle2, label: `${totalProcesses}+ procesos`, sub: "catalogados" },
+              { icon: Zap, label: `${sectors.length} sectores`, sub: "disponibles" },
+            ].map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={i} className="flex items-center gap-2.5 text-left">
+                  <Icon className="w-4 h-4 shrink-0" style={{ color: "rgba(0,255,255,0.65)" }} />
+                  <div>
+                    <div className="text-sm font-semibold text-white">{s.label}</div>
+                    <div className="text-xs text-gray-500">{s.sub}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Scroll hint */}
+          <div
+            className="flex flex-col items-center gap-2 animate-bounce cursor-pointer transition-colors"
+            style={{ color: "rgba(0,255,255,0.35)" }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "rgba(0,255,255,0.75)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(0,255,255,0.35)"}
+            onClick={() => document.getElementById("sectores")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            <span className="text-[11px] tracking-widest uppercase">Elige tu sector</span>
+            <ChevronDown className="w-4 h-4" />
+          </div>
         </div>
-      </header>
+      </section>
 
       {/* ── SECTOR GRID ── */}
       <section id="sectores" className="px-6 pb-0 relative">
         <div className="max-w-6xl mx-auto">
 
-      <main className="container mx-auto px-6 py-12 max-w-6xl">
-        <p className="text-sm text-gray-400 uppercase tracking-widest text-center mb-8 font-semibold">Selecciona tu sector</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
-          {sectors.map((sector) => {
-            const isActive = sector.status === "active";
-            const Icon = sector.icon;
-            const count = sectorCounts[sector.id] ?? 0;
+          <div className="text-center mb-12">
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">
+              {sectors.length} sectores disponibles
+            </p>
+          </div>
 
-            return (
-              <Link
-                key={sector.id}
-                to={sector.path}
-                className={`group relative h-full transition-all duration-300 ${!isActive ? 'opacity-70 hover:opacity-100' : 'hover:scale-[1.02]'}`}
-              >
-                <Card className="h-full border-white/5 bg-black/40 backdrop-blur-xl overflow-hidden transition-all duration-500 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_30px_rgba(8,145,178,0.1)] flex flex-col">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${sector.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {sectors.map((sector) => {
+              const Icon = sector.icon;
+              const count = sectorCounts[sector.id] ?? 0;
 
               return (
                 <Link
@@ -284,26 +292,18 @@ const SectorSelector = () => {
                         >
                           {count} procesos
                         </span>
-                      ) : !isActive ? (
-                        <Badge variant="outline" className="bg-white/5 border-white/10 text-[10px] uppercase tracking-wider text-gray-400 font-bold">
-                          Próximamente
-                        </Badge>
-                      ) : null}
+                      )}
                     </div>
-                    <CardTitle className="text-2xl font-bold group-hover:text-cyan-400 transition-colors">
-                      {sector.title}
-                    </CardTitle>
-                    <CardDescription className="text-gray-400 leading-relaxed pt-2">
-                      {sector.description}
-                    </CardDescription>
-                  </CardHeader>
 
-                  <CardContent className="relative z-10 mt-auto pt-4">
-                    <div className="flex items-center gap-2 text-sm font-medium transition-all duration-300 transform translate-x-0 group-hover:translate-x-2">
-                      <span className={isActive ? "text-cyan-400" : "text-gray-500"}>
-                        {isActive ? "Ver soluciones" : "Ir al catálogo general"}
-                      </span>
-                      <ChevronRight className={`w-4 h-4 ${isActive ? "text-cyan-400" : "text-gray-500"}`} />
+                    <p className="text-sm text-gray-400 leading-relaxed line-clamp-2 mb-4">
+                      {sector.description}
+                    </p>
+
+                    <div className="flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase transition-all duration-300 opacity-50 group-hover:opacity-100"
+                      style={{ color: sector.accent }}
+                    >
+                      <span>Explorar sector</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </div>
 
@@ -437,6 +437,7 @@ const SectorSelector = () => {
           </div>
 
         </div>
+      </section>
 
       {/* ── MODAL LEAD CAPTACIÓN ── */}
       <LeadCaptureModal

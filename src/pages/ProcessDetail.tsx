@@ -4,7 +4,7 @@ import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ChevronLeft, ChevronRight, Plus, Check, ArrowRight, LayoutGrid, Calendar, Bell, BarChart2, Zap, Settings2, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Check, ArrowRight, LayoutGrid, Calendar, Bell, BarChart2, Zap, Settings2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
 import { SelectionSummary } from "@/components/SelectionSummary";
@@ -17,8 +17,81 @@ import { computeFinalComplexity } from "@/lib/complexity-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 import { Input } from "@/components/ui/input";
 import { getCategoryColorClass } from "@/lib/category-colors";
+import { supabase } from "@/lib/supabase";
 
 const BENEFIT_ICONS = [Calendar, Bell, BarChart2, Zap, Settings2, Clock];
+
+// Nombres de módulo por sector × bloque
+const MODULE_MAP: Record<string, Record<string, string>> = {
+    "centros-deportivos": {
+        B1: "Reservas y acceso 24/7",
+        B2: "Captación y conversión de socios",
+        B3: "Fidelización y retención de socios",
+        B4: "Operativa del centro y personal",
+        B5: "Reputación y comunidad",
+        B6: "Marketing y contenido digital",
+    },
+    "gestorias": {
+        B1: "Alta y captación de clientes",
+        B2: "Gestión documental",
+        B3: "Fiscal y vencimientos",
+        B4: "Laboral y nóminas de clientes",
+        B5: "Relación con el cliente",
+        B6: "Operativa interna de la gestoría",
+    },
+    "salud": {
+        B1: "Captación y primera visita",
+        B2: "Gestión de citas y ausencias",
+        B3: "Reputación y reseñas",
+        B4: "Seguimiento clínico y fidelización",
+        B5: "Administración y facturación",
+        B6: "Gestión del equipo clínico",
+    },
+    "gastronomia-hosteleria": {
+        B1: "Reservas y atención 24/7",
+        B2: "Reputación y reseñas",
+        B3: "Fidelización y vuelta del cliente",
+        B4: "Operativa diaria y visibilidad",
+        B5: "Gestión de personal y equipo",
+        B6: "Marketing y contenido digital",
+    },
+    "academias": {
+        B1: "Captación de alumnos",
+        B2: "Matriculación y onboarding del alumno",
+        B3: "Comunicación con padres y alumnos",
+        B4: "Retención y reactivación",
+        B5: "Administración y finanzas",
+        B6: "Gestión del profesorado",
+    },
+    "construccion": {
+        B1: "Captación y cualificación de leads",
+        B2: "Conversión y argumentación comercial",
+        B3: "Seguimiento y visitas",
+        B4: "Cierre y contratación",
+        B5: "Postventa y relación con propietarios",
+        B6: "Operativa diaria",
+    },
+};
+
+// Nombre visible y ruta del sector
+const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
+    "centros-deportivos":     { label: "Centros Deportivos",       path: "/sector/centros-deportivos" },
+    "gestorias":              { label: "Gestorías",                path: "/sector/gestorias" },
+    "salud":                  { label: "Centros de Salud",         path: "/sector/salud" },
+    "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
+    "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
+    "construccion":           { label: "Constructoras / Reformas / Inmobiliarias", path: "/sector/construccion" },
+};
+
+// Config por sector: color de acento + imagen hero
+const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; heroImage: string | null }> = {
+    "centros-deportivos":     { accentHsl: "199 91% 38%", accentHex: "#0891b2", heroImage: "/centros-deportivos/hero.png" },
+    "gestorias":              { accentHsl: "43 53% 53%",  accentHex: "#c4a84c", heroImage: "/gestorias/hero.png" },
+    "salud":                  { accentHsl: "221 83% 53%", accentHex: "#2563eb", heroImage: "/salud/hero.png" },
+    "gastronomia-hosteleria": { accentHsl: "21 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
+    "academias":              { accentHsl: "262 83% 58%", accentHex: "#7c3aed", heroImage: "/academias/hero.png" },
+    "construccion":           { accentHsl: "38 92% 50%",  accentHex: "#d97706", heroImage: "/constructoras.png" },
+};
 
 const ProcessDetail = () => {
     const { slug } = useParams();
@@ -41,11 +114,12 @@ const ProcessDetail = () => {
     // Aplicar variante de sector si existe
     const sectorSlug = searchParams.get("sector") ?? undefined;
     const process = useMemo(() => {
-        if (!baseProcess) return undefined;
-        const variant = sectorSlug ? baseProcess.sector_variants?.[sectorSlug] : undefined;
-        if (!variant) return baseProcess;
+        const bp = baseProcess || dbProcess;
+        if (!bp) return undefined;
+        const variant = sectorSlug ? bp.sector_variants?.[sectorSlug] : undefined;
+        if (!variant) return bp;
         return {
-            ...baseProcess,
+            ...bp,
             ...(variant.tagline           && { tagline: variant.tagline }),
             ...(variant.one_liner         && { one_liner: variant.one_liner }),
             ...(variant.descripcionDetallada && { descripcionDetallada: variant.descripcionDetallada }),
@@ -54,10 +128,10 @@ const ProcessDetail = () => {
             ...(variant.personalizacion   && { personalizacion: variant.personalizacion }),
             ...(variant.how_it_works_steps && { how_it_works_steps: variant.how_it_works_steps }),
             ...(variant.summary && {
-                summary: { ...baseProcess.summary, ...variant.summary },
+                summary: { ...bp.summary, ...variant.summary },
             }),
         };
-    }, [baseProcess, sectorSlug]);
+    }, [baseProcess, dbProcess, sectorSlug]);
 
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
@@ -229,11 +303,19 @@ const ProcessDetail = () => {
         .filter((p): p is typeof processes[0] => !!p)
         .slice(0, 2);
 
-    const steps = process
+    const steps = (process
         ? (process.how_it_works_steps || process.pasos.map((p: string) => ({ title: p, short: p }))) as any[]
-        : [];
+        : []).slice(0, 3);
 
     if (!process) {
+        if (dbLoading) {
+            return (
+                <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 gap-4">
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm text-muted-foreground">Cargando proceso...</p>
+                </div>
+            );
+        }
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
                 <h1 className="text-4xl font-bold mb-4">Proceso no encontrado</h1>
@@ -263,7 +345,59 @@ const ProcessDetail = () => {
     } as React.CSSProperties) : undefined;
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground" style={themeStyle}>
+
+            {/* ── Paneles laterales atmosféricos — solo xl+, solo si el sector tiene hero ── */}
+            {sectorCfg?.heroImage && (
+                <>
+                    {/* Panel IZQUIERDO */}
+                    <div
+                        className="hidden xl:block fixed inset-y-0 left-0 pointer-events-none overflow-hidden"
+                        style={{ width: 'max(0px, calc((100vw - 908px) / 2))', zIndex: 0 }}
+                    >
+                        <div
+                            className="absolute inset-0 bg-cover bg-right opacity-[0.22]"
+                            style={{
+                                backgroundImage: `url('${sectorCfg.heroImage}')`,
+                                filter: 'blur(3px)',
+                                transform: 'scale(1.1)',
+                            }}
+                        />
+                        {/* Fade horizontal hacia el contenido */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background" />
+                        {/* Fade vertical: oscurece arriba y abajo */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent via-[35%] to-background" />
+                        {/* Tint de color del sector muy sutil */}
+                        <div
+                            className="absolute inset-0 opacity-20"
+                            style={{ background: `radial-gradient(ellipse at 50% 50%, ${sectorCfg.accentHex}60 0%, transparent 70%)` }}
+                        />
+                    </div>
+                    {/* Panel DERECHO */}
+                    <div
+                        className="hidden xl:block fixed inset-y-0 right-0 pointer-events-none overflow-hidden"
+                        style={{ width: 'max(0px, calc((100vw - 908px) / 2))', zIndex: 0 }}
+                    >
+                        <div
+                            className="absolute inset-0 bg-cover bg-left opacity-[0.22]"
+                            style={{
+                                backgroundImage: `url('${sectorCfg.heroImage}')`,
+                                filter: 'blur(3px)',
+                                transform: 'scale(1.1)',
+                            }}
+                        />
+                        {/* Fade horizontal hacia el contenido */}
+                        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background" />
+                        {/* Fade vertical */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent via-[35%] to-background" />
+                        {/* Tint de color del sector */}
+                        <div
+                            className="absolute inset-0 opacity-20"
+                            style={{ background: `radial-gradient(ellipse at 50% 50%, ${sectorCfg.accentHex}60 0%, transparent 70%)` }}
+                        />
+                    </div>
+                </>
+            )}
 
             {/* Nav */}
             <header className="border-b border-border bg-background sticky top-0 z-40">
@@ -279,7 +413,7 @@ const ProcessDetail = () => {
                             <Button
                                 className={`relative h-10 px-4 gap-2 border transition-all ${
                                     selectedProcessIds.size > 0
-                                        ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary shadow-[0_0_20px_rgba(0,200,220,0.2)]"
+                                        ? cn("bg-primary hover:bg-primary/90 text-primary-foreground border-primary", isGastro ? "shadow-[0_0_20px_rgba(234,88,12,0.25)]" : isSalud ? "shadow-[0_0_20px_rgba(14,165,233,0.25)]" : isAcademias ? "shadow-[0_0_20px_rgba(139,92,246,0.25)]" : "shadow-[0_0_20px_rgba(0,200,220,0.2)]")
                                         : "bg-transparent border-border text-muted-foreground hover:text-foreground hover:bg-accent"
                                 }`}
                             >
@@ -313,37 +447,136 @@ const ProcessDetail = () => {
                     </Sheet>
                 </div>
                 <div className="mx-auto max-w-[860px] px-4 md:px-6 pb-3">
-                    <ol className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <li className="hover:text-foreground cursor-pointer transition-colors" onClick={() => navigate("/")}>
-                            Catálogo
-                        </li>
-                        <li>/</li>
-                        <li>{process.categoriaNombre}</li>
-                        <li>/</li>
-                        <li className="text-foreground">{process.nombre}</li>
+                    <ol className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                        {sectorInfo ? (
+                            <>
+                                <li
+                                    className="hover:text-foreground cursor-pointer transition-colors"
+                                    onClick={() => navigate(sectorInfo.path)}
+                                >
+                                    {sectorInfo.label}
+                                </li>
+                                {moduleName && (
+                                    <>
+                                        <li className="opacity-40">/</li>
+                                        <li
+                                            className="hover:text-foreground cursor-pointer transition-colors"
+                                            onClick={() => navigate(`${sectorInfo.path}#block-${process.bloque_negocio}`)}
+                                        >
+                                            {moduleName}
+                                        </li>
+                                    </>
+                                )}
+                                <li className="opacity-40">/</li>
+                                <li className="text-foreground truncate max-w-[260px]">{process.nombre}</li>
+                            </>
+                        ) : (
+                            <>
+                                <li className="hover:text-foreground cursor-pointer transition-colors" onClick={() => navigate("/")}>
+                                    Catálogo
+                                </li>
+                                <li className="opacity-40">/</li>
+                                <li>{process.categoriaNombre}</li>
+                                <li className="opacity-40">/</li>
+                                <li className="text-foreground truncate max-w-[260px]">{process.nombre}</li>
+                            </>
+                        )}
                     </ol>
                 </div>
             </header>
 
-            <main className="mx-auto max-w-[860px] px-4 md:px-6 py-16 pb-32 space-y-20">
+            {/* ── HERO BANNER con imagen del sector ── */}
+            {sectorCfg?.heroImage && (() => {
+                return (
+                    <div className="relative w-full min-h-[460px] flex flex-col justify-end">
+                        <div
+                            className="absolute inset-0 overflow-hidden"
+                        >
+                            <div
+                                className="absolute inset-0 bg-cover bg-center"
+                                style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
+                            />
+                        </div>
+                        {/* Gradiente: cubre el 60% inferior progresivamente, luego el top con velo leve */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-background/90 via-[45%] to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent via-[25%] to-transparent" />
+                        <div className="relative z-10 mx-auto max-w-[860px] w-full px-4 md:px-6 pb-8 pt-6">
+                            {/* ← Volver al sector — sobre el título, muy sutil */}
+                            {sectorInfo && (
+                                <button
+                                    onClick={() => navigate(sectorInfo.path)}
+                                    className="flex items-center gap-1 text-xs text-white/35 hover:text-white/60 transition-colors mb-5"
+                                >
+                                    <ChevronLeft className="w-3.5 h-3.5" />
+                                    {sectorInfo.label}
+                                </button>
+                            )}
+                            <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-white mb-3">
+                                {process.nombre}
+                            </h1>
+                            {(process.one_liner || process.tagline) && (
+                                <p className="text-base text-white/55 leading-relaxed max-w-2xl mb-4">
+                                    {process.one_liner || process.tagline}
+                                </p>
+                            )}
+                            {/* Chips de módulo y recomendado */}
+                            <div className="flex flex-wrap items-center gap-3">
+                                {moduleName && (
+                                    <div
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border"
+                                        style={{
+                                            borderColor: `${sectorCfg?.accentHex}50`,
+                                            backgroundColor: `${sectorCfg?.accentHex}12`,
+                                            color: 'rgba(255,255,255,0.80)',
+                                        }}
+                                    >
+                                        <LayoutGrid className="w-4 h-4 shrink-0" style={{ color: sectorCfg?.accentHex }} />
+                                        <span>{process.bloque_negocio} · {moduleName}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
+
+            <main className={`mx-auto max-w-[860px] px-4 md:px-6 pb-32 space-y-20 ${sectorCfg?.heroImage ? 'pt-4' : 'py-16'}`}>
 
                 {/* HERO */}
                 <section className="space-y-6">
-                    <button
-                        onClick={() => navigate("/")}
-                        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        <ChevronLeft className="w-4 h-4" />
-                        Volver al catálogo
-                    </button>
+                    {!sectorCfg?.heroImage && (
+                        <>
+                            <button
+                                onClick={() => navigate("/")}
+                                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                                Volver al catálogo
+                            </button>
 
-                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight leading-tight">
-                        {process.nombre}
-                    </h1>
+                            <h1 className="text-4xl md:text-5xl font-medium tracking-tight leading-tight">
+                                {process.nombre}
+                            </h1>
 
-                    {(process.one_liner || process.tagline) && (
-                        <p className="text-xl text-muted-foreground leading-relaxed">
-                            {process.one_liner || process.tagline}
+                            {(process.one_liner || process.tagline) && (
+                                <p className="text-xl text-muted-foreground leading-relaxed">
+                                    {process.one_liner || process.tagline}
+                                </p>
+                            )}
+
+                            <span className={cn(
+                                "inline-flex px-3 py-1 rounded-full text-xs font-medium border",
+                                getCategoryColorClass(process.categoriaNombre)
+                            )}>
+                                {process.categoriaNombre}
+                            </span>
+                        </>
+                    )}
+
+                    {/* Descripción detallada — solo cuando hay imagen de sector */}
+                    {sectorCfg?.heroImage && process.descripcionDetallada && (
+                        <p className="text-base text-muted-foreground leading-relaxed pb-2">
+                            {process.descripcionDetallada}
                         </p>
                     )}
 
@@ -433,62 +666,116 @@ const ProcessDetail = () => {
                         </Button>
                     </div>
 
-                    {/* Pain identification */}
-                    {process.dolores && process.dolores.length > 0 && (
+                    {/* Antes · Después — flip cards 3D */}
+                    {((process.dolores && process.dolores.length > 0) || benefits.length > 0) && (
                         <div className="space-y-6 py-2">
-                            <div className="text-center space-y-2">
-                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                                    ¿Te reconoces?
+                            <div className="flex items-end justify-between gap-4">
+                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+                                    Lo que cambia con Immoralia
                                 </h2>
-                                <p className="text-muted-foreground text-base">
-                                    Esto pasa en la mayoría de empresas antes de automatizarlo
+                                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest shrink-0 pb-1">
+                                    Hover para voltear
                                 </p>
                             </div>
-                            <ul className="space-y-3 pt-2">
-                                {process.dolores.map((dolor: string, i: number) => (
-                                    <li key={i} className="rounded-xl border border-red-900/40 border-l-4 border-l-red-500/70 bg-red-950/20 px-6 py-4 transition-all duration-200 hover:border-l-red-400 hover:bg-red-950/30">
-                                        <p className="text-sm font-medium text-foreground">{dolor}</p>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div className="flex flex-col gap-3">
+                                {Array.from({ length: Math.max(process.dolores?.length ?? 0, benefits.length) }).map((_, i) => {
+                                    const dolor = process.dolores?.[i];
+                                    const benefit = benefits[i];
+                                    const BenefitIcon = BENEFIT_ICONS[i % BENEFIT_ICONS.length];
+                                    return (
+                                        <div
+                                            key={i}
+                                            className="relative cursor-pointer w-full"
+                                            style={{ perspective: '1200px', minHeight: '110px' }}
+                                            onMouseEnter={() => setFlippedCard(i)}
+                                            onMouseLeave={() => setFlippedCard(null)}
+                                        >
+                                            <div
+                                                className="relative w-full"
+                                                style={{
+                                                    minHeight: '110px',
+                                                    transformStyle: 'preserve-3d',
+                                                    transform: flippedCard === i ? 'rotateX(180deg)' : 'rotateX(0deg)',
+                                                    transition: 'transform 0.6s cubic-bezier(0.4,0,0.2,1)',
+                                                }}
+                                            >
+                                                {/* ── FRENTE — con Immoralia (lo bueno primero) ── */}
+                                                <div
+                                                    className="absolute inset-0 rounded-2xl overflow-hidden flex"
+                                                    style={{ backfaceVisibility: 'hidden' }}
+                                                >
+                                                    {/* Strip izquierda: sólido acento */}
+                                                    <div
+                                                        className="w-[72px] shrink-0 flex flex-col items-center justify-center gap-3 py-5"
+                                                        style={{ backgroundColor: sectorCfg?.accentHex ?? 'hsl(var(--primary))' }}
+                                                    >
+                                                        <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center">
+                                                            <BenefitIcon className="w-5 h-5 text-white" />
+                                                        </div>
+                                                        <svg className="w-6 h-6 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </div>
+                                                    {/* Contenido */}
+                                                    <div
+                                                        className="flex-1 px-6 py-5 flex flex-col justify-center relative overflow-hidden rounded-r-2xl border border-l-0"
+                                                        style={{
+                                                            backgroundColor: sectorCfg ? `${sectorCfg.accentHex}14` : 'hsl(var(--muted))',
+                                                            borderColor: sectorCfg ? `${sectorCfg.accentHex}40` : 'hsl(var(--border))',
+                                                        }}
+                                                    >
+                                                        <p
+                                                            className="text-[9px] font-bold uppercase tracking-[0.18em] mb-2.5"
+                                                            style={{ color: sectorCfg?.accentHex ?? 'hsl(var(--primary))' }}
+                                                        >
+                                                            Con Immoralia
+                                                        </p>
+                                                        {benefit && (
+                                                            <p className="text-base font-bold text-foreground leading-snug">
+                                                                {benefit}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* ── DORSO — sin automatizar ── */}
+                                                <div
+                                                    className="absolute inset-0 rounded-2xl overflow-hidden flex"
+                                                    style={{
+                                                        backfaceVisibility: 'hidden',
+                                                        transform: 'rotateX(180deg)',
+                                                    }}
+                                                >
+                                                    {/* Strip izquierda: sólido oscuro-rojo */}
+                                                    <div className="w-[72px] shrink-0 bg-red-950 flex flex-col items-center justify-center gap-3 py-5">
+                                                        <div className="w-10 h-10 rounded-full bg-red-900/70 border border-red-800/70 flex items-center justify-center">
+                                                            <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg className="w-6 h-6 text-red-700/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </div>
+                                                    {/* Contenido */}
+                                                    <div className="flex-1 bg-[#190a0a] px-6 py-5 flex flex-col justify-center relative overflow-hidden border border-l-0 border-red-950 rounded-r-2xl">
+                                                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-500/80 mb-2.5">
+                                                            Sin automatizar
+                                                        </p>
+                                                        {dolor && (
+                                                            <p className="text-sm font-semibold text-white/70 leading-relaxed">
+                                                                {dolor}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
                     )}
-
-                    {/* Benefits */}
-                    <div className="space-y-6 py-2">
-                        <div className="text-center space-y-2">
-                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                                Lo que conseguirás con Immoralia
-                            </h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {benefits.slice(0, 3).map((benefit: string, i: number) => {
-                                const Icon = BENEFIT_ICONS[i % BENEFIT_ICONS.length];
-                                return (
-                                    <div key={i} className="rounded-xl border border-border bg-transparent p-6 space-y-4 hover:border-primary/40 transition-colors duration-200">
-                                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                                            <Icon className="w-5 h-5 text-primary" />
-                                        </div>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{benefit}</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {/* Métricas */}
-                        <div className="grid grid-cols-3 divide-x divide-border/50 rounded-xl border border-border/50 bg-muted/30">
-                            {[
-                                { value: finalComplexity.timeEstimate, label: "de implementación" },
-                                { value: finalComplexity.complexity as string, label: "complejidad" },
-                                { value: process.indicators?.integrations?.length?.toString() ?? "—", label: "herramientas conectadas" },
-                            ].map(({ value, label }, i) => (
-                                <div key={i} className="flex flex-col items-center justify-center px-4 py-5 text-center">
-                                    <span className="text-xl md:text-2xl font-bold text-primary leading-none">{value}</span>
-                                    <span className="text-xs text-muted-foreground/70 mt-1.5 leading-snug">{label}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
                 </section>
 
                 {/* ── Procesos relacionados ── */}
@@ -593,18 +880,9 @@ const ProcessDetail = () => {
                                     );
                                 })}
                             </div>
-                            <div className="space-y-4">
-                                <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Necesidades específicas</label>
-                                <textarea
-                                    value={localNeedsInput}
-                                    onChange={(e) => setLocalNeedsInput(e.target.value)}
-                                    placeholder={process.customization.free_text_placeholder || "Describe aquí cualquier particularidad de tu negocio..."}
-                                    className="w-full h-32 bg-background border border-border rounded-xl p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50"
-                                />
-                            </div>
-                        </div>
-                    </section>
-                )}
+                        </section>
+                    );
+                })()}
 
                 {/* FAQs */}
                 {process.faqs && process.faqs.length > 0 && (
@@ -629,55 +907,6 @@ const ProcessDetail = () => {
                     </section>
                 )}
 
-                {/* Procesos relacionados */}
-                {relatedProcesses.length > 0 && (
-                    <section className="space-y-8">
-                        <h2 className="text-2xl font-medium">Procesos relacionados</h2>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            {relatedProcesses.map((p) => (
-                                <div
-                                    key={p.id}
-                                    className="group border border-border rounded-xl p-5 space-y-3 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer"
-                                    onClick={() => navigate(`/catalogo/procesos/${p.slug}`)}
-                                >
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <span className={cn(
-                                            "px-2.5 py-0.5 rounded-full text-xs font-medium border",
-                                            getCategoryColorClass(p.categoriaNombre)
-                                        )}>
-                                            {p.categoriaNombre}
-                                        </span>
-                                        {p.recomendado && (
-                                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                                                Recomendado
-                                            </span>
-                                        )}
-                                    </div>
-                                    <h3 className="text-base font-medium">{p.nombre}</h3>
-                                    <p className="text-sm text-muted-foreground font-normal">{p.tagline}</p>
-                                    <div className="flex items-center justify-between pt-1">
-                                        <span className="text-sm text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                                            Más información <ArrowRight className="w-3.5 h-3.5" />
-                                        </span>
-                                        <Button
-                                            size="sm"
-                                            onClick={(e) => { e.stopPropagation(); toggleProcess(p.id); }}
-                                            className={cn(
-                                                "text-xs font-medium h-7 px-3",
-                                                selectedProcessIds.has(p.id)
-                                                    ? "bg-secondary hover:bg-secondary/90 text-white"
-                                                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                                            )}
-                                        >
-                                            {selectedProcessIds.has(p.id) ? <Check className="mr-1 h-3 w-3" /> : <Plus className="mr-1 h-3 w-3" />}
-                                            {selectedProcessIds.has(p.id) ? "Añadido" : "Añadir"}
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
             </main>
 
             {/* Sticky CTA bar */}
