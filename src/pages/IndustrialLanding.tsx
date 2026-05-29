@@ -148,14 +148,14 @@ const IndustrialLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.25)]"
+                      ? "bg-yellow-500 hover:bg-yellow-400 text-black border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.4)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Mi Selección</span>
                   {selectedProcessIds.size > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-white text-yellow-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-yellow-400 text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {selectedProcessIds.size}
                     </span>
                   )}
@@ -196,7 +196,7 @@ const IndustrialLanding = () => {
           style={{ backgroundImage: "url('/industrial/hero.svg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-yellow-900/10 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-yellow-500/15 blur-[120px] rounded-full" />
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -215,7 +215,7 @@ const IndustrialLanding = () => {
             <Button
               size="lg"
               onClick={() => scrollTo("modulos")}
-              className="bg-yellow-600 hover:bg-yellow-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-yellow-900/30 transition-all hover:scale-[1.02]"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-yellow-500/30 transition-all hover:scale-[1.02]"
             >
               Empezar el recorrido <ChevronRight className="w-5 h-5" />
             </Button>
@@ -442,7 +442,7 @@ const IndustrialLanding = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to={AUDIT_URL}
-                  className="inline-flex items-center justify-center bg-yellow-600 hover:bg-yellow-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-yellow-900/30 transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center bg-yellow-500 hover:bg-yellow-400 text-black h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-yellow-500/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -784,7 +784,7 @@ const IndustrialLanding = () => {
             <Button
               size="lg"
               onClick={() => setShowContactForm(true)}
-              className="bg-yellow-600 hover:bg-yellow-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,179,8,0.35)] transition-all hover:scale-105"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(234,179,8,0.55)] transition-all hover:scale-105"
             >
               Solicitar propuesta
             </Button>
@@ -823,7 +823,7 @@ const IndustrialLanding = () => {
             <Button
               size="sm"
               onClick={() => setShowContactForm(true)}
-              className="bg-yellow-600 hover:bg-yellow-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
             >
               Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
             </Button>
