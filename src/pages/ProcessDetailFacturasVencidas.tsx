@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useNavigate } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,6 @@ import { useSelection } from "@/lib/SelectionContext";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
@@ -26,7 +26,7 @@ const ProcessDetailFacturasVencidas = () => {
     const isSelected = selectedProcessIds.has(process.id);
 
     const [showContactForm, setShowContactForm] = useState(false);
-    const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
@@ -408,7 +408,7 @@ const ProcessDetailFacturasVencidas = () => {
                         variant="ghost"
                         size="lg"
                         className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => setShowCalendlyModal(true)}
+                        onClick={() => setShowBookingModal(true)}
                     >
                         Agendar llamada
                     </Button>
@@ -445,17 +445,15 @@ const ProcessDetailFacturasVencidas = () => {
                 initialAnswers={onboardingAnswers}
             />
 
-            <CalendlyLeadModal
-                isOpen={showCalendlyModal}
-                onClose={() => setShowCalendlyModal(false)}
-            />
+            
 
             <ShareSelectionModal
                 isOpen={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 selectedProcesses={processes.filter(p => selectedProcessIds.has(p.id))}
             />
-        </div>
+          <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </div>
     );
 };
 

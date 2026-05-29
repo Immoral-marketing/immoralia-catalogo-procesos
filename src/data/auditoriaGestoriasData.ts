@@ -20,6 +20,10 @@ export type GsAuditQuestion =
       title: string;
       help?: string;
       block: GsAuditBlockId;
+      /** Etiquetas personalizadas para los 5 puntos de la escala. */
+      scaleLabels?: [string, string, string, string, string];
+      /** Texto bajo la escala (extremos). */
+      scaleHints?: [string, string];
     };
 
 export type GsAuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -94,6 +98,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "Cuando llega un cliente potencial, ¿cuánto tardas en enviarle un presupuesto personalizado y, si dice que sí, cuánto tarda en estar dado de alta con contrato firmado?",
     help: "1 = El presupuesto se prepara a mano en días y el alta requiere llamadas y papel; 5 = Presupuesto enviado en minutos y alta completa con contrato firmado digitalmente sin intervención",
     block: "B1",
+    scaleLabels: ["Días", "1-2 días", "Mismo día", "Horas", "Minutos"],
+    scaleHints: ["1 — Presupuesto en días, alta en papel", "5 — Presupuesto y alta automáticos"],
   },
   {
     type: "scale",
@@ -102,6 +108,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿Los contratos de servicios y representación se generan, envían y firman digitalmente sin que nadie tenga que imprimir, escanear ni desplazarse?",
     help: "1 = Aún se imprimen, se firman a mano y se escanean; 5 = Generación y firma digital con validez legal completa, archivo automático y cero papel",
     block: "B1",
+    scaleLabels: ["Papel físico", "Con esfuerzo", "A medias", "Casi digital", "100% digital"],
+    scaleHints: ["1 — Se imprime, firma y escanea", "5 — Firma digital completa sin papel"],
   },
   // ─── B2 Gestión documental ────────────────────────────────────────────────
   {
@@ -111,6 +119,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿La documentación mensual de cada cliente llega a tiempo y completa sin que el equipo tenga que recordárselo manualmente?",
     help: "1 = Siempre hay que llamar o escribir; hay clientes que entregan tarde o a trozos; 5 = Sistema automático que recuerda y hace seguimiento hasta que llega todo, sin intervención",
     block: "B2",
+    scaleLabels: ["Siempre tarde", "Muy tarde", "A veces tarde", "Puntual", "Automático"],
+    scaleHints: ["1 — Siempre hay que llamar para recordarlo", "5 — Recordatorios automáticos hasta completar"],
   },
   {
     type: "scale",
@@ -119,6 +129,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿Los documentos de los clientes se clasifican y archivan solos, y el sistema avisa antes de que un certificado, poder o contrato caduque?",
     help: "1 = Todo a mano, los certificados caducados nos pillan por sorpresa; 5 = Clasificación automática y alertas preventivas de caducidad sin trabajo manual",
     block: "B2",
+    scaleLabels: ["Todo manual", "Algo auto", "A medias", "Casi auto", "Automático"],
+    scaleHints: ["1 — A mano, caducados por sorpresa", "5 — Clasificación y alertas automáticas"],
   },
   // ─── B3 Fiscal y vencimientos ─────────────────────────────────────────────
   {
@@ -128,6 +140,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿El equipo tiene visibilidad automática de todos los vencimientos fiscales del próximo mes, con tiempo suficiente para pedir la documentación al cliente antes del plazo?",
     help: "1 = Dependemos de la memoria o de mirar la agenda cada semana; 5 = Alertas automáticas de cada vencimiento con antelación configurable para equipo y cliente",
     block: "B3",
+    scaleLabels: ["Solo memoria", "Agenda manual", "Alertas básicas", "Proactivo", "Automático"],
+    scaleHints: ["1 — Dependemos de la memoria", "5 — Alertas con antelación configurable"],
   },
   {
     type: "scale",
@@ -136,6 +150,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿Los clientes saben en qué estado está su trámite sin tener que llamar a la gestoría para preguntarlo?",
     help: "1 = Recibimos llamadas constantes preguntando por el estado; 5 = El cliente recibe actualizaciones automáticas cada vez que hay un avance relevante",
     block: "B3",
+    scaleLabels: ["Llaman siempre", "A menudo", "A veces", "Rara vez", "Actualizaciones auto"],
+    scaleHints: ["1 — Llamadas constantes preguntando", "5 — Actualizaciones automáticas al cliente"],
   },
   // ─── B4 Laboral y nóminas ────────────────────────────────────────────────
   {
@@ -145,6 +161,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "Cuando un cliente comunica un alta de empleado, ¿los datos llegan completos y estructurados sin tener que perseguirlos por WhatsApp en varias idas y venidas?",
     help: "1 = Los datos llegan a trozos y siempre falta algo; 5 = Formulario automático enviado al empleado que devuelve todo listo para tramitar sin intervención",
     block: "B4",
+    scaleLabels: ["A trozos", "Con idas/venidas", "A medias", "Casi completo", "Automático"],
+    scaleHints: ["1 — Siempre falta algo, varios mensajes", "5 — Formulario automático lo devuelve todo"],
   },
   {
     type: "scale",
@@ -153,6 +171,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿Las nóminas se distribuyen automáticamente a cada empleado al cerrar el mes, y el sistema avisa antes de que venza un contrato temporal de un cliente?",
     help: "1 = Los envíos son manuales y los vencimientos de contratos temporales nos pillan; 5 = Distribución automática al cerrar nóminas y alertas previas de contratos temporales",
     block: "B4",
+    scaleLabels: ["Manual y tarde", "A veces", "A medias", "Casi auto", "Automático"],
+    scaleHints: ["1 — Envíos manuales, vencimientos por sorpresa", "5 — Distribución auto y alertas previas"],
   },
   // ─── B5 Relación con el cliente ──────────────────────────────────────────
   {
@@ -162,6 +182,8 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿El equipo tiene acceso inmediato al historial completo de cada cliente y cada llamada queda resumida y registrada automáticamente en el CRM?",
     help: "1 = Dependemos de la memoria o de notas sueltas; 5 = Historial completo en el CRM con resúmenes automáticos de cada interacción accesibles desde cualquier dispositivo",
     block: "B5",
+    scaleLabels: ["Memoria sola", "Notas sueltas", "Parcial", "Casi completo", "CRM completo"],
+    scaleHints: ["1 — Dependemos de la memoria", "5 — CRM con resúmenes automáticos"],
   },
   // ─── B6 Operativa interna ────────────────────────────────────────────────
   {
@@ -171,6 +193,64 @@ export const GS_AUDIT_QUESTIONS: GsAuditQuestion[] = [
       "¿Los gastos e ingresos de la propia gestoría se registran automáticamente y la conciliación bancaria mensual no ocupa más de 15 minutos?",
     help: "1 = Llevamos nuestras propias cuentas en Excel y la conciliación es un trabajo de horas; 5 = Registro automático y conciliación bancaria sin trabajo manual",
     block: "B6",
+    scaleLabels: ["Excel manual", "Parcial", "A medias", "Casi auto", "Automático"],
+    scaleHints: ["1 — Excel y conciliación en horas", "5 — Registro y conciliación automáticos"],
+  },
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Qué sistemas digitales usáis hoy para gestionar la gestoría?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Email, Excel y carpetas locales — sin software específico" },
+      { k: "B", label: "Software fiscal/laboral básico (A3, Sage, Wolters...)" },
+      { k: "C", label: "Software profesional completo con módulos integrados" },
+      { k: "D", label: "Software profesional + CRM para gestión de clientes" },
+      { k: "E", label: "Suite integrada con portal de cliente y automatizaciones" },
+    ],
+  },
+  // ─── Concentración de clientes (scoreless) ────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de concentración",
+    title: "¿Qué porcentaje de vuestra facturación representa el top 3 de clientes?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Menos del 20% — cartera muy diversificada" },
+      { k: "B", label: "Entre el 20% y el 40% — concentración baja" },
+      { k: "C", label: "Entre el 40% y el 60% — concentración media" },
+      { k: "D", label: "Más del 60% — dependemos de muy pocos clientes" },
+    ],
+  },
+  // ─── Certificaciones (scoreless multiselect) ─────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y acreditaciones",
+    title: "¿Qué certificaciones o habilitaciones tenéis activas?",
+    scoreless: true,
+    multiselect: true,
+    options: [
+      { k: "A", label: "ISO 9001 — Gestión de calidad" },
+      { k: "B", label: "Colegiación de gestores administrativos o economistas" },
+      { k: "C", label: "Firma digital cualificada certificada (FNMT)" },
+      { k: "D", label: "Cumplimiento RGPD y ENS documentado" },
+      { k: "E", label: "Certificación de proveedor en plataformas públicas (GEDEFO, etc.)" },
+      { k: "F", label: "Solo los mínimos legales" },
+    ],
+  },
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si mañana no viene el gestor que lleva la cartera principal de clientes, ¿qué pasa?",
+    scoreless: true,
+    options: [
+      { k: "A", label: "Caos — todo el conocimiento de esos clientes depende de él/ella" },
+      { k: "B", label: "Hay un backup parcial pero se nota mucho su ausencia" },
+      { k: "C", label: "Hay otro gestor formado que puede cubrirle sin problemas" },
+      { k: "D", label: "Todo está documentado en el CRM y cualquier persona del equipo puede atender a esos clientes" },
+    ],
   },
   // ─── Prioridades (scoreless) ─────────────────────────────────────────────
   {

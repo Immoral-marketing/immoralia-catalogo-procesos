@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { Link } from "react-router-dom";
 import { processes, type Process } from "@/data/processes";
 import { industrialBlocks, type BlockId } from "@/data/industrialBlocks";
@@ -44,7 +45,6 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#eab308";
 const AUDIT_URL = "/auditorias/industrial";
@@ -55,13 +55,13 @@ const INDUSTRIAL_LANDING_SLUG = "industrial";
 const IndustrialLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBlockTab, setActiveBlockTab] = useState<"todos" | BlockId>("todos");
   const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<BlockId>("B1");
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const [flippedBlock, setFlippedBlock] = useState<BlockId | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -193,7 +193,7 @@ const IndustrialLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/industrial/hero.svg')" }}
+          style={{ backgroundImage: "url('/industrial/hero.png')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-yellow-500/15 blur-[120px] rounded-full" />
@@ -221,7 +221,7 @@ const IndustrialLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => setShowCalendlyModal(true)}
+                onClick={() => setShowBookingModal(true)}
                 className="text-sm text-gray-400 hover:text-yellow-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -792,7 +792,7 @@ const IndustrialLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => setShowCalendlyModal(true)}
+              onClick={() => setShowBookingModal(true)}
             >
               Agendar llamada
             </Button>
@@ -849,10 +849,8 @@ const IndustrialLanding = () => {
         accentColor={ACCENT}
       />
 
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
-      />
+      
+      <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </div>
   );
 };

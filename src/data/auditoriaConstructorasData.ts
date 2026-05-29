@@ -20,6 +20,8 @@ export type CnAuditQuestion =
       title: string;
       help?: string;
       block: CnAuditBlockId;
+      scaleLabels?: [string, string, string, string, string];
+      scaleHints?: [string, string];
     };
 
 export type CnAuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -94,14 +96,18 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 1 · Captación y cualificación",
     block: "B1",
     title: "Cuando llega un lead, sabemos si tiene presupuesto, urgencia y financiación antes de que el equipo dedique tiempo.",
-    help: "Sin tener que llamarle ni hacer una reunión de exploración inicial.",
+    help: "1 = Sin cualificación previa, cualquier consulta va directamente al equipo; 5 = Scoring automático filtra por presupuesto y financiación real",
+    scaleLabels: ["Sin cualificación", "Preguntas básicas", "Formulario", "Scoring parcial", "Scoring automático"],
+    scaleHints: ["1 — Sin cualificación previa al primer contacto", "5 — Scoring automático por presupuesto y financiación"],
   },
   {
     type: "scale",
     cat: "Bloque 1 · Captación y cualificación",
     block: "B1",
     title: "La dirección comercial tiene el estado del pipeline actualizado sin esperar al informe semanal.",
-    help: "Leads nuevos, tasa de conversión por fase, unidades en riesgo — siempre disponibles.",
+    help: "1 = Solo disponible en el informe semanal o la reunión de equipo; 5 = Pipeline en tiempo real accesible desde el móvil en cualquier momento",
+    scaleLabels: ["Nunca disponible", "Informe semanal", "2-3 veces/semana", "Diario", "Tiempo real"],
+    scaleHints: ["1 — Solo disponible en el informe semanal", "5 — Pipeline en tiempo real siempre accesible"],
   },
 
   // ─── B2 · Conversión y argumentación ────────────────────────────────────────
@@ -110,14 +116,18 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 2 · Conversión y argumentación",
     block: "B2",
     title: "Nuestros agentes pueden responder dudas técnicas del comprador (materiales, plazos, financiación) sin improvisar.",
-    help: "Incluso en la visita, con el cliente delante, sin llamar a nadie.",
+    help: "1 = Los agentes improvisan o llaman a alguien ante dudas técnicas; 5 = Asistente IA resuelve cualquier duda técnica al instante en la visita",
+    scaleLabels: ["Siempre improvisamos", "A veces preparados", "Docs básicos", "Base de conocimiento", "Asistente con IA"],
+    scaleHints: ["1 — Los agentes siempre improvisan", "5 — Asistente IA listo para cualquier duda técnica"],
   },
   {
     type: "scale",
     cat: "Bloque 2 · Conversión y argumentación",
     block: "B2",
     title: "Cuando un comprador pide información de una unidad, el agente se la envía en menos de 5 minutos con el plano, precio actualizado y condiciones.",
-    help: "Sin buscar documentos en carpetas ni esperar a que alguien prepare el dossier.",
+    help: "1 = Más de 30 minutos buscando documentos y preparando el dossier; 5 = Dossier completo con plano, precio y condiciones generado en menos de 5 minutos",
+    scaleLabels: ["30+ minutos", "15-30 minutos", "5-15 minutos", "Casi siempre en 5", "Siempre en <5 min"],
+    scaleHints: ["1 — Más de 30 minutos buscando documentos", "5 — Dossier completo generado en menos de 5 minutos"],
   },
 
   // ─── B3 · Seguimiento y visitas ──────────────────────────────────────────────
@@ -126,14 +136,18 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 3 · Seguimiento y visitas",
     block: "B3",
     title: "Los leads que no compran en la primera visita reciben seguimiento personalizado durante los meses de comercialización.",
-    help: "No solo un correo genérico — mensajes adaptados a su perfil y a la fase de la obra.",
+    help: "1 = Sin seguimiento tras la visita o con mensajes genéricos iguales para todos; 5 = Secuencias personalizadas automáticas según perfil y fase del embudo",
+    scaleLabels: ["Sin seguimiento", "Email genérico", "Secuencias básicas", "Personalizadas", "IA + contexto de obra"],
+    scaleHints: ["1 — Sin seguimiento tras la primera visita", "5 — Secuencias personalizadas por perfil y fase de obra"],
   },
   {
     type: "scale",
     cat: "Bloque 3 · Seguimiento y visitas",
     block: "B3",
     title: "La gestión de visitas al piso piloto (agenda, confirmación, recordatorios) es automática y no consume tiempo del equipo.",
-    help: "Los no-shows son algo que prácticamente no ocurre.",
+    help: "1 = Agenda de visitas completamente manual con no-shows frecuentes; 5 = Confirmación y recordatorios automáticos, no-shows prácticamente inexistentes",
+    scaleLabels: ["100% manual", "Parcialmente manual", "Casi automático", "Auto con errores", "Totalmente automático"],
+    scaleHints: ["1 — Agenda de visitas completamente manual", "5 — Confirmación y recordatorios totalmente automáticos"],
   },
 
   // ─── B4 · Cierre y contratación ─────────────────────────────────────────────
@@ -142,14 +156,18 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 4 · Cierre y contratación",
     block: "B4",
     title: "Cuando un cliente decide comprar, el contrato de reserva se genera y se envía a firmar en menos de una hora.",
-    help: "Sin que el área administrativa tenga que prepararlo manualmente desde cero.",
+    help: "1 = El contrato tarda 1-2 días en prepararse de forma manual; 5 = Generado automáticamente y enviado a firmar en menos de 1 hora",
+    scaleLabels: ["1-2 días", "Varias horas", "1-2 horas", "Casi siempre <1h", "Siempre <1h auto"],
+    scaleHints: ["1 — El contrato tarda 1-2 días en prepararse", "5 — Generado y enviado a firmar en menos de 1 hora"],
   },
   {
     type: "scale",
     cat: "Bloque 4 · Cierre y contratación",
     block: "B4",
     title: "Los compradores que ya han reservado reciben comunicación regular sobre el avance de obra sin que nadie lo gestione manualmente.",
-    help: "Actualizaciones de hitos, vídeos de progreso, próximos pasos — de forma automática.",
+    help: "1 = Los compradores no reciben noticias hasta que preguntan; 5 = Comunicación automática de cada hito sin intervención del equipo",
+    scaleLabels: ["Sin comunicar", "Email ocasional", "Mensual manual", "Automático básico", "Personalizado y auto"],
+    scaleHints: ["1 — Los compradores no reciben actualizaciones de obra", "5 — Comunicación automática de hitos y progreso"],
   },
 
   // ─── B5 · Postventa ─────────────────────────────────────────────────────────
@@ -158,7 +176,9 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 5 · Postventa y propietarios",
     block: "B5",
     title: "Cuando entregamos una vivienda, los propietarios pueden reportar incidencias y consultar garantías sin colapsar al equipo de postventa.",
-    help: "Sin llamadas interminables ni emails sin respuesta — con un sistema que filtra y prioriza.",
+    help: "1 = Todo el postventa por teléfono y email con el equipo desbordado; 5 = Portal con IA que resuelve el 70% de incidencias sin intervención humana",
+    scaleLabels: ["Todo por teléfono", "Email + teléfono", "Formulario básico", "Portal parcial", "Portal con IA"],
+    scaleHints: ["1 — Todo el postventa por teléfono y email", "5 — Portal con IA que resuelve el 70% sin intervención"],
   },
 
   // ─── B6 · Operativa diaria ───────────────────────────────────────────────────
@@ -167,7 +187,72 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     cat: "Bloque 6 · Operativa diaria",
     block: "B6",
     title: "Cuando una unidad lleva tiempo sin movimiento, el equipo lo detecta automáticamente y tiene recomendaciones de qué hacer.",
-    help: "Sin esperar a la reunión semanal ni depender de que alguien revise el CRM.",
+    help: "1 = Solo se detecta en la reunión semanal o al revisar el CRM a mano; 5 = Alertas automáticas con análisis de causa y recomendaciones de reactivación",
+    scaleLabels: ["Reunión semanal", "Revisión manual", "Alertas básicas", "Alertas + datos", "Auto + recomendaciones"],
+    scaleHints: ["1 — Solo se detecta en la reunión semanal", "5 — Alertas automáticas con recomendaciones de reactivación"],
+  },
+
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Cuántas de estas herramientas digitales usáis de forma activa?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "CRM inmobiliario (Salesforce, HubSpot, Inmoweb...)" },
+      { k: "B", label: "Plataforma de firma digital (DocuSign, Signaturit...)" },
+      { k: "C", label: "Marketing automation para leads y nurturing" },
+      { k: "D", label: "Software de gestión y seguimiento de obra" },
+      { k: "E", label: "Herramienta de reporting y analytics del pipeline" },
+      { k: "F", label: "Portal de propietarios para postventa e incidencias" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Riesgo de concentración (scoreless) ─────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de concentración",
+    title: "¿Qué porcentaje de las ventas depende de los 3 principales agentes colaboradores (APIs)?",
+    options: [
+      { k: "A", label: "Menos del 20% — canal diversificado" },
+      { k: "B", label: "Del 20 al 40%" },
+      { k: "C", label: "Del 40 al 60%" },
+      { k: "D", label: "Más del 60% — alta dependencia de agentes colaboradores" },
+    ],
+    scoreless: true,
+  },
+
+  // ─── Calidad y certificaciones (scoreless) ───────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y certificaciones",
+    title: "¿Cuáles de estas certificaciones o avales tiene vuestra empresa?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "ISO 9001 (gestión de calidad)" },
+      { k: "B", label: "Certificación de construcción sostenible (BREEAM, LEED, Passivhaus...)" },
+      { k: "C", label: "Promotor inscrito en registro oficial de promotores" },
+      { k: "D", label: "Seguro decenal documentado y comunicado al comprador" },
+      { k: "E", label: "Ninguna aún" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si un proveedor o subcontrata clave parase abruptamente, ¿cuánto tardaría la obra en normalizarse?",
+    options: [
+      { k: "A", label: "1-3 días — tenemos alternativas identificadas" },
+      { k: "B", label: "1-2 semanas" },
+      { k: "C", label: "Aproximadamente 1 mes" },
+      { k: "D", label: "Más de 1 mes — dependencia total de ese proveedor" },
+    ],
+    scoreless: true,
   },
 
   // ─── Prioridad (scoreless) ───────────────────────────────────────────────────

@@ -522,7 +522,7 @@ const SetupInfo = () => {
                                 <Button size="lg" className="px-8 py-8 text-lg font-bold shadow-xl shadow-primary/20" onClick={() => navigate("/")}>
                                     Volver a mi selección
                                 </Button>
-                                <Button size="lg" variant="outline" className="px-8 py-8 text-lg font-bold border-2" onClick={() => window.open('https://calendly.com/immoralia', '_blank')}>
+                                <Button size="lg" variant="outline" className="px-8 py-8 text-lg font-bold border-2" onClick={() => window.open('https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta', '_blank')}>
                                     Solicitar ayuda para elegir (15 min)
                                 </Button>
                             </div>

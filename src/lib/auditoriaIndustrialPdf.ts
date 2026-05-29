@@ -557,7 +557,7 @@ function buildPdfHtml(s: IndAuditState): string {
       <div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:10px">¿Por dónde empezamos?</div>
       <div style="font-size:13px;color:#fde68a;max-width:460px;line-height:1.65;margin-bottom:28px">Una conversación de 30 minutos para ver dónde está la fricción real entre tu comercial, tu planta y tu administración, qué ya tenéis montado y qué módulo puede generar impacto antes del próximo trimestre. Sin compromiso, sin presentaciones largas.</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="padding:12px 24px;background:#eab308;color:#1a1408;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">calendly.com/david-immoral/30min</div>
+        <div style="padding:12px 24px;background:#eab308;color:#1a1408;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">procesos.immoralia.es</div>
         <div style="padding:12px 24px;background:rgba(255,255,255,.08);color:#fff;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.3px;border:1px solid rgba(255,255,255,.15)">procesos.immoralia.es/sector/industrial</div>
       </div>
     </div>

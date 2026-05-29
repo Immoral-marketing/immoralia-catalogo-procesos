@@ -1,5 +1,6 @@
 ﻿import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, type Process } from "@/data/processes";
 import { gestoriasBlocks, type GestoriasBlockId } from "@/data/gestoriasBlocks";
 import { gestoriasModules, getGestoriasModulesByBlock } from "@/data/gestoriasModules";
@@ -44,7 +45,6 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 
 const ACCENT = "#c4a84c";
 
@@ -80,12 +80,12 @@ const SLUG_TO_BLOQUE: Record<string, GestoriasBlockId> = {
 const GestoriasLanding = () => {
   const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting } = useSelection();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBlockTab, setActiveBlockTab] = useState<"todos" | GestoriasBlockId>("todos");
   const [activeShowcaseBlock, setActiveShowcaseBlock] = useState<GestoriasBlockId>("B1");
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
-  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -243,7 +243,7 @@ const GestoriasLanding = () => {
             </Button>
             <div className="flex items-center gap-5">
               <button
-                onClick={() => setShowCalendlyModal(true)}
+                onClick={() => setShowBookingModal(true)}
                 className="text-sm text-gray-400 hover:text-yellow-400 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
@@ -756,7 +756,7 @@ const GestoriasLanding = () => {
               size="lg"
               variant="outline"
               className="h-16 px-10 text-xl border-white/10 hover:bg-white/5 hover:text-white"
-              onClick={() => setShowCalendlyModal(true)}
+              onClick={() => setShowBookingModal(true)}
             >
               Agendar llamada
             </Button>
@@ -813,10 +813,8 @@ const GestoriasLanding = () => {
         accentColor={ACCENT}
       />
 
-      <CalendlyLeadModal
-        isOpen={showCalendlyModal}
-        onClose={() => setShowCalendlyModal(false)}
-      />
+      
+      <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </div>
   );
 };

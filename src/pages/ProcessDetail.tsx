@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,6 @@ import { useSelection } from "@/lib/SelectionContext";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
-import { CalendlyLeadModal } from "@/components/CalendlyLeadModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
@@ -81,6 +81,7 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
     "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
     "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
     "construccion":           { label: "Constructoras / Reformas / Inmobiliarias", path: "/sector/construccion" },
+    "industrial":             { label: "Industrial / Producción",                  path: "/sector/industrial" },
 };
 
 // Config por sector: color de acento + imagen hero
@@ -91,6 +92,7 @@ const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; hero
     "gastronomia-hosteleria": { accentHsl: "21 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
     "academias":              { accentHsl: "262 83% 58%", accentHex: "#7c3aed", heroImage: "/academias/hero.png" },
     "construccion":           { accentHsl: "38 92% 50%",  accentHex: "#d97706", heroImage: "/constructoras.png" },
+    "industrial":             { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/industrial/hero.png" },
 };
 
 const ProcessDetail = () => {
@@ -103,6 +105,7 @@ const ProcessDetail = () => {
 
     // Procesos del mismo módulo desde Supabase staging (tiene bloque_negocio, slug, catalog_active)
     const [dbModuleProcesses, setDbModuleProcesses] = useState<any[]>([]);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
     // Fallback a Supabase para procesos no definidos en el archivo estático
     const [dbProcess, setDbProcess] = useState<any>(null);
@@ -136,7 +139,6 @@ const ProcessDetail = () => {
     const isSelected = process ? selectedProcessIds.has(process.id) : false;
 
     const [showContactForm, setShowContactForm] = useState(false);
-    const [showCalendlyModal, setShowCalendlyModal] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
@@ -916,7 +918,7 @@ const ProcessDetail = () => {
                         variant="ghost"
                         size="lg"
                         className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => setShowCalendlyModal(true)}
+                        onClick={() => setShowBookingModal(true)}
                     >
                         Agendar llamada
                     </Button>
@@ -953,17 +955,15 @@ const ProcessDetail = () => {
                 initialAnswers={onboardingAnswers}
             />
 
-            <CalendlyLeadModal
-                isOpen={showCalendlyModal}
-                onClose={() => setShowCalendlyModal(false)}
-            />
+            
 
             <ShareSelectionModal
                 isOpen={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 selectedProcesses={processes.filter(p => selectedProcessIds.has(p.id))}
             />
-        </div>
+          <GHLBookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </div>
     );
 };
 

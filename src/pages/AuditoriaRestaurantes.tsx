@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AUDIT_BLOCKS,
@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
 
-const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/LOCATION_ID/WORKFLOW_ID";
+const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/oAgj6wUxweXdbWMvz0Gn/webhook-trigger/673af019-7b64-4d52-ac6b-e0adbcb12a60";
 
 type Screen = "intro" | "questions" | "contact" | "result";
 
@@ -46,6 +46,11 @@ interface Contact {
   email: string;
   phone: string;
 }
+
+const parseScaleHelp = (help: string): { hint1: string; hint5: string } | null => {
+  const m = help.match(/^\s*1\s*=\s*(.+?)\s*;\s*5\s*=\s*(.+?)\s*$/i);
+  return m ? { hint1: m[1], hint5: m[2] } : null;
+};
 
 const SCALE_LABELS = ["Nada", "Poco", "A medias", "Bastante", "Totalmente"];
 
@@ -452,7 +457,21 @@ const QuestionScreen = ({
         <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3">
           {q.title}
         </h2>
-        {q.help && <p className="text-gray-400 mb-8 leading-relaxed">{q.help}</p>}
+        {q.help && (() => {
+          const p = q.type === "scale" ? parseScaleHelp(q.help!) : null;
+          return p ? (
+            <div className="flex flex-col gap-2 mb-6">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">1</span>
+                <p className="text-gray-300 text-sm leading-snug">{p.hint1}</p>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">5</span>
+                <p className="text-gray-300 text-sm leading-snug">{p.hint5}</p>
+              </div>
+            </div>
+          ) : <p className="text-gray-400 mb-8 leading-relaxed">{q.help}</p>;
+        })()}
 
         {/* OPTIONS */}
         {q.type === "choice" && (
@@ -504,7 +523,7 @@ const QuestionScreen = ({
         {q.type === "scale" && (
           <>
             <div className="grid grid-cols-5 gap-2 mb-3">
-              {SCALE_LABELS.map((lbl, i) => {
+              {(q.scaleLabels ?? SCALE_LABELS).map((lbl, i) => {
                 const val = i + 1;
                 const selected = answer === val;
                 return (
@@ -538,8 +557,8 @@ const QuestionScreen = ({
               })}
             </div>
             <div className="flex justify-between text-[10px] uppercase tracking-widest text-gray-500 mb-8">
-              <span>1 — No lo hacemos</span>
-              <span>5 — Es sistemático</span>
+              <span>{q.scaleHints?.[0] ?? "1 — No lo hacemos"}</span>
+              <span>{q.scaleHints?.[1] ?? "5 — Es sistemático"}</span>
             </div>
           </>
         )}
@@ -936,7 +955,7 @@ const ResultScreen = ({
             <p className="text-white/85 mb-7 max-w-xl mx-auto leading-relaxed">{ctaSub}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://calendly.com/david-immoral/30min"
+                href="https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta"
                 target="_blank"
                 rel="noopener"
                 className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-white text-orange-700 font-bold hover:bg-white/90 transition-all"

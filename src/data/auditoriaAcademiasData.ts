@@ -20,6 +20,8 @@ export type AcAuditQuestion =
       title: string;
       help?: string;
       block: AcAuditBlockId;
+      scaleLabels?: [string, string, string, string, string];
+      scaleHints?: [string, string];
     };
 
 export type AcAuditBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
@@ -95,6 +97,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Qué pasa cuando alguien escribe o llama a tu academia fuera del horario de secretaría? ¿Cuántas de esas consultas tienen respuesta antes del día siguiente?",
     help: "1 = Casi ninguna, se responde al día siguiente; 5 = El sistema responde y cualifica al instante",
     block: "B1",
+    scaleLabels: ["Sin respuesta", "Día siguiente", "Misma noche", "En pocas horas", "Al instante"],
+    scaleHints: ["1 — Sin respuesta fuera de horario", "5 — Respuesta y cualificación automática 24/7"],
   },
   {
     type: "scale",
@@ -103,6 +107,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Tienes visibilidad en tiempo real de todos los leads activos: de dónde vinieron, en qué punto del proceso están y qué se les ha comunicado?",
     help: "1 = Es caótico, se pierden leads por varios canales; 5 = Panel centralizado y actualizado automáticamente",
     block: "B1",
+    scaleLabels: ["Sin visibilidad", "Notas dispersas", "Parcialmente", "Panel manual", "Auto centralizado"],
+    scaleHints: ["1 — Leads dispersos y caóticos por canales", "5 — Panel centralizado actualizado en tiempo real"],
   },
   // ─── B2 Matriculación y onboarding ───────────────────────────────────────────
   {
@@ -112,6 +118,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Puede un alumno nuevo completar la matrícula —firma, documentación, pago— y recibir el welcome pack sin que nadie de tu equipo tenga que intervenir?",
     help: "1 = Todo depende de una cita o gestión manual; 5 = 100% digital y automático",
     block: "B2",
+    scaleLabels: ["Siempre presencial", "Papel + email", "A medias", "Casi digital", "100% automático"],
+    scaleHints: ["1 — Todo el proceso depende de gestión manual", "5 — Alta y bienvenida 100% digital y automática"],
   },
   {
     type: "scale",
@@ -120,6 +128,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Cuántas horas dedica tu equipo cada semana a perseguir mensualidades, gestionar impagos y actualizar el estado de pagos?",
     help: "1 = Más de 5 horas semanales; 5 = No se hace, está completamente automatizado",
     block: "B2",
+    scaleLabels: ["5+ h/semana", "3-5 h/semana", "1-3 h/semana", "Pocas horas", "Automatizado"],
+    scaleHints: ["1 — Más de 5 horas semanales persiguiendo cobros", "5 — Gestión de cobros completamente automatizada"],
   },
   // ─── B3 Comunicación ─────────────────────────────────────────────────────────
   {
@@ -129,6 +139,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Los padres y alumnos reciben avisos automáticos de asistencia, cambios de horario y próximos exámenes sin que el equipo tenga que enviarlos manualmente?",
     help: "1 = Todo se comunica a mano cuando alguien se acuerda; 5 = Comunicación proactiva 100% automatizada",
     block: "B3",
+    scaleLabels: ["Todo manual", "Parcialmente", "Avisos básicos", "Casi auto", "100% automatizado"],
+    scaleHints: ["1 — Todo se comunica a mano cuando alguien se acuerda", "5 — Comunicación proactiva 100% automatizada"],
   },
   {
     type: "scale",
@@ -137,6 +149,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Tienes algún sistema que recoja feedback de alumnos y padres de forma regular y detecte insatisfacción antes de que el alumno decida darse de baja?",
     help: "1 = Nos enteramos cuando ya se han ido; 5 = Detección temprana con acción automática",
     block: "B3",
+    scaleLabels: ["Sin sistema", "Encuestas anuales", "Trimestrales", "Frecuentes", "Detección proactiva"],
+    scaleHints: ["1 — Las bajas llegan de sorpresa", "5 — Detección temprana con acción automática"],
   },
   // ─── B4 Retención y reactivación ─────────────────────────────────────────────
   {
@@ -146,6 +160,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Tienes un sistema que detecte cuándo un alumno empieza a desengancharse —más faltas, menos respuesta, pagos tardíos— y activa automáticamente una respuesta antes de que pida la baja?",
     help: "1 = Las bajas llegan de sorpresa; 5 = Detección y retención completamente automatizadas",
     block: "B4",
+    scaleLabels: ["Sin sistema", "Lo intuimos tarde", "Revisión manual", "Alertas básicas", "Retención automática"],
+    scaleHints: ["1 — Las bajas llegan siempre de sorpresa", "5 — Detección y retención completamente automatizadas"],
   },
   {
     type: "scale",
@@ -154,6 +170,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿Contactas de forma sistemática y personalizada a exalumnos para que vuelvan, o a los alumnos más satisfechos para que recomienden la academia?",
     help: "1 = Nunca se hace; 5 = Secuencias automatizadas según perfil y tiempo desde la baja",
     block: "B4",
+    scaleLabels: ["Nunca", "Raramente", "A veces manual", "Con secuencias", "Auto personalizado"],
+    scaleHints: ["1 — Nunca se contacta a exalumnos", "5 — Secuencias automáticas por perfil y tiempo desde la baja"],
   },
   // ─── B5 Administración ───────────────────────────────────────────────────────
   {
@@ -163,6 +181,8 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "¿El ciclo completo de cobro de mensualidades —aviso previo, confirmación de pago y escalado de impagos— funciona sin intervención manual del equipo?",
     help: "1 = Todo manual por teléfono o WhatsApp; 5 = Completamente automatizado",
     block: "B5",
+    scaleLabels: ["100% manual", "Parcialmente", "Recordatorios auto", "Casi auto", "Completamente auto"],
+    scaleHints: ["1 — Todo el ciclo de cobro es manual", "5 — Ciclo completo de cobro automatizado"],
   },
   // ─── B6 Profesorado ──────────────────────────────────────────────────────────
   {
@@ -172,7 +192,73 @@ export const AC_AUDIT_QUESTIONS: AcAuditQuestion[] = [
       "Cuando un profesor falta a última hora, ¿cuánto tarda en gestionarse la sustitución y comunicarse el cambio a los alumnos?",
     help: "1 = Horas de caos, llamadas y grupos de WhatsApp; 5 = El sistema lo gestiona en minutos de forma autónoma",
     block: "B6",
+    scaleLabels: ["Horas de caos", "30-60 minutos", "15-30 minutos", "Minutos (manual)", "Automático"],
+    scaleHints: ["1 — Horas de caos con llamadas y grupos de WhatsApp", "5 — Sustitución gestionada en minutos automáticamente"],
   },
+
+  // ─── Madurez digital (scoreless) ────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Madurez digital",
+    title: "¿Cuántas de estas herramientas digitales usáis de forma activa?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "Software de gestión académica (SGA) o ERP de academia" },
+      { k: "B", label: "Plataforma de firma electrónica para matrículas" },
+      { k: "C", label: "CRM para seguimiento de leads y captación" },
+      { k: "D", label: "Herramienta de email o WhatsApp automático" },
+      { k: "E", label: "Aula virtual o app de aprendizaje" },
+      { k: "F", label: "Reporting automático de cobros y asistencia" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Riesgo de concentración (scoreless) ─────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Riesgo de concentración",
+    title: "¿Qué porcentaje de los ingresos depende de un único curso, programa o franja de edad?",
+    options: [
+      { k: "A", label: "Menos del 20% — oferta diversificada" },
+      { k: "B", label: "Del 20 al 40%" },
+      { k: "C", label: "Del 40 al 60%" },
+      { k: "D", label: "Más del 60% — fuerte dependencia de un solo programa" },
+    ],
+    scoreless: true,
+  },
+
+  // ─── Calidad y acreditaciones (scoreless) ────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Calidad y acreditaciones",
+    title: "¿Cuáles de estas acreditaciones o reconocimientos tiene vuestra academia?",
+    help: "Puedes seleccionar varias.",
+    options: [
+      { k: "A", label: "Centro oficial de exámenes (Cambridge, DELF, EOI, Trinity...)" },
+      { k: "B", label: "Certificación de calidad educativa (ISO, Q de Calidad...)" },
+      { k: "C", label: "Acreditación para formación para el empleo (SEPE/FUNDAE)" },
+      { k: "D", label: "Colaboración formalizada con institutos o universidades" },
+      { k: "E", label: "Ninguna aún" },
+    ],
+    scoreless: true,
+    multiselect: true,
+  },
+
+  // ─── Resiliencia (scoreless) ─────────────────────────────────────────────────
+  {
+    type: "choice",
+    cat: "Resiliencia",
+    title: "Si un profesor clave causara baja mañana, ¿cuánto tardaría la academia en continuar con normalidad?",
+    options: [
+      { k: "A", label: "Sin problema — tenemos sustitutos identificados y protocolos" },
+      { k: "B", label: "1-2 días de ajuste" },
+      { k: "C", label: "Aproximadamente 1 semana" },
+      { k: "D", label: "Más de 1 semana — dependencia alta de ese docente" },
+    ],
+    scoreless: true,
+  },
+
   // ─── Prioridades (scoreless) ─────────────────────────────────────────────────
   {
     type: "choice",
