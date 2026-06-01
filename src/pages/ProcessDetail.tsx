@@ -443,6 +443,7 @@ const ProcessDetail = () => {
                                     n8nHosting={n8nHosting}
                                     onHostingChange={setN8nHosting}
                                     className="flex-1 overflow-hidden"
+                                    accentColor={process?.landing_slug ? SECTOR_CONFIG[process.landing_slug]?.accentHex : undefined}
                                 />
                             </div>
                         </SheetContent>

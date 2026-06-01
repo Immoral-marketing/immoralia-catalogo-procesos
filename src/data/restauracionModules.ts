@@ -186,6 +186,20 @@ export const restauracionModules: RestauracionModule[] = [
       "Trazabilidad total de cada gasto",
     ],
   },
+  {
+    codigo: "4.4",
+    bloque: "B4",
+    nombre: "Control de stock y alertas de reposición",
+    descripcion:
+      "El sistema lleva el inventario de materia prima en tiempo real, descuenta el consumo a partir de las ventas del TPV y avisa automáticamente cuando hay que pedir. Fin de los pedidos de memoria y las roturas de stock.",
+    badge: "–Roturas de stock",
+    linkedProcessSlug: "gastro-control-stock-inventario",
+    highlights: [
+      "Alerta automática cuando un producto baja del stock mínimo",
+      "Pedido al proveedor generado sin intervención manual",
+      "Visibilidad del coste de materia prima en tiempo real",
+    ],
+  },
 
   // ── BLOQUE 05 · Gestión de personal y equipo ──────────────────────────────
   {
