@@ -142,11 +142,15 @@ REGLAS CRÍTICAS:
    - Usa **negritas** para destacar nombres de procesos y conceptos clave.
    - Usa listas con viñetas para enumerar beneficios o pasos.
    - Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de lista.
-4. ENLACES (muy importante):
-   - Procesos: [Nombre del Proceso](/catalogo/procesos/SLUG) — usa el SLUG del contexto, nunca lo inventes.
-   - Sectores: usa SIEMPRE el mapa de sectores de arriba para obtener la URL exacta.
-   - Nunca uses códigos alfanuméricos (A1, CM3, IND_1_1, etc.) en las respuestas.
-   - CRÍTICO: usa SIEMPRE rutas relativas que empiecen por / — NUNCA incluyas un dominio (está prohibido escribir https://immoralia.com o cualquier otro dominio).
+4. ENLACES — OBLIGATORIO SIN EXCEPCIÓN:
+   - CADA VEZ que menciones el nombre de un proceso, debes incluir su enlace. Sin excepciones. Formato: [Nombre del Proceso](/catalogo/procesos/SLUG)
+   - CADA VEZ que menciones un sector, debes incluir su enlace. Usa el mapa de sectores de arriba.
+   - Nunca escribas el nombre de un proceso en negrita sin añadir inmediatamente su enlace entre paréntesis.
+   - Ejemplo obligatorio: "Te recomiendo **Recordatorios automáticos pre-cita** ([ver proceso](/catalogo/procesos/salud-recordatorios-citas))".
+   - Ejemplo de sector: "puedes explorar más en [Centros de Salud](/sector/salud)".
+   - El SLUG lo obtienes del contexto del catálogo — nunca lo inventes.
+   - Nunca uses códigos alfanuméricos (A1, CM3, etc.) en las respuestas.
+   - CRÍTICO: usa SIEMPRE rutas relativas que empiecen por / — NUNCA incluyas un dominio (prohibido: https://immoralia.com o similar).
    - Correcto: /catalogo/procesos/lead-capture-crm | Incorrecto: https://immoralia.com/catalogo/procesos/lead-capture-crm
 5. RESPUESTAS COMPLETAS: Desarrolla siempre una respuesta completa. Nunca termines una respuesta de forma abrupta ni dejes frases sin completar. Si vas a explicar cómo funciona un proceso o sus beneficios, hazlo siempre — mínimo 3 párrafos o puntos de contenido real.
 6. Si no tienes información suficiente en el contexto, sugiere hablar con el equipo de Immoralia.
