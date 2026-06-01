@@ -840,18 +840,6 @@
     }
   },
   {
-    "content": "# Proceso: Aviso automático cuando un alumno lleva días sin venir al centro\n**Tagline**: Detecta el abandono antes de que ocurra.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nSi un alumno no asiste en 10 días (o su frecuencia cae un 50%), el sistema genera una alerta interna y dispara un mensaje personalizado del instructor preguntando cómo está.\n\n## Cómo funciona\n1. Análisis de frecuencia de asistencia\n2. Detección de 'riesgo de abandono'\n3. Mensaje preventivo personalizado\n\n## Personalización\nAjusta los días de inactividad según la intensidad del centro.\n\n## Herramientas utilizadas\nVirtuagym, Mindbody, Make, WhatsApp Business API\n\n## Problemas que resuelve\nNo sabes cuántos socios están en riesgo de baja ahora mismo\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "GV7",
-      "process_name": "Aviso automático cuando un alumno lleva días sin venir al centro",
-      "slug": "seguimiento-alumnos-riesgo-baja",
-      "landing_slug": "centros-deportivos",
-      "bloque_negocio": "B3",
-      "sector_name": "Centros Deportivos"
-    }
-  },
-  {
     "content": "# Proceso: Contratos de reserva generados y enviados a firmar desde el móvil\n**Tagline**: El fin definitivo al papelazo que atranca tus ventas ya cerradas.\n**Sector**: Exclusivo de Construcción & Inmobiliaria\n**Bloque de negocio**: B4\n**Módulo**: 4.1\n\n## Descripción\nSistema que automatiza la generación del contrato de reserva y sus anexos, envía los documentos para firma digital certificada y hace seguimiento del estado de cada firma. Reduce la fricción operativa entre el acuerdo verbal y el documento firmado, acelerando los cierres sin riesgo de que el comprador se enfríe.\n\n## Cómo funciona\n1. Inyectamos los datos del comprador y el precio cerrado en la plantilla legal oficial de la promotora.\n2. Lanzamos la secuencia de firma en el móvil del comprador con certificado de hora e IP.\n3. Devolvemos el archivo firmado a la promotora listo para facturación y elevación a escritura pública.\n\n## Personalización\nNos amoldamos a las plantillas blindadas de la promotora, respetando todos los anexos: memoria de calidades, SEPA, RGPD y cualquier cláusula específica.\n\n## Herramientas utilizadas\nCRM, DOCS, Firma Digital\n\n## Problemas que resuelve\nEl papeleo de contratos ralentiza los cierres, El comprador se enfría entre el acuerdo y la firma\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -885,6 +873,18 @@
       "landing_slug": "agencias",
       "bloque_negocio": null,
       "sector_name": "agencias"
+    }
+  },
+  {
+    "content": "# Proceso: Aviso automático cuando un alumno lleva días sin venir al centro\n**Tagline**: Detecta el abandono antes de que ocurra.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nMuchos socios cancelan su membresía sin avisar: simplemente dejan de venir y un día se van. Este proceso monitoriza la frecuencia de asistencia de cada socio y detecta en tiempo real quién está en riesgo de darse de baja. Cuando un alumno no asiste en 10 días consecutivos, o su frecuencia cae un 50% respecto a su media habitual, el sistema genera una alerta interna y dispara automáticamente un mensaje personalizado del instructor preguntando cómo está. Actuar en ese momento —antes de que el socio tome la decisión de cancelar— multiplica la tasa de retención. Es el proceso más efectivo para prevenir bajas, reducir el churn y recuperar socios que están a punto de abandonar el centro.\n\n## Cómo funciona\n1. Análisis de frecuencia de asistencia de cada socio\n2. Detección automática de socios en riesgo de baja o abandono\n3. Alerta interna al equipo con el perfil del socio\n4. Mensaje preventivo personalizado al socio por WhatsApp o email\n\n## Personalización\nAjusta los días de inactividad que activan la alerta, el canal de contacto (WhatsApp o email) y el tono del mensaje según el perfil del socio.\n\n## Herramientas utilizadas\nVirtuagym, Mindbody, Make, WhatsApp Business API\n\n## Problemas que resuelve\nNo sabes cuántos socios están en riesgo de baja ahora mismo, Los socios cancelan sin avisar y te enteras cuando ya es tarde, Pierdes socios que simplemente dejan de venir sin que nadie les contacte, No tienes forma de saber quién está a punto de darse de baja, Tu tasa de cancelaciones es alta y no sabes cómo prevenirlo, Quieres retener más socios y reducir el churn del centro\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "GV7",
+      "process_name": "Aviso automático cuando un alumno lleva días sin venir al centro",
+      "slug": "seguimiento-alumnos-riesgo-baja",
+      "landing_slug": "centros-deportivos",
+      "bloque_negocio": "B3",
+      "sector_name": "Centros Deportivos"
     }
   },
   {
@@ -1008,7 +1008,7 @@
     }
   },
   {
-    "content": "# Proceso: Control de calidad en proceso\n**Tagline**: Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nEl control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.\n\n## Cómo funciona\n1. Se definen los puntos de control y tolerancias por tipo de producto\n2. El operario registra los valores medidos en cada punto de control\n3. El sistema compara con los valores esperados\n4. Si hay desviación\n5. bloquea el avance y alerta al responsable\n6. El responsable valida o rechaza antes de permitir continuar\n\n## Personalización\nDefine los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.\n\n## Herramientas utilizadas\nMES / Sistema de producción, Tablet, Make/n8n\n\n## Problemas que resuelve\nEl control de calidad se hace de memoria y la trazabilidad es muy mala, Detectamos los problemas cuando el producto ya está en el cliente\n\n## Canales de integración",
+    "content": "# Proceso: Control de calidad en proceso\n**Tagline**: Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nEl control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.\n\n## Cómo funciona\n1. Se definen los puntos de control y tolerancias por tipo de producto\n2. El operario registra los valores medidos en cada punto de control\n3. El sistema compara con los valores esperados\n4. Si hay desviación\n5. bloquea el avance y alerta al responsable\n6. El responsable valida o rechaza antes de permitir continuar\n\n## Personalización\nDefine los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.\n\n## Herramientas utilizadas\nMES / Sistema de producción, Tablet, Make/n8n\n\n## Problemas que resuelve\nEl control de calidad se hace de memoria y la trazabilidad es muy mala, Detectamos los problemas cuando el producto ya está en el cliente, Los operarios rellenan los controles de calidad en papel y los datos se pierden o llegan tarde, Tenemos que digitalizar manualmente los registros de calidad en papel, No podemos auditar la trazabilidad de calidad porque está todo en papel\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
       "process_id": "IND-3.1",
@@ -1344,18 +1344,6 @@
     }
   },
   {
-    "content": "# Proceso: Control de avance de línea en tiempo real\n**Tagline**: Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.2\n\n## Descripción\nEl jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente. Este panel muestra en tiempo real el avance de cada orden, los operarios asignados, los tiempos invertidos y una alerta automática si alguna orden supera el tiempo previsto. Comercial y dirección pueden ver también el estado sin interrumpir a planta.\n\n## Cómo funciona\n1. Los operarios reportan el avance de cada fase desde planta\n2. El sistema actualiza el estado de cada orden en tiempo real\n3. Se calcula el tiempo restante estimado por orden\n4. Se lanza alerta si hay desviación respecto al plazo comprometido\n5. Jefe de producción y comercial reciben la alerta y pueden actuar\n\n## Personalización\nDefine los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).\n\n## Herramientas utilizadas\nMES / Sistema de producción, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNos enteramos de los retrasos cuando ya es demasiado tarde, El comercial llama a planta para saber el estado y los interrumpe\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-2.2",
-      "process_name": "Control de avance de línea en tiempo real",
-      "slug": "industrial-control-avance-linea",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B2",
-      "sector_name": "Industrial"
-    }
-  },
-  {
     "content": "# Proceso: Lista de tareas automática al incorporar a alguien nuevo al centro\n**Tagline**: Experiencia premium desde el minuto 1.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B4\n**Módulo**: 4.4\n\n## Descripción\nChecklist automático de onboarding: envío de documentación, acceso a herramientas, asignación de mentor y recordatorios de pasos pendientes.\n\n## Cómo funciona\n1. Lanzamiento de workflow por nuevo contrato\n2. Distribución de kit de bienvenida digital\n3. Seguimiento de tareas de onboarding\n\n## Personalización\nAdapta el checklist por rol (staff, instructor, alumno).\n\n## Herramientas utilizadas\nMake, Notion, Gmail\n\n## Problemas que resuelve\nQuiero ordenar tareas y que se asignen solas\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1629,6 +1617,30 @@
       "landing_slug": "construccion",
       "bloque_negocio": "B3",
       "sector_name": "Construcción & Inmobiliaria"
+    }
+  },
+  {
+    "content": "# Proceso: Control de avance de línea en tiempo real\n**Tagline**: Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.2\n\n## Descripción\nEl jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente ni esperar a que alguien le pase los partes en papel. Cuando los operarios registran el avance de producción en papel o en hojas de cálculo, la información siempre llega tarde, incompleta o con errores de transcripción. Este proceso digitaliza completamente el registro de partes de producción: los operarios introducen los datos directamente desde planta (tablet o terminal), el sistema procesa esa información en tiempo real y muestra el avance de cada orden, los operarios asignados y los tiempos invertidos. Si alguna orden supera el tiempo previsto, salta una alerta automática. Comercial y dirección pueden consultar el estado sin interrumpir a planta.\n\n## Cómo funciona\n1. Los operarios reportan el avance de cada fase desde planta\n2. El sistema actualiza el estado de cada orden en tiempo real\n3. Se calcula el tiempo restante estimado por orden\n4. Se lanza alerta si hay desviación respecto al plazo comprometido\n5. Jefe de producción y comercial reciben la alerta y pueden actuar\n\n## Personalización\nDefine los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).\n\n## Herramientas utilizadas\nMES / Sistema de producción, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNos enteramos de los retrasos cuando ya es demasiado tarde, El comercial llama a planta para saber el estado y los interrumpe, Mis operarios rellenan partes de producción en papel y alguien tiene que pasarlos al ordenador, La información de planta llega tarde, en papel y con errores de transcripción, No sabemos el avance real de producción sin ir físicamente a planta, Perdemos horas a la semana pasando datos de partes de papel al sistema\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-2.2",
+      "process_name": "Control de avance de línea en tiempo real",
+      "slug": "industrial-control-avance-linea",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B2",
+      "sector_name": "Industrial"
+    }
+  },
+  {
+    "content": "# Proceso: Control automático de stock de materia prima y alertas de reposición\n**Tagline**: Nunca más quedarte sin producto en mitad del servicio.\n**Sector**: Exclusivo de Gastronomía y Hostelería\n**Bloque de negocio**: B4\n**Módulo**: 4.4\n\n## Descripción\nEn hostelería, quedarse sin un ingrediente clave durante el servicio es uno de los errores más evitables y más frecuentes. El stock se gestiona de memoria, los pedidos los hace quien se acuerda y nadie sabe cuánto queda de cada producto hasta que ya no queda. Este proceso registra el inventario en tiempo real: descuenta el consumo diario a partir de los datos de ventas del TPV, compara con los niveles mínimos configurados por producto y lanza una alerta automática al responsable cuando hay que pedir. También puede generar el pedido al proveedor habitual directamente. Resultado: cero roturas de stock, menos mermas por sobrecompra y visibilidad total sobre el coste de materia prima.\n\n## Cómo funciona\n1. Configuración del inventario inicial con stocks mínimos por producto\n2. Conexión con el TPV para descuento automático del consumo\n3. Alerta automática al responsable cuando un producto baja del mínimo\n4. Generación del pedido al proveedor habitual con las cantidades exactas\n5. Actualización del stock al confirmar la recepción del pedido\n\n## Personalización\nDefine los niveles mínimos de stock por producto, el canal de alerta (WhatsApp o email), el responsable de compras, los proveedores habituales y si quieres que el pedido se genere automáticamente o requiera aprobación.\n\n## Herramientas utilizadas\nLightspeed, Square, Holded, Google Sheets, Make/n8n, WhatsApp Business API\n\n## Problemas que resuelve\nMe quedo sin ingredientes clave en mitad del servicio, Hacemos los pedidos de memoria y siempre nos pasamos o nos quedamos cortos, No sé cuánto tengo de cada producto hasta que abro la nevera, Tiramos producto porque compramos de más sin control, El inventario lo hacemos a mano cada semana y es un infierno, Los pedidos a proveedores los hace quien se acuerda, sin sistema\n\n## Canales de integración\nWhatsApp, Email",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "GAST-4.4",
+      "process_name": "Control automático de stock de materia prima y alertas de reposición",
+      "slug": "gastro-control-stock-inventario",
+      "landing_slug": "gastronomia-hosteleria",
+      "bloque_negocio": "B4",
+      "sector_name": "Gastronomía y Hostelería"
     }
   },
   {

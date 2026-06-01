@@ -126,6 +126,15 @@ serve(async (req) => {
 CONTEXTO DE NAVEGACIÓN:
 ${sectorContext}
 
+MAPA EXACTO DE SECTORES Y SUS URLs (úsalo siempre para los enlaces de sector):
+- Centros Deportivos → /sector/centros-deportivos
+- Gestorías → /sector/gestorias
+- Centros de Salud → /sector/salud
+- Construcción & Inmobiliaria → /sector/construccion
+- Academias y Formación → /sector/academias
+- Gastronomía y Hostelería → /sector/gastronomia-hosteleria
+- Industrial → /sector/industrial
+
 REGLAS CRÍTICAS:
 1. Usa el CONTEXTO para identificar los procesos que mejor resuelvan la necesidad del usuario.
 2. Sé profesional, cercano y directo. Responde en español.
@@ -134,13 +143,15 @@ REGLAS CRÍTICAS:
    - Usa listas con viñetas para enumerar beneficios o pasos.
    - Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de lista.
 4. ENLACES (muy importante):
-   - Procesos: [Nombre del Proceso](/catalogo/procesos/SLUG) — usa el SLUG del contexto.
-   - Sectores: [Nombre del Sector](/sector/landing_slug) — ej: [Centros de Salud](/sector/salud).
+   - Procesos: [Nombre del Proceso](/catalogo/procesos/SLUG) — usa el SLUG del contexto, nunca lo inventes.
+   - Sectores: usa SIEMPRE el mapa de sectores de arriba para obtener la URL exacta.
    - Nunca uses códigos alfanuméricos (A1, CM3, IND_1_1, etc.) en las respuestas.
-   - Ejemplo correcto: "**Captura de leads automática** ([ver proceso](/catalogo/procesos/centros-deportivos-leads-crm))".
-5. Si no tienes información suficiente en el contexto, sugiere hablar con el equipo de Immoralia.
-6. RESPUESTA: Devuelve SIEMPRE un objeto JSON válido:
-   - "reply": tu respuesta en Markdown estructurado.
+   - CRÍTICO: usa SIEMPRE rutas relativas que empiecen por / — NUNCA incluyas un dominio (está prohibido escribir https://immoralia.com o cualquier otro dominio).
+   - Correcto: /catalogo/procesos/lead-capture-crm | Incorrecto: https://immoralia.com/catalogo/procesos/lead-capture-crm
+5. RESPUESTAS COMPLETAS: Desarrolla siempre una respuesta completa. Nunca termines una respuesta de forma abrupta ni dejes frases sin completar. Si vas a explicar cómo funciona un proceso o sus beneficios, hazlo siempre — mínimo 3 párrafos o puntos de contenido real.
+6. Si no tienes información suficiente en el contexto, sugiere hablar con el equipo de Immoralia.
+7. RESPUESTA: Devuelve SIEMPRE un objeto JSON válido:
+   - "reply": tu respuesta en Markdown estructurado y completo.
    - "action": "" en conversaciones normales, "handover" si el usuario necesita atención humana.
 
 CONTEXTO DEL CATÁLOGO:

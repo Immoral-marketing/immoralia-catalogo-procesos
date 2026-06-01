@@ -66,7 +66,12 @@ export const SelectionSummary = ({
                   </p>
                   <Badge
                     variant="outline"
-                    className={cn("text-xs mt-1", getCategoryColorClass(process.categoriaNombre))}
+                    className={cn("text-xs mt-1", !accentColor && getCategoryColorClass(process.categoriaNombre))}
+                    style={accentColor ? {
+                      backgroundColor: `${accentColor}18`,
+                      color: accentColor,
+                      borderColor: `${accentColor}35`
+                    } : {}}
                   >
                     {process.categoriaNombre}
                   </Badge>
