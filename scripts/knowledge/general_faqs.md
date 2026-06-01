@@ -1,24 +1,56 @@
-# Preguntas Frecuentes Generales e Información de Immoralia
+# Información General y Preguntas Frecuentes de Immoralia
 
-## Sobre la Plataforma y Tecnología (n8n)
-- **¿Qué es n8n y por qué lo usamos?**: n8n es una potente herramienta de automatización de "low-code". La elegimos porque, a diferencia de otras como Zapier o Make, nos permite ofrecerte automatizaciones mucho más potentes, privadas (tus datos no se quedan en n8n) y sin costes por "tarea ejecutada". Es el motor que hace que las piezas de tu catálogo se muevan solas.
-- **¿Por qué recomendáis que Immoralia aloje mi servidor?**: La seguridad y la disponibilidad son críticas. Si nosotros lo alojamos, nos encargamos de que el servidor esté encendido 24/7, de las actualizaciones de seguridad de n8n, de las copias de seguridad diarias y de que todo funcione sin que tú tengas que saber nada de servidores.
-- **¿Puedo tener mi propio servidor de n8n?**: Sí, es posible. Si ya tienes un equipo técnico o un VPS configurado, podemos instalar allí las automatizaciones. Ten en cuenta que en este caso la gestión de la infraestructura y su seguridad corre de tu parte.
-- **¿Qué es un VPS y por qué es necesario?**: Un VPS (Servidor Privado Virtual) es esencialmente un ordenador en internet que nunca se apaga. Es necesario para que tus automatizaciones puedan ejecutarse en cualquier momento (por ejemplo, registrar un gasto que llega a las 3 AM) sin depender de que tu ordenador personal esté encendido.
+## Qué es Immoralia
 
-## Servicios y Consultoría
-- **¿Qué hacéis exactamente en Immoralia?**: En Immoralia somos especialistas en hacer que las cosas pasen mediante tecnología. Ayudamos a empresas a escalar eliminando el trabajo manual repetitivo. Nuestra filosofía es "Menos administración, más negocio".
-- **¿Qué pasa si mi proceso no está en el catálogo?**: El catálogo es solo una selección de los procesos más probados. Si tienes una necesidad específica, realizamos consultorías personalizadas para diseñar y construir automatizaciones ad-hoc que se adapten al 100% a tu forma de trabajar.
-- **¿Puedo modificar un proceso una vez que ya está funcionando?**: Por supuesto. Las empresas evolucionan y tus procesos también. Ofrecemos servicios de mantenimiento y mejora continua para ajustar los flujos a tus nuevos requisitos o herramientas.
+**¿Qué hace Immoralia?**
+Immoralia es una empresa especializada en automatización de procesos de negocio. Ayudamos a empresas a eliminar el trabajo manual repetitivo para que puedan centrarse en crecer. Nuestra filosofía es "Menos administración, más negocio": identificamos los procesos que más tiempo te roban y los automatizamos para que funcionen solos, 24 horas al día, 7 días a la semana.
 
-## Seguridad y Confianza
-- **¿Están mis datos seguros con vuestras automatizaciones?**: Sí. Usamos protocolos de comunicación encriptados (SSL/HTTPS) y conectamos con tus herramientas (Holded, ClickUp, etc.) mediante APIs oficiales. Las credenciales se guardan de forma cifrada y tus datos de negocio fluyen pero no se almacenan permanentemente en el servidor de automatización.
-- **¿Quién tiene acceso a mis credenciales de Holded/ClickUp?**: Solo el sistema de automatización para poder ejecutar las tareas. Internamente seguimos protocolos estrictos para que nadie de nuestro equipo acceda a tus herramientas a menos que sea estrictamente necesario para el soporte técnico solicitado.
+**¿A qué tipo de empresas ayudáis?**
+Tenemos catálogos especializados para varios sectores: Centros Deportivos, Gestorías, Centros de Salud (clínicas, dentistas, veterinarias), Construcción e Inmobiliaria, Academias y Formación, Gastronomía y Hostelería, e Industrial. Si tu sector no aparece aquí, podemos hacer una consultoría personalizada. Consulta el catálogo completo en /sector o pregúntanos directamente.
 
-## Valor de Negocio y ROI
-- **¿En cuánto tiempo recupero la inversión (ROI)?**: La mayoría de nuestros clientes recuperan el coste del setup en menos de 3 meses. El ahorro mensual en horas de personal administrativo suele ser superior al coste de mantenimiento del sistema desde el primer mes.
-- **¿Cómo se mide el ahorro de tiempo de cada proceso?**: Las estimaciones del catálogo se basan en datos medios de casos reales. Por ejemplo, si una persona suele tardar 15 minutos en crear una factura y el sistema la hace en segundos, el ahorro es directo y acumulativo cada vez que se ejecuta el proceso.
-- **¿Cuánto cuesta el setup inicial?**: El precio varía según la complejidad del proceso. Cada ficha del catálogo indica la complejidad (Baja, Media, Alta). Una vez analizada tu situación, te entregamos un presupuesto cerrado que incluye el Setup (puesta en marcha) y una cuota de mantenimiento/servidor.
+**¿Cuál es vuestra filosofía de trabajo?**
+No vendemos software: construimos soluciones. Analizamos cómo funciona tu negocio, diseñamos el proceso adaptado a tus herramientas actuales, lo implementamos y te lo dejamos funcionando. Tú no necesitas saber nada de tecnología: nosotros nos encargamos de todo.
 
-## Soporte
-- **¿Cómo puedo hablar con un humano para una duda compleja?**: Si el chatbot no puede ayudarte, puedes pulsar el botón de "Solicitar contacto humano" o completar el formulario final. Un consultor de Immoralia revisará tu caso y se pondrá en contacto contigo en menos de 24-48 horas laborables.
+## Cómo funciona el servicio
+
+**¿Cómo empiezo?**
+El primer paso es una llamada de diagnóstico gratuita. Puedes agendarla directamente desde cualquier página del catálogo pulsando el botón "Agendar llamada". En esa sesión analizamos tu situación, identificamos qué procesos te darían más valor y te explicamos cómo funcionaría la implementación.
+
+**¿Cuánto tarda la implementación?**
+Depende de la complejidad del proceso. Los procesos de complejidad baja pueden estar funcionando en 1-2 semanas. Los de complejidad media, en 2-4 semanas. Los más avanzados o los proyectos con múltiples procesos integrados entre sí pueden llevar entre 1 y 3 meses. Siempre te damos un plazo cerrado antes de empezar.
+
+**¿Qué pasa si mi proceso no está en el catálogo?**
+El catálogo es una selección de los procesos más probados y demandados, pero no es el límite de lo que podemos hacer. Si tienes una necesidad específica, realizamos consultorías para diseñar automatizaciones completamente a medida.
+
+**¿Puedo modificar un proceso una vez que ya está funcionando?**
+Sí. Las empresas evolucionan y los procesos también. Ofrecemos mantenimiento y mejora continua para adaptar los flujos a nuevos requisitos, herramientas o cambios en tu negocio.
+
+## Tecnología (n8n y herramientas)
+
+**¿Qué es n8n y por qué lo usáis?**
+n8n es la herramienta de automatización que usamos como motor principal. A diferencia de Zapier o Make, permite automatizaciones más potentes, sin límites de tareas ejecutadas y con los datos alojados en un servidor privado tuyo. No dependes de un tercero para que tus datos fluyan: el servidor es tuyo.
+
+**¿Por qué recomendáis que Immoralia aloje el servidor?**
+Porque la disponibilidad y el mantenimiento son críticos. Si nosotros gestionamos el servidor, nos encargamos de que esté activo 24/7, de las actualizaciones de seguridad, de las copias de seguridad y de que todo funcione sin que tengas que preocuparte. Es la opción más cómoda y segura para la mayoría de clientes.
+
+**¿Puedo tener mi propio servidor de n8n?**
+Sí, es posible. Si ya tienes infraestructura técnica propia (VPS, equipo IT), podemos instalar las automatizaciones en tu entorno. En ese caso, la gestión de la infraestructura corre de tu parte.
+
+**¿Con qué herramientas integráis?**
+Integramos con la mayoría de herramientas del mercado: CRMs (HubSpot, ActiveCampaign, Pipedrive), software de gestión sectorial (Mindbody, Virtuagym, Holded, etc.), Google Suite, WhatsApp Business API, Stripe, Slack, Typeform, Calendly y muchas más. Si usas una herramienta específica, pregúntanos si tiene integración disponible.
+
+## Seguridad y confianza
+
+**¿Están mis datos seguros?**
+Sí. Usamos protocolos encriptados (SSL/HTTPS) y nos conectamos a tus herramientas mediante APIs oficiales. Las credenciales se guardan cifradas y los datos de tu negocio fluyen a través del sistema pero no se almacenan permanentemente en el servidor de automatización.
+
+**¿Quién tiene acceso a mis herramientas?**
+Solo el sistema de automatización, para ejecutar las tareas programadas. Internamente seguimos protocolos estrictos para que ninguna persona de Immoralia acceda a tus herramientas salvo en casos de soporte técnico expresamente solicitado por ti.
+
+## Soporte y contacto
+
+**¿Cómo puedo hablar con alguien del equipo?**
+Puedes agendar una llamada desde el botón "Agendar llamada" disponible en todas las páginas del catálogo. También puedes usar el botón "Hablar con un humano" en este chat y un consultor de Immoralia revisará tu caso y te contactará en menos de 24-48 horas laborables.
+
+**¿Tenéis soporte después de la implementación?**
+Sí. Todos los proyectos incluyen soporte post-lanzamiento. Si algo falla o quieres ajustar el proceso, estamos disponibles para resolverlo.
