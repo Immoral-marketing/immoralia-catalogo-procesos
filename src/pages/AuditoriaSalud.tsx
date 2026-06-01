@@ -35,7 +35,7 @@ import immoraliaLogo from "@/assets/immoralia_logo.png";
 
 const SA_MODULES = buildSaModulesByBlock(processes);
 
-const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/LOCATION_ID/WORKFLOW_ID";
+const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/oAgj6wUxweXdbWMvz0Gn/webhook-trigger/673af019-7b64-4d52-ac6b-e0adbcb12a60";
 
 type Screen = "intro" | "questions" | "contact" | "result";
 type AnswerValue = string | string[] | number;
@@ -941,7 +941,7 @@ const ResultScreen = ({
             <p className="text-gray-300 mb-7 max-w-xl mx-auto leading-relaxed">{ctaSub}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://calendly.com/david-immoral/30min"
+                href="https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta"
                 target="_blank"
                 rel="noopener"
                 className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-sky-500 text-white font-bold hover:bg-sky-400 transition-all"

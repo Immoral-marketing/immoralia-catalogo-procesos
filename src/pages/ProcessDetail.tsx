@@ -81,6 +81,7 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
     "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
     "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
     "construccion":           { label: "Constructoras / Reformas / Inmobiliarias", path: "/sector/construccion" },
+    "industrial":             { label: "Industrial / Producción",                  path: "/sector/industrial" },
 };
 
 // Config por sector: color de acento + imagen hero
@@ -91,6 +92,7 @@ const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; hero
     "gastronomia-hosteleria": { accentHsl: "21 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
     "academias":              { accentHsl: "262 83% 58%", accentHex: "#7c3aed", heroImage: "/academias/hero.png" },
     "construccion":           { accentHsl: "38 92% 50%",  accentHex: "#d97706", heroImage: "/constructoras.png" },
+    "industrial":             { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/industrial/hero.png" },
 };
 
 const ProcessDetail = () => {
