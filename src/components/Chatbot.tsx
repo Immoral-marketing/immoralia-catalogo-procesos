@@ -21,6 +21,19 @@ interface LeadData {
     telefono: string;
 }
 
+const SECTOR_CONFIG: Record<string, { color: string; slug: string }> = {
+        'centros-deportivos': { color: '#dc2626', slug: 'centros-deportivos' },
+        'gestorias':          { color: '#c4a84c', slug: 'gestorias' },
+        'salud':              { color: '#2563eb', slug: 'salud' },
+        'construccion':       { color: '#16a34a', slug: 'construccion' },
+        'academias':          { color: '#7c3aed', slug: 'academias' },
+        'gastronomia-hosteleria': { color: '#ea580c', slug: 'gastronomia-hosteleria' },
+        'restauracion':       { color: '#ea580c', slug: 'gastronomia-hosteleria' },
+        'gastronomia':        { color: '#ea580c', slug: 'gastronomia-hosteleria' },
+        'agencias':           { color: '#e11d48', slug: 'agencias' },
+        'industrial':         { color: '#f59e0b', slug: 'industrial' },
+};
+
 const Chatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
@@ -35,21 +48,17 @@ const Chatbot: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
 
-    // Determinar el color de acento según la ruta
-    const getAccentColor = () => {
+    const getSectorFromPath = (): { color: string; slug: string } | null => {
         const path = location.pathname;
-        if (path.includes('centros-deportivos')) return '#dc2626'; // Red
-        if (path.includes('gestorias')) return '#c4a84c';          // Yellow/gold
-        if (path.includes('salud')) return '#2563eb';              // Blue
-        if (path.includes('construccion')) return '#16a34a';       // Green
-        if (path.includes('academias')) return '#7c3aed';          // Violet
-        if (path.includes('restauracion') || path.includes('gastronomia')) return '#ea580c'; // Orange
-        if (path.includes('agencias')) return '#e11d48';           // Rose
-        return '#000000';
+        for (const [key, config] of Object.entries(SECTOR_CONFIG)) {
+            if (path.includes(key)) return config;
+        }
+        return null;
     };
 
-    const accentColor = getAccentColor();
-    const isLanding = accentColor !== '#000000';
+    const currentSector = getSectorFromPath();
+    const accentColor = currentSector?.color ?? '#000000';
+    const isLanding = currentSector !== null;
     const isProcessDetail = location.pathname.startsWith('/catalogo/procesos/');
 
     const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
@@ -129,7 +138,10 @@ const Chatbot: React.FC = () => {
             setIsLoading(true);
             try {
                 const { data, error } = await supabase.functions.invoke('chat-assistant', {
-                    body: { message: userMessage },
+                    body: {
+                        message: userMessage,
+                        sector: currentSector?.slug ?? null,
+                    },
                 });
 
                 if (error) throw error;
