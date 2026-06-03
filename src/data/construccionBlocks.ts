@@ -31,7 +31,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
   {
     id: "B1",
     number: "01",
-    title: "Captación y cualificación de leads",
+    title: "Captación y cualificación de posibles compradores",
     sub: "Saber quién tiene presupuesto real antes de que tu equipo invierta tiempo",
     icon: Filter,
     accent: "#22c55e",
