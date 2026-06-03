@@ -91,7 +91,7 @@ const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; hero
     "salud":                  { accentHsl: "221 83% 53%", accentHex: "#2563eb", heroImage: "/salud/hero.png" },
     "gastronomia-hosteleria": { accentHsl: "21 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
     "academias":              { accentHsl: "262 83% 58%", accentHex: "#7c3aed", heroImage: "/academias/hero.png" },
-    "construccion":           { accentHsl: "38 92% 50%",  accentHex: "#d97706", heroImage: "/constructoras.png" },
+    "construccion":           { accentHsl: "142 71% 45%",  accentHex: "#22c55e", heroImage: "/constructoras.png" },
     "industrial":             { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/industrial/hero.png" },
 };
 
@@ -443,6 +443,7 @@ const ProcessDetail = () => {
                                     n8nHosting={n8nHosting}
                                     onHostingChange={setN8nHosting}
                                     className="flex-1 overflow-hidden"
+                                    accentColor={process?.landing_slug ? SECTOR_CONFIG[process.landing_slug]?.accentHex : undefined}
                                 />
                             </div>
                         </SheetContent>

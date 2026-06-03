@@ -1,73 +1,147 @@
-# Welcome to your Lovable project
+# Catálogo de Procesos — Immoralia
 
-## Project info
+Aplicación web para visualizar, filtrar y seleccionar procesos de automatización con IA, organizados por sector de negocio. Permite a clientes explorar el catálogo, hacer una auditoría de madurez digital y solicitar una propuesta personalizada.
 
-**URL**: https://lovable.dev/projects/5a916f12-d78c-4084-9fe6-72e629974972
+## Stack
 
-## How can I edit this code?
+| Capa | Tecnología |
+|---|---|
+| Frontend | Vite + React 18 + TypeScript |
+| UI | Tailwind CSS + shadcn/ui (Radix) + lucide-react |
+| Routing / Estado | react-router-dom v6 + @tanstack/react-query + Context API |
+| Backend / BD | Supabase (Postgres + pgvector + Edge Functions Deno) |
+| Despliegue | Vercel — rama `staging` → entorno staging, rama `main` → producción |
 
-There are several ways of editing your application.
+## Arranque local
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/5a916f12-d78c-4084-9fe6-72e629974972) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+npm install
+npm run dev           # servidor Vite en localhost
+npm run build         # build producción
+npm run build:dev     # build modo development
+npm run lint          # eslint
 ```
 
-**Edit a file directly in GitHub**
+Variables de entorno necesarias (crear `.env.local`):
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
 
-**Use GitHub Codespaces**
+## Estructura del proyecto
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+├── App.tsx                          # Router + providers
+├── main.tsx                         # Entry point
+├── pages/
+│   ├── SectorSelector.tsx           # Home: selección de sector
+│   ├── Index.tsx                    # Catálogo completo
+│   ├── <Sector>Landing.tsx          # Landing pública por sector
+│   ├── Auditoria<Sector>.tsx        # Auditoría de madurez por sector
+│   ├── ProcessDetail.tsx            # Detalle de proceso
+│   ├── AfiliadoPage.tsx             # Sistema de afiliados
+│   └── AdminPage.tsx
+├── components/
+│   ├── ui/                          # shadcn (no editar directamente)
+│   ├── ProcessCard.tsx
+│   ├── SelectionSummary.tsx
+│   ├── ContactForm.tsx
+│   ├── OnboardingModal.tsx
+│   ├── Chatbot.tsx
+│   └── ...
+├── data/
+│   ├── processes.ts                 # FUENTE DE VERDAD de contenido
+│   ├── <sector>Blocks.ts            # 6 bloques de negocio por sector
+│   ├── <sector>Modules.ts           # Módulos por sector
+│   └── auditoria<Sector>Data.ts
+├── lib/
+│   ├── SelectionContext.tsx          # Estado global de selección
+│   ├── auditoria<Sector>Pdf.ts       # Generadores PDF
+│   └── utils.ts, pricing.ts, referral.ts
+└── integrations/supabase/
+    ├── client.ts
+    └── types.ts                     # Auto-generado — no editar
 
-## What technologies are used for this project?
+supabase/
+├── config.toml
+├── migrations/                      # Migraciones SQL
+└── functions/                       # Edge Functions Deno
 
-This project is built with:
+scripts/
+├── sync_processes_to_supabase.v2.mjs  # Sync TS → Supabase (ver Regla #1)
+├── manual_sync_staging_to_prod.mjs
+├── generate_embeddings.mjs
+└── knowledge/                         # Base de conocimiento del chatbot
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+public/
+└── <sector>/b1-b6.png, hero.png       # Assets visuales por sector
+```
 
-## How can I deploy this project?
+## Sectores activos
 
-Simply open [Lovable](https://lovable.dev/projects/5a916f12-d78c-4084-9fe6-72e629974972) and click on Share -> Publish.
+| Sector | Ruta |
+|---|---|
+| Centros Deportivos | `/sector/centros-deportivos` |
+| Gestorías | `/sector/gestorias` |
+| Centros de Salud | `/sector/salud` |
+| Construcción & Inmobiliaria | `/sector/construccion` |
+| Academias / Formación | `/sector/academias` |
+| Gastronomía y Hotelería | `/sector/gastronomia-hosteleria` |
+| Industrial | `/sector/industrial` |
 
-## Can I connect a custom domain to my Lovable project?
+## ⚠️ Regla obligatoria — Flujo TS ↔ Supabase
 
-Yes, you can!
+`src/data/processes.ts` es la **fuente de verdad del contenido**. Supabase almacena los **assets generados** (guiones, vídeos, imágenes). Las landings consumen `processes.ts` en build time — no consultan Supabase.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+**Siempre que añadas o modifiques un proceso:**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. Editar `src/data/processes.ts`
+2. Ejecutar el sync:
+
+```bash
+# Dry-run — muestra qué cambiará sin aplicar
+node scripts/sync_processes_to_supabase.v2.mjs --verbose
+
+# Aplicar a staging
+node scripts/sync_processes_to_supabase.v2.mjs --apply
+
+# Aplicar a producción (solo tras validar en staging)
+node scripts/sync_processes_to_supabase.v2.mjs --target=prod --apply
+
+# Borrar procesos huérfanos en BD
+node scripts/sync_processes_to_supabase.v2.mjs --apply --delete-orphans
+```
+
+**Nunca:** editar directamente la tabla en Supabase Studio, ni cambiar solo TS sin ejecutar el sync.
+
+## Branch strategy
+
+| Rama | Propósito |
+|---|---|
+| `main` | Producción. Solo merges desde `staging` vía PR |
+| `staging` | Preproducción. Acumula features antes de producción |
+| `feat/<nombre>` / `fix/<nombre>` | Trabajo diario. Salen de `origin/staging` |
+| `claude/<nombre>` | Worktrees automáticos de Claude Code |
+
+**Flujo:** `feat/*` → PR a `staging` → validar → PR `staging → main` → deploy automático a producción.
+
+Al mergear a `main`, el workflow `supabase-sync.yml` ejecuta automáticamente `supabase db push` y `supabase functions deploy`.
+
+## Comandos útiles
+
+```bash
+# Supabase CLI
+supabase db push
+supabase gen types typescript --linked > src/integrations/supabase/types.ts
+supabase functions deploy <nombre>
+
+# Embeddings del chatbot
+node scripts/generate_embeddings.mjs
+```
+
+## Responsables
+
+- **Manel** — manel@immoral.es
+- **David** — programador

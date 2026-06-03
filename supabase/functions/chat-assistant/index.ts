@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const corsHeaders = {
@@ -126,7 +126,7 @@ serve(async (req) => {
 CONTEXTO DE NAVEGACIÓN:
 ${sectorContext}
 
-MAPA EXACTO DE SECTORES Y SUS URLs:
+MAPA EXACTO DE SECTORES Y SUS URLs (úsalo siempre para los enlaces de sector):
 - Centros Deportivos → /sector/centros-deportivos
 - Gestorías → /sector/gestorias
 - Centros de Salud → /sector/salud

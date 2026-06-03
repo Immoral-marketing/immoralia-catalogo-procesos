@@ -4594,6 +4594,68 @@ export const processes: Process[] = [
     modulo_codigo: "4.3",
     related_processes: ["gastro-reporte-diario", "gastro-seguimiento-facturas"]
   },
+  {
+    id: "GAST-4.4",
+    codigo: "4.4",
+    slug: "gastro-control-stock-inventario",
+    categoria: "B4",
+    categoriaNombre: "Operativa diaria y visibilidad",
+    nombre: "Control automático de stock de materia prima y alertas de reposición",
+    tagline: "Nunca más quedarte sin producto en mitad del servicio.",
+    recomendado: true,
+    descripcionDetallada: "En hostelería, quedarse sin un ingrediente clave durante el servicio es uno de los errores más evitables y más frecuentes. El stock se gestiona de memoria, los pedidos los hace quien se acuerda y nadie sabe cuánto queda de cada producto hasta que ya no queda. Este proceso registra el inventario en tiempo real: descuenta el consumo diario a partir de los datos de ventas del TPV, compara con los niveles mínimos configurados por producto y lanza una alerta automática al responsable cuando hay que pedir. También puede generar el pedido al proveedor habitual directamente. Resultado: cero roturas de stock, menos mermas por sobrecompra y visibilidad total sobre el coste de materia prima.",
+    summary: {
+      what_it_is: "Sistema de control de inventario conectado al TPV que alerta automáticamente cuando un producto baja del stock mínimo y puede generar el pedido al proveedor.",
+      for_who: [
+        "Restaurantes que se quedan sin producto durante el servicio",
+        "Negocios que hacen los pedidos de memoria sin datos reales",
+        "Grupos con varios locales que necesitan control centralizado de stock"
+      ],
+      requirements: ["TPV o sistema de gestión de ventas", "Lista de proveedores y productos con stock mínimo", "WhatsApp o email del responsable de compras"],
+      output: "Alertas automáticas de reposición, pedidos generados al proveedor y visibilidad del coste de materia prima en tiempo real."
+    },
+    indicators: {
+      time_estimate: "2-3 semanas",
+      complexity: "Media",
+      integrations: ["TPV", "ERP", "WhatsApp"]
+    },
+    how_it_works_steps: [
+      { title: "Registra el inventario inicial", short: "Carga el stock de partida.", detail: "Se registran todos los productos con su stock actual y el nivel mínimo que activa la alerta de reposición." },
+      { title: "Descuenta el consumo automáticamente", short: "Se conecta al TPV.", detail: "Cada vez que se vende un plato, el sistema descuenta los ingredientes correspondientes del stock en tiempo real." },
+      { title: "Alerta cuando hay que pedir", short: "Aviso al responsable.", detail: "Cuando un producto baja del mínimo, el responsable recibe una alerta por WhatsApp o email con qué pedir y cuánto." },
+      { title: "Genera el pedido al proveedor", short: "Orden de compra automática.", detail: "Opcionalmente, el sistema genera y envía la orden de compra al proveedor habitual con las cantidades correctas." },
+      { title: "Actualiza el stock al recibir", short: "Cierre del ciclo.", detail: "Al registrar la recepción del pedido, el stock se actualiza y el ciclo vuelve a empezar." }
+    ],
+    benefits: [
+      "Cero roturas de stock en mitad del servicio",
+      "Pedidos basados en datos, no en memoria",
+      "Visibilidad del coste de materia prima en tiempo real"
+    ],
+    pasos: [
+      "Configuración del inventario inicial con stocks mínimos por producto",
+      "Conexión con el TPV para descuento automático del consumo",
+      "Alerta automática al responsable cuando un producto baja del mínimo",
+      "Generación del pedido al proveedor habitual con las cantidades exactas",
+      "Actualización del stock al confirmar la recepción del pedido"
+    ],
+    personalizacion: "Define los niveles mínimos de stock por producto, el canal de alerta (WhatsApp o email), el responsable de compras, los proveedores habituales y si quieres que el pedido se genere automáticamente o requiera aprobación.",
+    sectores: ["Gastronomía / Hostelería"],
+    herramientas: ["Lightspeed", "Square", "Holded", "Google Sheets", "Make/n8n", "WhatsApp Business API"],
+    dolores: [
+      "Me quedo sin ingredientes clave en mitad del servicio",
+      "Hacemos los pedidos de memoria y siempre nos pasamos o nos quedamos cortos",
+      "No sé cuánto tengo de cada producto hasta que abro la nevera",
+      "Tiramos producto porque compramos de más sin control",
+      "El inventario lo hacemos a mano cada semana y es un infierno",
+      "Los pedidos a proveedores los hace quien se acuerda, sin sistema"
+    ],
+    canales: ["WhatsApp", "Email"],
+    integration_domains: ["ERP", "COMMS"],
+    landing_slug: "gastronomia-hosteleria",
+    bloque_negocio: "B4",
+    modulo_codigo: "4.4",
+    related_processes: ["gastro-reporte-diario", "gastro-registro-gastos"]
+  },
 
   // ── BLOQUE B5 · Gestión de personal y equipo ────────────────────────────
   {
