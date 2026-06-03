@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { highlightText } from "@/lib/highlightText";
 
 const ACCENT = "#dc2626";
 
@@ -380,7 +381,35 @@ const SportsLanding = () => {
                 key={activeBlock.id}
                 className="relative animate-in fade-in slide-in-from-right-4 duration-500"
               >
-                <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/3] lg:aspect-[5/4]">
+                {/* Badge + Título + Sub */}
+                <div className="mb-5">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4">
+                    <span className={`text-xs font-light ${activeBlock.accentText}`}>
+                      {activeBlock.id}
+                    </span>
+                    <span className="text-xs text-gray-300">Módulo {activeBlock.number}</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
+                    {activeBlock.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-400 italic">{activeBlock.sub}</p>
+                </div>
+
+                {/* Teaser con keywords resaltadas */}
+                <p className="mb-6 text-gray-300 leading-relaxed text-justify hyphens-auto">
+                  {highlightText(activeBlock.teaser, activeBlock.accentText)}
+                </p>
+
+                <button
+                  onClick={() => scrollTo(`block-${activeBlock.id}`)}
+                  className="mb-5 inline-flex items-center gap-2 h-9 px-4 rounded-xl text-xs font-semibold text-white transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                  style={{ backgroundColor: activeBlock.accent, boxShadow: `0 8px 20px ${activeBlock.accent}50` }}
+                >
+                  Conocer procesos <ArrowRight className="w-4 h-4" />
+                </button>
+
+                {/* Imagen 16:9 */}
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 aspect-video">
                   <img
                     src={activeBlock.image}
                     alt={activeBlock.title}
@@ -390,36 +419,10 @@ const SportsLanding = () => {
                     }}
                   />
                   <div
-                    className="absolute inset-0 mix-blend-overlay opacity-30"
+                    className="absolute inset-0 mix-blend-overlay opacity-20"
                     style={{ backgroundColor: activeBlock.accent }}
                   />
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-
-                  <div className="absolute top-5 left-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15">
-                    <span className={`text-xs font-light ${activeBlock.accentText}`}>
-                      {activeBlock.id}
-                    </span>
-                    <span className="text-xs text-gray-300">Módulo {activeBlock.number}</span>
-                  </div>
-
-                  <div className="absolute inset-x-0 bottom-0 p-7 md:p-9">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                      {activeBlock.title}
-                    </h3>
-                    <p className="text-sm md:text-base text-gray-300 italic">{activeBlock.sub}</p>
-                  </div>
                 </div>
-
-                <p className="mt-6 text-gray-300 leading-relaxed text-justify hyphens-auto">
-                  {activeBlock.teaser}
-                </p>
-
-                <button
-                  onClick={() => scrollTo(`block-${activeBlock.id}`)}
-                  className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${activeBlock.accentText} hover:underline`}
-                >
-                  Conocer en profundidad <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
             </div>
           </div>
@@ -427,9 +430,17 @@ const SportsLanding = () => {
       </section>
 
       {/* ───────────────────── AUDITORÍA / LEAD MAGNET ───────────────────── */}
-      <section id="auditoria" className="py-28 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 pointer-events-none" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-red-500/10 blur-[140px] rounded-full pointer-events-none" />
+      <section id="auditoria" className="py-28 relative overflow-hidden bg-[#130508]">
+        {/* Top border glow */}
+        <div className="audit-border absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+        {/* Grid background */}
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
+        {/* Main orb — left center */}
+        <div className="audit-orb-1 absolute top-1/2 -left-40 w-[700px] h-[700px] bg-red-600/35 blur-[160px] rounded-full pointer-events-none" />
+        {/* Secondary orb — right top */}
+        <div className="audit-orb-2 absolute -top-20 right-0 w-[500px] h-[500px] bg-red-400/22 blur-[120px] rounded-full pointer-events-none" />
+        {/* Bottom center glow */}
+        <div className="audit-orb-3 absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[180px] bg-red-500/18 blur-[80px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -582,7 +593,7 @@ const SportsLanding = () => {
 
             <div className="container mx-auto px-6 relative z-10">
               <div
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start ${
                   reverse ? "lg:[&>div:first-child]:order-2" : ""
                 }`}
               >
@@ -638,9 +649,12 @@ const SportsLanding = () => {
                     {b.title}
                   </h2>
                   <p className="text-base md:text-lg text-gray-400 mb-7 italic">{b.sub}</p>
-                  <p className="text-gray-300 leading-relaxed mb-7 text-justify hyphens-auto">
-                    {b.paragraph}
-                  </p>
+                  {/* Descripción detallada — oculta temporalmente, conservar para uso futuro */}
+                  <div className="hidden">
+                    <p className="text-gray-300 leading-relaxed mb-7 text-justify hyphens-auto">
+                      {b.paragraph}
+                    </p>
+                  </div>
 
                   {/* Beneficios */}
                   <Accordion
@@ -676,6 +690,21 @@ const SportsLanding = () => {
                     </AccordionItem>
                   </Accordion>
 
+                  {/* Título sección automatizaciones */}
+                  <div className="mb-4 mt-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`text-xs font-semibold tracking-widest uppercase ${b.accentText}`}>
+                        Automatizaciones del módulo
+                      </span>
+                      {modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length > 0 && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${b.accentBg} ${b.accentText} border ${b.accentBorder}`}>
+                          {modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length} seleccionada{modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">Selecciona las que quieres activar en tu negocio</p>
+                  </div>
+
                   {/* Lista de módulos con toggle */}
                   <div className="mb-8 border-t border-white/8">
                     {modules.map((m, i) => {
@@ -690,7 +719,7 @@ const SportsLanding = () => {
                           <div className="flex items-center">
                             <button
                               onClick={() => setExpandedModule(isOpen ? null : m.codigo)}
-                              className="flex-1 flex items-baseline gap-4 py-3.5 hover:bg-white/[0.02] transition-colors text-left group min-w-0"
+                              className="flex-1 flex items-center gap-4 py-3.5 hover:bg-white/[0.02] transition-colors text-left group min-w-0"
                             >
                               <span
                                 className="text-sm font-light tabular-nums tracking-tight shrink-0 w-9"
@@ -709,16 +738,16 @@ const SportsLanding = () => {
                             </button>
                             <button
                               onClick={() => toggleProcess(`mod-${m.codigo}`)}
-                              className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all mr-1 ${
+                              className={`shrink-0 flex items-center gap-1 px-2.5 h-7 rounded-full border text-xs font-medium transition-all mr-1 ${
                                 isModuleSelected
-                                  ? "bg-red-500/20 border-red-500/60 text-red-400"
-                                  : "border-white/15 text-gray-600 hover:border-white/35 hover:text-gray-300"
+                                  ? `${b.accentBg} ${b.accentBorder} ${b.accentText}`
+                                  : "border-white/15 text-gray-400 hover:border-white/40 hover:text-white bg-white/[0.03]"
                               }`}
                             >
                               {isModuleSelected ? (
-                                <Check className="w-3.5 h-3.5" />
+                                <><Check className="w-3 h-3" /><span>Añadida</span></>
                               ) : (
-                                <Plus className="w-3.5 h-3.5" />
+                                <><Plus className="w-3 h-3" /><span>Añadir</span></>
                               )}
                             </button>
                           </div>
