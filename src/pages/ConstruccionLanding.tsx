@@ -7,6 +7,7 @@ import { construccionModules, getConstruccionModulesByBlock } from "@/data/const
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -706,6 +707,14 @@ const ConstruccionLanding = () => {
         );
       })}
 
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="construccion"
+        sectorName="constructora"
+        accentHex="#22c55e"
+        suggestions={SECTOR_SUGGESTIONS["construccion"]}
+      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
