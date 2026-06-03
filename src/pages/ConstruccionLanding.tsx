@@ -234,7 +234,7 @@ const ConstruccionLanding = () => {
       {/* ───────────────────── CHATBOT ───────────────────── */}
       <SectorChatbot
         sector="construccion"
-        sectorName="constructora"
+        sectorName="desarrolladora"
         accentHex="#22c55e"
         suggestions={SECTOR_SUGGESTIONS["construccion"]}
       />
@@ -722,7 +722,7 @@ const ConstruccionLanding = () => {
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-green-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
-            ¿Listo para escalar <br /> tu constructora?
+            ¿Listo para escalar <br /> tu desarrolladora?
           </h2>
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
             Solicita una propuesta personalizada con los módulos que te interesan, el orden recomendado

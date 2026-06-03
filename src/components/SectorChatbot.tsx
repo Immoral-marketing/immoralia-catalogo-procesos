@@ -293,7 +293,7 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
                 )}
               </h2>
               <p className="text-sm text-gray-500">
-                Cuéntanos el problema — te decimos qué proceso lo resuelve.
+                Cuéntanos el problema y te decimos qué proceso lo resuelve.
               </p>
             </div>
           )}
