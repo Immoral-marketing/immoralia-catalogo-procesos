@@ -213,14 +213,6 @@ const GestoriasLanding = () => {
         </div>
       </nav>
 
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="gestorias"
-        sectorName="gestoría"
-        accentHex="#22c55e"
-        suggestions={SECTOR_SUGGESTIONS["gestorias"]}
-      />
-
       {/* ───────────────────── HERO ───────────────────── */}
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
@@ -274,6 +266,14 @@ const GestoriasLanding = () => {
           </div>
         </div>
       </section>
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="gestorias"
+        sectorName="gestoría"
+        accentHex="#22c55e"
+        suggestions={SECTOR_SUGGESTIONS["gestorias"]}
+      />
 
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">

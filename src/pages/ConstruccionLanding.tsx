@@ -176,14 +176,6 @@ const ConstruccionLanding = () => {
         </div>
       </nav>
 
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="construccion"
-        sectorName="constructora"
-        accentHex="#22c55e"
-        suggestions={SECTOR_SUGGESTIONS["construccion"]}
-      />
-
       {/* ───────────────────── HERO ───────────────────── */}
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
@@ -238,6 +230,14 @@ const ConstruccionLanding = () => {
           </div>
         </div>
       </section>
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="construccion"
+        sectorName="constructora"
+        accentHex="#22c55e"
+        suggestions={SECTOR_SUGGESTIONS["construccion"]}
+      />
 
       {/* ───────────────────── 6 BLOQUES — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">

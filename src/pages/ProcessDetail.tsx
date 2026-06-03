@@ -91,7 +91,7 @@ const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; hero
     "salud":                  { accentHsl: "199 89% 48%", accentHex: "#0ea5e9", heroImage: "/salud/hero.webp" },
     "gastronomia-hosteleria": { accentHsl: "24 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.webp" },
     "academias":              { accentHsl: "292 73% 40%", accentHex: "#a21caf", heroImage: "/academias/hero.webp" },
-    "construccion":           { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/constructoras.webp" },
+    "construccion":           { accentHsl: "142 71% 45%", accentHex: "#22c55e", heroImage: "/constructoras.webp" },
     "industrial":             { accentHsl: "220 9% 46%",  accentHex: "#6b7280", heroImage: "/industrial/hero.webp" },
 };
 
