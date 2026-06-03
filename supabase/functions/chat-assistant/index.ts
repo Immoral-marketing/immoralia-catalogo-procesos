@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const corsHeaders = {
@@ -142,13 +142,15 @@ REGLAS CRÍTICAS:
    - Usa **negritas** para destacar nombres de procesos y conceptos clave.
    - Usa listas con viñetas para enumerar beneficios o pasos.
    - Usa DOBLE SALTO DE LÍNEA (\\n\\n) entre párrafos y entre puntos de lista.
-4. ENLACES (muy importante):
-   - Procesos: [Nombre del Proceso](/catalogo/procesos/SLUG) — usa el SLUG del contexto, nunca lo inventes.
-   - Sectores: usa SIEMPRE el mapa de sectores de arriba para obtener la URL exacta.
-   - Nunca uses códigos alfanuméricos (A1, CM3, IND_1_1, etc.) en las respuestas.
-   - CRÍTICO: usa SIEMPRE rutas relativas que empiecen por / — NUNCA incluyas un dominio (está prohibido escribir https://immoralia.com o cualquier otro dominio).
-   - Correcto: /catalogo/procesos/lead-capture-crm | Incorrecto: https://immoralia.com/catalogo/procesos/lead-capture-crm
-5. RESPUESTAS COMPLETAS: Desarrolla siempre una respuesta completa. Nunca termines una respuesta de forma abrupta ni dejes frases sin completar. Si vas a explicar cómo funciona un proceso o sus beneficios, hazlo siempre — mínimo 3 párrafos o puntos de contenido real.
+4. ENLACES — REGLAS ABSOLUTAS:
+   - Solo puedes enlazar un proceso si su SLUG aparece EXPLÍCITAMENTE en el CONTEXTO DEL CATÁLOGO (formato: "SLUG: valor"). Si el proceso no está en el contexto o no tiene SLUG visible, escríbelo en **negrita sin enlace** — NUNCA inventes un slug.
+   - Formato para procesos del contexto: [Nombre del Proceso](/catalogo/procesos/SLUG-EXACTO)
+   - Ejemplo correcto: "**Recordatorios pre-cita** ([ver proceso](/catalogo/procesos/salud-recordatorios-citas))" — donde el slug viene del contexto.
+   - Ejemplo de lo que está PROHIBIDO: escribir /catalogo/procesos/gestion-proyectos si ese slug no aparece en el contexto.
+   - Para sectores usa el MAPA DE SECTORES de arriba — nunca inventes rutas de sector.
+   - Usa SIEMPRE rutas relativas (/) — NUNCA incluyas dominio (prohibido: https://immoralia.com).
+   - Nunca uses códigos alfanuméricos (A1, CM3, etc.).
+5. RESPUESTAS COMPLETAS: Desarrolla siempre una respuesta completa. Nunca dejes frases sin terminar — mínimo 3 párrafos o puntos de contenido real.
 6. Si no tienes información suficiente en el contexto, sugiere hablar con el equipo de Immoralia.
 7. RESPUESTA: Devuelve SIEMPRE un objeto JSON válido:
    - "reply": tu respuesta en Markdown estructurado y completo.

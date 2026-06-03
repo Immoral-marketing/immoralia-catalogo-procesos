@@ -47,6 +47,23 @@ Sí. Usamos protocolos encriptados (SSL/HTTPS) y nos conectamos a tus herramient
 **¿Quién tiene acceso a mis herramientas?**
 Solo el sistema de automatización, para ejecutar las tareas programadas. Internamente seguimos protocolos estrictos para que ninguna persona de Immoralia acceda a tus herramientas salvo en casos de soporte técnico expresamente solicitado por ti.
 
+## Para quién no sabe por dónde empezar
+
+**¿Por dónde debería empezar alguien que nunca ha automatizado nada?**
+Lo primero es identificar el proceso que más tiempo te roba cada semana. Suele ser uno de estos: responder leads que llegan de redes sociales, perseguir a clientes para que manden documentos, enviar recordatorios de citas o facturas, o gestionar reservas por teléfono y WhatsApp. Cuéntanos cuál es el tuyo y te explicamos qué existe en el catálogo para resolverlo. Si no tienes claro cuál es, podemos hacer una llamada de diagnóstico de 20 minutos y lo identificamos juntos.
+
+**¿Necesito cambiar las herramientas que ya uso?**
+No. Automatizamos encima de lo que ya tienes. Si usas WhatsApp, Gmail, Google Drive, HubSpot, Holded, o cualquier otro software habitual, conectamos con ellos mediante sus APIs oficiales. No tienes que aprender nada nuevo ni migrar datos.
+
+**¿Hay algún proceso que funcione bien como punto de partida?**
+Sí. Los procesos con mejor ratio esfuerzo/resultado para empezar suelen ser los de captación y seguimiento de leads (no perder ninguna solicitud que llega), los de recordatorios automáticos (citas, pagos, renovaciones) y los de comunicación interna del equipo (turnos, onboarding de empleados). Son rápidos de implementar y el impacto se ve desde el primer mes.
+
+**¿Qué diferencia hay entre usar Immoralia y contratar a alguien que sepa de Zapier o Make?**
+Zapier y Make son herramientas genéricas para conectar apps. Lo que hacemos nosotros es diseñar el proceso completo adaptado a tu forma de trabajar, construirlo, mantenerlo y asegurarnos de que no falla. No vendemos una herramienta: entregamos el proceso funcionando. Además usamos n8n, que es más potente y sin límites de tareas ejecutadas.
+
+**¿Cuáles son los procesos más demandados en el catálogo?**
+Varía por sector, pero los más solicitados en general son: la captura automática de leads desde redes sociales y web, los recordatorios de citas o renovaciones, el envío automático de nóminas o documentos a clientes, la reactivación de clientes inactivos y el control de cobros pendientes.
+
 ## Soporte y contacto
 
 **¿Cómo puedo hablar con alguien del equipo?**
