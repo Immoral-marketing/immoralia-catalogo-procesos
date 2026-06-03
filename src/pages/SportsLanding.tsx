@@ -233,6 +233,14 @@ const SportsLanding = () => {
         </div>
       </nav>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="centros-deportivos"
+        sectorName="centro deportivo"
+        accentHex="#dc2626"
+        suggestions={SECTOR_SUGGESTIONS["centros-deportivos"]}
+      />
+
       {/* ───────────────────── HERO ───────────────────── */}
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
@@ -794,14 +802,6 @@ const SportsLanding = () => {
         );
       })}
 
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="centros-deportivos"
-        sectorName="centro deportivo"
-        accentHex="#dc2626"
-        suggestions={SECTOR_SUGGESTIONS["centros-deportivos"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

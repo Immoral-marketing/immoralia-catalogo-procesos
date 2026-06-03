@@ -191,6 +191,14 @@ const RestauracionLanding = () => {
         </div>
       </nav>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="gastronomia-hosteleria"
+        sectorName="restaurante"
+        accentHex="#ea580c"
+        suggestions={SECTOR_SUGGESTIONS["gastronomia-hosteleria"]}
+      />
+
       {/* ───────────────────── HERO ───────────────────── */}
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
@@ -797,14 +805,6 @@ const RestauracionLanding = () => {
           </section>
         );
       })}
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="gastronomia-hosteleria"
-        sectorName="restaurante"
-        accentHex="#ea580c"
-        suggestions={SECTOR_SUGGESTIONS["gastronomia-hosteleria"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

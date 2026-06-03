@@ -21,45 +21,38 @@ export interface SectorChatbotProps {
 // Chips por sector
 export const SECTOR_SUGGESTIONS: Record<string, string[]> = {
   construccion: [
-    'Pierdo leads que llegan de portales inmobiliarios',
-    'Mis agentes improvisan el discurso de venta',
-    '¿Cómo genero un dossier de unidad al momento?',
-    'Quiero saber qué unidades llevan meses paradas',
+    'Pierdo leads de portales inmobiliarios',
+    'Mis agentes improvisan el discurso',
+    '¿Cómo genero un dossier al momento?',
   ],
   salud: [
-    'Tengo muchas llamadas perdidas fuera de horario',
-    '¿Cómo reduzco los no-shows a consulta?',
-    'Quiero cobrar automáticamente a las mutuas',
-    'Necesito reactivar pacientes que no vuelven',
+    'Tengo llamadas perdidas fuera de horario',
+    '¿Cómo reduzco los no-shows?',
+    'Necesito reactivar pacientes inactivos',
   ],
   gestorias: [
-    'Mis clientes no me mandan la documentación a tiempo',
+    'Los clientes no mandan documentación a tiempo',
     '¿Cómo envío nóminas automáticamente?',
-    'Quiero que el cliente firme contratos desde el móvil',
-    'Se me olvidan vencimientos fiscales importantes',
+    'Se me olvidan vencimientos fiscales',
   ],
   'centros-deportivos': [
     'Detecto tarde cuando un socio se va a dar de baja',
     '¿Cómo gestiono reservas y listas de espera?',
-    'Quiero automatizar el cobro mensual y los avisos',
-    'Necesito un programa de referidos para socios',
+    'Quiero automatizar el cobro mensual',
   ],
   academias: [
     'Los alumnos se dan de baja sin avisar',
     '¿Cómo hago las matrículas sin papeleo?',
-    'Quiero avisar automáticamente de faltas a los padres',
-    'Necesito reactivar exalumnos que dejaron los cursos',
+    'Necesito reactivar exalumnos',
   ],
   'gastronomia-hosteleria': [
     'Tengo muchos no-shows que me cuestan dinero',
     '¿Cómo consigo más reseñas en Google?',
-    'Quiero saber cuándo se va a acabar el stock',
-    'Necesito campañas para eventos y temporadas',
+    'Quiero controlar el stock automáticamente',
   ],
   industrial: [
-    'Tardo demasiado en preparar un presupuesto',
+    'Tardo demasiado en preparar presupuestos',
     '¿Cómo doy visibilidad del pedido al cliente?',
-    'Quiero controlar el avance de producción en tiempo real',
     'Necesito trazabilidad de lote sin Excel',
   ],
 };
@@ -336,12 +329,12 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
           </div>
 
           {!hasSentFirstMessage && (
-            <div className="flex flex-wrap gap-2 mt-5 justify-center animate-in fade-in duration-500 delay-200">
+            <div className="flex gap-2 mt-5 justify-center animate-in fade-in duration-500 delay-200">
               {suggestions.map(s => (
                 <button
                   key={s}
                   onClick={() => handleSuggestion(s)}
-                  className="text-sm px-4 py-2 rounded-full border transition-all text-gray-300 hover:text-white"
+                  className="text-xs px-3.5 py-2 rounded-full border transition-all text-gray-300 hover:text-white whitespace-nowrap"
                   style={{ borderColor: `rgba(${accentRgb},0.22)`, backgroundColor: `rgba(${accentRgb},0.05)` }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = `rgba(${accentRgb},0.5)`;
