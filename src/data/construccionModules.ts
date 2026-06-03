@@ -11,11 +11,11 @@ export interface ConstruccionModule {
 }
 
 export const construccionModules: ConstruccionModule[] = [
-  // ── BLOQUE 01 · Captación y cualificación de leads ────────────────────────
+  // ── BLOQUE 01 · Captación y cualificación de posibles compradores ────────────────────────
   {
     codigo: "1.1",
     bloque: "B1",
-    nombre: "Calificación inteligente de leads",
+    nombre: "Calificación inteligente de posibles compradores",
     descripcion:
       "La IA analiza cada nuevo contacto — canal de entrada, respuestas al formulario, comportamiento previo — y le asigna una puntuación basada en presupuesto, urgencia y tipo de financiación. Tu equipo comercial recibe solo los leads con intención real de compra.",
     badge: "Impacto inmediato",
