@@ -674,9 +674,6 @@ const ProcessDetail = () => {
                                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
                                     Lo que cambia con Immoralia
                                 </h2>
-                                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest shrink-0 pb-1">
-                                    Hover para voltear
-                                </p>
                             </div>
                             <div className="flex flex-col gap-3">
                                 {Array.from({ length: Math.max(process.dolores?.length ?? 0, benefits.length) }).map((_, i) => {
