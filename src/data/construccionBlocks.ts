@@ -39,7 +39,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-500/30",
     accentText: "text-yellow-400",
     accentGradient: "from-yellow-500/30 via-yellow-500/5 to-transparent",
-    image: "/constructoras/b1.png",
+    image: "/constructoras/b1.webp",
     teaser:
       "Recibes consultas de múltiples canales pero no sabes cuáles tienen presupuesto, urgencia y financiación real. La IA evalúa cada lead en segundos para que tu equipo solo hable con quien tiene intención de compra.",
     paragraph:
@@ -61,7 +61,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-600/30",
     accentText: "text-yellow-400",
     accentGradient: "from-yellow-600/30 via-yellow-600/5 to-transparent",
-    image: "/constructoras/b2.png",
+    image: "/constructoras/b2.webp",
     teaser:
       "Tus agentes tienen que responder dudas técnicas, adaptar el discurso a cada perfil y generar dossieres de unidad sobre la marcha. La IA les da respuesta inmediata a todo eso para que se centren en construir confianza.",
     paragraph:
@@ -83,7 +83,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-400/30",
     accentText: "text-yellow-300",
     accentGradient: "from-yellow-400/30 via-yellow-400/5 to-transparent",
-    image: "/constructoras/b3.png",
+    image: "/constructoras/b3.webp",
     teaser:
       "Un lead que visita la promoción tiene muchas más probabilidades de comprar, pero coordinar citas, recordatorios y el seguimiento posterior consume horas cada semana. Lo automatizamos de principio a fin.",
     paragraph:
@@ -105,7 +105,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-700/30",
     accentText: "text-yellow-400",
     accentGradient: "from-yellow-700/30 via-yellow-700/5 to-transparent",
-    image: "/constructoras/b4.png",
+    image: "/constructoras/b4.webp",
     teaser:
       "Cuando un cliente decide comprar, el proceso documental — contratos, firma digital, seguimiento de hitos — suele ser lento y manual. Lo automatizamos para que el cierre sea tan ágil como la decisión.",
     paragraph:
@@ -127,7 +127,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-600/30",
     accentText: "text-yellow-400",
     accentGradient: "from-yellow-600/30 via-yellow-600/5 to-transparent",
-    image: "/constructoras/b5.png",
+    image: "/constructoras/b5.webp",
     teaser:
       "La relación con el propietario no termina en la entrega de llaves. Un portal de IA resuelve dudas, gestiona garantías y predice problemas antes de que escalen — convirtiendo compradores en recomendadores activos.",
     paragraph:
@@ -149,7 +149,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
     accentBorder: "border-yellow-500/30",
     accentText: "text-yellow-400",
     accentGradient: "from-yellow-500/30 via-yellow-500/5 to-transparent",
-    image: "/constructoras/b6.png",
+    image: "/constructoras/b6.webp",
     teaser:
       "Cuando una unidad lleva tiempo sin movimiento, normalmente te enteras demasiado tarde. La IA detecta las unidades estancadas, analiza por qué y propone acciones concretas para reactivarlas antes de que el proyecto se alargue.",
     paragraph:

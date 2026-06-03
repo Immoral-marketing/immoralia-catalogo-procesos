@@ -39,7 +39,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-500/30",
     accentText: "text-red-400",
     accentGradient: "from-red-500/30 via-red-500/5 to-transparent",
-    image: "/centros-deportivos/b1.png",
+    image: "/centros-deportivos/b1.webp",
     teaser:
       "Tu recepción no puede atender al socio que entra y al WhatsApp que no para de llegar al mismo tiempo. Convertimos cada canal — mensaje, web, app — en una entrada limpia al sistema, con confirmaciones, avisos de cancelación y lista de espera en tiempo real.",
     paragraph:
@@ -61,7 +61,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-500/30",
     accentText: "text-red-400",
     accentGradient: "from-red-500/30 via-red-500/5 to-transparent",
-    image: "/centros-deportivos/b2.png",
+    image: "/centros-deportivos/b2.webp",
     teaser:
       "Cada mes llegan personas interesadas por Instagram, la web o el boca a boca — y la mayoría no recibe respuesta rápida porque no hay nadie detrás. Capturamos cada interesado, le mandamos una secuencia que le lleva hasta la primera visita y lo damos de alta en cuanto dice que sí.",
     paragraph:
@@ -83,7 +83,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-600/30",
     accentText: "text-red-500",
     accentGradient: "from-red-600/30 via-red-600/5 to-transparent",
-    image: "/centros-deportivos/b3.png",
+    image: "/centros-deportivos/b3.webp",
     teaser:
       "El mayor coste de un centro es la pérdida silenciosa de socios — se dejan de venir, no renuevan y te enteras cuando ya es tarde. Detectamos las señales de abandono y actuamos de forma automática antes de que tomen la decisión.",
     paragraph:
@@ -105,7 +105,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-700/30",
     accentText: "text-red-500",
     accentGradient: "from-red-700/30 via-red-700/5 to-transparent",
-    image: "/centros-deportivos/b4.png",
+    image: "/centros-deportivos/b4.webp",
     teaser:
       "Gestionar un centro tiene una carga administrativa enorme: turnos, contratos, averías, comunicación con familias. Lo automatizamos para que el equipo se centre en los socios, no en el papeleo.",
     paragraph:
@@ -127,7 +127,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-600/30",
     accentText: "text-red-400",
     accentGradient: "from-red-600/30 via-red-600/5 to-transparent",
-    image: "/centros-deportivos/b5.png",
+    image: "/centros-deportivos/b5.webp",
     teaser:
       "Das un buen servicio pero tus reseñas en Google no lo reflejan, y cuando alguien se queja muchas veces te enteras demasiado tarde. Pedimos reseña al socio contento en el momento adecuado y gestionamos las quejas antes de que escalen.",
     paragraph:
@@ -149,7 +149,7 @@ export const centrosDeportivosBlocks: CentrosDeportivosBlock[] = [
     accentBorder: "border-red-500/30",
     accentText: "text-red-400",
     accentGradient: "from-red-500/30 via-red-500/5 to-transparent",
-    image: "/centros-deportivos/b6.png",
+    image: "/centros-deportivos/b6.webp",
     teaser:
       "El marketing del centro no puede depender de que alguien tenga un rato libre entre sesión y sesión. Publicamos novedades, activamos campañas por temporada y medimos qué canal trae más socios — sin agencia y sin briefings.",
     paragraph:

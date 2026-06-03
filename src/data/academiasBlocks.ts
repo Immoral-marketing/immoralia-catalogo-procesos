@@ -39,7 +39,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-600/30",
     accentText: "text-fuchsia-400",
     accentGradient: "from-fuchsia-600/30 via-fuchsia-600/5 to-transparent",
-    image: "/academias/b1.png",
+    image: "/academias/b1.webp",
     teaser:
       "Cuando alguien busca una academia, compara varias en minutos. Si no le atiendes al instante — por teléfono, WhatsApp, web o Instagram — se va a la academia de al lado. Convertimos cada canal en una entrada limpia al proceso de matriculación, con cualificación previa para que llegue ya filtrado por objetivo, nivel e interés real.",
     paragraph:
@@ -61,7 +61,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-700/30",
     accentText: "text-fuchsia-600",
     accentGradient: "from-fuchsia-700/30 via-fuchsia-700/5 to-transparent",
-    image: "/academias/b2.png",
+    image: "/academias/b2.webp",
     teaser:
       "La matriculación manual — contratos en papel, pagos en ventanilla, explicar lo mismo al nuevo alumno cada vez — consume horas de administración que deberían estar en la enseñanza. Automatizamos el proceso completo: documentación, pago y bienvenida, para que el alumno esté activo en 24 horas.",
     paragraph:
@@ -83,7 +83,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-400/30",
     accentText: "text-fuchsia-300",
     accentGradient: "from-fuchsia-400/30 via-fuchsia-400/5 to-transparent",
-    image: "/academias/b3.png",
+    image: "/academias/b3.webp",
     teaser:
       "Los padres quieren saber qué pasa con sus hijos. Sin sistema, cada duda genera una llamada. Con un buen flujo de comunicación proactiva — faltas, exámenes, cambios de horario, fechas clave — reduces llamadas entrantes y aumentas la confianza de las familias en la academia.",
     paragraph:
@@ -105,7 +105,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-800/30",
     accentText: "text-fuchsia-600",
     accentGradient: "from-fuchsia-800/30 via-fuchsia-800/5 to-transparent",
-    image: "/academias/b4.png",
+    image: "/academias/b4.webp",
     teaser:
       "Un alumno que lleva tres meses sin conectarse a la plataforma o con ausencias repetidas está a punto de darse de baja. Si no actúas antes de que lo diga, ya es demasiado tarde. Detectamos las señales de riesgo y lanzamos el mensaje correcto en el momento correcto — antes de la baja, no después.",
     paragraph:
@@ -127,7 +127,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-800/30",
     accentText: "text-fuchsia-700",
     accentGradient: "from-fuchsia-800/30 via-fuchsia-800/5 to-transparent",
-    image: "/academias/b5.png",
+    image: "/academias/b5.webp",
     teaser:
       "Hacer el seguimiento de mensualidades, registrar gastos de material y cerrar el mes te quita días que deberías invertir en mejorar la academia. Automatizamos recordatorios de pago, captura de gastos y el reporte diario para que cierres mes en horas, no en días.",
     paragraph:
@@ -149,7 +149,7 @@ export const academiasBlocks: AcademiasBlock[] = [
     accentBorder: "border-fuchsia-300/30",
     accentText: "text-violet-200",
     accentGradient: "from-fuchsia-300/30 via-fuchsia-300/5 to-transparent",
-    image: "/academias/b6.png",
+    image: "/academias/b6.webp",
     teaser:
       "Las academias rotan profesores y cubren bajas de última hora con grupos de WhatsApp caóticos. Cuando un profesor no puede dar clase, la búsqueda de sustituto absorbe horas. Comunicación de turnos individual, sustituciones inteligentes y onboarding que se ejecuta solo el primer día.",
     paragraph:

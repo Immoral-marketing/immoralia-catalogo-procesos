@@ -39,7 +39,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-500/30",
     accentText: "text-green-400",
     accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
-    image: "/gestorias/b1.png",
+    image: "/gestorias/b1.webp",
     teaser:
       "Cada cliente potencial que llega a la gestoría debería recibir un presupuesto en minutos y un contrato para firmar esa misma tarde. La realidad es que entre prepararlo a mano, mandarlo y hacer seguimiento se van días — y algunos se van a otra gestoría.",
     paragraph:
@@ -61,7 +61,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-600/30",
     accentText: "text-green-400",
     accentGradient: "from-green-600/30 via-green-600/5 to-transparent",
-    image: "/gestorias/b2.png",
+    image: "/gestorias/b2.webp",
     teaser:
       "La mayor fuente de estrés en una gestoría no son los impuestos — es el cliente que envía las facturas por WhatsApp a trozos dos días antes del cierre. Automatizamos la recogida, la clasificación y el archivo para que todo llegue en tiempo y forma sin que nadie tenga que perseguir a nadie.",
     paragraph:
@@ -83,7 +83,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-400/30",
     accentText: "text-green-400",
     accentGradient: "from-green-400/30 via-green-400/5 to-transparent",
-    image: "/gestorias/b3.png",
+    image: "/gestorias/b3.webp",
     teaser:
       "Un plazo de impuestos que se pasa no es solo un recargo — es una responsabilidad que cae sobre la gestoría. El calendario fiscal no puede depender de que alguien se acuerde de mirar la agenda.",
     paragraph:
@@ -105,7 +105,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-500/30",
     accentText: "text-green-400",
     accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
-    image: "/gestorias/b4.png",
+    image: "/gestorias/b4.webp",
     teaser:
       "El área laboral de una gestoría vive en el caos: los datos del nuevo empleado llegan a trozos por WhatsApp, los contratos temporales se renuevan por inercia y enviar las nóminas toma una mañana entera. Todo eso tiene solución.",
     paragraph:
@@ -127,7 +127,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-400/30",
     accentText: "text-green-400",
     accentGradient: "from-green-400/30 via-green-400/5 to-transparent",
-    image: "/gestorias/b5.png",
+    image: "/gestorias/b5.webp",
     teaser:
       "El cliente que llama constantemente para preguntar cómo va lo suyo no es un cliente exigente — es un cliente que no está bien informado. Y el asesor que tarda veinte minutos en recordar los detalles de la última reunión no es desmemoriado — es que nadie le da las herramientas.",
     paragraph:
@@ -149,7 +149,7 @@ export const gestoriasBlocks: GestoriasBlock[] = [
     accentBorder: "border-green-600/30",
     accentText: "text-green-400",
     accentGradient: "from-green-600/30 via-green-600/5 to-transparent",
-    image: "/gestorias/b6.png",
+    image: "/gestorias/b6.webp",
     teaser:
       "La gestoría ayuda a sus clientes a llevar la contabilidad — pero la suya propia a menudo se gestiona en un Excel que nadie actualiza. Automatizamos el registro de gastos y la conciliación bancaria para que el control interno sea tan bueno como el que le dais a vuestros clientes.",
     paragraph:

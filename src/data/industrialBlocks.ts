@@ -39,7 +39,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-500/30",
     accentText: "text-gray-400",
     accentGradient: "from-gray-500/30 via-gray-500/5 to-transparent",
-    image: "/industrial/b1.png",
+    image: "/industrial/b1.webp",
     teaser:
       "El comercial de una industrial pierde horas recopilando datos de producto, precios y plazos antes de poder enviar un presupuesto. Mientras tanto, el cliente ya ha pedido oferta a tres competidores. Centraliza las peticiones, genera el presupuesto con los datos actualizados y haz seguimiento automático para que ninguna oferta quede en el aire.",
     paragraph:
@@ -61,7 +61,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-600/30",
     accentText: "text-gray-400",
     accentGradient: "from-gray-600/30 via-gray-600/5 to-transparent",
-    image: "/industrial/b2.png",
+    image: "/industrial/b2.webp",
     teaser:
       "Cuando entra un pedido, alguien tiene que trasladar los datos al sistema de producción, reservar materiales, asignar máquinas y poner la orden en la cola. Si ese paso es manual, hay errores, retrasos y el jefe de planta trabaja siempre con información incompleta. Automatiza el puente entre la venta y la planta.",
     paragraph:
@@ -83,7 +83,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-400/30",
     accentText: "text-gray-400",
     accentGradient: "from-gray-400/30 via-gray-400/5 to-transparent",
-    image: "/industrial/b3.png",
+    image: "/industrial/b3.webp",
     teaser:
       "Una no conformidad detectada en planta cuesta 10 veces menos que una reclamación del cliente. Y una reclamación con trazabilidad resuelta en 24 horas tiene un impacto en la relación completamente diferente a una que tarda una semana en investigarse. Pon el control de calidad y la trazabilidad en el proceso, no en la memoria de las personas.",
     paragraph:
@@ -105,7 +105,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-500/30",
     accentText: "text-gray-400",
     accentGradient: "from-gray-500/30 via-gray-500/5 to-transparent",
-    image: "/industrial/b4.png",
+    image: "/industrial/b4.webp",
     teaser:
       "Una rotura de stock para en planta. Y cuando se para planta, el coste por hora puede superar fácilmente al coste de haber mantenido el stock correcto. Pero comprar de más también tiene coste. El equilibrio pasa por anticipar la necesidad, lanzar el pedido en el momento exacto y recibir el material verificado antes de que entre al proceso.",
     paragraph:
@@ -127,7 +127,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-700/30",
     accentText: "text-gray-400",
     accentGradient: "from-gray-700/30 via-gray-700/5 to-transparent",
-    image: "/industrial/b5.png",
+    image: "/industrial/b5.webp",
     teaser:
       "En muchas industriales, la factura tarda más en generarse que la pieza en fabricarse. El albarán llega, alguien lo introduce manualmente, otro lo valida, otro genera la factura y otro la envía. Cada paso es un punto donde se puede retrasar el cobro. Y en industria, donde los plazos de cobro ya son largos por defecto, cualquier retraso adicional duele en caja.",
     paragraph:
@@ -149,7 +149,7 @@ export const industrialBlocks: IndustrialBlock[] = [
     accentBorder: "border-gray-400/30",
     accentText: "text-gray-300",
     accentGradient: "from-gray-400/30 via-gray-400/5 to-transparent",
-    image: "/industrial/b6.png",
+    image: "/industrial/b6.webp",
     teaser:
       "En planta, una máquina parada por falta de mantenimiento puede costar más en un día que el mantenimiento preventivo de un año. Y un operario que lleva dos semanas sin saber quién cubre la próxima semana es un operario que busca trabajo en otro sitio. La gestión del equipo y la planta necesita sistemas, no buena memoria.",
     paragraph:

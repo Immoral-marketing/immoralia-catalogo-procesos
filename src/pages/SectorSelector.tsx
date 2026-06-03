@@ -31,7 +31,7 @@ const sectors = [
     accentClass: "bg-red-600/10 border-red-600/25 text-red-400",
     accentGlow: "rgba(220,38,38,0.25)",
     accentBar: "bg-red-500",
-    heroImage: "/centros-deportivos/hero.png",
+    heroImage: "/centros-deportivos/hero.webp",
     landingSlug: "centros-deportivos",
     sectorNames: [] as string[],
   },
@@ -46,7 +46,7 @@ const sectors = [
     accentClass: "bg-green-500/10 border-green-500/25 text-green-400",
     accentGlow: "rgba(34,197,94,0.25)",
     accentBar: "bg-green-500",
-    heroImage: "/gestorias/hero.png",
+    heroImage: "/gestorias/hero.webp",
     landingSlug: "gestorias",
     sectorNames: ["Gestoria"],
   },
@@ -61,7 +61,7 @@ const sectors = [
     accentClass: "bg-blue-600/10 border-blue-600/25 text-blue-400",
     accentGlow: "rgba(37,99,235,0.25)",
     accentBar: "bg-blue-500",
-    heroImage: "/salud/hero.png",
+    heroImage: "/salud/hero.webp",
     landingSlug: "salud",
     sectorNames: ["Centros de Salud"],
   },
@@ -76,7 +76,7 @@ const sectors = [
     accentClass: "bg-yellow-500/10 border-yellow-500/25 text-yellow-400",
     accentGlow: "rgba(234,179,8,0.25)",
     accentBar: "bg-yellow-500",
-    heroImage: "/constructoras.png" as string | null,
+    heroImage: "/constructoras.webp" as string | null,
     landingSlug: "construccion",
     sectorNames: ["Construcción & Reformas", "Constructoras / Obra Nueva", "Inmobiliaria", "Inmobiliarias"],
   },
@@ -91,7 +91,7 @@ const sectors = [
     accentClass: "bg-fuchsia-700/10 border-fuchsia-700/25 text-fuchsia-400",
     accentGlow: "rgba(162,28,175,0.25)",
     accentBar: "bg-fuchsia-600",
-    heroImage: "/academias/hero.png" as string | null,
+    heroImage: "/academias/hero.webp" as string | null,
     landingSlug: "academias",
     sectorNames: ["Academias / Formación"],
   },
@@ -106,7 +106,7 @@ const sectors = [
     accentClass: "bg-orange-600/10 border-orange-600/25 text-orange-400",
     accentGlow: "rgba(234,88,12,0.25)",
     accentBar: "bg-orange-500",
-    heroImage: "/restauracion/hero.png" as string | null,
+    heroImage: "/restauracion/hero.webp" as string | null,
     landingSlug: "gastronomia-hosteleria",
     sectorNames: ["Gastronomía / Hostelería"],
   },
@@ -121,7 +121,7 @@ const sectors = [
     accentClass: "bg-gray-500/10 border-gray-500/25 text-gray-400",
     accentGlow: "rgba(107,114,128,0.25)",
     accentBar: "bg-gray-500",
-    heroImage: "/industrial/hero.png" as string | null,
+    heroImage: "/industrial/hero.webp" as string | null,
     landingSlug: "industrial",
     sectorNames: ["Industrial / Producción"],
   },
@@ -162,7 +162,7 @@ const SectorSelector = () => {
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/home/hero.png')" }}
+          style={{ backgroundImage: "url('/home/hero.webp')" }}
         />
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d0d0d]" />
@@ -430,7 +430,7 @@ const SectorSelector = () => {
               {/* RIGHT: imagen */}
               <div className="md:flex-1 relative overflow-hidden min-h-[180px] md:min-h-0 rounded-b-2xl md:rounded-b-none md:rounded-r-2xl">
                 <img
-                  src="/auditorias-banner.png"
+                  src="/auditorias-banner.webp"
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
                 />

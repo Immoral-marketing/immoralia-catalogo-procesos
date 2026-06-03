@@ -194,7 +194,7 @@ const RestauracionLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/restauracion/hero.png'), url('/restauracion.jpg')" }}
+          style={{ backgroundImage: "url('/restauracion/hero.webp'), url('/restauracion.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-orange-900/10 blur-[120px] rounded-full" />
@@ -373,6 +373,8 @@ const RestauracionLanding = () => {
                   <img
                     src={activeBlock.image}
                     alt={activeBlock.title}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
@@ -579,6 +581,8 @@ const RestauracionLanding = () => {
                       <img
                         src={b.image}
                         alt={b.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-105"
                         onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
                       />

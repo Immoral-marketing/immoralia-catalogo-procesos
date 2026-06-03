@@ -86,13 +86,13 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
 
 // Config por sector: color de acento + imagen hero
 const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; heroImage: string | null }> = {
-    "centros-deportivos":     { accentHsl: "0 84% 60%",   accentHex: "#ef4444", heroImage: "/centros-deportivos/hero.png" },
-    "gestorias":              { accentHsl: "142 71% 45%", accentHex: "#22c55e", heroImage: "/gestorias/hero.png" },
-    "salud":                  { accentHsl: "199 89% 48%", accentHex: "#0ea5e9", heroImage: "/salud/hero.png" },
-    "gastronomia-hosteleria": { accentHsl: "24 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
-    "academias":              { accentHsl: "292 73% 40%", accentHex: "#a21caf", heroImage: "/academias/hero.png" },
-    "construccion":           { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/constructoras.png" },
-    "industrial":             { accentHsl: "220 9% 46%",  accentHex: "#6b7280", heroImage: "/industrial/hero.png" },
+    "centros-deportivos":     { accentHsl: "0 84% 60%",   accentHex: "#ef4444", heroImage: "/centros-deportivos/hero.webp" },
+    "gestorias":              { accentHsl: "142 71% 45%", accentHex: "#22c55e", heroImage: "/gestorias/hero.webp" },
+    "salud":                  { accentHsl: "199 89% 48%", accentHex: "#0ea5e9", heroImage: "/salud/hero.webp" },
+    "gastronomia-hosteleria": { accentHsl: "24 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.webp" },
+    "academias":              { accentHsl: "292 73% 40%", accentHex: "#a21caf", heroImage: "/academias/hero.webp" },
+    "construccion":           { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/constructoras.webp" },
+    "industrial":             { accentHsl: "220 9% 46%",  accentHex: "#6b7280", heroImage: "/industrial/hero.webp" },
 };
 
 const ProcessDetail = () => {
