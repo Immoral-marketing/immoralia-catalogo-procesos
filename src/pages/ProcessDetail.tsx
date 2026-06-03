@@ -913,26 +913,47 @@ const ProcessDetail = () => {
             </main>
 
             {/* Sticky CTA bar */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-primary border-t border-primary/80">
-                <div className="mx-auto max-w-[860px] px-4 md:px-6 py-3 flex gap-3 justify-center">
-                    <Button
-                        variant="ghost"
-                        size="lg"
-                        className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => setShowBookingModal(true)}
+            {(() => {
+                const barAccent = sectorCfg?.accentHex ?? "#0ea5e9";
+                return (
+                    <div
+                        className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t"
+                        style={{
+                            backgroundColor: `${barAccent}12`,
+                            borderColor: `${barAccent}25`,
+                            boxShadow: `0 -8px 40px ${barAccent}10`,
+                        }}
                     >
-                        Agendar llamada
-                    </Button>
-                    <Button
-                        onClick={toggleSelect}
-                        size="lg"
-                        className="bg-black/90 hover:bg-black text-white font-medium border-0"
-                    >
-                        {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
-                        {isSelected ? "Añadido a mi selección" : "Añadir a mi selección"}
-                    </Button>
-                </div>
-            </div>
+                        <div className="mx-auto max-w-[860px] px-4 md:px-6 py-3 flex gap-3 justify-center">
+                            <Button
+                                variant="ghost"
+                                size="lg"
+                                className="font-medium text-white/50 hover:text-white/80 hover:bg-white/[0.08]"
+                                onClick={() => setShowBookingModal(true)}
+                            >
+                                Agendar llamada
+                            </Button>
+                            <Button
+                                onClick={toggleSelect}
+                                size="lg"
+                                className="font-medium border"
+                                style={isSelected ? {
+                                    backgroundColor: `${barAccent}25`,
+                                    borderColor: `${barAccent}55`,
+                                    color: barAccent,
+                                } : {
+                                    backgroundColor: `${barAccent}18`,
+                                    borderColor: `${barAccent}40`,
+                                    color: "#fff",
+                                }}
+                            >
+                                {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                                {isSelected ? "Añadido a mi selección" : "Añadir a mi selección"}
+                            </Button>
+                        </div>
+                    </div>
+                );
+            })()}
 
 
             {/* Modals */}
