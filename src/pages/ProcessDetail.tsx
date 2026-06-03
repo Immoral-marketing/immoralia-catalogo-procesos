@@ -491,18 +491,16 @@ const ProcessDetail = () => {
             {/* ── HERO BANNER con imagen del sector ── */}
             {sectorCfg?.heroImage && (() => {
                 return (
-                    <div className="relative w-full min-h-[460px] flex flex-col justify-end">
+                    <div className="relative w-full min-h-[480px] flex flex-col justify-end overflow-hidden">
+                        {/* Imagen full-bleed */}
                         <div
-                            className="absolute inset-0 overflow-hidden"
-                        >
-                            <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
-                            />
-                        </div>
-                        {/* Gradiente: cubre el 60% inferior progresivamente, luego el top con velo leve */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-background/90 via-[45%] to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent via-[25%] to-transparent" />
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
+                        />
+                        {/* Fade inferior: completamente opaco desde el 35% para abajo */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background from-[35%] via-background/70 via-[58%] to-transparent to-[85%]" />
+                        {/* Velo superior */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent via-[20%] to-transparent" />
                         <div className="relative z-10 mx-auto max-w-[860px] w-full px-4 md:px-6 pb-8 pt-6">
                             {/* ← Volver al sector — sobre el título, muy sutil */}
                             {sectorInfo && (
@@ -543,7 +541,7 @@ const ProcessDetail = () => {
                 );
             })()}
 
-            <main className={`mx-auto max-w-[860px] px-4 md:px-6 pb-32 space-y-20 ${sectorCfg?.heroImage ? 'pt-4' : 'py-16'}`}>
+            <main className={`relative z-10 mx-auto max-w-[860px] px-4 md:px-6 pb-32 space-y-20 ${sectorCfg?.heroImage ? 'pt-8' : 'py-16'}`}>
 
                 {/* HERO */}
                 <section className="space-y-6">

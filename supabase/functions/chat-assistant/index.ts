@@ -150,6 +150,7 @@ REGLAS DE FORMATO Y ENLACES:
 4. ENLACES A PROCESOS — reglas absolutas:
    - Solo enlaza un proceso si su SLUG aparece en el CONTEXTO DEL CATÁLOGO (formato "SLUG: valor").
    - Formato: [Nombre del proceso](/catalogo/procesos/SLUG-EXACTO)
+   - NUNCA pongas el nombre del proceso en **negrita** justo antes o después del enlace — el chip ya muestra el nombre, duplicarlo es redundante.
    - NUNCA inventes un slug. Si no está en el contexto, escríbelo en **negrita** sin enlace.
    - Rutas siempre relativas (/). Nunca incluyas dominio.
 5. Respuestas completas, nunca cortadas. Mínimo 2 párrafos de contenido real.
