@@ -64,12 +64,12 @@ const MODULE_MAP: Record<string, Record<string, string>> = {
         B6: "Gestión del profesorado",
     },
     "construccion": {
-        B1: "Captación y cualificación de leads",
-        B2: "Conversión y argumentación comercial",
+        B1: "Captación y cualificación",
+        B2: "Conversión y cierre",
         B3: "Seguimiento y visitas",
-        B4: "Cierre y contratación",
-        B5: "Postventa y relación con propietarios",
-        B6: "Operativa diaria",
+        B4: "Obra y proveedores",
+        B5: "Finanzas y cobros",
+        B6: "Postventa y dirección",
     },
 };
 
