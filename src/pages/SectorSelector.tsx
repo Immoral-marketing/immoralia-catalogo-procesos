@@ -68,7 +68,7 @@ const sectors = [
   {
     id: "construction",
     number: "04",
-    title: "Constructoras e Inmobiliarias",
+    title: "Desarrolladoras e Inmobiliarias",
     description: "Constructoras, empresas de reformas, arquitectura, agencias inmobiliarias y gestión de propiedades.",
     icon: HardHat,
     path: "/sector/construccion",
