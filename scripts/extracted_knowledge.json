@@ -1,5 +1,17 @@
 [
   {
+    "content": "# Proceso: Control de presencia y turnos\n**Tagline**: Cada operario recibe su turno individual por WhatsApp con confirmación. Los cambios se gestionan automáticamente y la ausencia no justificada alerta al responsable.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B6\n**Módulo**: 6.2\n\n## Descripción\nLos grupos de WhatsApp de turnos en una fábrica son ingobernables cuando el equipo supera los 10-15 operarios. Los cambios de turno generan confusión, las ausencias de última hora cogen a producción sin cobertura y el cuaderno de presencia en papel no permite análisis ni cruce con nómina. Este proceso digitaliza la comunicación de turnos, el registro de presencia y la gestión de ausencias con notificaciones automáticas al responsable.\n\n## Cómo funciona\n1. Se publica el cuadrante de turnos en el sistema\n2. Cada operario recibe su turno individual por WhatsApp\n3. Se registra la confirmación de lectura de cada turno\n4. Los cambios y ausencias generan notificaciones solo a los afectados\n5. El registro de presencia se sincroniza automáticamente con nómina\n\n## Personalización\nDefine el día y hora de envío del cuadrante, los criterios de sustitución por ausencia y el canal de escalado al responsable.\n\n## Herramientas utilizadas\nWhatsApp Business API, Software de RRHH / Excel, Make/n8n\n\n## Problemas que resuelve\nEl grupo de WhatsApp de turnos es un caos que nadie controla, Las ausencias de última hora nos pillan sin cobertura en planta\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-6.2",
+      "process_name": "Control de presencia y turnos",
+      "slug": "industrial-control-presencia-turnos",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B6",
+      "sector_name": "Industrial"
+    }
+  },
+  {
     "content": "# Proceso: Captura unificada de peticiones desde todos los canales\n**Tagline**: WhatsApp, formulario web, Instagram DM, llamadas — todo cae en una sola bandeja con el origen identificado.\n**Sector**: Exclusivo de Centros de Salud\n**Bloque de negocio**: B1\n**Módulo**: 1.2\n\n## Descripción\nCentralizamos todas las peticiones de cita entrantes en un único panel. El paciente escribe por WhatsApp, por Instagram DM, rellena el formulario de la web o llama por teléfono — y todo se unifica con el canal de origen marcado, sin duplicados y sin que recepción tenga que saltar entre 5 apps.\n\n## Cómo funciona\n1. Conectamos Instagram DM\n2. WhatsApp Business\n3. web y llamadas\n4. Detectamos qué mensajes son petición de cita real\n5. Unificamos en un panel centralizado\n6. Etiquetamos cada petición por canal de origen\n7. Notificamos a recepción solo lo que requiere intervención humana\n\n## Personalización\nElige qué canales activar, qué cuenta como 'caso especial' (grupos, urgencias, peticiones VIP) y la asignación por defecto.\n\n## Herramientas utilizadas\nInstagram Business API, WhatsApp Business API, Make/n8n, Software de gestión clínica\n\n## Problemas que resuelve\nLos DMs de Instagram pidiendo cita se nos pasan, Recepción copia datos de WhatsApp al sistema a mano, Tenemos peticiones duplicadas por el mismo paciente\n\n## Canales de integración\nInstagram, WhatsApp, Web, Teléfono",
     "metadata": {
       "source": "catalog_process",
@@ -33,6 +45,18 @@
       "landing_slug": "academias",
       "bloque_negocio": "B2",
       "sector_name": "Academias y Formación"
+    }
+  },
+  {
+    "content": "# Proceso: Mantenimiento preventivo de maquinaria\n**Tagline**: Planifica y registra las revisiones de cada máquina, avisa antes de que caduque un mantenimiento y deja trazabilidad de cada intervención para auditorías.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B6\n**Módulo**: 6.4\n\n## Descripción\nEl mantenimiento que 'está pendiente de programar' se convierte invariablemente en una avería en el peor momento. En una línea de producción, una parada no planificada tiene un coste por hora que supera fácilmente al coste del mantenimiento preventivo del año entero. Este proceso planifica automáticamente las revisiones de cada máquina según su plan de mantenimiento, lanza alertas antes de cada vencimiento y registra cada intervención con el responsable, el tiempo invertido y el resultado.\n\n## Cómo funciona\n1. Se define el plan de mantenimiento por máquina con frecuencias y responsables\n2. El sistema calcula las fechas de vencimiento de cada revisión\n3. Alerta al responsable con la antelación configurada antes de cada revisión\n4. El responsable ejecuta el mantenimiento y registra la intervención\n5. El sistema calcula automáticamente la próxima fecha de revisión\n\n## Personalización\nDefine los tipos de mantenimiento por máquina, las frecuencias, los responsables y los umbrales de alerta para cada tipo de revisión.\n\n## Herramientas utilizadas\nCMMS / Gestión de mantenimiento, Email / WhatsApp, Make/n8n\n\n## Problemas que resuelve\nLas averías siempre nos pillan en el peor momento porque el mantenimiento no está al día, El mantenimiento lo llevamos de memoria y no tenemos trazabilidad de intervenciones\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-6.4",
+      "process_name": "Mantenimiento preventivo de maquinaria",
+      "slug": "industrial-mantenimiento-preventivo",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B6",
+      "sector_name": "Industrial"
     }
   },
   {
@@ -108,6 +132,18 @@
     }
   },
   {
+    "content": "# Proceso: Creación automática de presupuestos sin errores\n**Tagline**: Vuela enviando presupuestos.\n**Sector**: Exclusivo de Gestorías\n**Bloque de negocio**: B1\n**Módulo**: 1.1\n\n## Descripción\nDesde una hoja de cálculo o cualquier fuente → Creamos presupuestos completos en tu sistema de facturación/ERP. Leemos tarifas, servicios y cantidades. Creamos el presupuesto con líneas y totales. Notificamos al responsable para envío o revisión.\n\n## Cómo funciona\n1. Leemos tarifas\n2. servicios y cantidades\n3. Creamos el presupuesto con líneas y totales\n4. Notificamos al responsable para envío o revisión\n\n## Personalización\nDecide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.\n\n## Herramientas utilizadas\nERP/Software de gestión, Hoja de cálculo\n\n## Problemas que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes\n\n## Canales de integración\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Presupuestos automáticos\r\n\r\n## Contexto\r\nEste proceso es una herramienta de **ventas y captación de clientes**. Su objetivo es agilizar el envío de propuestas comerciales por los servicios que la empresa vende. **No tiene relación con presupuestos recibidos de proveedores o colaboradores externos.**\r\n\r\n## Lógica Técnica\r\nGeneración dinámica de documentos comerciales basados en datos estructurados.\r\n1.  **Captura**: Datos de entrada desde un formulario (tu herramienta de formularios/tu herramienta de formularios) o una fila en Google Sheets.\r\n2.  **Mapeo**: n8n cruza los servicios seleccionados con una base de datos de precios/tarifas.\r\n3.  **Documentación**: Uso de la API de tu ERP/software de gestión para crear el presupuesto con todos los conceptos detallados.\r\n4.  **Flujo**: El presupuesto queda creado en tu ERP/software de gestión listo para ser enviado o se envía automáticamente si se cumplen ciertas condiciones.\r\n\r\n## Beneficios y ROI\r\n-   **Velocidad de Respuesta**: Los leads reciben el presupuesto en minutos, aumentando el ratio de conversión.\r\n-   **Uniformidad**: Todos los presupuestos siguen la misma estructura y diseño corporativo.\r\n-   **Sin Errores**: Precios siempre actualizados desde una fuente centralizada.\r\n\r\n## Casos de Uso\r\n-   **Consultorías**: Servicios paquetizados con precios fijos.\r\n-   **Agencias de Eventos**: Desglose rápido de partidas estándar.\r\n\r\n## Requisitos Previos\r\n-   Base de datos de servicios/productos configurada en el ERP.\r\n-   Formulario de captura de datos o estructura de Sheets clara.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Puedo añadir productos personalizados?** Sí, el sistema puede tener una opción de \"Otros\" para añadir texto libre que luego un comercial revisa.\r\n-   **¿Envía el PDF al cliente?** Se puede configurar, aunque recomendamos que pase por una revisión manual antes de salir.\r\n",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "A3",
+      "process_name": "Creación automática de presupuestos sin errores",
+      "slug": "presupuestos-automaticos",
+      "landing_slug": "gestorias",
+      "bloque_negocio": "B1",
+      "sector_name": "Gestorías"
+    }
+  },
+  {
     "content": "# Proceso: Chatbot informativo del centro\n**Tagline**: Un asistente que conoce servicios, precios estimados, aseguradoras, ubicación y horarios — y responde al instante.\n**Sector**: Exclusivo de Centros de Salud\n**Bloque de negocio**: B1\n**Módulo**: 1.3\n\n## Descripción\nUn asistente conversacional disponible en WhatsApp, Instagram DM y el chat de la web que tiene toda la información del centro: cartera de servicios, rangos de precio orientativos, aseguradoras con las que trabajáis, dirección y cómo llegar, parking, horarios, política de primera visita. Responde 24/7 con información actualizada y, cuando hay intención de cita, deriva o gestiona la reserva.\n\n## Cómo funciona\n1. Recopilamos toda la información del centro y servicios\n2. Entrenamos al asistente en el tono del centro\n3. Lo conectamos a los canales donde te escriben los pacientes\n4. Responde dudas al instante con información actualizada\n5. Cuando detecta intención de cita\n6. la gestiona o deriva con contexto\n\n## Personalización\nDefine el tono, qué información incluir, qué temas escalar siempre a humano (urgencias, quejas) y cuándo proponer activamente reservar cita.\n\n## Herramientas utilizadas\nOpenAI / Claude, WhatsApp Business API, Instagram Business, Make/n8n\n\n## Problemas que resuelve\nTodos los días respondemos las mismas 10 preguntas, Recepción está al teléfono y no atiende el mostrador, Damos información inconsistente según quién responda\n\n## Canales de integración\nWhatsApp, Instagram, Web",
     "metadata": {
       "source": "catalog_process",
@@ -180,6 +216,18 @@
     }
   },
   {
+    "content": "# Proceso: Cobros automáticos mensuales y avisos cuando un pago falla\n**Tagline**: Asegura tus ingresos sin perseguir recibos.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B4\n**Módulo**: 4.1\n\n## Descripción\nProcesamiento automático de cobros. Si falla, el sistema reintenta a los 3 días, notifica al socio con link de pago y alerta a administración.\n\n## Cómo funciona\n1. Ejecución de remesa/cobro tarjeta\n2. Lógica de reintentos automática\n3. Comunicación de deuda instantánea\n\n## Personalización\nDefine el número de reintentos y los plazos de aviso.\n\n## Herramientas utilizadas\nStripe, GoCardless, Make, WhatsApp Business API\n\n## Problemas que resuelve\nLos cobros fallidos los sigues persiguiendo tú\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "FF27",
+      "process_name": "Cobros automáticos mensuales y avisos cuando un pago falla",
+      "slug": "cobro-recurrente-gestion-impagos",
+      "landing_slug": "centros-deportivos",
+      "bloque_negocio": "B4",
+      "sector_name": "Centros Deportivos"
+    }
+  },
+  {
     "content": "# Proceso: Seguimiento automático a los interesados mientras dura la obra\n**Tagline**: Mantén viva la llama por meses automatizando avances de tu obra sin parecer un robot.\n**Sector**: Exclusivo de Construcción & Inmobiliaria\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nSistema que mantiene el lead activo durante meses enviando avances de obra, hitos importantes y mensajes personalizados según etapa del embudo. Integra email, WhatsApp y recordatorios programados. Reactiva leads inactivos de forma contextual, no masiva.\n\n## Cómo funciona\n1. Diseña la secuencia ligada a fechas clave de avance de proyecto y marketing.\n2. Cruzan campañas multicanal con fotos o vídeos de dron.\n3. Notifica al agente comercial la reactivación si el lead responde a algo.\n\n## Personalización\nDefine cómo calibrar los mensajes, más agresivos o más sutiles según la etapa y el termómetro comercial.\n\n## Herramientas utilizadas\nCRM, Mailing / WhatsApp\n\n## Problemas que resuelve\n\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -201,6 +249,18 @@
       "landing_slug": "academias",
       "bloque_negocio": "B5",
       "sector_name": "Academias y Formación"
+    }
+  },
+  {
+    "content": "# Proceso: Captación automática de interesados desde tu web y redes sociales\n**Tagline**: Los leads entran solos en tu CRM y arrancan su secuencia.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B2\n**Módulo**: 2.1\n\n## Descripción\nCuando alguien rellena un formulario de 'prueba gratuita' o 'más información' en la web o Instagram, el contacto entra automáticamente en el CRM/email marketing con etiqueta de origen y arranca una secuencia de nurturing.\n\n## Cómo funciona\n1. Captura de lead desde formulario/RRSS\n2. Sincronización con CRM\n3. Activación de secuencia de email/notificación\n\n## Personalización\nDefine los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).\n\n## Herramientas utilizadas\nTypeform, HubSpot, ActiveCampaign, Make\n\n## Problemas que resuelve\nTienes leads de prueba gratuita que nunca nadie siguió, Pierdo solicitudes entre WhatsApp/Instagram/email\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "CM1",
+      "process_name": "Captación automática de interesados desde tu web y redes sociales",
+      "slug": "lead-capture-crm",
+      "landing_slug": "centros-deportivos",
+      "bloque_negocio": "B2",
+      "sector_name": "Centros Deportivos"
     }
   },
   {
@@ -321,18 +381,6 @@
       "landing_slug": "academias",
       "bloque_negocio": "B3",
       "sector_name": "Academias y Formación"
-    }
-  },
-  {
-    "content": "# Proceso: Creación automática de presupuestos sin errores\n**Tagline**: Vuela enviando presupuestos.\n**Sector**: Exclusivo de Gestorías\n**Bloque de negocio**: B1\n**Módulo**: 1.1\n\n## Descripción\nDesde una hoja de cálculo o cualquier fuente → Creamos presupuestos completos en tu sistema de facturación/ERP. Leemos tarifas, servicios y cantidades. Creamos el presupuesto con líneas y totales. Notificamos al responsable para envío o revisión.\n\n## Cómo funciona\n1. Leemos tarifas\n2. servicios y cantidades\n3. Creamos el presupuesto con líneas y totales\n4. Notificamos al responsable para envío o revisión\n\n## Personalización\nDecide si el presupuesto se envía automáticamente al cliente o queda en borrador para que lo revises.\n\n## Herramientas utilizadas\nERP/Software de gestión, Hoja de cálculo\n\n## Problemas que resuelve\nQuiero automatizar presupuestos y respuestas, Tardamos en responder y perdemos clientes\n\n## Canales de integración\n\n--- INFORMACIÓN DETALLADA ---\n\n# Deep Knowledge: Presupuestos automáticos\r\n\r\n## Contexto\r\nEste proceso es una herramienta de **ventas y captación de clientes**. Su objetivo es agilizar el envío de propuestas comerciales por los servicios que la empresa vende. **No tiene relación con presupuestos recibidos de proveedores o colaboradores externos.**\r\n\r\n## Lógica Técnica\r\nGeneración dinámica de documentos comerciales basados en datos estructurados.\r\n1.  **Captura**: Datos de entrada desde un formulario (tu herramienta de formularios/tu herramienta de formularios) o una fila en Google Sheets.\r\n2.  **Mapeo**: n8n cruza los servicios seleccionados con una base de datos de precios/tarifas.\r\n3.  **Documentación**: Uso de la API de tu ERP/software de gestión para crear el presupuesto con todos los conceptos detallados.\r\n4.  **Flujo**: El presupuesto queda creado en tu ERP/software de gestión listo para ser enviado o se envía automáticamente si se cumplen ciertas condiciones.\r\n\r\n## Beneficios y ROI\r\n-   **Velocidad de Respuesta**: Los leads reciben el presupuesto en minutos, aumentando el ratio de conversión.\r\n-   **Uniformidad**: Todos los presupuestos siguen la misma estructura y diseño corporativo.\r\n-   **Sin Errores**: Precios siempre actualizados desde una fuente centralizada.\r\n\r\n## Casos de Uso\r\n-   **Consultorías**: Servicios paquetizados con precios fijos.\r\n-   **Agencias de Eventos**: Desglose rápido de partidas estándar.\r\n\r\n## Requisitos Previos\r\n-   Base de datos de servicios/productos configurada en el ERP.\r\n-   Formulario de captura de datos o estructura de Sheets clara.\r\n\r\n## Preguntas Frecuentes\r\n-   **¿Puedo añadir productos personalizados?** Sí, el sistema puede tener una opción de \"Otros\" para añadir texto libre que luego un comercial revisa.\r\n-   **¿Envía el PDF al cliente?** Se puede configurar, aunque recomendamos que pase por una revisión manual antes de salir.\r\n",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "A3",
-      "process_name": "Creación automática de presupuestos sin errores",
-      "slug": "presupuestos-automaticos",
-      "landing_slug": "gestorias",
-      "bloque_negocio": "B1",
-      "sector_name": "Gestorías"
     }
   },
   {
@@ -840,18 +888,6 @@
     }
   },
   {
-    "content": "# Proceso: Aviso automático cuando un alumno lleva días sin venir al centro\n**Tagline**: Detecta el abandono antes de que ocurra.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nSi un alumno no asiste en 10 días (o su frecuencia cae un 50%), el sistema genera una alerta interna y dispara un mensaje personalizado del instructor preguntando cómo está.\n\n## Cómo funciona\n1. Análisis de frecuencia de asistencia\n2. Detección de 'riesgo de abandono'\n3. Mensaje preventivo personalizado\n\n## Personalización\nAjusta los días de inactividad según la intensidad del centro.\n\n## Herramientas utilizadas\nVirtuagym, Mindbody, Make, WhatsApp Business API\n\n## Problemas que resuelve\nNo sabes cuántos socios están en riesgo de baja ahora mismo\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "GV7",
-      "process_name": "Aviso automático cuando un alumno lleva días sin venir al centro",
-      "slug": "seguimiento-alumnos-riesgo-baja",
-      "landing_slug": "centros-deportivos",
-      "bloque_negocio": "B3",
-      "sector_name": "Centros Deportivos"
-    }
-  },
-  {
     "content": "# Proceso: Contratos de reserva generados y enviados a firmar desde el móvil\n**Tagline**: El fin definitivo al papelazo que atranca tus ventas ya cerradas.\n**Sector**: Exclusivo de Construcción & Inmobiliaria\n**Bloque de negocio**: B4\n**Módulo**: 4.1\n\n## Descripción\nSistema que automatiza la generación del contrato de reserva y sus anexos, envía los documentos para firma digital certificada y hace seguimiento del estado de cada firma. Reduce la fricción operativa entre el acuerdo verbal y el documento firmado, acelerando los cierres sin riesgo de que el comprador se enfríe.\n\n## Cómo funciona\n1. Inyectamos los datos del comprador y el precio cerrado en la plantilla legal oficial de la promotora.\n2. Lanzamos la secuencia de firma en el móvil del comprador con certificado de hora e IP.\n3. Devolvemos el archivo firmado a la promotora listo para facturación y elevación a escritura pública.\n\n## Personalización\nNos amoldamos a las plantillas blindadas de la promotora, respetando todos los anexos: memoria de calidades, SEPA, RGPD y cualquier cláusula específica.\n\n## Herramientas utilizadas\nCRM, DOCS, Firma Digital\n\n## Problemas que resuelve\nEl papeleo de contratos ralentiza los cierres, El comprador se enfría entre el acuerdo y la firma\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -885,6 +921,18 @@
       "landing_slug": "agencias",
       "bloque_negocio": null,
       "sector_name": "agencias"
+    }
+  },
+  {
+    "content": "# Proceso: Aviso automático cuando un alumno lleva días sin venir al centro\n**Tagline**: Detecta el abandono antes de que ocurra.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nMuchos socios cancelan su membresía sin avisar: simplemente dejan de venir y un día se van. Este proceso monitoriza la frecuencia de asistencia de cada socio y detecta en tiempo real quién está en riesgo de darse de baja. Cuando un alumno no asiste en 10 días consecutivos, o su frecuencia cae un 50% respecto a su media habitual, el sistema genera una alerta interna y dispara automáticamente un mensaje personalizado del instructor preguntando cómo está. Actuar en ese momento —antes de que el socio tome la decisión de cancelar— multiplica la tasa de retención. Es el proceso más efectivo para prevenir bajas, reducir el churn y recuperar socios que están a punto de abandonar el centro.\n\n## Cómo funciona\n1. Análisis de frecuencia de asistencia de cada socio\n2. Detección automática de socios en riesgo de baja o abandono\n3. Alerta interna al equipo con el perfil del socio\n4. Mensaje preventivo personalizado al socio por WhatsApp o email\n\n## Personalización\nAjusta los días de inactividad que activan la alerta, el canal de contacto (WhatsApp o email) y el tono del mensaje según el perfil del socio.\n\n## Herramientas utilizadas\nVirtuagym, Mindbody, Make, WhatsApp Business API\n\n## Problemas que resuelve\nNo sabes cuántos socios están en riesgo de baja ahora mismo, Los socios cancelan sin avisar y te enteras cuando ya es tarde, Pierdes socios que simplemente dejan de venir sin que nadie les contacte, No tienes forma de saber quién está a punto de darse de baja, Tu tasa de cancelaciones es alta y no sabes cómo prevenirlo, Quieres retener más socios y reducir el churn del centro\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "GV7",
+      "process_name": "Aviso automático cuando un alumno lleva días sin venir al centro",
+      "slug": "seguimiento-alumnos-riesgo-baja",
+      "landing_slug": "centros-deportivos",
+      "bloque_negocio": "B3",
+      "sector_name": "Centros Deportivos"
     }
   },
   {
@@ -936,18 +984,6 @@
     }
   },
   {
-    "content": "# Proceso: Recopilación automática de documentos\n**Tagline**: Solicita y centraliza la documentación de tus clientes cada mes sin perseguir a nadie.\n**Sector**: Exclusivo de Gestorías\n**Bloque de negocio**: B2\n**Módulo**: 2.1\n\n## Descripción\nOlvídate de perseguir facturas cada mes. El sistema detecta automáticamente la fecha de cierre y solicita la documentación necesaria a cada cliente. Si no hay respuesta tras unos días, lanza un segundo aviso de recordatorio. Toda la documentación recibida se centraliza automáticamente en su carpeta correspondiente, lista para ser procesada.\n\n## Cómo funciona\n1. Configuramos el calendario de cierre por cliente\n2. Lanzamos solicitudes automáticas multicanal\n3. Monitorizamos la recepción y lanzamos recordatorios\n4. Centralizamos los archivos en tu gestor de nube organizado\n\n## Personalización\nDefine los días de aviso, el tono del mensaje y la estructura de carpetas en tu nube.\n\n## Herramientas utilizadas\nEmail, Google Drive/Dropbox, Make/Zapier\n\n## Problemas que resuelve\nPierdo mucho tiempo pidiendo facturas, Los clientes se retrasan en el envío de docs\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "GS1",
-      "process_name": "Recopilación automática de documentos",
-      "slug": "recopilacion-mensual-documentos",
-      "landing_slug": "gestorias",
-      "bloque_negocio": "B2",
-      "sector_name": "Gestorías"
-    }
-  },
-  {
     "content": "# Proceso: Entrada de pedido y planificación de producción\n**Tagline**: Cuando entra un pedido confirmado, el sistema lo convierte en una orden de fabricación, reserva los materiales y lo ubica en la cola de producción.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.1\n\n## Descripción\nEl traslado manual de un pedido confirmado a una orden de producción es uno de los cuellos de botella más habituales en la industria. Alguien tiene que introducir los datos en el sistema de producción, comprobar los materiales disponibles, reservarlos y asignar la posición en la cola. Si hay errores en ese paso, los plazos se incumplen y planta trabaja con información incorrecta. Este proceso cierra ese gap de forma automática y sin intervención humana.\n\n## Cómo funciona\n1. El pedido se confirma en el sistema de gestión\n2. Se crea automáticamente la orden de fabricación\n3. Se comprueba el stock de materiales necesarios\n4. Se reservan los materiales para la orden\n5. La orden se posiciona en la cola de producción según plazo\n\n## Personalización\nDefine los criterios de posicionamiento en cola (FIFO, por fecha de entrega, por cliente prioritario), qué hacer si faltan materiales y cómo notificar a planta.\n\n## Herramientas utilizadas\nERP, MES / Sistema de producción, Make/n8n\n\n## Problemas que resuelve\nDe la confirmación del pedido a la orden de producción pueden pasar horas o días, Planta empieza a trabajar con datos incorrectos o incompletos, Los errores de transferencia nos generan retrabajos y retrasos\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -957,6 +993,18 @@
       "landing_slug": "industrial",
       "bloque_negocio": "B2",
       "sector_name": "Industrial"
+    }
+  },
+  {
+    "content": "# Proceso: Recopilación automática de documentos\n**Tagline**: Solicita y centraliza la documentación de tus clientes cada mes sin perseguir a nadie.\n**Sector**: Exclusivo de Gestorías\n**Bloque de negocio**: B2\n**Módulo**: 2.1\n\n## Descripción\nOlvídate de perseguir facturas cada mes. El sistema detecta automáticamente la fecha de cierre y solicita la documentación necesaria a cada cliente. Si no hay respuesta tras unos días, lanza un segundo aviso de recordatorio. Toda la documentación recibida se centraliza automáticamente en su carpeta correspondiente, lista para ser procesada.\n\n## Cómo funciona\n1. Configuramos el calendario de cierre por cliente\n2. Lanzamos solicitudes automáticas multicanal\n3. Monitorizamos la recepción y lanzamos recordatorios\n4. Centralizamos los archivos en tu gestor de nube organizado\n\n## Personalización\nDefine los días de aviso, el tono del mensaje y la estructura de carpetas en tu nube.\n\n## Herramientas utilizadas\nEmail, Google Drive/Dropbox, Make/Zapier\n\n## Problemas que resuelve\nPierdo mucho tiempo pidiendo facturas, Los clientes se retrasan en el envío de docs\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "GS1",
+      "process_name": "Recopilación automática de documentos",
+      "slug": "recopilacion-mensual-documentos",
+      "landing_slug": "gestorias",
+      "bloque_negocio": "B2",
+      "sector_name": "Gestorías"
     }
   },
   {
@@ -1008,7 +1056,7 @@
     }
   },
   {
-    "content": "# Proceso: Control de calidad en proceso\n**Tagline**: Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nEl control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.\n\n## Cómo funciona\n1. Se definen los puntos de control y tolerancias por tipo de producto\n2. El operario registra los valores medidos en cada punto de control\n3. El sistema compara con los valores esperados\n4. Si hay desviación\n5. bloquea el avance y alerta al responsable\n6. El responsable valida o rechaza antes de permitir continuar\n\n## Personalización\nDefine los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.\n\n## Herramientas utilizadas\nMES / Sistema de producción, Tablet, Make/n8n\n\n## Problemas que resuelve\nEl control de calidad se hace de memoria y la trazabilidad es muy mala, Detectamos los problemas cuando el producto ya está en el cliente\n\n## Canales de integración",
+    "content": "# Proceso: Control de calidad en proceso\n**Tagline**: Registra los controles de calidad en cada punto crítico de la producción y bloquea el avance de la orden si hay una desviación sin resolver.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B3\n**Módulo**: 3.1\n\n## Descripción\nEl control de calidad que se hace de memoria o en papel llega tarde y deja trazabilidad incompleta. Este proceso digitaliza los puntos de control de calidad a lo largo de la producción: el operario registra los valores medidos en cada fase, el sistema comprueba si están dentro de tolerancia y bloquea el avance si hay una desviación sin resolver, evitando que el problema avance en la cadena.\n\n## Cómo funciona\n1. Se definen los puntos de control y tolerancias por tipo de producto\n2. El operario registra los valores medidos en cada punto de control\n3. El sistema compara con los valores esperados\n4. Si hay desviación\n5. bloquea el avance y alerta al responsable\n6. El responsable valida o rechaza antes de permitir continuar\n\n## Personalización\nDefine los puntos de control, valores esperados y tolerancias por producto, y el escalado de alertas según la gravedad de la desviación.\n\n## Herramientas utilizadas\nMES / Sistema de producción, Tablet, Make/n8n\n\n## Problemas que resuelve\nEl control de calidad se hace de memoria y la trazabilidad es muy mala, Detectamos los problemas cuando el producto ya está en el cliente, Los operarios rellenan los controles de calidad en papel y los datos se pierden o llegan tarde, Tenemos que digitalizar manualmente los registros de calidad en papel, No podemos auditar la trazabilidad de calidad porque está todo en papel\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
       "process_id": "IND-3.1",
@@ -1044,30 +1092,6 @@
     }
   },
   {
-    "content": "# Proceso: Evaluación y homologación de proveedores\n**Tagline**: Recoge automáticamente los datos de entrega, calidad y precio por proveedor y genera el informe periódico para decidir con quién seguir trabajando.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B4\n**Módulo**: 4.2\n\n## Descripción\nLa evaluación de proveedores en muchas industriales se hace de forma subjetiva o directamente no se hace. Este proceso recoge automáticamente los datos reales de cada proveedor — plazos de entrega cumplidos, tasa de material rechazado, desviaciones de precio — y genera un scorecard periódico que sirve de base objetiva para las decisiones de compras: homologar proveedores nuevos, renegociar condiciones o buscar alternativas.\n\n## Cómo funciona\n1. El sistema recoge automáticamente los datos de cada pedido cerrado\n2. Calcula las métricas de rendimiento por proveedor: plazo\n3. calidad\n4. precio\n5. Genera el scorecard comparativo por proveedor\n6. Envía el informe al responsable de compras con la frecuencia definida\n7. Las decisiones de homologación y renegociación se basan en el scorecard\n\n## Personalización\nDefine las métricas y su ponderación (plazo, calidad, precio, servicio), la frecuencia del informe y los umbrales que activan una revisión de proveedor.\n\n## Herramientas utilizadas\nERP, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNo tenemos datos objetivos para evaluar a nuestros proveedores, Seguimos trabajando con proveedores problemáticos porque no tenemos alternativa documentada\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-4.2",
-      "process_name": "Evaluación y homologación de proveedores",
-      "slug": "industrial-evaluacion-proveedores",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B4",
-      "sector_name": "Industrial"
-    }
-  },
-  {
-    "content": "# Proceso: Recepción y verificación de materiales\n**Tagline**: Guía al almacén en la recepción de materiales, comprueba que lo recibido coincide con el pedido y registra las incidencias antes de dar entrada al stock.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B4\n**Módulo**: 4.3\n\n## Descripción\nRecibir materiales sin un proceso de verificación estructurado significa que errores del proveedor — cantidades incorrectas, materiales fuera de especificación, daños de transporte — entran en el stock y se detectan cuando ya están en producción, mucho más tarde y con mucho más impacto. Este proceso guía al personal de almacén en la recepción con una checklist vinculada al pedido, registra las incidencias en el momento y bloquea la entrada al stock hasta que están resueltas.\n\n## Cómo funciona\n1. El personal de almacén identifica el pedido entrante en el sistema\n2. La checklist guía la verificación de cantidad\n3. referencia y estado\n4. Las incidencias detectadas se registran en el sistema con foto\n5. Se notifica automáticamente al proveedor de las incidencias\n6. La entrada al stock solo se aprueba cuando la recepción es correcta\n\n## Personalización\nDefine qué verificar por tipo de material, los criterios de aceptación/rechazo y el flujo de notificación al proveedor en caso de incidencia.\n\n## Herramientas utilizadas\nERP, Gestión de almacén, Tablet, Make/n8n\n\n## Problemas que resuelve\nRecibimos material incorrecto o dañado y lo detectamos cuando ya está en producción, No tenemos documentación de las incidencias para reclamar al proveedor\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-4.3",
-      "process_name": "Recepción y verificación de materiales",
-      "slug": "industrial-recepcion-verificacion-materiales",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B4",
-      "sector_name": "Industrial"
-    }
-  },
-  {
     "content": "# Proceso: Control de stock mínimo y alertas de reposición\n**Tagline**: Monitoriza el nivel de cada material y lanza una alerta cuando baja del mínimo definido, con el tiempo de antelación necesario para recibir el pedido antes de que afecte a producción.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B4\n**Módulo**: 4.4\n\n## Descripción\nUna rotura de stock en una referencia crítica puede parar una línea de producción entera. Y el stock mínimo que se configuró hace dos años ya no refleja el ritmo de consumo actual. Este proceso monitoriza en tiempo real el nivel de cada referencia de material, ajusta dinámicamente las alertas según el consumo reciente y el plazo de entrega del proveedor, y lanza la alerta con la antelación suficiente para recibir el pedido antes de que la producción se vea afectada.\n\n## Cómo funciona\n1. El sistema monitoriza el nivel de stock por referencia en tiempo real\n2. Calcula el punto de reposición según consumo y plazo del proveedor\n3. Cuando el nivel baja del punto de reposición\n4. lanza la alerta\n5. La alerta incluye la cantidad sugerida y el proveedor habitual\n6. El responsable de compras genera el pedido en un clic\n\n## Personalización\nDefine los stocks mínimos por referencia, la sensibilidad de ajuste dinámico y el canal de alerta al responsable de compras.\n\n## Herramientas utilizadas\nERP, Gestión de stock, Email / WhatsApp, Make/n8n\n\n## Problemas que resuelve\nNos quedamos sin material y paramos producción cuando ya es tarde, Los stocks mínimos que tenemos configurados están desactualizados\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1092,36 +1116,12 @@
     }
   },
   {
-    "content": "# Proceso: Facturación automática al cierre de entrega\n**Tagline**: En cuanto el albarán está firmado, el sistema genera la factura, la envía al cliente y la registra en contabilidad sin intervención manual.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.1\n\n## Descripción\nEn una industrial que factura a plazos largos (60 o 90 días), cualquier retraso en la emisión de la factura se traduce directamente en retraso del cobro. Si el albarán tarda tres días en procesarse y convertirse en factura, esos tres días se suman al plazo de cobro. Este proceso elimina ese retraso: desde la firma del albarán hasta la factura enviada al cliente en cuestión de minutos, con los datos correctos y el registro automático en el sistema contable.\n\n## Cómo funciona\n1. El albarán firmado queda registrado en el sistema\n2. El proceso detecta el cierre y arranca la facturación\n3. Se genera la factura con los datos del pedido y las condiciones acordadas\n4. La factura se envía automáticamente al cliente por email\n5. Se registra en el sistema contable sin intervención manual\n\n## Personalización\nDefine las condiciones de facturación por cliente (plazo, divisa, formato), los campos de validación requeridos y si quiere revisión humana antes del envío para pedidos de gran importe.\n\n## Herramientas utilizadas\nERP, Software de facturación, Email, Contabilidad\n\n## Problemas que resuelve\nEl albarán tarda días en convertirse en factura y perdemos días de cobro, Las facturas tienen errores por los datos introducidos a mano\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-5.1",
-      "process_name": "Facturación automática al cierre de entrega",
-      "slug": "industrial-facturacion-automatica",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B5",
-      "sector_name": "Industrial"
-    }
-  },
-  {
     "content": "# Proceso: Seguimiento de cobros y reclamación de impagados\n**Tagline**: Controla el estado de cada factura emitida, lanza recordatorios automáticos antes del vencimiento y escala si el pago no llega en plazo.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.2\n\n## Descripción\nEn industria, los plazos de cobro son largos y las facturas son muchas. Llevar el seguimiento manual de cuáles están cobradas, cuáles están próximas a vencer y cuáles han vencido sin cobrar es un trabajo que consume horas del administrativo cada semana. Este proceso automatiza toda la cadena: recordatorio preventivo antes del vencimiento, seguimiento tras el vencimiento y escalado a la dirección si la situación persiste.\n\n## Cómo funciona\n1. El sistema monitoriza el estado de cada factura emitida\n2. Días antes del vencimiento\n3. envía recordatorio al cliente\n4. Al vencer sin cobrar\n5. inicia el proceso de seguimiento escalonado\n6. Si persiste sin pago\n7. escala a un nivel de comunicación más directo\n8. Cuando supera el umbral crítico\n9. alerta a dirección para gestión directa\n\n## Personalización\nDefine los umbrales de recordatorio, el tono de cada escalado, quién recibe las alertas en dirección y si integra con el departamento legal para casos extremos.\n\n## Herramientas utilizadas\nERP / Software de facturación, Email, WhatsApp Business, Make/n8n\n\n## Problemas que resuelve\nLas facturas se cobran tarde porque nadie lleva el seguimiento de forma sistemática, Tenemos facturas vencidas de hace meses que descubrimos por casualidad\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
       "process_id": "IND-5.2",
       "process_name": "Seguimiento de cobros y reclamación de impagados",
       "slug": "industrial-seguimiento-cobros",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B5",
-      "sector_name": "Industrial"
-    }
-  },
-  {
-    "content": "# Proceso: Cuadro de mando financiero\n**Tagline**: Consolidada facturación, cobros pendientes, coste de producción y margen por orden en un informe accesible en tiempo real, sin esperar al gestor.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.3\n\n## Descripción\nLa dirección de una industrial no puede tomar decisiones operativas si los datos financieros del mes actual solo están disponibles cuando el gestor cierra los libros. Este cuadro de mando consolida en tiempo real los datos de facturación, cobros pendientes, costes de producción y margen por orden desde los sistemas operativos, y los presenta en un panel accesible para dirección sin necesidad de intervención del administrativo.\n\n## Cómo funciona\n1. Se integran los sistemas de datos (ERP\n2. facturación\n3. contabilidad)\n4. El sistema extrae y consolida los datos en tiempo real\n5. Calcula márgenes\n6. cobros pendientes y variaciones respecto al periodo anterior\n7. El panel se actualiza automáticamente y es accesible para dirección\n8. Se configuran alertas si algún indicador supera los umbrales definidos\n\n## Personalización\nDefine los indicadores clave para tu negocio, los periodos de comparación y los umbrales que disparan alertas para dirección.\n\n## Herramientas utilizadas\nERP, Contabilidad, Power BI / Looker / similar, Make/n8n\n\n## Problemas que resuelve\nNo sabemos nuestro margen real hasta que el gestor cierra los libros, semanas tarde, Dirección toma decisiones con datos del mes pasado\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-5.3",
-      "process_name": "Cuadro de mando financiero",
-      "slug": "industrial-cuadro-mando-financiero",
       "landing_slug": "industrial",
       "bloque_negocio": "B5",
       "sector_name": "Industrial"
@@ -1140,36 +1140,12 @@
     }
   },
   {
-    "content": "# Proceso: Informes mensuales de actividad y rendimiento\n**Tagline**: Genera automáticamente el informe mensual con métricas clave de producción, ventas, calidad y equipo, listo para presentar a dirección sin prepararlo desde cero.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.4\n\n## Descripción\nEl informe mensual que se presenta en la reunión de dirección suele prepararse manualmente, extrayendo datos de varios sistemas y formateando el documento. Este proceso lo automatiza completamente: al cierre de cada mes, extrae los datos de producción, ventas, calidad y equipo de los sistemas operativos, genera el informe con el formato corporativo y lo envía a los destinatarios configurados listo para revisar y presentar.\n\n## Cómo funciona\n1. Al cierre del mes\n2. el proceso se activa automáticamente\n3. Extrae KPIs de producción: órdenes\n4. plazos\n5. eficiencia\n6. Extrae KPIs de ventas: facturación\n7. nuevos pedidos\n8. pipeline\n9. Extrae KPIs de calidad: no conformidades\n10. reclamaciones\n11. rechazos\n12. Genera el informe en formato corporativo y lo envía a la lista de distribución\n\n## Personalización\nDefine los KPIs de cada área, el formato del informe, la fecha de generación y la lista de distribución.\n\n## Herramientas utilizadas\nERP, Sistema de producción, Generador de documentos, Email\n\n## Problemas que resuelve\nEl informe mensual lo prepara alguien a mano y siempre llega tarde a la reunión, Los datos de distintos departamentos no cuadran porque cada uno tira de su Excel\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-5.4",
-      "process_name": "Informes mensuales de actividad y rendimiento",
-      "slug": "industrial-informes-mensuales",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B5",
-      "sector_name": "Industrial"
-    }
-  },
-  {
     "content": "# Proceso: Onboarding de nuevo trabajador\n**Tagline**: Cuando se incorpora un operario, el proceso organiza automáticamente la documentación, los accesos, el equipo de protección y la formación obligatoria del primer día.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B6\n**Módulo**: 6.1\n\n## Descripción\nEn una industrial, la incorporación de un nuevo operario implica coordinación entre RRHH, el responsable de planta, el responsable de seguridad y el responsable de sistemas: contrato, alta en nómina, ficha de formación PRL, entrega de EPIs, acceso a máquinas y sistemas. Si ese proceso no está automatizado, la mitad de las veces el nuevo llega y alguien está improvisando. Este proceso coordina automáticamente cada paso del onboarding desde el momento de la contratación.\n\n## Cómo funciona\n1. Se confirma la contratación en el sistema de RRHH\n2. El proceso lanza la checklist de documentación a RRHH\n3. Se preparan los EPIs y accesos necesarios para el puesto\n4. Se programan las formaciones obligatorias del primer día\n5. El nuevo trabajador llega con todo preparado y operativo\n\n## Personalización\nDefine la lista de acciones por tipo de puesto, los responsables de cada acción y el canal de comunicación para cada parte.\n\n## Herramientas utilizadas\nRRHH / Nómina, Email / WhatsApp, Make/n8n\n\n## Problemas que resuelve\nCuando entra alguien nuevo siempre hay algo sin preparar: el acceso, los EPIs, la formación, El responsable de planta pierde media jornada el primer día del nuevo\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
       "process_id": "IND-6.1",
       "process_name": "Onboarding de nuevo trabajador",
       "slug": "industrial-onboarding-trabajador",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B6",
-      "sector_name": "Industrial"
-    }
-  },
-  {
-    "content": "# Proceso: Control de presencia y turnos\n**Tagline**: Cada operario recibe su turno individual por WhatsApp con confirmación. Los cambios se gestionan automáticamente y la ausencia no justificada alerta al responsable.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B6\n**Módulo**: 6.2\n\n## Descripción\nLos grupos de WhatsApp de turnos en una fábrica son ingobernables cuando el equipo supera los 10-15 operarios. Los cambios de turno generan confusión, las ausencias de última hora cogen a producción sin cobertura y el cuaderno de presencia en papel no permite análisis ni cruce con nómina. Este proceso digitaliza la comunicación de turnos, el registro de presencia y la gestión de ausencias con notificaciones automáticas al responsable.\n\n## Cómo funciona\n1. Se publica el cuadrante de turnos en el sistema\n2. Cada operario recibe su turno individual por WhatsApp\n3. Se registra la confirmación de lectura de cada turno\n4. Los cambios y ausencias generan notificaciones solo a los afectados\n5. El registro de presencia se sincroniza automáticamente con nómina\n\n## Personalización\nDefine el día y hora de envío del cuadrante, los criterios de sustitución por ausencia y el canal de escalado al responsable.\n\n## Herramientas utilizadas\nWhatsApp Business API, Software de RRHH / Excel, Make/n8n\n\n## Problemas que resuelve\nEl grupo de WhatsApp de turnos es un caos que nadie controla, Las ausencias de última hora nos pillan sin cobertura en planta\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-6.2",
-      "process_name": "Control de presencia y turnos",
-      "slug": "industrial-control-presencia-turnos",
       "landing_slug": "industrial",
       "bloque_negocio": "B6",
       "sector_name": "Industrial"
@@ -1194,18 +1170,6 @@
       "process_id": "IND-6.3",
       "process_name": "Gestión de documentación laboral",
       "slug": "industrial-documentacion-laboral",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B6",
-      "sector_name": "Industrial"
-    }
-  },
-  {
-    "content": "# Proceso: Mantenimiento preventivo de maquinaria\n**Tagline**: Planifica y registra las revisiones de cada máquina, avisa antes de que caduque un mantenimiento y deja trazabilidad de cada intervención para auditorías.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B6\n**Módulo**: 6.4\n\n## Descripción\nEl mantenimiento que 'está pendiente de programar' se convierte invariablemente en una avería en el peor momento. En una línea de producción, una parada no planificada tiene un coste por hora que supera fácilmente al coste del mantenimiento preventivo del año entero. Este proceso planifica automáticamente las revisiones de cada máquina según su plan de mantenimiento, lanza alertas antes de cada vencimiento y registra cada intervención con el responsable, el tiempo invertido y el resultado.\n\n## Cómo funciona\n1. Se define el plan de mantenimiento por máquina con frecuencias y responsables\n2. El sistema calcula las fechas de vencimiento de cada revisión\n3. Alerta al responsable con la antelación configurada antes de cada revisión\n4. El responsable ejecuta el mantenimiento y registra la intervención\n5. El sistema calcula automáticamente la próxima fecha de revisión\n\n## Personalización\nDefine los tipos de mantenimiento por máquina, las frecuencias, los responsables y los umbrales de alerta para cada tipo de revisión.\n\n## Herramientas utilizadas\nCMMS / Gestión de mantenimiento, Email / WhatsApp, Make/n8n\n\n## Problemas que resuelve\nLas averías siempre nos pillan en el peor momento porque el mantenimiento no está al día, El mantenimiento lo llevamos de memoria y no tenemos trazabilidad de intervenciones\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-6.4",
-      "process_name": "Mantenimiento preventivo de maquinaria",
-      "slug": "industrial-mantenimiento-preventivo",
       "landing_slug": "industrial",
       "bloque_negocio": "B6",
       "sector_name": "Industrial"
@@ -1344,18 +1308,6 @@
     }
   },
   {
-    "content": "# Proceso: Control de avance de línea en tiempo real\n**Tagline**: Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.2\n\n## Descripción\nEl jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente. Este panel muestra en tiempo real el avance de cada orden, los operarios asignados, los tiempos invertidos y una alerta automática si alguna orden supera el tiempo previsto. Comercial y dirección pueden ver también el estado sin interrumpir a planta.\n\n## Cómo funciona\n1. Los operarios reportan el avance de cada fase desde planta\n2. El sistema actualiza el estado de cada orden en tiempo real\n3. Se calcula el tiempo restante estimado por orden\n4. Se lanza alerta si hay desviación respecto al plazo comprometido\n5. Jefe de producción y comercial reciben la alerta y pueden actuar\n\n## Personalización\nDefine los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).\n\n## Herramientas utilizadas\nMES / Sistema de producción, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNos enteramos de los retrasos cuando ya es demasiado tarde, El comercial llama a planta para saber el estado y los interrumpe\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "IND-2.2",
-      "process_name": "Control de avance de línea en tiempo real",
-      "slug": "industrial-control-avance-linea",
-      "landing_slug": "industrial",
-      "bloque_negocio": "B2",
-      "sector_name": "Industrial"
-    }
-  },
-  {
     "content": "# Proceso: Lista de tareas automática al incorporar a alguien nuevo al centro\n**Tagline**: Experiencia premium desde el minuto 1.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B4\n**Módulo**: 4.4\n\n## Descripción\nChecklist automático de onboarding: envío de documentación, acceso a herramientas, asignación de mentor y recordatorios de pasos pendientes.\n\n## Cómo funciona\n1. Lanzamiento de workflow por nuevo contrato\n2. Distribución de kit de bienvenida digital\n3. Seguimiento de tareas de onboarding\n\n## Personalización\nAdapta el checklist por rol (staff, instructor, alumno).\n\n## Herramientas utilizadas\nMake, Notion, Gmail\n\n## Problemas que resuelve\nQuiero ordenar tareas y que se asignen solas\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1392,18 +1344,6 @@
     }
   },
   {
-    "content": "# Proceso: Captación automática de interesados desde tu web y redes sociales\n**Tagline**: Los leads entran solos en tu CRM y arrancan su secuencia.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B2\n**Módulo**: 2.1\n\n## Descripción\nCuando alguien rellena un formulario de 'prueba gratuita' o 'más información' en la web o Instagram, el contacto entra automáticamente en el CRM/email marketing con etiqueta de origen y arranca una secuencia de nurturing.\n\n## Cómo funciona\n1. Captura de lead desde formulario/RRSS\n2. Sincronización con CRM\n3. Activación de secuencia de email/notificación\n\n## Personalización\nDefine los campos a capturar y el CRM de destino (HubSpot, ActiveCampaign, etc.).\n\n## Herramientas utilizadas\nTypeform, HubSpot, ActiveCampaign, Make\n\n## Problemas que resuelve\nTienes leads de prueba gratuita que nunca nadie siguió, Pierdo solicitudes entre WhatsApp/Instagram/email\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "CM1",
-      "process_name": "Captación automática de interesados desde tu web y redes sociales",
-      "slug": "lead-capture-crm",
-      "landing_slug": "centros-deportivos",
-      "bloque_negocio": "B2",
-      "sector_name": "Centros Deportivos"
-    }
-  },
-  {
     "content": "# Proceso: Gestión de cambios de pedido en curso\n**Tagline**: Cuando el cliente modifica un pedido ya en marcha, el proceso recalcula el impacto en plazo y coste y notifica a todos los afectados antes de validar.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.3\n\n## Descripción\nUn cambio en un pedido que ya está en producción es una de las situaciones más costosas y caóticas en una industrial. El cliente lo pide como si fuera fácil, pero el impacto en materiales, cola de producción y plazo puede ser significativo. Este proceso obliga a cuantificar ese impacto antes de aceptar el cambio, coordina la comunicación con todos los afectados (producción, compras, comercial) y registra la modificación de forma trazable.\n\n## Cómo funciona\n1. Se registra la solicitud de cambio con los detalles de la modificación\n2. El sistema calcula el impacto en plazo\n3. coste y materiales\n4. El responsable revisa y aprueba o rechaza el cambio\n5. Al aprobarse\n6. se notifica a producción\n7. compras y al cliente\n8. La modificación queda registrada en el expediente del pedido\n\n## Personalización\nDefine quién aprueba según el tipo de cambio, los criterios de cálculo de coste adicional y el canal de notificación a cada parte.\n\n## Herramientas utilizadas\nERP, Email, Make/n8n\n\n## Problemas que resuelve\nLos cambios de pedido en curso generan caos en planta, No sabemos el coste de cada modificación hasta que ya está hecha\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1425,18 +1365,6 @@
       "landing_slug": "academias",
       "bloque_negocio": "B2",
       "sector_name": "Academias y Formación"
-    }
-  },
-  {
-    "content": "# Proceso: Cobros automáticos mensuales y avisos cuando un pago falla\n**Tagline**: Asegura tus ingresos sin perseguir recibos.\n**Sector**: Exclusivo de Centros Deportivos\n**Bloque de negocio**: B4\n**Módulo**: 4.1\n\n## Descripción\nProcesamiento automático de cobros. Si falla, el sistema reintenta a los 3 días, notifica al socio con link de pago y alerta a administración.\n\n## Cómo funciona\n1. Ejecución de remesa/cobro tarjeta\n2. Lógica de reintentos automática\n3. Comunicación de deuda instantánea\n\n## Personalización\nDefine el número de reintentos y los plazos de aviso.\n\n## Herramientas utilizadas\nStripe, GoCardless, Make, WhatsApp Business API\n\n## Problemas que resuelve\nLos cobros fallidos los sigues persiguiendo tú\n\n## Canales de integración",
-    "metadata": {
-      "source": "catalog_process",
-      "process_id": "FF27",
-      "process_name": "Cobros automáticos mensuales y avisos cuando un pago falla",
-      "slug": "cobro-recurrente-gestion-impagos",
-      "landing_slug": "centros-deportivos",
-      "bloque_negocio": "B4",
-      "sector_name": "Centros Deportivos"
     }
   },
   {
@@ -1632,6 +1560,30 @@
     }
   },
   {
+    "content": "# Proceso: Control de avance de línea en tiempo real\n**Tagline**: Panel visual del estado de cada orden activa: qué está en proceso, qué está parado y si hay riesgo de retraso respecto al plazo comprometido.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B2\n**Módulo**: 2.2\n\n## Descripción\nEl jefe de producción necesita saber en todo momento qué está pasando en planta sin tener que ir a comprobarlo físicamente ni esperar a que alguien le pase los partes en papel. Cuando los operarios registran el avance de producción en papel o en hojas de cálculo, la información siempre llega tarde, incompleta o con errores de transcripción. Este proceso digitaliza completamente el registro de partes de producción: los operarios introducen los datos directamente desde planta (tablet o terminal), el sistema procesa esa información en tiempo real y muestra el avance de cada orden, los operarios asignados y los tiempos invertidos. Si alguna orden supera el tiempo previsto, salta una alerta automática. Comercial y dirección pueden consultar el estado sin interrumpir a planta.\n\n## Cómo funciona\n1. Los operarios reportan el avance de cada fase desde planta\n2. El sistema actualiza el estado de cada orden en tiempo real\n3. Se calcula el tiempo restante estimado por orden\n4. Se lanza alerta si hay desviación respecto al plazo comprometido\n5. Jefe de producción y comercial reciben la alerta y pueden actuar\n\n## Personalización\nDefine los umbrales de alerta por tipo de orden, quién recibe las notificaciones y qué información ve cada rol (producción, comercial, dirección).\n\n## Herramientas utilizadas\nMES / Sistema de producción, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNos enteramos de los retrasos cuando ya es demasiado tarde, El comercial llama a planta para saber el estado y los interrumpe, Mis operarios rellenan partes de producción en papel y alguien tiene que pasarlos al ordenador, La información de planta llega tarde, en papel y con errores de transcripción, No sabemos el avance real de producción sin ir físicamente a planta, Perdemos horas a la semana pasando datos de partes de papel al sistema\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-2.2",
+      "process_name": "Control de avance de línea en tiempo real",
+      "slug": "industrial-control-avance-linea",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B2",
+      "sector_name": "Industrial"
+    }
+  },
+  {
+    "content": "# Proceso: Control automático de stock de materia prima y alertas de reposición\n**Tagline**: Nunca más quedarte sin producto en mitad del servicio.\n**Sector**: Exclusivo de Gastronomía y Hostelería\n**Bloque de negocio**: B4\n**Módulo**: 4.4\n\n## Descripción\nEn hostelería, quedarse sin un ingrediente clave durante el servicio es uno de los errores más evitables y más frecuentes. El stock se gestiona de memoria, los pedidos los hace quien se acuerda y nadie sabe cuánto queda de cada producto hasta que ya no queda. Este proceso registra el inventario en tiempo real: descuenta el consumo diario a partir de los datos de ventas del TPV, compara con los niveles mínimos configurados por producto y lanza una alerta automática al responsable cuando hay que pedir. También puede generar el pedido al proveedor habitual directamente. Resultado: cero roturas de stock, menos mermas por sobrecompra y visibilidad total sobre el coste de materia prima.\n\n## Cómo funciona\n1. Configuración del inventario inicial con stocks mínimos por producto\n2. Conexión con el TPV para descuento automático del consumo\n3. Alerta automática al responsable cuando un producto baja del mínimo\n4. Generación del pedido al proveedor habitual con las cantidades exactas\n5. Actualización del stock al confirmar la recepción del pedido\n\n## Personalización\nDefine los niveles mínimos de stock por producto, el canal de alerta (WhatsApp o email), el responsable de compras, los proveedores habituales y si quieres que el pedido se genere automáticamente o requiera aprobación.\n\n## Herramientas utilizadas\nLightspeed, Square, Holded, Google Sheets, Make/n8n, WhatsApp Business API\n\n## Problemas que resuelve\nMe quedo sin ingredientes clave en mitad del servicio, Hacemos los pedidos de memoria y siempre nos pasamos o nos quedamos cortos, No sé cuánto tengo de cada producto hasta que abro la nevera, Tiramos producto porque compramos de más sin control, El inventario lo hacemos a mano cada semana y es un infierno, Los pedidos a proveedores los hace quien se acuerda, sin sistema\n\n## Canales de integración\nWhatsApp, Email",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "GAST-4.4",
+      "process_name": "Control automático de stock de materia prima y alertas de reposición",
+      "slug": "gastro-control-stock-inventario",
+      "landing_slug": "gastronomia-hosteleria",
+      "bloque_negocio": "B4",
+      "sector_name": "Gastronomía y Hostelería"
+    }
+  },
+  {
     "content": "# Proceso: Reactivación de clientes inactivos\n**Tagline**: Recupera el contacto con clientes recurrentes que han perdido actividad.\n**Sector**: Exclusivo de Gestorías\n**Bloque de negocio**: B5\n**Módulo**: 5.3\n\n## Descripción\nNo dejes que un cliente se vaya en silencio. El sistema monitoriza la actividad de tu cartera y detecta si algún cliente lleva X meses sin solicitar trámites o facturar servicios específicos. En ese momento, lanza un mensaje personalizado (vía WhatsApp o email) de interés genuino, ofreciendo una revisión gratuita de su situación o informando de una novedad legal que le afecte.\n\n## Cómo funciona\n1. Segmentamos tus clientes por volumen e historial\n2. Definimos los umbrales de inactividad que activan el proceso\n3. Redactamos los guiones de contacto para que suenen naturales y útiles\n4. Configuramos la automatización de envío y el registro de respuestas\n\n## Personalización\nDefine el tiempo de espera por segmento y el canal de contacto preferido por cada cliente.\n\n## Herramientas utilizadas\nActiveCampaign/Brevo, Make, CRM\n\n## Problemas que resuelve\nSolo hablo con mis clientes cuando hay problemas o toca pagar, Se me olvidan clientes que solían traerme trámites y ya no vienen\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1641,6 +1593,18 @@
       "landing_slug": "gestorias",
       "bloque_negocio": "B5",
       "sector_name": "Gestorías"
+    }
+  },
+  {
+    "content": "# Proceso: Evaluación y homologación de proveedores\n**Tagline**: Recoge automáticamente los datos de entrega, calidad y precio por proveedor y genera el informe periódico para decidir con quién seguir trabajando.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B4\n**Módulo**: 4.2\n\n## Descripción\nLa evaluación de proveedores en muchas industriales se hace de forma subjetiva o directamente no se hace. Este proceso recoge automáticamente los datos reales de cada proveedor — plazos de entrega cumplidos, tasa de material rechazado, desviaciones de precio — y genera un scorecard periódico que sirve de base objetiva para las decisiones de compras: homologar proveedores nuevos, renegociar condiciones o buscar alternativas.\n\n## Cómo funciona\n1. El sistema recoge automáticamente los datos de cada pedido cerrado\n2. Calcula las métricas de rendimiento por proveedor: plazo\n3. calidad\n4. precio\n5. Genera el scorecard comparativo por proveedor\n6. Envía el informe al responsable de compras con la frecuencia definida\n7. Las decisiones de homologación y renegociación se basan en el scorecard\n\n## Personalización\nDefine las métricas y su ponderación (plazo, calidad, precio, servicio), la frecuencia del informe y los umbrales que activan una revisión de proveedor.\n\n## Herramientas utilizadas\nERP, Dashboard, Make/n8n\n\n## Problemas que resuelve\nNo tenemos datos objetivos para evaluar a nuestros proveedores, Seguimos trabajando con proveedores problemáticos porque no tenemos alternativa documentada\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-4.2",
+      "process_name": "Evaluación y homologación de proveedores",
+      "slug": "industrial-evaluacion-proveedores",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B4",
+      "sector_name": "Industrial"
     }
   },
   {
@@ -1668,6 +1632,18 @@
     }
   },
   {
+    "content": "# Proceso: Recepción y verificación de materiales\n**Tagline**: Guía al almacén en la recepción de materiales, comprueba que lo recibido coincide con el pedido y registra las incidencias antes de dar entrada al stock.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B4\n**Módulo**: 4.3\n\n## Descripción\nRecibir materiales sin un proceso de verificación estructurado significa que errores del proveedor — cantidades incorrectas, materiales fuera de especificación, daños de transporte — entran en el stock y se detectan cuando ya están en producción, mucho más tarde y con mucho más impacto. Este proceso guía al personal de almacén en la recepción con una checklist vinculada al pedido, registra las incidencias en el momento y bloquea la entrada al stock hasta que están resueltas.\n\n## Cómo funciona\n1. El personal de almacén identifica el pedido entrante en el sistema\n2. La checklist guía la verificación de cantidad\n3. referencia y estado\n4. Las incidencias detectadas se registran en el sistema con foto\n5. Se notifica automáticamente al proveedor de las incidencias\n6. La entrada al stock solo se aprueba cuando la recepción es correcta\n\n## Personalización\nDefine qué verificar por tipo de material, los criterios de aceptación/rechazo y el flujo de notificación al proveedor en caso de incidencia.\n\n## Herramientas utilizadas\nERP, Gestión de almacén, Tablet, Make/n8n\n\n## Problemas que resuelve\nRecibimos material incorrecto o dañado y lo detectamos cuando ya está en producción, No tenemos documentación de las incidencias para reclamar al proveedor\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-4.3",
+      "process_name": "Recepción y verificación de materiales",
+      "slug": "industrial-recepcion-verificacion-materiales",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B4",
+      "sector_name": "Industrial"
+    }
+  },
+  {
     "content": "# Proceso: Informes mensuales automáticos para el cliente\n**Tagline**: Entrega valor cada mes con un resumen automático de la situación de tu cliente.\n**Sector**: Exclusivo de agencias\n**Bloque de negocio**: General\n**Módulo**: GS4\n\n## Descripción\nAl cierre de cada mes o trimestre, el sistema recopila los datos financieros del cliente y genera un informe visual y fácil de entender. Sin que tu equipo tenga que preparar nada manualmente, el cliente recibe un resumen de su situación: comparativa de ingresos/gastos, previsión de impuestos y alertas de salud financiera.\n\n## Cómo funciona\n1. Definimos la estructura del informe ideal para tus clientes\n2. Mapeamos los campos de tu ERP con la plantilla del reporte\n3. Programamos el envío automático tras el cierre del periodo\n4. Configuramos alertas de variaciones bruscas para el gestor\n\n## Personalización\nElige los KPIs que quieres mostrar (Margen, IVA, Cashflow) y la marca de agua con tu logo.\n\n## Herramientas utilizadas\nERP contable, Make, Hojas de cálculo\n\n## Problemas que resuelve\nEl cliente solo tiene noticias mías para pedir papeles o pagar impuestos, Tardo mucho en preparar informes para los clientes VIP\n\n## Canales de integración",
     "metadata": {
       "source": "catalog_process",
@@ -1677,6 +1653,18 @@
       "landing_slug": "agencias",
       "bloque_negocio": null,
       "sector_name": "agencias"
+    }
+  },
+  {
+    "content": "# Proceso: Facturación automática al cierre de entrega\n**Tagline**: En cuanto el albarán está firmado, el sistema genera la factura, la envía al cliente y la registra en contabilidad sin intervención manual.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.1\n\n## Descripción\nEn una industrial que factura a plazos largos (60 o 90 días), cualquier retraso en la emisión de la factura se traduce directamente en retraso del cobro. Si el albarán tarda tres días en procesarse y convertirse en factura, esos tres días se suman al plazo de cobro. Este proceso elimina ese retraso: desde la firma del albarán hasta la factura enviada al cliente en cuestión de minutos, con los datos correctos y el registro automático en el sistema contable.\n\n## Cómo funciona\n1. El albarán firmado queda registrado en el sistema\n2. El proceso detecta el cierre y arranca la facturación\n3. Se genera la factura con los datos del pedido y las condiciones acordadas\n4. La factura se envía automáticamente al cliente por email\n5. Se registra en el sistema contable sin intervención manual\n\n## Personalización\nDefine las condiciones de facturación por cliente (plazo, divisa, formato), los campos de validación requeridos y si quiere revisión humana antes del envío para pedidos de gran importe.\n\n## Herramientas utilizadas\nERP, Software de facturación, Email, Contabilidad\n\n## Problemas que resuelve\nEl albarán tarda días en convertirse en factura y perdemos días de cobro, Las facturas tienen errores por los datos introducidos a mano\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-5.1",
+      "process_name": "Facturación automática al cierre de entrega",
+      "slug": "industrial-facturacion-automatica",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B5",
+      "sector_name": "Industrial"
     }
   },
   {
@@ -1704,6 +1692,18 @@
     }
   },
   {
+    "content": "# Proceso: Cuadro de mando financiero\n**Tagline**: Consolidada facturación, cobros pendientes, coste de producción y margen por orden en un informe accesible en tiempo real, sin esperar al gestor.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.3\n\n## Descripción\nLa dirección de una industrial no puede tomar decisiones operativas si los datos financieros del mes actual solo están disponibles cuando el gestor cierra los libros. Este cuadro de mando consolida en tiempo real los datos de facturación, cobros pendientes, costes de producción y margen por orden desde los sistemas operativos, y los presenta en un panel accesible para dirección sin necesidad de intervención del administrativo.\n\n## Cómo funciona\n1. Se integran los sistemas de datos (ERP\n2. facturación\n3. contabilidad)\n4. El sistema extrae y consolida los datos en tiempo real\n5. Calcula márgenes\n6. cobros pendientes y variaciones respecto al periodo anterior\n7. El panel se actualiza automáticamente y es accesible para dirección\n8. Se configuran alertas si algún indicador supera los umbrales definidos\n\n## Personalización\nDefine los indicadores clave para tu negocio, los periodos de comparación y los umbrales que disparan alertas para dirección.\n\n## Herramientas utilizadas\nERP, Contabilidad, Power BI / Looker / similar, Make/n8n\n\n## Problemas que resuelve\nNo sabemos nuestro margen real hasta que el gestor cierra los libros, semanas tarde, Dirección toma decisiones con datos del mes pasado\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-5.3",
+      "process_name": "Cuadro de mando financiero",
+      "slug": "industrial-cuadro-mando-financiero",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B5",
+      "sector_name": "Industrial"
+    }
+  },
+  {
     "content": "# Proceso: Reactivación de clientes inactivos\n**Tagline**: Si un habitual lleva meses sin venir, el sistema lo detecta y le envía un mensaje personal con un motivo para volver.\n**Sector**: Exclusivo de Gastronomía y Hostelería\n**Bloque de negocio**: B3\n**Módulo**: 3.2\n\n## Descripción\nEl sistema detecta automáticamente cuándo un cliente habitual lleva más tiempo del normal sin reservar. En ese momento, le envía un mensaje personal — no campaña masiva — con un motivo concreto para volver: una novedad de carta, una mención al plato que pidió la última vez, una invitación a un evento o simplemente un saludo. Recupera entre el 15% y el 25% de la base inactiva sin coste publicitario.\n\n## Cómo funciona\n1. Calculamos la frecuencia normal de cada cliente\n2. Detectamos cuándo alguien se está saliendo del patrón\n3. Generamos un mensaje personal con motivo concreto\n4. Lo enviamos por el canal preferido del cliente\n5. Medimos la respuesta y mejoramos el mensaje en cada ciclo\n\n## Personalización\nDefine qué cuenta como 'inactivo' (umbral de tiempo), el canal preferido, tipos de gancho a usar (carta, eventos, descuentos) y la frecuencia máxima de contacto.\n\n## Herramientas utilizadas\nAirtable / HubSpot, WhatsApp Business / Email, OpenAI, Make/n8n\n\n## Problemas que resuelve\nTeníamos clientes habituales que han dejado de venir y no sabemos por qué, Cuando alguien deja de venir, no hacemos nada activo para recuperarlo, Pagamos publicidad para captar nuevos en vez de recuperar los que ya tuvimos\n\n## Canales de integración\nWhatsApp, Email",
     "metadata": {
       "source": "catalog_process",
@@ -1728,7 +1728,19 @@
     }
   },
   {
-    "content": "# Información General y Preguntas Frecuentes de Immoralia\n\n## Qué es Immoralia\n\n**¿Qué hace Immoralia?**\nImmoralia es una empresa especializada en automatización de procesos de negocio. Ayudamos a empresas a eliminar el trabajo manual repetitivo para que puedan centrarse en crecer. Nuestra filosofía es \"Menos administración, más negocio\": identificamos los procesos que más tiempo te roban y los automatizamos para que funcionen solos, 24 horas al día, 7 días a la semana.\n\n**¿A qué tipo de empresas ayudáis?**\nTenemos catálogos especializados para varios sectores: Centros Deportivos, Gestorías, Centros de Salud (clínicas, dentistas, veterinarias), Construcción e Inmobiliaria, Academias y Formación, Gastronomía y Hostelería, e Industrial. Si tu sector no aparece aquí, podemos hacer una consultoría personalizada. Consulta el catálogo completo en /sector o pregúntanos directamente.\n\n**¿Cuál es vuestra filosofía de trabajo?**\nNo vendemos software: construimos soluciones. Analizamos cómo funciona tu negocio, diseñamos el proceso adaptado a tus herramientas actuales, lo implementamos y te lo dejamos funcionando. Tú no necesitas saber nada de tecnología: nosotros nos encargamos de todo.\n\n## Cómo funciona el servicio\n\n**¿Cómo empiezo?**\nEl primer paso es una llamada de diagnóstico gratuita. Puedes agendarla directamente desde cualquier página del catálogo pulsando el botón \"Agendar llamada\". En esa sesión analizamos tu situación, identificamos qué procesos te darían más valor y te explicamos cómo funcionaría la implementación.\n\n**¿Cuánto tarda la implementación?**\nDepende de la complejidad del proceso. Los procesos de complejidad baja pueden estar funcionando en 1-2 semanas. Los de complejidad media, en 2-4 semanas. Los más avanzados o los proyectos con múltiples procesos integrados entre sí pueden llevar entre 1 y 3 meses. Siempre te damos un plazo cerrado antes de empezar.\n\n**¿Qué pasa si mi proceso no está en el catálogo?**\nEl catálogo es una selección de los procesos más probados y demandados, pero no es el límite de lo que podemos hacer. Si tienes una necesidad específica, realizamos consultorías para diseñar automatizaciones completamente a medida.\n\n**¿Puedo modificar un proceso una vez que ya está funcionando?**\nSí. Las empresas evolucionan y los procesos también. Ofrecemos mantenimiento y mejora continua para adaptar los flujos a nuevos requisitos, herramientas o cambios en tu negocio.\n\n## Tecnología (n8n y herramientas)\n\n**¿Qué es n8n y por qué lo usáis?**\nn8n es la herramienta de automatización que usamos como motor principal. A diferencia de Zapier o Make, permite automatizaciones más potentes, sin límites de tareas ejecutadas y con los datos alojados en un servidor privado tuyo. No dependes de un tercero para que tus datos fluyan: el servidor es tuyo.\n\n**¿Por qué recomendáis que Immoralia aloje el servidor?**\nPorque la disponibilidad y el mantenimiento son críticos. Si nosotros gestionamos el servidor, nos encargamos de que esté activo 24/7, de las actualizaciones de seguridad, de las copias de seguridad y de que todo funcione sin que tengas que preocuparte. Es la opción más cómoda y segura para la mayoría de clientes.\n\n**¿Puedo tener mi propio servidor de n8n?**\nSí, es posible. Si ya tienes infraestructura técnica propia (VPS, equipo IT), podemos instalar las automatizaciones en tu entorno. En ese caso, la gestión de la infraestructura corre de tu parte.\n\n**¿Con qué herramientas integráis?**\nIntegramos con la mayoría de herramientas del mercado: CRMs (HubSpot, ActiveCampaign, Pipedrive), software de gestión sectorial (Mindbody, Virtuagym, Holded, etc.), Google Suite, WhatsApp Business API, Stripe, Slack, Typeform, Calendly y muchas más. Si usas una herramienta específica, pregúntanos si tiene integración disponible.\n\n## Seguridad y confianza\n\n**¿Están mis datos seguros?**\nSí. Usamos protocolos encriptados (SSL/HTTPS) y nos conectamos a tus herramientas mediante APIs oficiales. Las credenciales se guardan cifradas y los datos de tu negocio fluyen a través del sistema pero no se almacenan permanentemente en el servidor de automatización.\n\n**¿Quién tiene acceso a mis herramientas?**\nSolo el sistema de automatización, para ejecutar las tareas programadas. Internamente seguimos protocolos estrictos para que ninguna persona de Immoralia acceda a tus herramientas salvo en casos de soporte técnico expresamente solicitado por ti.\n\n## Soporte y contacto\n\n**¿Cómo puedo hablar con alguien del equipo?**\nPuedes agendar una llamada desde el botón \"Agendar llamada\" disponible en todas las páginas del catálogo. También puedes usar el botón \"Hablar con un humano\" en este chat y un consultor de Immoralia revisará tu caso y te contactará en menos de 24-48 horas laborables.\n\n**¿Tenéis soporte después de la implementación?**\nSí. Todos los proyectos incluyen soporte post-lanzamiento. Si algo falla o quieres ajustar el proceso, estamos disponibles para resolverlo.\n",
+    "content": "# Proceso: Informes mensuales de actividad y rendimiento\n**Tagline**: Genera automáticamente el informe mensual con métricas clave de producción, ventas, calidad y equipo, listo para presentar a dirección sin prepararlo desde cero.\n**Sector**: Exclusivo de Industrial\n**Bloque de negocio**: B5\n**Módulo**: 5.4\n\n## Descripción\nEl informe mensual que se presenta en la reunión de dirección suele prepararse manualmente, extrayendo datos de varios sistemas y formateando el documento. Este proceso lo automatiza completamente: al cierre de cada mes, extrae los datos de producción, ventas, calidad y equipo de los sistemas operativos, genera el informe con el formato corporativo y lo envía a los destinatarios configurados listo para revisar y presentar.\n\n## Cómo funciona\n1. Al cierre del mes\n2. el proceso se activa automáticamente\n3. Extrae KPIs de producción: órdenes\n4. plazos\n5. eficiencia\n6. Extrae KPIs de ventas: facturación\n7. nuevos pedidos\n8. pipeline\n9. Extrae KPIs de calidad: no conformidades\n10. reclamaciones\n11. rechazos\n12. Genera el informe en formato corporativo y lo envía a la lista de distribución\n\n## Personalización\nDefine los KPIs de cada área, el formato del informe, la fecha de generación y la lista de distribución.\n\n## Herramientas utilizadas\nERP, Sistema de producción, Generador de documentos, Email\n\n## Problemas que resuelve\nEl informe mensual lo prepara alguien a mano y siempre llega tarde a la reunión, Los datos de distintos departamentos no cuadran porque cada uno tira de su Excel\n\n## Canales de integración",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "IND-5.4",
+      "process_name": "Informes mensuales de actividad y rendimiento",
+      "slug": "industrial-informes-mensuales",
+      "landing_slug": "industrial",
+      "bloque_negocio": "B5",
+      "sector_name": "Industrial"
+    }
+  },
+  {
+    "content": "# Información General y Preguntas Frecuentes de Immoralia\n\n## Qué es Immoralia\n\n**¿Qué hace Immoralia?**\nImmoralia es una empresa especializada en automatización de procesos de negocio. Ayudamos a empresas a eliminar el trabajo manual repetitivo para que puedan centrarse en crecer. Nuestra filosofía es \"Menos administración, más negocio\": identificamos los procesos que más tiempo te roban y los automatizamos para que funcionen solos, 24 horas al día, 7 días a la semana.\n\n**¿A qué tipo de empresas ayudáis?**\nTenemos catálogos especializados para varios sectores: Centros Deportivos, Gestorías, Centros de Salud (clínicas, dentistas, veterinarias), Construcción e Inmobiliaria, Academias y Formación, Gastronomía y Hostelería, e Industrial. Si tu sector no aparece aquí, podemos hacer una consultoría personalizada. Consulta el catálogo completo en /sector o pregúntanos directamente.\n\n**¿Cuál es vuestra filosofía de trabajo?**\nNo vendemos software: construimos soluciones. Analizamos cómo funciona tu negocio, diseñamos el proceso adaptado a tus herramientas actuales, lo implementamos y te lo dejamos funcionando. Tú no necesitas saber nada de tecnología: nosotros nos encargamos de todo.\n\n## Cómo funciona el servicio\n\n**¿Cómo empiezo?**\nEl primer paso es una llamada de diagnóstico gratuita. Puedes agendarla directamente desde cualquier página del catálogo pulsando el botón \"Agendar llamada\". En esa sesión analizamos tu situación, identificamos qué procesos te darían más valor y te explicamos cómo funcionaría la implementación.\n\n**¿Cuánto tarda la implementación?**\nDepende de la complejidad del proceso. Los procesos de complejidad baja pueden estar funcionando en 1-2 semanas. Los de complejidad media, en 2-4 semanas. Los más avanzados o los proyectos con múltiples procesos integrados entre sí pueden llevar entre 1 y 3 meses. Siempre te damos un plazo cerrado antes de empezar.\n\n**¿Qué pasa si mi proceso no está en el catálogo?**\nEl catálogo es una selección de los procesos más probados y demandados, pero no es el límite de lo que podemos hacer. Si tienes una necesidad específica, realizamos consultorías para diseñar automatizaciones completamente a medida.\n\n**¿Puedo modificar un proceso una vez que ya está funcionando?**\nSí. Las empresas evolucionan y los procesos también. Ofrecemos mantenimiento y mejora continua para adaptar los flujos a nuevos requisitos, herramientas o cambios en tu negocio.\n\n## Tecnología (n8n y herramientas)\n\n**¿Qué es n8n y por qué lo usáis?**\nn8n es la herramienta de automatización que usamos como motor principal. A diferencia de Zapier o Make, permite automatizaciones más potentes, sin límites de tareas ejecutadas y con los datos alojados en un servidor privado tuyo. No dependes de un tercero para que tus datos fluyan: el servidor es tuyo.\n\n**¿Por qué recomendáis que Immoralia aloje el servidor?**\nPorque la disponibilidad y el mantenimiento son críticos. Si nosotros gestionamos el servidor, nos encargamos de que esté activo 24/7, de las actualizaciones de seguridad, de las copias de seguridad y de que todo funcione sin que tengas que preocuparte. Es la opción más cómoda y segura para la mayoría de clientes.\n\n**¿Puedo tener mi propio servidor de n8n?**\nSí, es posible. Si ya tienes infraestructura técnica propia (VPS, equipo IT), podemos instalar las automatizaciones en tu entorno. En ese caso, la gestión de la infraestructura corre de tu parte.\n\n**¿Con qué herramientas integráis?**\nIntegramos con la mayoría de herramientas del mercado: CRMs (HubSpot, ActiveCampaign, Pipedrive), software de gestión sectorial (Mindbody, Virtuagym, Holded, etc.), Google Suite, WhatsApp Business API, Stripe, Slack, Typeform, Calendly y muchas más. Si usas una herramienta específica, pregúntanos si tiene integración disponible.\n\n## Seguridad y confianza\n\n**¿Están mis datos seguros?**\nSí. Usamos protocolos encriptados (SSL/HTTPS) y nos conectamos a tus herramientas mediante APIs oficiales. Las credenciales se guardan cifradas y los datos de tu negocio fluyen a través del sistema pero no se almacenan permanentemente en el servidor de automatización.\n\n**¿Quién tiene acceso a mis herramientas?**\nSolo el sistema de automatización, para ejecutar las tareas programadas. Internamente seguimos protocolos estrictos para que ninguna persona de Immoralia acceda a tus herramientas salvo en casos de soporte técnico expresamente solicitado por ti.\n\n## Para quién no sabe por dónde empezar\n\n**¿Por dónde debería empezar alguien que nunca ha automatizado nada?**\nLo primero es identificar el proceso que más tiempo te roba cada semana. Suele ser uno de estos: responder leads que llegan de redes sociales, perseguir a clientes para que manden documentos, enviar recordatorios de citas o facturas, o gestionar reservas por teléfono y WhatsApp. Cuéntanos cuál es el tuyo y te explicamos qué existe en el catálogo para resolverlo. Si no tienes claro cuál es, podemos hacer una llamada de diagnóstico de 20 minutos y lo identificamos juntos.\n\n**¿Necesito cambiar las herramientas que ya uso?**\nNo. Automatizamos encima de lo que ya tienes. Si usas WhatsApp, Gmail, Google Drive, HubSpot, Holded, o cualquier otro software habitual, conectamos con ellos mediante sus APIs oficiales. No tienes que aprender nada nuevo ni migrar datos.\n\n**¿Hay algún proceso que funcione bien como punto de partida?**\nSí. Los procesos con mejor ratio esfuerzo/resultado para empezar suelen ser los de captación y seguimiento de leads (no perder ninguna solicitud que llega), los de recordatorios automáticos (citas, pagos, renovaciones) y los de comunicación interna del equipo (turnos, onboarding de empleados). Son rápidos de implementar y el impacto se ve desde el primer mes.\n\n**¿Qué diferencia hay entre usar Immoralia y contratar a alguien que sepa de Zapier o Make?**\nZapier y Make son herramientas genéricas para conectar apps. Lo que hacemos nosotros es diseñar el proceso completo adaptado a tu forma de trabajar, construirlo, mantenerlo y asegurarnos de que no falla. No vendemos una herramienta: entregamos el proceso funcionando. Además usamos n8n, que es más potente y sin límites de tareas ejecutadas.\n\n**¿Cuáles son los procesos más demandados en el catálogo?**\nVaría por sector, pero los más solicitados en general son: la captura automática de leads desde redes sociales y web, los recordatorios de citas o renovaciones, el envío automático de nóminas o documentos a clientes, la reactivación de clientes inactivos y el control de cobros pendientes.\n\n## Soporte y contacto\n\n**¿Cómo puedo hablar con alguien del equipo?**\nPuedes agendar una llamada desde el botón \"Agendar llamada\" disponible en todas las páginas del catálogo. También puedes usar el botón \"Hablar con un humano\" en este chat y un consultor de Immoralia revisará tu caso y te contactará en menos de 24-48 horas laborables.\n\n**¿Tenéis soporte después de la implementación?**\nSí. Todos los proyectos incluyen soporte post-lanzamiento. Si algo falla o quieres ajustar el proceso, estamos disponibles para resolverlo.\n",
     "metadata": {
       "source": "general_knowledge",
       "type": "general_faqs",
