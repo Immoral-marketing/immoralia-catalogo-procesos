@@ -1,166 +1,166 @@
 import {
-  Filter,
-  TrendingUp,
-  CalendarCheck,
-  FileSignature,
-  Home,
-  BarChart3,
-  type LucideIcon,
+ Filter,
+ TrendingUp,
+ CalendarCheck,
+ HardHat,
+ Wallet,
+ LayoutDashboard,
+ type LucideIcon,
 } from "lucide-react";
 
 export type ConstruccionBlockId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6";
 
 export interface ConstruccionBlock {
-  id: ConstruccionBlockId;
-  number: string;
-  title: string;
-  sub: string;
-  icon: LucideIcon;
-  accent: string;
-  accentBg: string;
-  accentBorder: string;
-  accentText: string;
-  accentGradient: string;
-  image: string;
-  benefits: string[];
-  paragraph: string;
-  teaser: string;
+ id: ConstruccionBlockId;
+ number: string;
+ title: string;
+ sub: string;
+ icon: LucideIcon;
+ accent: string;
+ accentBg: string;
+ accentBorder: string;
+ accentText: string;
+ accentGradient: string;
+ image: string;
+ benefits: string[];
+ paragraph: string;
+ teaser: string;
 }
 
 export const construccionBlocks: ConstruccionBlock[] = [
-  {
-    id: "B1",
-    number: "01",
-    title: "Captación y cualificación de leads",
-    sub: "Saber quién tiene presupuesto real antes de que tu equipo invierta tiempo",
-    icon: Filter,
-    accent: "#22c55e",
-    accentBg: "bg-green-500/10",
-    accentBorder: "border-green-500/30",
-    accentText: "text-green-400",
-    accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
-    image: "/constructoras/b1.png",
-    teaser:
-      "Recibes consultas de múltiples canales pero no sabes cuáles tienen presupuesto, urgencia y financiación real. La IA evalúa cada lead en segundos para que tu equipo solo hable con quien tiene intención de compra.",
-    paragraph:
-      "Recibes consultas de múltiples canales pero no sabes cuáles tienen presupuesto, urgencia y financiación real — y tu equipo pierde tiempo en leads que no van a ningún lado. La IA evalúa cada nuevo contacto en segundos, analiza señales de riesgo antes de que se enfríen, y tu director comercial tiene el estado del pipeline en tiempo real sin perseguir a nadie.",
-    benefits: [
-      "Calificación automática por presupuesto, urgencia y tipo de financiación",
-      "Detección temprana de leads que se enfrían antes de perderlos",
-      "Dashboard comercial en tiempo real para dirección sin informes manuales",
-    ],
-  },
-  {
-    id: "B2",
-    number: "02",
-    title: "Conversión y argumentación comercial",
-    sub: "El agente siempre con el discurso correcto y el dossier listo en segundos",
-    icon: TrendingUp,
-    accent: "#16a34a",
-    accentBg: "bg-green-600/10",
-    accentBorder: "border-green-600/30",
-    accentText: "text-green-500",
-    accentGradient: "from-green-600/30 via-green-600/5 to-transparent",
-    image: "/constructoras/b2.png",
-    teaser:
-      "Tus agentes tienen que responder dudas técnicas, adaptar el discurso a cada perfil y generar dossieres de unidad sobre la marcha. La IA les da respuesta inmediata a todo eso para que se centren en construir confianza.",
-    paragraph:
-      "Tus agentes tienen que responder dudas técnicas, adaptar el discurso a cada perfil de comprador y generar dossieres con plano, precio y condiciones sobre la marcha — y muchas veces improvisan. Un asistente de IA les da respuesta inmediata a objeciones y preguntas técnicas, adapta los argumentos al perfil del cliente, genera el dossier en segundos y resume cada llamada directamente en el CRM.",
-    benefits: [
-      "Respuestas instantáneas a objeciones y dudas técnicas del comprador",
-      "Dossier de unidad personalizado con plano, precio y condiciones en segundos",
-      "Resumen automático de cada llamada actualizado en el CRM sin teclear",
-    ],
-  },
-  {
-    id: "B3",
-    number: "03",
-    title: "Seguimiento y visitas",
-    sub: "Leads que no se enfrían y visitas que siempre se producen",
-    icon: CalendarCheck,
-    accent: "#86efac",
-    accentBg: "bg-green-400/10",
-    accentBorder: "border-green-400/30",
-    accentText: "text-green-300",
-    accentGradient: "from-green-400/30 via-green-400/5 to-transparent",
-    image: "/constructoras/b3.png",
-    teaser:
-      "Un lead que visita la promoción tiene muchas más probabilidades de comprar, pero coordinar citas, recordatorios y el seguimiento posterior consume horas cada semana. Lo automatizamos de principio a fin.",
-    paragraph:
-      "Un lead que visita la promoción tiene muchas más probabilidades de comprar, pero coordinar citas, recordatorios y el seguimiento posterior consume horas cada semana al equipo comercial. Automatizamos el seguimiento por el canal correcto según la fase del embudo, la gestión de la agenda de visitas con check-in automático y la encuesta post-visita con nurturing activo para los que aún no deciden.",
-    benefits: [
-      "Mensajes de seguimiento contextuales según la fase del embudo sin trabajo manual",
-      "Gestión automática de agenda, recordatorios y check-in en la visita",
-      "Encuesta post-visita y nurturing activo para leads que no deciden en el momento",
-    ],
-  },
-  {
-    id: "B4",
-    number: "04",
-    title: "Cierre y contratación",
-    sub: "De la reserva al contrato firmado sin papeleo manual",
-    icon: FileSignature,
-    accent: "#15803d",
-    accentBg: "bg-green-700/10",
-    accentBorder: "border-green-700/30",
-    accentText: "text-green-600",
-    accentGradient: "from-green-700/30 via-green-700/5 to-transparent",
-    image: "/constructoras/b4.png",
-    teaser:
-      "Cuando un cliente decide comprar, el proceso documental — contratos, firma digital, seguimiento de hitos — suele ser lento y manual. Lo automatizamos para que el cierre sea tan ágil como la decisión.",
-    paragraph:
-      "Cuando un cliente decide comprar, el proceso documental es el cuello de botella: contratos a revisar, firma digital a coordinar, plazos a comunicar. Automatizamos la generación y trazabilidad de contratos con firma digital integrada, y el proceso post-reserva para que el comprador reciba información de cada hito sin que nadie lo tenga que escribir manualmente.",
-    benefits: [
-      "Contratos generados automáticamente con firma digital integrada y trazabilidad completa",
-      "Comunicación automática de hitos y avances desde la reserva hasta la entrega",
-      "Cero cuellos de botella documentales en el momento de mayor ilusión del comprador",
-    ],
-  },
-  {
-    id: "B5",
-    number: "05",
-    title: "Postventa y relación con propietarios",
-    sub: "Compradores satisfechos que se convierten en prescriptores",
-    icon: Home,
-    accent: "#166534",
-    accentBg: "bg-green-800/10",
-    accentBorder: "border-green-800/30",
-    accentText: "text-green-500",
-    accentGradient: "from-green-800/30 via-green-800/5 to-transparent",
-    image: "/constructoras/b5.png",
-    teaser:
-      "La relación con el propietario no termina en la entrega de llaves. Un portal de IA resuelve dudas, gestiona garantías y predice problemas antes de que escalen — convirtiendo compradores en recomendadores activos.",
-    paragraph:
-      "La relación con el propietario no termina en la entrega de llaves — pero el equipo postventa suele estar desbordado con consultas repetitivas sobre garantías, incidencias y plazos. Un portal de IA con conocimiento completo del proyecto resuelve dudas al instante, gestiona las garantías de forma organizada y anticipa problemas potenciales para que el departamento técnico actúe antes de que el comprador se queje.",
-    benefits: [
-      "Portal de propietarios con IA que resuelve dudas sin saturar al equipo postventa",
-      "Gestión estructurada de garantías e incidencias con trazabilidad completa",
-      "Predicción de problemas recurrentes para actuar antes de que escalen",
-    ],
-  },
-  {
-    id: "B6",
-    number: "06",
-    title: "Operativa diaria",
-    sub: "Visibilidad total del pipeline sin depender de informes manuales",
-    icon: BarChart3,
-    accent: "#22c55e",
-    accentBg: "bg-green-500/10",
-    accentBorder: "border-green-500/30",
-    accentText: "text-green-400",
-    accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
-    image: "/constructoras/b6.png",
-    teaser:
-      "Cuando una unidad lleva tiempo sin movimiento, normalmente te enteras demasiado tarde. La IA detecta las unidades estancadas, analiza por qué y propone acciones concretas para reactivarlas antes de que el proyecto se alargue.",
-    paragraph:
-      "Cuando una unidad lleva semanas sin movimiento en el pipeline, normalmente el director comercial lo descubre demasiado tarde en la reunión semanal. La IA identifica automáticamente las unidades estancadas, analiza los motivos — precio, tipología, zona — y propone acciones concretas de reactivación con datos reales del mercado para que la promotora actúe con criterio.",
-    benefits: [
-      "Identificación automática de unidades estancadas con análisis de causa raíz",
-      "Recomendaciones estratégicas basadas en datos de mercado para reactivar stock",
-      "Alertas proactivas para dirección antes de que los retrasos afecten al proyecto",
-    ],
-  },
+ {
+ id: "B1",
+ number: "01",
+ title: "Captación y cualificación",
+ sub: "Saber quién tiene intención real de compra antes de invertir tiempo del equipo",
+ icon: Filter,
+ accent: "#22c55e",
+ accentBg: "bg-green-500/10",
+ accentBorder: "border-green-500/30",
+ accentText: "text-green-400",
+ accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
+ image: "/constructoras/b1.png",
+ teaser:
+ "Le entran consultas por muchos canales, pero no sabe cuáles tienen presupuesto, urgencia y financiamiento real. La IA evalúa cada interesado en segundos para que su equipo hable solo con quien puede comprar.",
+ paragraph:
+ "Le entran consultas por muchos canales, pero no sabe cuáles tienen presupuesto, urgencia y financiamiento real, y el equipo pierde tiempo con interesados que no avanzan. La IA evalúa cada contacto en segundos, avisa a tiempo cuando un interesado se enfría y mantiene a dirección con el estado de la comercialización al día, sin perseguir a nadie.",
+ benefits: [
+ "Priorización automática por presupuesto, urgencia y financiamiento",
+ "Alerta temprana cuando un interesado se enfría",
+ "Panel de control comercial en tiempo real para dirección",
+ ],
+ },
+ {
+ id: "B2",
+ number: "02",
+ title: "Conversión y cierre",
+ sub: "Del interés a la reserva firmada, con el material correcto y sin papeleo manual",
+ icon: TrendingUp,
+ accent: "#16a34a",
+ accentBg: "bg-green-600/10",
+ accentBorder: "border-green-600/30",
+ accentText: "text-green-500",
+ accentGradient: "from-green-600/30 via-green-600/5 to-transparent",
+ image: "/constructoras/b2.png",
+ teaser:
+ "Su equipo improvisa argumentos, arma fichas a mano y pierde cierres en el papeleo. La IA le da el material adecuado para cada comprador y lleva la reserva hasta la firma digital sin fricción.",
+ paragraph:
+ "Su equipo necesita responder dudas técnicas, adaptar el discurso a cada comprador y armar fichas y contratos sobre la marcha, y muchas veces improvisa o se atrasa en el papeleo. El sistema responde dudas al instante, genera la ficha de cada unidad en segundos, adapta la presentación al perfil del comprador y lleva la reserva a firma digital con seguimiento, para cerrar en caliente.",
+ benefits: [
+ "Asistente y ficha de unidad listos en segundos para el comprador",
+ "Presentación adaptada al perfil de cada interesado",
+ "Contrato de reserva a firma digital, sin enfriar la venta",
+ ],
+ },
+ {
+ id: "B3",
+ number: "03",
+ title: "Seguimiento y visitas",
+ sub: "Interesados que no se enfrían y visitas que sí se producen",
+ icon: CalendarCheck,
+ accent: "#4ade80",
+ accentBg: "bg-green-400/10",
+ accentBorder: "border-green-400/30",
+ accentText: "text-green-300",
+ accentGradient: "from-green-400/30 via-green-400/5 to-transparent",
+ image: "/constructoras/b3.png",
+ teaser:
+ "En obra nueva pasan meses entre el interés y la entrega, y coordinar visitas y seguimiento consume horas cada semana. Lo automatizamos de principio a fin.",
+ paragraph:
+ "Un interesado que visita el proyecto tiene mucha más probabilidad de comprar, pero el ciclo largo de la obra lo enfría y coordinar visitas, recordatorios y seguimiento consume horas del equipo. Automatizamos el seguimiento durante los meses de obra, la agenda de visitas con recordatorios y check-in, y el seguimiento tras la visita para recuperar a quien quedó con dudas.",
+ benefits: [
+ "Seguimiento automático durante los meses de obra",
+ "Agenda de visitas con recordatorios y check-in",
+ "Recuperación de interesados tras la visita",
+ ],
+ },
+ {
+ id: "B4",
+ number: "04",
+ title: "Obra y proveedores",
+ sub: "Que la obra y la oficina trabajen con la misma información, al día",
+ icon: HardHat,
+ accent: "#15803d",
+ accentBg: "bg-green-700/10",
+ accentBorder: "border-green-700/30",
+ accentText: "text-green-500",
+ accentGradient: "from-green-700/30 via-green-700/5 to-transparent",
+ image: "/constructoras/b4.png",
+ teaser:
+ "Los reportes de avance toman días, los documentos de proveedor se digitan a mano y los trámites se pasan de fecha. La IA conecta la obra con la oficina y mantiene todo al día.",
+ paragraph:
+ "La mayor parte del margen se gana o se pierde en la ejecución: reportes de avance que toman días, albaranes y facturas de proveedor digitados a mano, permisos que se pasan de fecha y documentación dispersa. Automatizamos el reporte de avance de obra, la lectura de documentos de proveedor, la gestión de permisos y trámites, el control documental del proyecto y la revisión de cumplimiento normativo.",
+ benefits: [
+ "Reporte de avance de obra automático, en minutos",
+ "Albaranes y facturas de proveedor leídos y conciliados solos",
+ "Permisos, trámites y normativa bajo control, sin retrasos",
+ ],
+ },
+ {
+ id: "B5",
+ number: "05",
+ title: "Finanzas y cobros",
+ sub: "Proteger el flujo de caja del proyecto sin perseguir pagos a mano",
+ icon: Wallet,
+ accent: "#10b981",
+ accentBg: "bg-emerald-500/10",
+ accentBorder: "border-emerald-500/30",
+ accentText: "text-emerald-400",
+ accentGradient: "from-emerald-500/30 via-emerald-500/5 to-transparent",
+ image: "/constructoras/b5.png",
+ teaser:
+ "La cobranza consume horas, cuadrar pagos genera errores y el reporte a inversionistas toma días. Automatizamos las finanzas del proyecto para proteger la caja.",
+ paragraph:
+ "El control de cobros es tan crítico como el de costos: un atraso golpea el flujo de caja del proyecto. Automatizamos los recordatorios de cuotas atrasadas, la conciliación de pagos y el estado de cuenta de cada comprador, la facturación de cada pago y el reporte a inversionistas con avance comercial, de obra y de caja, para que dirección decida con datos al día.",
+ benefits: [
+ "Recordatorios automáticos de cuotas atrasadas",
+ "Pagos conciliados y estado de cuenta del comprador al día",
+ "Facturación automática y reporte a inversionistas sin armarlo a mano",
+ ],
+ },
+ {
+ id: "B6",
+ number: "06",
+ title: "Postventa y dirección",
+ sub: "Compradores satisfechos y dirección con visibilidad total de los proyectos",
+ icon: LayoutDashboard,
+ accent: "#22c55e",
+ accentBg: "bg-green-500/10",
+ accentBorder: "border-green-500/30",
+ accentText: "text-green-400",
+ accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
+ image: "/constructoras/b6.png",
+ teaser:
+ "La relación no termina con la entrega de llaves, y dirección no siempre ve a tiempo lo que se traba. Ordenamos la postventa y le damos a dirección la vista de todos los proyectos.",
+ paragraph:
+ "Después de la entrega, las consultas de garantías e incidencias desbordan al equipo, y la dirección descubre demasiado tarde las unidades estancadas o los proyectos que se desvían. Ordenamos la entrega de cada vivienda, el portal de incidencias y las garantías por plazos, detectamos las unidades que no avanzan y le damos a dirección un panel con el estado de todos los proyectos a la vez.",
+ benefits: [
+ "Entrega digital, portal de incidencias y garantías bajo control",
+ "Detección automática de unidades estancadas",
+ "Panel ejecutivo con todos los proyectos en una sola vista",
+ ],
+ },
 ];
 
 export const getConstruccionBlockById = (id: ConstruccionBlockId): ConstruccionBlock | undefined =>
-  construccionBlocks.find((b) => b.id === id);
+ construccionBlocks.find((b) => b.id === id);
