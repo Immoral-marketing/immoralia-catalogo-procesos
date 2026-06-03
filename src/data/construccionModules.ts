@@ -15,7 +15,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "1.1",
     bloque: "B1",
-    nombre: "Calificación inteligente de posibles compradores",
+    nombre: "Interesados priorizados por intención de compra",
     descripcion:
       "La IA analiza cada nuevo contacto — canal de entrada, respuestas al formulario, comportamiento previo — y le asigna una puntuación basada en presupuesto, urgencia y tipo de financiación. Tu equipo comercial recibe solo los leads con intención real de compra.",
     badge: "Impacto inmediato",
@@ -29,7 +29,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "1.2",
     bloque: "B1",
-    nombre: "Análisis de sentimiento y riesgo",
+    nombre: "Alerta de enfriamiento de interesados",
     descripcion:
       "El sistema monitoriza la temperatura de cada lead a lo largo del proceso: detecta señales de enfriamiento — falta de respuesta, cambio de tono, silencio — y avisa al agente antes de que el contacto se pierda definitivamente.",
     badge: "Retención de leads",
@@ -43,7 +43,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "1.3",
     bloque: "B1",
-    nombre: "Dashboard comercial en tiempo real",
+    nombre: "Panel de control comercial en tiempo real",
     descripcion:
       "Dirección ve el estado del pipeline en tiempo real sin esperar el informe del lunes: leads nuevos, tasa de conversión por fase, previsión de cierre y unidades en riesgo. Todo actualizado en automático desde el CRM.",
     badge: "Visibilidad total",
@@ -59,7 +59,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.1",
     bloque: "B2",
-    nombre: "Asistente digital del proyecto",
+    nombre: "Asistente web de atención al interesado",
     descripcion:
       "Antes de que el agente hable con el cliente, la IA ya ha respondido sus dudas técnicas sobre materiales, certificaciones, plazos y zonas comunes. El cliente llega a la conversación informado y el agente se centra en cerrar.",
     badge: "Eficiencia comercial",
@@ -73,7 +73,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.2",
     bloque: "B2",
-    nombre: "Motor de discurso personalizado",
+    nombre: "Presentación comercial adaptada por perfil",
     descripcion:
       "El sistema adapta los argumentos comerciales al perfil de cada cliente — primera vivienda, inversión, familiar — para que el agente siempre tenga el enfoque correcto sin improvisar. Los mensajes de seguimiento también se personalizan automáticamente.",
     badge: "Conversión +",
@@ -87,7 +87,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.3",
     bloque: "B2",
-    nombre: "Generador de dossier de unidad",
+    nombre: "Generador de fichas de vivienda",
     descripcion:
       "El agente selecciona la unidad y el sistema genera en segundos un dossier con plano, precio actualizado, condiciones de pago, zonas comunes y certificación energética. Listo para enviar por WhatsApp o email.",
     badge: "Agilidad documental",
@@ -101,7 +101,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.4",
     bloque: "B2",
-    nombre: "Resumen automático de llamadas",
+    nombre: "Resumen automático de llamadas en el CRM",
     descripcion:
       "Cada llamada con un cliente se transcribe, resume y vuelca al CRM automáticamente: intereses, objeciones, próximos pasos. El agente termina la llamada y ya está documentada sin escribir nada.",
     badge: "CRM siempre al día",
@@ -115,7 +115,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.5",
     bloque: "B2",
-    nombre: "Asistente interno para agentes",
+    nombre: "Asistente interno del equipo de ventas",
     descripcion:
       "El agente tiene a mano un copiloto que responde en segundos a cualquier pregunta técnica, legal o de producto — mientras está con el cliente, por teléfono o en la visita — sin tener que llamar a nadie ni buscar en documentos.",
     badge: "Agentes más seguros",
@@ -131,7 +131,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "3.1",
     bloque: "B3",
-    nombre: "Seguimiento multicanal contextual",
+    nombre: "Seguimiento automático durante la obra",
     descripcion:
       "El sistema envía el mensaje correcto al lead correcto por el canal correcto — WhatsApp, email o SMS — en función de su fase en el embudo y su comportamiento reciente. Sin spam, sin mensajes genéricos, sin trabajo manual.",
     badge: "Leads calientes",
@@ -145,7 +145,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "3.2",
     bloque: "B3",
-    nombre: "Automatización de visitas",
+    nombre: "Gestión automática de visitas",
     descripcion:
       "El sistema gestiona el calendario de visitas, envía recordatorios automáticos al lead y al agente, registra el check-in en la visita y actualiza el CRM. Si el lead no confirma, el sistema hace el seguimiento hasta que se produce la visita.",
     badge: "Más visitas",
@@ -159,7 +159,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "3.3",
     bloque: "B3",
-    nombre: "Seguimiento post-visita",
+    nombre: "Seguimiento automático tras la visita",
     descripcion:
       "Tras cada visita, el sistema envía automáticamente una encuesta de satisfacción y activa una secuencia de nurturing para los leads que aún no deciden: contenido relevante, actualizaciones del proyecto y momentos de urgencia controlados.",
     badge: "Nurturing activo",
@@ -175,7 +175,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "4.1",
     bloque: "B4",
-    nombre: "Automatización documental",
+    nombre: "Contratos de reserva con firma digital",
     descripcion:
       "Cuando el cliente decide comprar, el sistema genera el contrato de reserva con los datos correctos, lo envía para firma digital y registra cada paso con trazabilidad completa. Sin errores manuales, sin demoras por papeleo.",
     badge: "Cierre ágil",
@@ -189,7 +189,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "4.2",
     bloque: "B4",
-    nombre: "Proceso post-reserva",
+    nombre: "Gestión automática del post-reserva",
     descripcion:
       "Una vez hecha la reserva, el comprador recibe comunicaciones automáticas sobre cada hito del proyecto — inicio de obra, estructura, cerramientos, entrega prevista — para que se sienta acompañado durante todo el proceso de construcción.",
     badge: "Comprador tranquilo",
@@ -205,7 +205,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "5.1",
     bloque: "B5",
-    nombre: "Portal de propietarios con IA",
+    nombre: "Portal de incidencias para propietarios",
     descripcion:
       "Un portal personalizado donde el propietario resuelve dudas sobre garantías, reporta incidencias y consulta el estado de su vivienda — atendido por una IA con conocimiento completo del proyecto. El equipo técnico recibe solo lo que necesita su atención real.",
     badge: "Postventa escalable",
@@ -221,7 +221,7 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "6.1",
     bloque: "B6",
-    nombre: "Identificación de unidades estancadas",
+    nombre: "Alerta de viviendas estancadas",
     descripcion:
       "El sistema analiza el pipeline y detecta automáticamente qué unidades llevan demasiado tiempo sin avance: cruza datos de precio, tipología, visitas y mercado para proponer acciones concretas de reactivación — bajada de precio, cambio de argumentario, oferta especial.",
     badge: "Stock activo",
