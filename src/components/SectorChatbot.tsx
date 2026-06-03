@@ -282,21 +282,21 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
 
         <div className="max-w-2xl mx-auto relative">
 
-          {!hasSentFirstMessage && (
-            <div className="text-center mb-10 animate-in fade-in duration-500">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
-                {headline ?? (
-                  <>¿Qué te está{' '}
-                    <span style={{ color: ACCENT }}>robando tiempo</span>{' '}
-                    en {sectorName.startsWith('tu') ? sectorName : `tu ${sectorName.toLowerCase()}`}?
-                  </>
-                )}
-              </h2>
+          <div className={`text-center animate-in fade-in duration-500 ${hasSentFirstMessage ? 'mb-6' : 'mb-10'}`}>
+            <h2 className={`font-bold text-white leading-tight ${hasSentFirstMessage ? 'text-2xl md:text-3xl mb-1' : 'text-3xl md:text-4xl mb-3'}`}>
+              {headline ?? (
+                <>¿Qué te está{' '}
+                  <span style={{ color: ACCENT }}>robando tiempo</span>{' '}
+                  en {sectorName.startsWith('tu') ? sectorName : `tu ${sectorName.toLowerCase()}`}?
+                </>
+              )}
+            </h2>
+            {!hasSentFirstMessage && (
               <p className="text-sm text-gray-500">
                 Cuéntanos el problema y te decimos qué proceso lo resuelve.
               </p>
-            </div>
-          )}
+            )}
+          </div>
 
           {hasSentFirstMessage && !showMessages && (
             <button
