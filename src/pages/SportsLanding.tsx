@@ -7,6 +7,7 @@ import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -793,6 +794,14 @@ const SportsLanding = () => {
         );
       })}
 
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="centros-deportivos"
+        sectorName="centro deportivo"
+        accentHex="#dc2626"
+        suggestions={SECTOR_SUGGESTIONS["centros-deportivos"]}
+      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

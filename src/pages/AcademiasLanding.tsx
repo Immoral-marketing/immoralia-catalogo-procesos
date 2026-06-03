@@ -7,6 +7,7 @@ import { academiasModules, getModulesByBlock } from "@/data/academiasModules";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -796,6 +797,14 @@ const AcademiasLanding = () => {
           </section>
         );
       })}
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="academias"
+        sectorName="academia"
+        accentHex="#a21caf"
+        suggestions={SECTOR_SUGGESTIONS["academias"]}
+      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

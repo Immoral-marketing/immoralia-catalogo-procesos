@@ -80,7 +80,7 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
     "salud":                  { label: "Centros de Salud",         path: "/sector/salud" },
     "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
     "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
-    "construccion":           { label: "Constructoras / Reformas / Inmobiliarias", path: "/sector/construccion" },
+    "construccion":           { label: "Desarrolladoras e Inmobiliarias", path: "/sector/construccion" },
     "industrial":             { label: "Industrial / Producción",                  path: "/sector/industrial" },
 };
 

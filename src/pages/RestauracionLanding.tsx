@@ -7,6 +7,7 @@ import { restauracionModules, getModulesByBlock } from "@/data/restauracionModul
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -796,6 +797,14 @@ const RestauracionLanding = () => {
           </section>
         );
       })}
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="gastronomia-hosteleria"
+        sectorName="restaurante"
+        accentHex="#ea580c"
+        suggestions={SECTOR_SUGGESTIONS["gastronomia-hosteleria"]}
+      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
