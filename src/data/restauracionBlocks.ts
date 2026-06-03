@@ -39,7 +39,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-500/30",
     accentText: "text-orange-400",
     accentGradient: "from-orange-500/30 via-orange-500/5 to-transparent",
-    image: "/restauracion/b1.png",
+    image: "/restauracion/b1.webp",
     teaser:
       "Tu sala no puede atender el teléfono mientras sirve mesas. Convertimos cada canal — llamada, WhatsApp, Instagram, web — en una entrada limpia a tu sistema, con confirmaciones y lista de espera en tiempo real.",
     paragraph:
@@ -61,7 +61,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-400/30",
     accentText: "text-orange-300",
     accentGradient: "from-orange-400/30 via-orange-400/5 to-transparent",
-    image: "/restauracion/b2.png",
+    image: "/restauracion/b2.webp",
     teaser:
       "Das buen servicio pero las reseñas no llegan, y cuando una mala se publica te enteras tarde. Pedimos reseña al cliente contento, filtramos a los descontentos y avisamos al responsable antes de que escale.",
     paragraph:
@@ -83,7 +83,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-400/30",
     accentText: "text-orange-300",
     accentGradient: "from-orange-400/30 via-orange-400/5 to-transparent",
-    image: "/restauracion/b3.png",
+    image: "/restauracion/b3.webp",
     teaser:
       "Cada cliente que entra es un activo, pero la mayoría de restaurantes no tienen base de datos. Construimos un CRM gastronómico que se llena solo con cada reserva y dispara comunicaciones segmentadas — sin spam.",
     paragraph:
@@ -105,7 +105,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-700/30",
     accentText: "text-orange-500",
     accentGradient: "from-orange-700/30 via-orange-700/5 to-transparent",
-    image: "/restauracion/b4.png",
+    image: "/restauracion/b4.webp",
     teaser:
       "Si tienes uno o varios locales, necesitas saber cómo van sin perseguir a los encargados. Cada mañana llega un parte limpio del día anterior y cuando algo se desvía del patrón, te avisa antes de que sea problema.",
     paragraph:
@@ -127,7 +127,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-800/30",
     accentText: "text-orange-600",
     accentGradient: "from-orange-800/30 via-orange-800/5 to-transparent",
-    image: "/restauracion/b5.png",
+    image: "/restauracion/b5.webp",
     teaser:
       "Hostelería tiene alta rotación y grupos de WhatsApp caóticos. Cada incorporación supone explicar lo mismo desde cero. Automatizamos la comunicación de turnos y el onboarding del equipo nuevo.",
     paragraph:
@@ -149,7 +149,7 @@ export const restauracionBlocks: RestauracionBlock[] = [
     accentBorder: "border-orange-500/30",
     accentText: "text-orange-400",
     accentGradient: "from-orange-500/30 via-orange-500/5 to-transparent",
-    image: "/restauracion/b6.png",
+    image: "/restauracion/b6.webp",
     teaser:
       "El marketing del restaurante no puede depender de que el encargado tenga un rato libre. Generamos publicaciones de novedades y eventos en piloto automático, y activamos campañas hacia tu propia base antes de los picos.",
     paragraph:

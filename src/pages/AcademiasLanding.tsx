@@ -7,6 +7,7 @@ import { academiasModules, getModulesByBlock } from "@/data/academiasModules";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,8 +46,9 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import immoraliaLogo from "@/assets/immoralia_logo.png";
+import { highlightText } from "@/lib/highlightText";
 
-const ACCENT = "#8b5cf6";
+const ACCENT = "#a21caf";
 const AUDIT_URL = "/auditorias/academias";
 
 // Sector exclusivo: los procesos de academias tienen landing_slug propio
@@ -135,7 +137,7 @@ const AcademiasLanding = () => {
   const activeBlock = academiasBlocks.find((b) => b.id === activeShowcaseBlock)!;
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-violet-500/30 font-sans">
+    <div className="min-h-screen bg-[#0d0d0d] text-white selection:bg-fuchsia-500/30 font-sans">
       {/* ───────────────────── NAVIGATION ───────────────────── */}
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -148,14 +150,14 @@ const AcademiasLanding = () => {
                 <Button
                   className={`relative h-10 px-4 gap-2 border transition-all ${
                     selectedProcessIds.size > 0
-                      ? "bg-violet-600 hover:bg-violet-500 text-white border-violet-600 shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                      ? "bg-fuchsia-600 hover:bg-fuchsia-500 text-white border-fuchsia-600 shadow-[0_0_20px_rgba(162,28,175,0.25)]"
                       : "bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                   <span className="hidden sm:inline">Mi Selección</span>
                   {selectedProcessIds.size > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-white text-violet-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-white text-fuchsia-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {selectedProcessIds.size}
                     </span>
                   )}
@@ -168,7 +170,7 @@ const AcademiasLanding = () => {
                 <div className="h-full flex flex-col p-6">
                   <SheetHeader className="mb-2 text-left">
                     <SheetTitle className="text-white text-2xl font-bold flex items-center gap-2">
-                      <LayoutGrid className="w-6 h-6 text-violet-400" />
+                      <LayoutGrid className="w-6 h-6 text-fuchsia-400" />
                       Mi Selección
                     </SheetTitle>
                   </SheetHeader>
@@ -193,15 +195,15 @@ const AcademiasLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/academias/hero.png')" }}
+          style={{ backgroundImage: "url('/academias/hero.webp')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-violet-900/10 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-fuchsia-900/10 blur-[120px] rounded-full" />
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-[1.05] animate-in fade-in slide-in-from-bottom-4 duration-700">
             De gestionar la academia a mano, <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-fuchsia-700">
               a liderar un centro educativo escalable
             </span>
           </h1>
@@ -215,21 +217,21 @@ const AcademiasLanding = () => {
             <Button
               size="lg"
               onClick={() => scrollTo("modulos")}
-              className="bg-violet-600 hover:bg-violet-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-violet-900/30 transition-all hover:scale-[1.02]"
+              className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white h-14 px-8 text-lg gap-2 font-bold shadow-lg shadow-fuchsia-900/30 transition-all hover:scale-[1.02]"
             >
               Empezar el recorrido <ChevronRight className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-5">
               <button
                 onClick={() => setShowBookingModal(true)}
-                className="text-sm text-gray-400 hover:text-violet-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-fuchsia-300 transition-colors underline-offset-4 hover:underline"
               >
                 Agendar una llamada
               </button>
               <span className="text-white/15 text-xs">·</span>
               <button
                 onClick={() => setShowContactForm(true)}
-                className="text-sm text-gray-400 hover:text-violet-300 transition-colors underline-offset-4 hover:underline"
+                className="text-sm text-gray-400 hover:text-fuchsia-300 transition-colors underline-offset-4 hover:underline"
               >
                 Contáctanos
               </button>
@@ -244,6 +246,14 @@ const AcademiasLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="academias"
+        sectorName="academia"
+        accentHex="#a21caf"
+        suggestions={SECTOR_SUGGESTIONS["academias"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         {/* Glow del color del bloque activo */}
@@ -257,7 +267,7 @@ const AcademiasLanding = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-5 tracking-tight">
-              Las áreas donde una academia <span className="text-violet-400">puede funcionar sola</span>
+              Las áreas donde una academia <span className="text-fuchsia-400">puede funcionar sola</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
               Seis áreas, cada una con un propósito claro. Pasa por encima de cada una para ver de qué va.
@@ -340,50 +350,50 @@ const AcademiasLanding = () => {
                 key={activeBlock.id}
                 className="relative animate-in fade-in slide-in-from-right-4 duration-500"
               >
-                {/* Imagen con marco y badge */}
-                <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/3] lg:aspect-[5/4]">
+                {/* Badge + Título + Sub */}
+                <div className="mb-5">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4">
+                    <span className={`text-xs font-light ${activeBlock.accentText}`}>
+                      {activeBlock.id}
+                    </span>
+                    <span className="text-xs text-gray-300">Módulo {activeBlock.number}</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
+                    {activeBlock.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-400 italic">{activeBlock.sub}</p>
+                </div>
+
+                {/* Teaser con keywords resaltadas */}
+                <p className="mb-6 text-gray-300 leading-relaxed text-justify hyphens-auto">
+                  {highlightText(activeBlock.teaser, activeBlock.accentText)}
+                </p>
+
+                <button
+                  onClick={() => scrollTo(`block-${activeBlock.id}`)}
+                  className="mb-5 inline-flex items-center gap-2 h-9 px-4 rounded-xl text-xs font-semibold text-white transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                  style={{ backgroundColor: activeBlock.accent, boxShadow: `0 8px 20px ${activeBlock.accent}50` }}
+                >
+                  Conocer procesos <ArrowRight className="w-4 h-4" />
+                </button>
+
+                {/* Imagen 16:9 */}
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 aspect-video">
                   <img
                     src={activeBlock.image}
                     alt={activeBlock.title}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
                     }}
                   />
                   <div
-                    className="absolute inset-0 mix-blend-overlay opacity-30"
+                    className="absolute inset-0 mix-blend-overlay opacity-20"
                     style={{ backgroundColor: activeBlock.accent }}
                   />
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-
-                  {/* Badge esquina superior */}
-                  <div className="absolute top-5 left-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15">
-                    <span className={`text-xs font-light ${activeBlock.accentText}`}>
-                      {activeBlock.id}
-                    </span>
-                    <span className="text-xs text-gray-300">Módulo {activeBlock.number}</span>
-                  </div>
-
-                  {/* Texto sobre imagen */}
-                  <div className="absolute inset-x-0 bottom-0 p-7 md:p-9">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                      {activeBlock.title}
-                    </h3>
-                    <p className="text-sm md:text-base text-gray-300 italic">{activeBlock.sub}</p>
-                  </div>
                 </div>
-
-                {/* Teaser justificado debajo */}
-                <p className="mt-6 text-gray-300 leading-relaxed text-justify hyphens-auto">
-                  {activeBlock.teaser}
-                </p>
-
-                <button
-                  onClick={() => scrollTo(`block-${activeBlock.id}`)}
-                  className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${activeBlock.accentText} hover:underline`}
-                >
-                  Conocer en profundidad <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
             </div>
           </div>
@@ -391,23 +401,31 @@ const AcademiasLanding = () => {
       </section>
 
       {/* ───────────────────── AUDITORÍA ───────────────────── */}
-      <section id="auditoria" className="py-28 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-amber-500/5 pointer-events-none" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-violet-500/10 blur-[140px] rounded-full pointer-events-none" />
+      <section id="auditoria" className="py-28 relative overflow-hidden bg-[#0e0510]">
+        {/* Top border glow */}
+        <div className="audit-border absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/60 to-transparent" />
+        {/* Grid background */}
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
+        {/* Main orb — left center */}
+        <div className="audit-orb-1 absolute top-1/2 -left-40 w-[700px] h-[700px] bg-fuchsia-600/35 blur-[160px] rounded-full pointer-events-none" />
+        {/* Secondary orb — right top */}
+        <div className="audit-orb-2 absolute -top-20 right-0 w-[500px] h-[500px] bg-fuchsia-400/22 blur-[120px] rounded-full pointer-events-none" />
+        {/* Bottom center glow */}
+        <div className="audit-orb-3 absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[180px] bg-fuchsia-500/18 blur-[80px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Texto izquierda */}
             <div>
               <div className="inline-flex items-center gap-2 mb-4">
-                <FileText className="w-5 h-5 text-violet-400" />
-                <span className="text-violet-400 font-medium tracking-widest uppercase text-xs">
+                <FileText className="w-5 h-5 text-fuchsia-400" />
+                <span className="text-fuchsia-400 font-medium tracking-widest uppercase text-xs">
                   Auditoría gratuita · 6 min
                 </span>
               </div>
               <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
                 ¿No sabes por dónde <br className="hidden md:block" />
-                empezar? <span className="text-violet-400">Te lo decimos nosotros.</span>
+                empezar? <span className="text-fuchsia-400">Te lo decimos nosotros.</span>
               </h2>
               <p className="text-gray-300 leading-relaxed mb-5 text-justify hyphens-auto">
                 Responde 18 preguntas sobre cómo opera tu academia hoy y te enviamos un{" "}
@@ -433,7 +451,7 @@ const AcademiasLanding = () => {
                       key={i}
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
                     >
-                      <Icon className="w-3.5 h-3.5 text-violet-400" /> {it.label}
+                      <Icon className="w-3.5 h-3.5 text-fuchsia-400" /> {it.label}
                     </div>
                   );
                 })}
@@ -442,7 +460,7 @@ const AcademiasLanding = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to={AUDIT_URL}
-                  className="inline-flex items-center justify-center bg-violet-600 hover:bg-violet-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-violet-900/30 transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center bg-fuchsia-600 hover:bg-fuchsia-500 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-fuchsia-900/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -466,7 +484,7 @@ const AcademiasLanding = () => {
                     <div className="flex items-center justify-between mb-6">
                       <div className="font-bold text-lg">
                         <span className="text-white">immoral</span>
-                        <span className="text-violet-400">ia</span>
+                        <span className="text-fuchsia-400">ia</span>
                       </div>
                       <span className="text-[10px] tracking-widest text-amber-300/80 uppercase">
                         Confidencial
@@ -480,8 +498,8 @@ const AcademiasLanding = () => {
                     </h4>
                     {/* Score circle simulado */}
                     <div className="flex items-center gap-5 mb-6 py-4 border-y border-white/10">
-                      <div className="relative w-20 h-20 rounded-full bg-[#2d1c4a] border-2 border-violet-400/30 flex flex-col items-center justify-center">
-                        <span className="text-3xl font-bold text-violet-400 leading-none">68</span>
+                      <div className="relative w-20 h-20 rounded-full bg-[#2d1c4a] border-2 border-fuchsia-400/30 flex flex-col items-center justify-center">
+                        <span className="text-3xl font-bold text-fuchsia-400 leading-none">68</span>
                         <span className="text-[8px] tracking-widest text-gray-400 mt-0.5">DE 100</span>
                       </div>
                       <div>
@@ -549,7 +567,7 @@ const AcademiasLanding = () => {
 
             <div className="container mx-auto px-6 relative z-10">
               <div
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start ${
                   reverse ? "lg:[&>div:first-child]:order-2" : ""
                 }`}
               >
@@ -572,6 +590,8 @@ const AcademiasLanding = () => {
                       <img
                         src={b.image}
                         alt={b.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-105"
                         onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
                       />
@@ -635,9 +655,12 @@ const AcademiasLanding = () => {
                     {b.title}
                   </h2>
                   <p className="text-base md:text-lg text-gray-400 mb-7 italic">{b.sub}</p>
-                  <p className="text-gray-300 leading-relaxed mb-7 text-justify hyphens-auto">
-                    {b.paragraph}
-                  </p>
+                  {/* Descripción detallada — oculta temporalmente, conservar para uso futuro */}
+                  <div className="hidden">
+                    <p className="text-gray-300 leading-relaxed mb-7 text-justify hyphens-auto">
+                      {b.paragraph}
+                    </p>
+                  </div>
 
                   {/* Beneficios en accordion */}
                   <Accordion
@@ -673,6 +696,21 @@ const AcademiasLanding = () => {
                     </AccordionItem>
                   </Accordion>
 
+                  {/* Título sección automatizaciones */}
+                  <div className="mb-4 mt-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`text-xs font-semibold tracking-widest uppercase ${b.accentText}`}>
+                        Automatizaciones del módulo
+                      </span>
+                      {modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length > 0 && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${b.accentBg} ${b.accentText} border ${b.accentBorder}`}>
+                          {modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length} seleccionada{modules.filter(m => selectedProcessIds.has(`mod-${m.codigo}`)).length > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">Selecciona las que quieres activar en tu negocio</p>
+                  </div>
+
                   {/* Módulos del bloque — lista compacta con toggle + expand */}
                   <div className="mb-8 border-t border-white/8">
                     {modules.map((m, i) => {
@@ -688,7 +726,7 @@ const AcademiasLanding = () => {
                             {/* Expand area */}
                             <button
                               onClick={() => setExpandedModule(isOpen ? null : m.codigo)}
-                              className="flex-1 flex items-baseline gap-4 py-3.5 hover:bg-white/[0.02] transition-colors text-left group min-w-0"
+                              className="flex-1 flex items-center gap-4 py-3.5 hover:bg-white/[0.02] transition-colors text-left group min-w-0"
                             >
                               <span
                                 className="text-sm font-light tabular-nums tracking-tight shrink-0 w-9"
@@ -708,16 +746,16 @@ const AcademiasLanding = () => {
                             {/* Toggle selection */}
                             <button
                               onClick={() => toggleProcess(`mod-${m.codigo}`)}
-                              className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all mr-1 ${
+                              className={`shrink-0 flex items-center gap-1 px-2.5 h-7 rounded-full border text-xs font-medium transition-all mr-1 ${
                                 isModuleSelected
-                                  ? "bg-violet-500/20 border-violet-500/60 text-violet-400"
-                                  : "border-white/15 text-gray-600 hover:border-white/35 hover:text-gray-300"
+                                  ? `${b.accentBg} ${b.accentBorder} ${b.accentText}`
+                                  : "border-white/15 text-gray-400 hover:border-white/40 hover:text-white bg-white/[0.03]"
                               }`}
                             >
                               {isModuleSelected ? (
-                                <Check className="w-3.5 h-3.5" />
+                                <><Check className="w-3 h-3" /><span>Añadida</span></>
                               ) : (
-                                <Plus className="w-3.5 h-3.5" />
+                                <><Plus className="w-3 h-3" /><span>Añadir</span></>
                               )}
                             </button>
                           </div>
@@ -770,8 +808,8 @@ const AcademiasLanding = () => {
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
-        <div className="absolute inset-0 bg-violet-600/5 -z-10" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-violet-500/10 blur-[100px] rounded-full" />
+        <div className="absolute inset-0 bg-fuchsia-600/5 -z-10" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-fuchsia-500/10 blur-[100px] rounded-full" />
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-[1.05]">
             ¿Listo para escalar <br /> tu academia?
@@ -784,7 +822,7 @@ const AcademiasLanding = () => {
             <Button
               size="lg"
               onClick={() => setShowContactForm(true)}
-              className="bg-violet-600 hover:bg-violet-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(139,92,246,0.35)] transition-all hover:scale-105"
+              className="bg-fuchsia-600 hover:bg-fuchsia-500 h-16 px-10 text-xl font-bold shadow-[0_0_40px_rgba(162,28,175,0.35)] transition-all hover:scale-105"
             >
               Solicitar propuesta
             </Button>
@@ -813,9 +851,9 @@ const AcademiasLanding = () => {
       {/* ───────────────────── FLOATING MODULE BAR ───────────────────── */}
       {selectedProcessIds.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300 px-4 w-full max-w-lg">
-          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-violet-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
+          <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl bg-[#171717] border border-fuchsia-500/30 shadow-2xl shadow-black/70 backdrop-blur-md">
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-2 h-2 rounded-full bg-violet-500 shrink-0 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-fuchsia-500 shrink-0 animate-pulse" />
               <span className="text-sm text-white font-semibold truncate">
                 {selectedProcessIds.size} proceso{selectedProcessIds.size > 1 ? "s" : ""} seleccionado{selectedProcessIds.size > 1 ? "s" : ""}
               </span>
@@ -823,7 +861,7 @@ const AcademiasLanding = () => {
             <Button
               size="sm"
               onClick={() => setShowContactForm(true)}
-              className="bg-violet-600 hover:bg-violet-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
+              className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white h-9 px-4 text-sm font-semibold gap-1.5 shrink-0"
             >
               Solicitar propuesta <ArrowRight className="w-3.5 h-3.5" />
             </Button>

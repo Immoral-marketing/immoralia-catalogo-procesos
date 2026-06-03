@@ -39,7 +39,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-500/30",
     accentText: "text-sky-400",
     accentGradient: "from-sky-500/30 via-sky-500/5 to-transparent",
-    image: "/salud/b1.png",
+    image: "/salud/b1.webp",
     teaser:
       "Cuando alguien busca un centro de salud, decide en minutos. Si no le atiendes al instante — por teléfono, WhatsApp, web o Instagram — se va al de al lado. Convertimos cada canal en una entrada limpia a tu agenda, con cualificación previa para que llegue ya filtrado.",
     paragraph:
@@ -61,7 +61,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-600/30",
     accentText: "text-sky-500",
     accentGradient: "from-sky-600/30 via-sky-600/5 to-transparent",
-    image: "/salud/b2.png",
+    image: "/salud/b2.webp",
     teaser:
       "Cada paciente que no aparece es un hueco de agenda que ya no recuperas. Con confirmaciones automáticas, lista de espera activa y reasignación inteligente de profesional, llenas la agenda y cortas las ausencias a la mitad.",
     paragraph:
@@ -83,7 +83,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-400/30",
     accentText: "text-sky-300",
     accentGradient: "from-sky-400/30 via-sky-400/5 to-transparent",
-    image: "/salud/b3.png",
+    image: "/salud/b3.webp",
     teaser:
       "Das buen trato pero solo las quejas llegan a Google. Pedimos reseña al paciente contento en el momento adecuado, filtramos los descontentos a un canal privado y avisamos en tiempo real cuando algo se publica antes de que escale.",
     paragraph:
@@ -105,7 +105,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-700/30",
     accentText: "text-sky-500",
     accentGradient: "from-sky-700/30 via-sky-700/5 to-transparent",
-    image: "/salud/b4.png",
+    image: "/salud/b4.webp",
     teaser:
       "Un paciente vale 5-10 veces más por su recurrencia que por la primera visita. Recordamos revisiones periódicas, recuperamos pacientes inactivos y enviamos encuestas justo después del tratamiento — cuando la respuesta es honesta y útil.",
     paragraph:
@@ -127,7 +127,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-800/30",
     accentText: "text-sky-600",
     accentGradient: "from-sky-800/30 via-sky-800/5 to-transparent",
-    image: "/salud/b5.png",
+    image: "/salud/b5.webp",
     teaser:
       "Facturar a mutuas, registrar gastos de material clínico y cerrar el mes te quita días que deberías estar en consulta. Automatizamos facturación a aseguradoras, captura de tickets y un parte diario por clínica para que cierres mes en horas.",
     paragraph:
@@ -149,7 +149,7 @@ export const saludBlocks: SaludBlock[] = [
     accentBorder: "border-sky-300/30",
     accentText: "text-sky-200",
     accentGradient: "from-sky-300/30 via-sky-300/5 to-transparent",
-    image: "/salud/b6.png",
+    image: "/salud/b6.webp",
     teaser:
       "Sanidad rota mucho personal — auxiliares, higienistas, recepción — y cada incorporación supone explicar lo mismo desde cero. Comunicación de turnos sin grupos caóticos, sustituciones inteligentes y onboarding que se ejecuta solo el primer día.",
     paragraph:

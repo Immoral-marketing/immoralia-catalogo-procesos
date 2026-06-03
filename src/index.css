@@ -79,3 +79,28 @@ All colors MUST be HSL.
     box-shadow: 0 0 25px hsl(var(--glow-primary) / 0.4);
   }
 }
+
+/* ── Audit section ambient animations ── */
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translateY(-50%) translateX(0px) scale(1); }
+  33%       { transform: translateY(-50%) translateX(70px) scale(1.15); }
+  66%       { transform: translateY(-50%) translateX(-40px) scale(0.90); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translateX(0px) translateY(0px) scale(1); }
+  50%       { transform: translateX(-50px) translateY(50px) scale(1.18); }
+}
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.10; }
+  50%       { opacity: 0.28; }
+}
+@keyframes border-shimmer {
+  0%   { opacity: 0.3; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.audit-orb-1   { animation: orb-drift-1 12s ease-in-out infinite; }
+.audit-orb-2   { animation: orb-drift-2 8s ease-in-out infinite; }
+.audit-orb-3   { animation: orb-pulse   5s ease-in-out infinite; }
+.audit-border  { animation: border-shimmer 3s ease-in-out infinite; }

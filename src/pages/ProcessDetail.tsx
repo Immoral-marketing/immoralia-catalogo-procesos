@@ -80,19 +80,19 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
     "salud":                  { label: "Centros de Salud",         path: "/sector/salud" },
     "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
     "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
-    "construccion":           { label: "Constructoras / Reformas / Inmobiliarias", path: "/sector/construccion" },
+    "construccion":           { label: "Desarrolladoras e Inmobiliarias", path: "/sector/construccion" },
     "industrial":             { label: "Industrial / Producción",                  path: "/sector/industrial" },
 };
 
 // Config por sector: color de acento + imagen hero
 const SECTOR_CONFIG: Record<string, { accentHsl: string; accentHex: string; heroImage: string | null }> = {
-    "centros-deportivos":     { accentHsl: "199 91% 38%", accentHex: "#0891b2", heroImage: "/centros-deportivos/hero.png" },
-    "gestorias":              { accentHsl: "43 53% 53%",  accentHex: "#c4a84c", heroImage: "/gestorias/hero.png" },
-    "salud":                  { accentHsl: "221 83% 53%", accentHex: "#2563eb", heroImage: "/salud/hero.png" },
-    "gastronomia-hosteleria": { accentHsl: "21 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.png" },
-    "academias":              { accentHsl: "262 83% 58%", accentHex: "#7c3aed", heroImage: "/academias/hero.png" },
-    "construccion":           { accentHsl: "38 92% 50%",  accentHex: "#d97706", heroImage: "/constructoras.png" },
-    "industrial":             { accentHsl: "45 93% 47%",  accentHex: "#eab308", heroImage: "/industrial/hero.png" },
+    "centros-deportivos":     { accentHsl: "0 84% 60%",   accentHex: "#ef4444", heroImage: "/centros-deportivos/hero.webp" },
+    "gestorias":              { accentHsl: "142 71% 45%", accentHex: "#22c55e", heroImage: "/gestorias/hero.webp" },
+    "salud":                  { accentHsl: "199 89% 48%", accentHex: "#0ea5e9", heroImage: "/salud/hero.webp" },
+    "gastronomia-hosteleria": { accentHsl: "24 90% 48%",  accentHex: "#ea580c", heroImage: "/restauracion/hero.webp" },
+    "academias":              { accentHsl: "292 73% 40%", accentHex: "#a21caf", heroImage: "/academias/hero.webp" },
+    "construccion":           { accentHsl: "142 71% 45%", accentHex: "#22c55e", heroImage: "/constructoras.webp" },
+    "industrial":             { accentHsl: "220 9% 46%",  accentHex: "#6b7280", heroImage: "/industrial/hero.webp" },
 };
 
 const ProcessDetail = () => {
@@ -491,18 +491,16 @@ const ProcessDetail = () => {
             {/* ── HERO BANNER con imagen del sector ── */}
             {sectorCfg?.heroImage && (() => {
                 return (
-                    <div className="relative w-full min-h-[460px] flex flex-col justify-end">
+                    <div className="relative w-full min-h-[480px] flex flex-col justify-end overflow-hidden">
+                        {/* Imagen full-bleed */}
                         <div
-                            className="absolute inset-0 overflow-hidden"
-                        >
-                            <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
-                            />
-                        </div>
-                        {/* Gradiente: cubre el 60% inferior progresivamente, luego el top con velo leve */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background from-0% via-background/90 via-[45%] to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent via-[25%] to-transparent" />
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
+                        />
+                        {/* Fade inferior: completamente opaco desde el 35% para abajo */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background from-[35%] via-background/70 via-[58%] to-transparent to-[85%]" />
+                        {/* Velo superior */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent via-[20%] to-transparent" />
                         <div className="relative z-10 mx-auto max-w-[860px] w-full px-4 md:px-6 pb-8 pt-6">
                             {/* ← Volver al sector — sobre el título, muy sutil */}
                             {sectorInfo && (
@@ -543,7 +541,7 @@ const ProcessDetail = () => {
                 );
             })()}
 
-            <main className={`mx-auto max-w-[860px] px-4 md:px-6 pb-32 space-y-20 ${sectorCfg?.heroImage ? 'pt-4' : 'py-16'}`}>
+            <main className={`relative z-10 mx-auto max-w-[860px] px-4 md:px-6 pb-32 space-y-20 ${sectorCfg?.heroImage ? 'pt-8' : 'py-16'}`}>
 
                 {/* HERO */}
                 <section className="space-y-6">
@@ -913,26 +911,47 @@ const ProcessDetail = () => {
             </main>
 
             {/* Sticky CTA bar */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-primary border-t border-primary/80">
-                <div className="mx-auto max-w-[860px] px-4 md:px-6 py-3 flex gap-3 justify-center">
-                    <Button
-                        variant="ghost"
-                        size="lg"
-                        className="font-medium text-black/70 hover:text-black hover:bg-white/20"
-                        onClick={() => setShowBookingModal(true)}
+            {(() => {
+                const barAccent = sectorCfg?.accentHex ?? "#0ea5e9";
+                return (
+                    <div
+                        className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t"
+                        style={{
+                            backgroundColor: `${barAccent}12`,
+                            borderColor: `${barAccent}25`,
+                            boxShadow: `0 -8px 40px ${barAccent}10`,
+                        }}
                     >
-                        Agendar llamada
-                    </Button>
-                    <Button
-                        onClick={toggleSelect}
-                        size="lg"
-                        className="bg-black/90 hover:bg-black text-white font-medium border-0"
-                    >
-                        {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
-                        {isSelected ? "Añadido a mi selección" : "Añadir a mi selección"}
-                    </Button>
-                </div>
-            </div>
+                        <div className="mx-auto max-w-[860px] px-4 md:px-6 py-3 flex gap-3 justify-center">
+                            <Button
+                                variant="ghost"
+                                size="lg"
+                                className="font-medium text-white/50 hover:text-white/80 hover:bg-white/[0.08]"
+                                onClick={() => setShowBookingModal(true)}
+                            >
+                                Agendar llamada
+                            </Button>
+                            <Button
+                                onClick={toggleSelect}
+                                size="lg"
+                                className="font-medium border"
+                                style={isSelected ? {
+                                    backgroundColor: `${barAccent}25`,
+                                    borderColor: `${barAccent}55`,
+                                    color: barAccent,
+                                } : {
+                                    backgroundColor: `${barAccent}18`,
+                                    borderColor: `${barAccent}40`,
+                                    color: "#fff",
+                                }}
+                            >
+                                {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                                {isSelected ? "Añadido a mi selección" : "Añadir a mi selección"}
+                            </Button>
+                        </div>
+                    </div>
+                );
+            })()}
 
 
             {/* Modals */}

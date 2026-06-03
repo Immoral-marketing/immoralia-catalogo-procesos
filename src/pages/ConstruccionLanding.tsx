@@ -7,6 +7,7 @@ import { construccionModules, getConstruccionModulesByBlock } from "@/data/const
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
+import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -229,6 +230,14 @@ const ConstruccionLanding = () => {
           </div>
         </div>
       </section>
+
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="construccion"
+        sectorName="constructora"
+        accentHex="#22c55e"
+        suggestions={SECTOR_SUGGESTIONS["construccion"]}
+      />
 
       {/* ───────────────────── 6 BLOQUES — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
@@ -460,7 +469,7 @@ const ConstruccionLanding = () => {
                       </span>
                     </div>
                     <div className="text-xs tracking-widest text-green-300/80 mb-3 uppercase">
-                      Diagnóstico · Constructoras / Reformas / Inmobiliarias · 2026
+                      Diagnóstico · Desarrolladoras e Inmobiliarias · 2026
                     </div>
                     <h4 className="text-xl font-bold mb-4 text-white leading-tight">
                       Diagnóstico de madurez comercial
