@@ -287,6 +287,14 @@ const SportsLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="centros-deportivos"
+        sectorName="centro deportivo"
+        accentHex="#dc2626"
+        suggestions={SECTOR_SUGGESTIONS["centros-deportivos"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         <div
@@ -794,14 +802,6 @@ const SportsLanding = () => {
         );
       })}
 
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="centros-deportivos"
-        sectorName="centro deportivo"
-        accentHex="#dc2626"
-        suggestions={SECTOR_SUGGESTIONS["centros-deportivos"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

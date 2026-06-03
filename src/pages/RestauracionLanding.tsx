@@ -246,6 +246,14 @@ const RestauracionLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="gastronomia-hosteleria"
+        sectorName="restaurante"
+        accentHex="#ea580c"
+        suggestions={SECTOR_SUGGESTIONS["gastronomia-hosteleria"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         {/* Glow del color del bloque activo */}
@@ -797,14 +805,6 @@ const RestauracionLanding = () => {
           </section>
         );
       })}
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="gastronomia-hosteleria"
-        sectorName="restaurante"
-        accentHex="#ea580c"
-        suggestions={SECTOR_SUGGESTIONS["gastronomia-hosteleria"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

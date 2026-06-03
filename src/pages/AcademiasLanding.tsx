@@ -246,6 +246,14 @@ const AcademiasLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="academias"
+        sectorName="academia"
+        accentHex="#a21caf"
+        suggestions={SECTOR_SUGGESTIONS["academias"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         {/* Glow del color del bloque activo */}
@@ -797,14 +805,6 @@ const AcademiasLanding = () => {
           </section>
         );
       })}
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="academias"
-        sectorName="academia"
-        accentHex="#a21caf"
-        suggestions={SECTOR_SUGGESTIONS["academias"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

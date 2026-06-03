@@ -246,6 +246,14 @@ const SaludLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="salud"
+        sectorName="centro de salud"
+        accentHex="#0ea5e9"
+        suggestions={SECTOR_SUGGESTIONS["salud"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         {/* Glow del color del bloque activo */}
@@ -797,14 +805,6 @@ const SaludLanding = () => {
           </section>
         );
       })}
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="salud"
-        sectorName="centro de salud"
-        accentHex="#0ea5e9"
-        suggestions={SECTOR_SUGGESTIONS["salud"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">

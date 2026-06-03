@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { Send, Loader2, Bot, Calendar, X, MessageSquare, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { GHLBookingModal } from './GHLBookingModal';
 import { cn } from '@/lib/utils';
+import { processes } from '@/data/processes';
 
 interface Message {
   role: 'assistant' | 'user';
@@ -18,48 +20,40 @@ export interface SectorChatbotProps {
   headline?: string;
 }
 
-// Chips por sector
 export const SECTOR_SUGGESTIONS: Record<string, string[]> = {
   construccion: [
-    'Pierdo leads que llegan de portales inmobiliarios',
-    'Mis agentes improvisan el discurso de venta',
-    '¿Cómo genero un dossier de unidad al momento?',
-    'Quiero saber qué unidades llevan meses paradas',
+    'Pierdo leads de portales inmobiliarios',
+    'Mis agentes improvisan el discurso',
+    '¿Cómo genero un dossier al momento?',
   ],
   salud: [
-    'Tengo muchas llamadas perdidas fuera de horario',
-    '¿Cómo reduzco los no-shows a consulta?',
-    'Quiero cobrar automáticamente a las mutuas',
-    'Necesito reactivar pacientes que no vuelven',
+    'Tengo llamadas perdidas fuera de horario',
+    '¿Cómo reduzco los no-shows?',
+    'Necesito reactivar pacientes inactivos',
   ],
   gestorias: [
-    'Mis clientes no me mandan la documentación a tiempo',
+    'Los clientes no mandan documentación a tiempo',
     '¿Cómo envío nóminas automáticamente?',
-    'Quiero que el cliente firme contratos desde el móvil',
-    'Se me olvidan vencimientos fiscales importantes',
+    'Se me olvidan vencimientos fiscales',
   ],
   'centros-deportivos': [
     'Detecto tarde cuando un socio se va a dar de baja',
     '¿Cómo gestiono reservas y listas de espera?',
-    'Quiero automatizar el cobro mensual y los avisos',
-    'Necesito un programa de referidos para socios',
+    'Quiero automatizar el cobro mensual',
   ],
   academias: [
     'Los alumnos se dan de baja sin avisar',
     '¿Cómo hago las matrículas sin papeleo?',
-    'Quiero avisar automáticamente de faltas a los padres',
-    'Necesito reactivar exalumnos que dejaron los cursos',
+    'Necesito reactivar exalumnos',
   ],
   'gastronomia-hosteleria': [
     'Tengo muchos no-shows que me cuestan dinero',
     '¿Cómo consigo más reseñas en Google?',
-    'Quiero saber cuándo se va a acabar el stock',
-    'Necesito campañas para eventos y temporadas',
+    'Quiero controlar el stock automáticamente',
   ],
   industrial: [
-    'Tardo demasiado en preparar un presupuesto',
+    'Tardo demasiado en preparar presupuestos',
     '¿Cómo doy visibilidad del pedido al cliente?',
-    'Quiero controlar el avance de producción en tiempo real',
     'Necesito trazabilidad de lote sin Excel',
   ],
 };
@@ -71,27 +65,123 @@ function hexToRgb(hex: string) {
   return { r, g, b };
 }
 
-function renderMarkdown(content: string, accentHex: string) {
-  const { r, g, b } = hexToRgb(accentHex);
-  const accentRgb = `${r},${g},${b}`;
-  return content
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
-    .replace(
-      /\[(.*?)\]\((\/catalogo\/procesos\/[^\s)]+)\)/g,
-      `<a href="$2" class="inline-flex items-center gap-1 mt-1 mb-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all hover:opacity-90" style="background:rgba(${accentRgb},0.12);color:rgba(${accentRgb},1);border:1px solid rgba(${accentRgb},0.3)" target="_blank" rel="noopener noreferrer">$1 ↗</a>`
-    )
-    .replace(
-      /\[(.*?)\]\((\/sector\/[^\s)]+)\)/g,
-      `<a href="$2" class="inline-flex items-center gap-1 mt-1 mb-1 px-2 py-0.5 rounded-md text-xs font-medium underline underline-offset-2 transition-opacity hover:opacity-80" style="color:rgba(${accentRgb},0.85)" target="_blank" rel="noopener noreferrer">$1 →</a>`
-    )
-    .replace(
-      /\[(.*?)\]\((.*?)\)/g,
-      `<a href="$2" class="underline underline-offset-2 hover:opacity-80 transition-opacity font-medium" style="color:rgba(${accentRgb},0.85)" target="_blank" rel="noopener noreferrer">$1</a>`
-    )
-    .replace(/^\s*-\s+(.*?)$/gm, '<li class="ml-4 mb-1 list-disc">$1</li>')
-    .replace(/\n\n/g, '<div class="h-2"></div>')
-    .replace(/\n/g, '<br />');
+// Busca un proceso por slug para extraer su nomenclatura
+function getProcessNomenclature(slug: string): { codigo: string; bloque: string; nombre: string } | null {
+  const p = processes.find(pr => pr.slug === slug);
+  if (!p) return null;
+  return {
+    codigo: p.modulo_codigo || p.codigo || '',
+    bloque: p.bloque_negocio || '',
+    nombre: p.nombre,
+  };
 }
+
+// Chip de proceso clicable con nomenclatura correcta
+const ProcessChip: React.FC<{ slug: string; label: string; accentHex: string }> = ({ slug, label, accentHex }) => {
+  const { r, g, b } = hexToRgb(accentHex);
+  const info = getProcessNomenclature(slug);
+  const displayLabel = info
+    ? `${info.bloque ? info.bloque + ' · ' : ''}${info.codigo ? info.codigo + ' · ' : ''}${info.nombre}`
+    : label;
+
+  return (
+    <Link
+      to={`/catalogo/procesos/${slug}`}
+      className="inline-flex items-center gap-1.5 mt-1 mb-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:opacity-90 hover:translate-x-0.5"
+      style={{
+        background: `rgba(${r},${g},${b},0.12)`,
+        color: `rgba(${r},${g},${b},1)`,
+        border: `1px solid rgba(${r},${g},${b},0.35)`,
+      }}
+    >
+      {displayLabel} ↗
+    </Link>
+  );
+};
+
+// Renderer de markdown como componentes React (soporta bold, process links, sector links, listas, saltos)
+const MarkdownContent: React.FC<{ content: string; accentHex: string }> = ({ content, accentHex }) => {
+  const { r, g, b } = hexToRgb(accentHex);
+  const accentStyle = { color: `rgba(${r},${g},${b},0.9)` };
+
+  const renderInline = (text: string, key: string): React.ReactNode => {
+    // Procesar bold + process links + sector links en el mismo texto
+    const parts: React.ReactNode[] = [];
+    // Regex combinado: bold, process link, sector link, generic link
+    const regex = /\*\*(.*?)\*\*|\[(.*?)\]\((\/catalogo\/procesos\/([^\s)]+))\)|\[(.*?)\]\((\/sector\/[^\s)]+)\)|\[(.*?)\]\(([^)]+)\)/g;
+    let last = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > last) {
+        parts.push(<span key={`t-${key}-${last}`}>{text.slice(last, match.index)}</span>);
+      }
+
+      if (match[1] !== undefined) {
+        // **bold**
+        parts.push(<strong key={`b-${key}-${match.index}`} className="font-semibold text-white">{match[1]}</strong>);
+      } else if (match[4] !== undefined) {
+        // Process link
+        parts.push(<ProcessChip key={`p-${key}-${match.index}`} slug={match[4]} label={match[2]} accentHex={accentHex} />);
+      } else if (match[5] !== undefined) {
+        // Sector link
+        parts.push(
+          <Link key={`s-${key}-${match.index}`} to={match[6]} className="underline underline-offset-2 font-medium hover:opacity-80 transition-opacity" style={accentStyle}>
+            {match[5]} →
+          </Link>
+        );
+      } else if (match[7] !== undefined) {
+        // Generic link
+        parts.push(
+          <a key={`l-${key}-${match.index}`} href={match[8]} className="underline underline-offset-2 font-medium hover:opacity-80 transition-opacity" style={accentStyle} target="_blank" rel="noopener noreferrer">
+            {match[7]}
+          </a>
+        );
+      }
+      last = match.index + match[0].length;
+    }
+
+    if (last < text.length) {
+      parts.push(<span key={`t-${key}-end`}>{text.slice(last)}</span>);
+    }
+
+    return parts.length === 1 && typeof parts[0] === 'object' ? parts[0] : <>{parts}</>;
+  };
+
+  const lines = content.split('\n');
+  const nodes: React.ReactNode[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.trim() === '') {
+      nodes.push(<div key={`gap-${i}`} className="h-2" />);
+    } else if (/^\s*[-*]\s+/.test(line)) {
+      // Lista — agrupa ítems consecutivos
+      const items: string[] = [];
+      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^\s*[-*]\s+/, ''));
+        i++;
+      }
+      nodes.push(
+        <ul key={`ul-${i}`} className="ml-4 space-y-1 my-1">
+          {items.map((item, idx) => (
+            <li key={idx} className="list-disc">{renderInline(item, `li-${i}-${idx}`)}</li>
+          ))}
+        </ul>
+      );
+      continue;
+    } else {
+      nodes.push(<p key={`p-${i}`} className="leading-relaxed">{renderInline(line, `p-${i}`)}</p>);
+    }
+    i++;
+  }
+
+  return <div className="space-y-1 text-sm">{nodes}</div>;
+};
+
+const STORAGE_KEY = (sector: string) => `immoralia_chat_${sector}`;
 
 const SectorChatbot: React.FC<SectorChatbotProps> = ({
   sector,
@@ -100,7 +190,12 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
   suggestions,
   headline,
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY(sector));
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userTurnCount, setUserTurnCount] = useState(0);
@@ -118,6 +213,13 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
 
   const hasSentFirstMessage = messages.length > 0;
 
+  // Persistir en localStorage cada vez que cambian los mensajes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY(sector), JSON.stringify(messages));
+    } catch {}
+  }, [messages, sector]);
+
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container || messages.length === 0) return;
@@ -131,7 +233,7 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
     }
   }, [messages]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = useCallback(async (text: string) => {
     const userMessage = text.trim();
     if (!userMessage || isLoading) return;
 
@@ -156,18 +258,14 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
     } catch {
       setMessages(prev => [
         ...prev,
-        {
-          role: 'assistant',
-          content: 'Ha habido un problema técnico. Por favor, inténtalo de nuevo.',
-        },
+        { role: 'assistant', content: 'Ha habido un problema técnico. Por favor, inténtalo de nuevo.' },
       ]);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoading, sector]);
 
   const handleSend = () => sendMessage(input);
-  const handleSuggestion = (s: string) => sendMessage(s);
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
@@ -218,14 +316,26 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
             <div className="mb-4">
               <div className="flex items-center justify-between mb-3 px-1">
                 <span className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Conversación</span>
-                <button
-                  onClick={() => setShowMessages(false)}
-                  className="flex items-center gap-1.5 text-xs font-medium transition-colors px-2 py-1 rounded-lg"
-                  style={{ color: ACCENT }}
-                >
-                  <X className="w-3.5 h-3.5" />
-                  Cerrar
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setMessages([]);
+                      localStorage.removeItem(STORAGE_KEY(sector));
+                      setUserTurnCount(0);
+                    }}
+                    className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+                  >
+                    Borrar
+                  </button>
+                  <button
+                    onClick={() => setShowMessages(false)}
+                    className="flex items-center gap-1.5 text-xs font-medium transition-colors px-2 py-1 rounded-lg"
+                    style={{ color: ACCENT }}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Cerrar
+                  </button>
+                </div>
               </div>
 
               <div ref={messagesContainerRef} className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
@@ -251,14 +361,10 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
                           : 'bg-white/[0.04] border border-white/8 text-gray-200 rounded-tl-none'
                       )}
                     >
-                      {m.role === 'assistant' ? (
-                        <div
-                          className="markdown-content"
-                          dangerouslySetInnerHTML={{ __html: renderMarkdown(m.content, accentHex) }}
-                        />
-                      ) : (
-                        m.content
-                      )}
+                      {m.role === 'assistant'
+                        ? <MarkdownContent content={m.content} accentHex={accentHex} />
+                        : m.content
+                      }
                     </div>
                   </div>
                 ))}
@@ -314,7 +420,6 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
               backgroundColor: 'rgba(255,255,255,0.04)',
               boxShadow: `0 0 0 1px rgba(${accentRgb},0.12), inset 0 1px 0 rgba(255,255,255,0.04)`,
             }}
-            onFocus={() => {}}
           >
             <input
               type="text"
@@ -336,12 +441,12 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
           </div>
 
           {!hasSentFirstMessage && (
-            <div className="flex flex-wrap gap-2 mt-5 justify-center animate-in fade-in duration-500 delay-200">
+            <div className="flex gap-2 mt-5 justify-center animate-in fade-in duration-500 delay-200">
               {suggestions.map(s => (
                 <button
                   key={s}
-                  onClick={() => handleSuggestion(s)}
-                  className="text-sm px-4 py-2 rounded-full border transition-all text-gray-300 hover:text-white"
+                  onClick={() => sendMessage(s)}
+                  className="text-xs px-3.5 py-2 rounded-full border transition-all text-gray-300 hover:text-white whitespace-nowrap"
                   style={{ borderColor: `rgba(${accentRgb},0.22)`, backgroundColor: `rgba(${accentRgb},0.05)` }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = `rgba(${accentRgb},0.5)`;

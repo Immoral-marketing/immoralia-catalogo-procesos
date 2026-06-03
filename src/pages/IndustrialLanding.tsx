@@ -246,6 +246,14 @@ const IndustrialLanding = () => {
         </div>
       </section>
 
+      {/* ───────────────────── CHATBOT ───────────────────── */}
+      <SectorChatbot
+        sector="industrial"
+        sectorName="empresa industrial"
+        accentHex="#6b7280"
+        suggestions={SECTOR_SUGGESTIONS["industrial"]}
+      />
+
       {/* ───────────────────── 6 MÓDULOS — FEATURE SHOWCASE ───────────────────── */}
       <section id="modulos" className="py-28 border-t border-white/5 relative overflow-hidden">
         {/* Glow del color del bloque activo */}
@@ -797,14 +805,6 @@ const IndustrialLanding = () => {
           </section>
         );
       })}
-
-      {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
-        sector="industrial"
-        sectorName="empresa industrial"
-        accentHex="#6b7280"
-        suggestions={SECTOR_SUGGESTIONS["industrial"]}
-      />
 
       {/* ───────────────────── FINAL CTA ───────────────────── */}
       <section className="py-32 relative overflow-hidden text-center">
