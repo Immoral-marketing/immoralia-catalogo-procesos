@@ -25,6 +25,14 @@ function renderMarkdown(content: string) {
   return content
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
     .replace(
+      /\[(.*?)\]\((\/catalogo\/procesos\/[^\s)]+)\)/g,
+      '<a href="$2" class="inline-flex items-center gap-1 mt-1 mb-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all hover:opacity-90" style="background:rgba(0,255,255,0.12);color:rgba(0,255,255,1);border:1px solid rgba(0,255,255,0.3)" target="_blank" rel="noopener noreferrer">$1 ↗</a>'
+    )
+    .replace(
+      /\[(.*?)\]\((\/sector\/[^\s)]+)\)/g,
+      '<a href="$2" class="inline-flex items-center gap-1 mt-1 mb-1 px-2 py-0.5 rounded-md text-xs font-medium underline underline-offset-2 transition-opacity hover:opacity-80" style="color:rgba(0,255,255,0.75)" target="_blank" rel="noopener noreferrer">$1 →</a>'
+    )
+    .replace(
       /\[(.*?)\]\((.*?)\)/g,
       '<a href="$2" class="underline underline-offset-2 hover:opacity-80 transition-opacity font-medium" style="color:rgba(0,255,255,0.85)" target="_blank" rel="noopener noreferrer">$1</a>'
     )
@@ -42,16 +50,29 @@ const HomeChatbot: React.FC = () => {
   const [scheduleSuggestionDismissed, setScheduleSuggestionDismissed] = useState(false);
   const [showMessages, setShowMessages] = useState(true);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const hasSentFirstMessage = messages.length > 0;
 
   useEffect(() => {
     const container = messagesContainerRef.current;
-    if (container) {
+    if (!container || messages.length === 0) return;
+
+    const lastIdx = messages.length - 1;
+    const lastMsg = messages[lastIdx];
+
+    if (lastMsg.role === 'assistant') {
+      // Mostrar el TOP del mensaje del asistente, no el fondo
+      const msgEl = messageRefs.current[lastIdx];
+      if (msgEl) {
+        container.scrollTop = msgEl.offsetTop - 12;
+      }
+    } else {
+      // Mensaje de usuario: scroll al fondo para ver el indicador de carga
       container.scrollTop = container.scrollHeight;
     }
-  }, [messages, isLoading]);
+  }, [messages]);
 
   const sendMessage = async (text: string) => {
     const userMessage = text.trim();
@@ -161,6 +182,7 @@ const HomeChatbot: React.FC = () => {
               {messages.map((m, i) => (
                 <div
                   key={i}
+                  ref={el => { messageRefs.current[i] = el; }}
                   className={cn(
                     'flex gap-3',
                     m.role === 'user' ? 'justify-end' : 'justify-start'
