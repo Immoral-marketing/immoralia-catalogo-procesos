@@ -94,7 +94,7 @@ const ProcessChip: React.FC<{ slug: string; label: string; accentHex: string }> 
         border: `1px solid rgba(${r},${g},${b},0.35)`,
       }}
     >
-      {displayLabel} ↗
+      {displayLabel}
     </Link>
   );
 };

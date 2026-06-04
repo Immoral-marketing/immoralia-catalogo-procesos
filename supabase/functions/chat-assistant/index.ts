@@ -107,7 +107,8 @@ serve(async (req) => {
                     const sectorLabel = isSectorMatch
                         ? `[SECTOR ACTUAL: ${sectorName}]`
                         : docSectorName ? `[OTRO SECTOR: ${docSectorName}]` : '[PROCESO UNIVERSAL]'
-                    header = `${sectorLabel} [PROCESO: ${meta.process_name || 'N/A'} | SLUG: ${meta.slug || ''}]\n`
+                    const moduloCodigo = meta.modulo_codigo ? ` | CÓDIGO: ${meta.modulo_codigo}` : ''
+                    header = `${sectorLabel} [PROCESO: ${meta.process_name || 'N/A'}${moduloCodigo} | SLUG: ${meta.slug || ''}]\n`
                 }
                 return `${header}${doc.content}`
             }).join('\n\n---\n\n')
@@ -131,7 +132,7 @@ REGLAS DE RESPUESTA — síguelas en este orden:
 
 EJEMPLO DE RESPUESTA BUENA (imita este estilo):
 Usuario: "Pierdo leads que llegan de redes sociales"
-Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\\n\\nEl proceso que lo resuelve directamente es [Captación unificada de leads](/catalogo/procesos/SLUG). Centraliza todos los canales — web, Instagram, WhatsApp — y los mete solos en tu CRM con datos limpios.\\n\\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
+Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\\n\\nEl proceso que lo resuelve directamente es [Interesados priorizados por intención de compra](/catalogo/procesos/calificacion-inteligente-leads). Analiza cada contacto y prioriza los que tienen más probabilidad de cerrar.\\n\\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
 
 EJEMPLO DE RESPUESTA MALA (nunca hagas esto):
 "Entiendo que estás buscando soluciones para mejorar la eficiencia de tu negocio en el sector de la construcción. Existen varias áreas donde la automatización puede facilitarte la vida..."
@@ -141,10 +142,10 @@ CONTEXTO DE NAVEGACIÓN:
 ${sectorContext}
 
 ENLACES A PROCESOS:
-- Solo enlaza si el SLUG aparece en el CONTEXTO DEL CATÁLOGO (formato "SLUG: valor").
-- Formato exacto: [Nombre del proceso](/catalogo/procesos/SLUG)
-- NO pongas el nombre en negrita si ya usas el enlace. El chip muestra el nombre.
-- Si no tienes slug, menciona el proceso en **negrita** sin enlace.
+- Todo proceso mencionado SIEMPRE debe ir como enlace clicable. Nunca en negrita sin enlace.
+- Formato OBLIGATORIO: [Nombre del proceso](/catalogo/procesos/slug-exacto) — solo el enlace, sin código delante ni detrás.
+- El chip ya muestra el código y bloque internamente. NO añadas "1.2" ni "B4" fuera del enlace.
+- Usa el SLUG exacto del contexto (formato "SLUG: valor"). NUNCA pongas "SLUG" literal.
 - Rutas relativas siempre. Sin dominio.
 
 RESPUESTA JSON:
