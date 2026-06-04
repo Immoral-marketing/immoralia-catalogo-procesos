@@ -243,8 +243,9 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
     setIsLoading(true);
 
     try {
+      const history = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
       const { data, error } = await supabase.functions.invoke('chat-assistant', {
-        body: { message: userMessage, sector },
+        body: { message: userMessage, sector, history },
       });
       if (error) throw error;
       setMessages(prev => [
@@ -263,7 +264,7 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, sector]);
+  }, [isLoading, sector, messages]);
 
   const handleSend = () => sendMessage(input);
   const handleKey = (e: React.KeyboardEvent) => {
