@@ -39,7 +39,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-green-500/30",
  accentText: "text-green-400",
  accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
- image: "/constructoras/b1.png",
+ image: "/constructoras/b1.webp",
  teaser:
  "Le entran consultas por muchos canales, pero no sabe cuáles tienen presupuesto, urgencia y financiamiento real. La IA evalúa cada interesado en segundos para que su equipo hable solo con quien puede comprar.",
  paragraph:
@@ -61,7 +61,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-green-600/30",
  accentText: "text-green-500",
  accentGradient: "from-green-600/30 via-green-600/5 to-transparent",
- image: "/constructoras/b2.png",
+ image: "/constructoras/b2.webp",
  teaser:
  "Su equipo improvisa argumentos, arma fichas a mano y pierde cierres en el papeleo. La IA le da el material adecuado para cada comprador y lleva la reserva hasta la firma digital sin fricción.",
  paragraph:
@@ -83,7 +83,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-green-400/30",
  accentText: "text-green-300",
  accentGradient: "from-green-400/30 via-green-400/5 to-transparent",
- image: "/constructoras/b3.png",
+ image: "/constructoras/b3.webp",
  teaser:
  "En obra nueva pasan meses entre el interés y la entrega, y coordinar visitas y seguimiento consume horas cada semana. Lo automatizamos de principio a fin.",
  paragraph:
@@ -105,7 +105,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-green-700/30",
  accentText: "text-green-500",
  accentGradient: "from-green-700/30 via-green-700/5 to-transparent",
- image: "/constructoras/b4.png",
+ image: "/constructoras/b4.webp",
  teaser:
  "Los reportes de avance toman días, los documentos de proveedor se digitan a mano y los trámites se pasan de fecha. La IA conecta la obra con la oficina y mantiene todo al día.",
  paragraph:
@@ -127,7 +127,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-emerald-500/30",
  accentText: "text-emerald-400",
  accentGradient: "from-emerald-500/30 via-emerald-500/5 to-transparent",
- image: "/constructoras/b5.png",
+ image: "/constructoras/b5.webp",
  teaser:
  "La cobranza consume horas, cuadrar pagos genera errores y el reporte a inversionistas toma días. Automatizamos las finanzas del proyecto para proteger la caja.",
  paragraph:
@@ -149,7 +149,7 @@ export const construccionBlocks: ConstruccionBlock[] = [
  accentBorder: "border-green-500/30",
  accentText: "text-green-400",
  accentGradient: "from-green-500/30 via-green-500/5 to-transparent",
- image: "/constructoras/b6.png",
+ image: "/constructoras/b6.webp",
  teaser:
  "La relación no termina con la entrega de llaves, y dirección no siempre ve a tiempo lo que se traba. Ordenamos la postventa y le damos a dirección la vista de todos los proyectos.",
  paragraph:

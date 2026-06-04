@@ -85,8 +85,9 @@ const HomeChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const history = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
       const { data, error } = await supabase.functions.invoke('chat-assistant', {
-        body: { message: userMessage, sector: null },
+        body: { message: userMessage, sector: null, history },
       });
 
       if (error) throw error;

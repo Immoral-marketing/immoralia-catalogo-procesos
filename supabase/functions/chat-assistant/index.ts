@@ -22,7 +22,7 @@ serve(async (req) => {
     }
 
     try {
-        const { message, sector } = await req.json()
+        const { message, sector, history = [] } = await req.json()
 
         if (!message) {
             return new Response(JSON.stringify({ error: 'Falta el mensaje' }), {
@@ -37,7 +37,16 @@ serve(async (req) => {
 
         const supabase = createClient(supabaseUrl, supabaseKey)
 
-        // 1. Generar embedding para la pregunta del usuario
+        // 1. Generar embedding para la pregunta del usuario.
+        // Si hay historial, añadimos la última pregunta del asistente como contexto:
+        // así un mensaje corto ("smartphones", "sí") sigue matcheando los procesos correctos.
+        const lastAssistant = Array.isArray(history)
+            ? [...history].reverse().find((m: any) => m.role === 'assistant')?.content || ''
+            : ''
+        const embeddingInput = lastAssistant
+            ? `${lastAssistant}\n\nUsuario: ${message}`
+            : message
+
         const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
             method: 'POST',
             headers: {
@@ -46,7 +55,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
                 model: 'text-embedding-3-small',
-                input: message,
+                input: embeddingInput,
             }),
         })
 
@@ -107,7 +116,8 @@ serve(async (req) => {
                     const sectorLabel = isSectorMatch
                         ? `[SECTOR ACTUAL: ${sectorName}]`
                         : docSectorName ? `[OTRO SECTOR: ${docSectorName}]` : '[PROCESO UNIVERSAL]'
-                    header = `${sectorLabel} [PROCESO: ${meta.process_name || 'N/A'} | SLUG: ${meta.slug || ''}]\n`
+                    const moduloCodigo = meta.modulo_codigo ? ` | CÓDIGO: ${meta.modulo_codigo}` : ''
+                    header = `${sectorLabel} [PROCESO: ${meta.process_name || 'N/A'}${moduloCodigo} | SLUG: ${meta.slug || ''}]\n`
                 }
                 return `${header}${doc.content}`
             }).join('\n\n---\n\n')
@@ -123,15 +133,20 @@ serve(async (req) => {
 
         const systemPrompt = `Eres el asistente de Immoralia. Ayudas a negocios a automatizar procesos con IA. Hablas como un consultor directo que conoce el sector, no como un chatbot corporativo.
 
+MANTÉN EL HILO DE LA CONVERSACIÓN:
+- Lees los mensajes anteriores. Si el usuario responde a una pregunta tuya, continúa ESE hilo — no empieces de cero ni cambies de tema.
+- Una respuesta corta del usuario ("smartphones", "sí", "el primero") es una respuesta a tu pregunta anterior. Interprétala en ese contexto, nunca como una consulta nueva aislada.
+- Si ya recomendaste un proceso y el usuario sigue preguntando sobre él, responde sobre ESE proceso. No saltes a recomendar otros distintos.
+
 REGLAS DE RESPUESTA — síguelas en este orden:
-1. Primera frase: reconoce el problema concreto del usuario en una sola frase corta. Sin "Entiendo que...", sin "Es frustrante que...". Directo.
-2. Si el mensaje es vago (sin problema concreto), haz UNA sola pregunta de seguimiento. Nada más. No recomiendes procesos todavía.
-3. Si el problema está claro, recomienda 1-2 procesos máximo. Para cada uno: una frase de por qué encaja, luego el enlace si tienes el slug.
+1. Primera frase: reconoce el problema o responde a lo que dijo el usuario en una sola frase corta. Sin "Entiendo que...", sin "Es frustrante que...". Directo.
+2. NO estás obligado a recomendar un proceso en cada turno. Si el usuario aporta información, responde a tu pregunta o sigue describiendo su situación, conversa con naturalidad y profundiza. Está bien un turno de pura conversación.
+3. Recomienda un proceso solo cuando entiendas bien el problema. Una conversación de 2-3 turnos antes de recomendar es mejor que recomendar de golpe. Cuando recomiendes: 1-2 procesos máximo, con una frase de por qué encaja y el enlace.
 4. Respuesta máxima: 4 párrafos cortos. Sin listas largas. Sin frases de relleno.
 
 EJEMPLO DE RESPUESTA BUENA (imita este estilo):
 Usuario: "Pierdo leads que llegan de redes sociales"
-Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\\n\\nEl proceso que lo resuelve directamente es [Captación unificada de leads](/catalogo/procesos/SLUG). Centraliza todos los canales — web, Instagram, WhatsApp — y los mete solos en tu CRM con datos limpios.\\n\\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
+Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\\n\\nEl proceso que lo resuelve directamente es [Interesados priorizados por intención de compra](/catalogo/procesos/calificacion-inteligente-leads). Analiza cada contacto y prioriza los que tienen más probabilidad de cerrar.\\n\\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
 
 EJEMPLO DE RESPUESTA MALA (nunca hagas esto):
 "Entiendo que estás buscando soluciones para mejorar la eficiencia de tu negocio en el sector de la construcción. Existen varias áreas donde la automatización puede facilitarte la vida..."
@@ -141,10 +156,10 @@ CONTEXTO DE NAVEGACIÓN:
 ${sectorContext}
 
 ENLACES A PROCESOS:
-- Solo enlaza si el SLUG aparece en el CONTEXTO DEL CATÁLOGO (formato "SLUG: valor").
-- Formato exacto: [Nombre del proceso](/catalogo/procesos/SLUG)
-- NO pongas el nombre en negrita si ya usas el enlace. El chip muestra el nombre.
-- Si no tienes slug, menciona el proceso en **negrita** sin enlace.
+- Todo proceso mencionado SIEMPRE debe ir como enlace clicable. Nunca en negrita sin enlace.
+- Formato OBLIGATORIO: [Nombre del proceso](/catalogo/procesos/slug-exacto) — solo el enlace, sin código delante ni detrás.
+- El chip ya muestra el código y bloque internamente. NO añadas "1.2" ni "B4" fuera del enlace.
+- Usa el SLUG exacto del contexto (formato "SLUG: valor"). NUNCA pongas "SLUG" literal.
 - Rutas relativas siempre. Sin dominio.
 
 RESPUESTA JSON:
@@ -165,6 +180,7 @@ ${contextText}`
                 model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
+                    ...(Array.isArray(history) ? history.filter((m: any) => m && (m.role === 'user' || m.role === 'assistant') && m.content) : []),
                     { role: 'user', content: message },
                 ],
                 response_format: { type: "json_object" }
