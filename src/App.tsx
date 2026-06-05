@@ -50,7 +50,8 @@ const App = () => (
             <Route path="/sector/centros-deportivos" element={<SportsLanding />} />
             <Route path="/sector/gestorias" element={<GestoriasLanding />} />
             <Route path="/sector/salud" element={<SaludLanding />} />
-            <Route path="/sector/construccion" element={<ConstruccionLanding />} />
+            <Route path="/sector/desarrolladoras" element={<ConstruccionLanding />} />
+            <Route path="/sector/construccion" element={<Navigate to="/sector/desarrolladoras" replace />} />
             <Route path="/sector/academias" element={<AcademiasLanding />} />
             <Route path="/sector/gastronomia-hosteleria" element={<RestauracionLanding />} />
             <Route path="/sector/restauracion" element={<Navigate to="/sector/gastronomia-hosteleria" replace />} />

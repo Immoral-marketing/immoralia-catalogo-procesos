@@ -98,6 +98,7 @@ ${formatArray(p.canales)}
                 slug: p.slug || '',
                 landing_slug: p.landing_slug || null,
                 bloque_negocio: p.bloque_negocio || null,
+                modulo_codigo: p.modulo_codigo || p.codigo || null,
                 sector_name: sectorName || null,
             }
         };
