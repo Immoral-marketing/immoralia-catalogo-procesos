@@ -71,7 +71,7 @@ const sectors = [
     title: "Desarrolladoras e Inmobiliarias",
     description: "Constructoras, empresas de reformas, arquitectura, agencias inmobiliarias y gestión de propiedades.",
     icon: HardHat,
-    path: "/sector/construccion",
+    path: "/sector/desarrolladoras",
     accent: "#22c55e",
     accentClass: "bg-green-500/10 border-green-500/25 text-green-400",
     accentGlow: "rgba(34,197,94,0.25)",

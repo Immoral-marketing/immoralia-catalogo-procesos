@@ -58,6 +58,20 @@ export const construccionModules: ConstruccionModule[] = [
       "Control del desempeño de cada asesor del equipo",
     ],
   },
+  {
+    codigo: "1.4",
+    bloque: "B1",
+    nombre: "Asistente web de atención al interesado",
+    descripcion:
+      "Un asistente con IA atiende en su sitio web y por WhatsApp las 24 horas: explica tipologías, formas de pago, ubicación y resuelve las dudas frecuentes del proyecto. El interesado llega a su asesor ya informado, el equipo deja de repetir lo mismo una y otra vez, y toda la conversación queda registrada en el CRM.",
+    badge: "Popular",
+    linkedProcessSlug: "asistente-digital-precualificacion",
+    highlights: [
+      "Atención a los interesados las 24 horas sin sumar planilla",
+      "El equipo deja de explicar lo básico una y otra vez",
+      "Los interesados llegan al asesor ya informados sobre precio y condiciones",
+    ],
+  },
   // ── BLOQUE 02 · Conversión y cierre ──
   {
     codigo: "2.1",
@@ -104,15 +118,15 @@ export const construccionModules: ConstruccionModule[] = [
   {
     codigo: "2.4",
     bloque: "B2",
-    nombre: "Contratos de reserva con firma digital",
+    nombre: "Pago de reserva online y contrato a firma digital",
     descripcion:
-      "Cuando se cierra la reserva, el sistema genera el contrato con los datos del comprador y la unidad y lo envía a firma digital certificada al celular, con seguimiento del estado de cada firma. Se cierra en caliente, sin que el papeleo enfríe al comprador entre el acuerdo y la firma.",
+      "El comprador elige su unidad, paga la señal de reserva online con tarjeta y la unidad queda bloqueada al instante. En cuanto el pago se confirma, el sistema genera automáticamente el contrato de reserva con los datos del comprador y la unidad y lo envía a firma digital certificada al celular, con seguimiento del estado de cada firma. Se cierra en caliente, sin transferencias manuales ni papeleo que enfríe al comprador entre el acuerdo, el pago y la firma.",
     badge: "Esencial",
     linkedProcessSlug: "contrato-reserva-firma-digital-obra",
     highlights: [
-      "Tiempo de emisión de contratos reducido hasta en un 95%",
-      "Reserva firmada en el momento, sin enfriar al comprador",
-      "Seguimiento visual del estado de firma de cada interviniente",
+      "El comprador reserva y paga la señal online, sin transferencia ni visita al banco",
+      "El pago confirmado dispara el contrato a firma digital al instante",
+      "Cada reserva queda bloqueada y respaldada por su pago, sin gestiones manuales",
     ],
   },
   {
@@ -127,6 +141,20 @@ export const construccionModules: ConstruccionModule[] = [
       "Menos cancelaciones de reserva al transmitir confianza desde el primer día",
       "Baja la carga administrativa de andar solicitando documentos uno a uno",
       "Mejora la satisfacción del comprador y las recomendaciones a nuevos clientes",
+    ],
+  },
+  {
+    codigo: "2.6",
+    bloque: "B2",
+    nombre: "Presentación comercial adaptada por perfil",
+    descripcion:
+      "Según el perfil del interesado, inversionista, familia, pareja joven, el sistema arma de forma automática la presentación, la ficha y los correos con los argumentos que de verdad le importan a ese comprador. El asesor envía siempre el material más relevante, sin preparar versiones distintas a mano.",
+    badge: "Nuevo",
+    linkedProcessSlug: "motor-presentacion-perfil",
+    highlights: [
+      "Mayor tasa de apertura al enviar material relevante para cada perfil",
+      "Se acaban los envíos genéricos que no conectan",
+      "El asesor deja de armar a mano una propuesta distinta para cada cliente",
     ],
   },
   // ── BLOQUE 03 · Seguimiento y visitas ──
@@ -170,34 +198,6 @@ export const construccionModules: ConstruccionModule[] = [
       "Recupera interesados que se iban con dudas sin resolver",
       "Termómetro real del desempeño de cada asesor en la visita",
       "Automatiza el paso de cierre que más se suele olvidar",
-    ],
-  },
-  {
-    codigo: "3.4",
-    bloque: "B3",
-    nombre: "Asistente web de atención al interesado",
-    descripcion:
-      "Un asistente con IA atiende en su sitio web y por WhatsApp las 24 horas: explica tipologías, formas de pago, ubicación y resuelve las dudas frecuentes del proyecto. El interesado llega a su asesor ya informado, el equipo deja de repetir lo mismo una y otra vez, y toda la conversación queda registrada en el CRM.",
-    badge: "Popular",
-    linkedProcessSlug: "asistente-digital-precualificacion",
-    highlights: [
-      "Atención a los interesados las 24 horas sin sumar planilla",
-      "El equipo deja de explicar lo básico una y otra vez",
-      "Los interesados llegan al asesor ya informados sobre precio y condiciones",
-    ],
-  },
-  {
-    codigo: "3.5",
-    bloque: "B3",
-    nombre: "Presentación comercial adaptada por perfil",
-    descripcion:
-      "Según el perfil del interesado, inversionista, familia, pareja joven, el sistema arma de forma automática la presentación, la ficha y los correos con los argumentos que de verdad le importan a ese comprador. El asesor envía siempre el material más relevante, sin preparar versiones distintas a mano.",
-    badge: "Nuevo",
-    linkedProcessSlug: "motor-presentacion-perfil",
-    highlights: [
-      "Mayor tasa de apertura al enviar material relevante para cada perfil",
-      "Se acaban los envíos genéricos que no conectan",
-      "El asesor deja de armar a mano una propuesta distinta para cada cliente",
     ],
   },
   // ── BLOQUE 04 · Obra y proveedores ──
