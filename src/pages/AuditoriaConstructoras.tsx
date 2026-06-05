@@ -17,6 +17,10 @@ import {
 import { processes } from "@/data/processes";
 
 const CN_MODULES = buildCnModulesByBlock(processes);
+// Índice de la pregunta de prioridades, localizado por su flag (robusto ante cambios de orden).
+const PRIORITY_IDX = CN_AUDIT_QUESTIONS.findIndex(
+  (qq) => qq.type === "choice" && (qq as { priority?: boolean }).priority,
+);
 import { downloadCnAuditPdf, type CnAuditState } from "@/lib/auditoriaConstructorasPdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,9 +207,9 @@ const AuditoriaConstructoras = () => {
           )
             .map((k) => CN_AUDIT_CANALES_LEADS[k] || k)
             .join(", "),
-          audit_priority: (Array.isArray(answers[13])
-            ? (answers[13] as string[])
-            : [answers[13] as string].filter(Boolean)
+          audit_priority: (Array.isArray(answers[PRIORITY_IDX])
+            ? (answers[PRIORITY_IDX] as string[])
+            : [answers[PRIORITY_IDX] as string].filter(Boolean)
           )
             .map((k) => CN_AUDIT_PRIORIDADES[k] || k)
             .join(", ") || "—",
@@ -336,21 +340,21 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 mb-7">
           <Sparkles className="w-3.5 h-3.5 text-green-400" />
           <span className="text-green-300 font-medium tracking-widest uppercase text-[11px]">
-            Auditoría confidencial · Constructoras &amp; Promotoras 2026
+            Auditoría confidencial · Desarrolladoras e Inmobiliarias · 2026
           </span>
         </div>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-7 tracking-tight leading-[1.05]">
-          Descubre qué está frenando tu <br className="hidden md:block" />
+          Descubre qué frena la <br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-200">
             comercialización
           </span>{" "}
-          esta promoción.
+          de tu promoción.
         </h1>
 
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-5 leading-relaxed">
-          Te hacemos las preguntas que importan sobre cómo gestionas leads, visitas, cierre y
-          postventa. Recibes un{" "}
+          Te hacemos las preguntas que importan sobre cómo gestionas la captación, las ventas,
+          la obra, los cobros y la postventa. Recibes un{" "}
           <span className="text-white font-semibold">informe personalizado en PDF</span> con tu
           nivel de madurez comercial y los módulos que recomendamos activar primero en tu
           promoción.
@@ -364,7 +368,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
         <div className="flex flex-wrap gap-2.5 justify-center mb-10">
           {[
             { icon: FileText, label: "Informe PDF personalizado" },
-            { icon: ListChecks, label: "15 preguntas guiadas" },
+            { icon: ListChecks, label: `${CN_AUDIT_QUESTIONS.length} preguntas guiadas` },
             { icon: Lock, label: "100% Confidencial" },
             { icon: CheckCircle2, label: "Sin tarjeta ni compromiso" },
           ].map((it, i) => {
@@ -405,7 +409,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
           {
             n: "02",
             title: "Diagnóstico por área",
-            desc: "Score detallado en las 6 áreas clave: captación, conversión, seguimiento, cierre, postventa y operativa diaria.",
+            desc: "Score detallado en las 6 áreas clave: captación, conversión y cierre, seguimiento, obra y proveedores, finanzas y cobros, y postventa y dirección.",
           },
           {
             n: "03",
@@ -460,12 +464,12 @@ const QuestionScreen = ({
           const p = q.type === "scale" ? parseScaleHelp(q.help!) : null;
           return p ? (
             <div className="flex flex-col gap-2 mb-6">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">1</span>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-green-500/[0.08] border border-green-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 text-black text-xs font-bold flex items-center justify-center">1</span>
                 <p className="text-gray-300 text-sm leading-snug">{p.hint1}</p>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/[0.08] border border-yellow-500/20">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold flex items-center justify-center">5</span>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-green-500/[0.08] border border-green-500/20">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 text-black text-xs font-bold flex items-center justify-center">5</span>
                 <p className="text-gray-300 text-sm leading-snug">{p.hint5}</p>
               </div>
             </div>

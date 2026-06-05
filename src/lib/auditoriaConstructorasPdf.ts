@@ -1,10 +1,11 @@
-// Generación del PDF descargable de la auditoría de constructoras y promotoras.
+// Generación del PDF descargable de la auditoría de desarrolladoras e inmobiliarias.
 // Construye un HTML A4 con la identidad del informe (azul marino + cyan)
 // y lo lanza a window.print() vía iframe oculto.
 
 import {
   CN_AUDIT_BLOCKS,
   CN_AUDIT_BLOCK_KEYS,
+  CN_AUDIT_QUESTIONS,
   CN_AUDIT_TIPO_EMPRESA,
   CN_AUDIT_NUM_UNIDADES,
   CN_AUDIT_PRIORIDADES,
@@ -15,6 +16,10 @@ import {
 import { processes } from "@/data/processes";
 
 const CN_MODULES = buildCnModulesByBlock(processes);
+// Índice de la pregunta de prioridades, localizado por su flag (robusto ante cambios de orden).
+const CN_PRIORITY_IDX = CN_AUDIT_QUESTIONS.findIndex(
+  (qq) => qq.type === "choice" && (qq as { priority?: boolean }).priority,
+);
 
 export interface CnAuditState {
   contact: {
@@ -84,11 +89,11 @@ function buildPdfHtml(s: CnAuditState): string {
     year: "numeric",
   });
 
-  // indices: 0=tipo empresa, 1=num unidades, 2=canales (multiselect), 13=prioridades
+  // indices: 0=tipo empresa, 1=num unidades, 2=canales (multiselect); prioridades por flag
   const tipoIdx = (s.answers[0] as string) || "A";
   const unidadesIdx = (s.answers[1] as string) || "A";
   const prioridadesArr = (
-    Array.isArray(s.answers[13]) ? (s.answers[13] as string[]) : [s.answers[13] as string].filter(Boolean)
+    Array.isArray(s.answers[CN_PRIORITY_IDX]) ? (s.answers[CN_PRIORITY_IDX] as string[]) : [s.answers[CN_PRIORITY_IDX] as string].filter(Boolean)
   )
     .map((k) => CN_AUDIT_PRIORIDADES[k] || k)
     .join(", ") || "—";
@@ -231,7 +236,7 @@ function buildPdfHtml(s: CnAuditState): string {
       <div style="font-size:24px;font-weight:800;margin-bottom:56px">
         <span style="color:#fff">immoral</span><span style="color:#22d3ee">ia</span>
       </div>
-      <div style="font-size:9px;letter-spacing:4px;color:#67C5DC;text-transform:uppercase;margin-bottom:14px">Informe de Auditoría · Constructoras &amp; Promotoras · ${today}</div>
+      <div style="font-size:9px;letter-spacing:4px;color:#67C5DC;text-transform:uppercase;margin-bottom:14px">Informe de Auditoría · Desarrolladoras e Inmobiliarias · ${today}</div>
       <h1 style="font-size:38px;line-height:1.1;font-weight:800;max-width:500px;margin-bottom:14px;color:#fff">Auditoría de Madurez Comercial</h1>
       <div style="font-size:13px;color:#7AB8CC;max-width:440px;line-height:1.65;margin-bottom:44px">Preparado para <strong style="color:#fff;font-weight:700">${c.name}</strong>${c.company ? " · " + c.company : ""}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:400px">
@@ -262,20 +267,13 @@ function buildPdfHtml(s: CnAuditState): string {
       <div style="position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(34,211,238,.07)"></div>
       <div style="position:absolute;right:40px;bottom:-30px;width:120px;height:120px;border-radius:50%;background:rgba(34,211,238,.05)"></div>
       <div style="font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:10px;position:relative;z-index:2">immoralia · Parte de Immoral Group</div>
-      <div style="font-size:26px;font-weight:800;color:#fff;line-height:1.15;margin-bottom:10px;max-width:480px;position:relative;z-index:2">Automatización e IA<br>para promotoras y constructoras</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.65;max-width:500px;position:relative;z-index:2">Ayudamos a promotoras y constructoras a comercializar más eficientemente: desde la cualificación del primer lead hasta la entrega y postventa. Sin añadir más comerciales. Sin más reuniones de seguimiento. Módulo a módulo, con impacto medible en el siguiente ciclo de ventas.</div>
+      <div style="font-size:26px;font-weight:800;color:#fff;line-height:1.15;margin-bottom:10px;max-width:480px;position:relative;z-index:2">Automatización e IA<br>para promotoras y desarrolladoras</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.65;max-width:500px;position:relative;z-index:2">Ayudamos a promotoras y desarrolladoras a comercializar más eficientemente: desde la cualificación del primer lead hasta la entrega y postventa. Sin añadir más comerciales. Sin más reuniones de seguimiento. Módulo a módulo, con impacto medible en el siguiente ciclo de ventas.</div>
     </div>
     <div style="background:#fff;padding:20px 40px">
       <div style="font-size:9px;letter-spacing:2px;color:#22d3ee;text-transform:uppercase;font-weight:800;margin-bottom:14px">Las 6 áreas que automatizamos</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-        ${[
-          ["B1", "Captación y cualificación", "Lead scoring automático, pipeline en tiempo real, detección de enfriamiento"],
-          ["B2", "Conversión y argumentación", "Asistente digital, dossier instantáneo y resumen de llamadas al CRM"],
-          ["B3", "Seguimiento y visitas", "Nurturing durante la obra, agenda automática y seguimiento post-visita"],
-          ["B4", "Cierre y contratación", "Firma digital, contratos automáticos y comunicación post-reserva"],
-          ["B5", "Postventa y propietarios", "Portal de incidencias con IA, ticketing y gestión de garantías"],
-          ["B6", "Operativa diaria", "Detección de unidades estancadas y recomendaciones de dirección"],
-        ]
+        ${CN_AUDIT_BLOCK_KEYS.map((b) => [b, CN_AUDIT_BLOCKS[b].name, CN_AUDIT_BLOCKS[b].short])
           .map(
             ([id, name, desc]) => `
           <div style="padding:12px 14px;background:#F0FAFE;border-radius:8px;border:1px solid #BAE6F5">
