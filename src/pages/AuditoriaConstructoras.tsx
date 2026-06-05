@@ -969,7 +969,7 @@ const ResultScreen = ({
                 Agendar llamada de 30 min <ArrowRight className="w-4 h-4" />
               </a>
               <Link
-                to="/sector/construccion"
+                to="/sector/desarrolladoras"
                 className="inline-flex items-center justify-center gap-2 px-7 h-12 rounded-full bg-white/5 text-white border border-white/20 font-semibold hover:bg-white/10 transition-all"
               >
                 Ver catálogo de módulos

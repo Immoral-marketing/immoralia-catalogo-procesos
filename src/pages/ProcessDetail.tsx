@@ -80,7 +80,7 @@ const SECTOR_LABELS: Record<string, { label: string; path: string }> = {
     "salud":                  { label: "Centros de Salud",         path: "/sector/salud" },
     "gastronomia-hosteleria": { label: "Gastronomía y Hostelería", path: "/sector/gastronomia-hosteleria" },
     "academias":              { label: "Academias y Formación",    path: "/sector/academias" },
-    "construccion":           { label: "Desarrolladoras e Inmobiliarias", path: "/sector/construccion" },
+    "construccion":           { label: "Desarrolladoras e Inmobiliarias", path: "/sector/desarrolladoras" },
     "industrial":             { label: "Industrial / Producción",                  path: "/sector/industrial" },
 };
 
@@ -224,6 +224,8 @@ const ProcessDetail = () => {
                         sectores: row.sectores ?? [],
                         herramientas: row.herramientas ?? [],
                         landing_slug: row.landing_slug,
+                        bloque_negocio: row.bloque_negocio,
+                        modulo_codigo: row.modulo_codigo,
                         integration_domains: row.integration_domains ?? [],
                     });
                     setStepImages([
@@ -657,10 +659,11 @@ const ProcessDetail = () => {
                             size="lg"
                             className={cn(
                                 "font-medium px-8 transition-all duration-200",
-                                isSelected
+                                !sectorCfg && (isSelected
                                     ? "bg-secondary hover:bg-secondary/90 text-white"
-                                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                                    : "bg-primary hover:bg-primary/90 text-primary-foreground")
                             )}
+                            style={sectorCfg ? { backgroundColor: sectorCfg.accentHex, color: "#fff", boxShadow: isSelected ? `0 0 20px ${sectorCfg.accentHex}55` : undefined } : {}}
                         >
                             {isSelected ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
                             {isSelected ? "Proceso seleccionado" : "Seleccionar proceso"}

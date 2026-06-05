@@ -22,6 +22,8 @@ interface SelectionSummaryProps {
   variant?: 'card' | 'drawer';
   className?: string;
   accentColor?: string;
+  /** Lista de procesos seleccionados ya resuelta por el caller (incluye módulos `mod-...` de las landings de sector). Si no se pasa, se calcula desde `processes` (solo ids reales). */
+  selectedProcesses?: Process[];
 }
 
 export const SelectionSummary = ({
@@ -33,9 +35,10 @@ export const SelectionSummary = ({
   variant = 'card',
   className,
   accentColor,
+  selectedProcesses: selectedProcessesProp,
 }: SelectionSummaryProps) => {
   const { selectedProcessIds, toggleProcess } = useSelection();
-  const selectedProcesses = processes.filter(p => selectedProcessIds.has(p.id));
+  const selectedProcesses = selectedProcessesProp ?? processes.filter(p => selectedProcessIds.has(p.id));
   const count = selectedProcesses.length;
 
   const [isShareHovered, setIsShareHovered] = useState(false);

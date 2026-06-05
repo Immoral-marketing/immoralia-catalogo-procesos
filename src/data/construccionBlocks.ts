@@ -65,11 +65,11 @@ export const construccionBlocks: ConstruccionBlock[] = [
  teaser:
  "Su equipo improvisa argumentos, arma fichas a mano y pierde cierres en el papeleo. La IA le da el material adecuado para cada comprador y lleva la reserva hasta la firma digital sin fricción.",
  paragraph:
- "Su equipo necesita responder dudas técnicas, adaptar el discurso a cada comprador y armar fichas y contratos sobre la marcha, y muchas veces improvisa o se atrasa en el papeleo. El sistema responde dudas al instante, genera la ficha de cada unidad en segundos, adapta la presentación al perfil del comprador y lleva la reserva a firma digital con seguimiento, para cerrar en caliente.",
+ "Su equipo necesita responder dudas técnicas, adaptar el discurso a cada comprador y armar fichas y contratos sobre la marcha, y muchas veces improvisa o se atrasa en el papeleo. El sistema responde dudas al instante, genera la ficha de cada unidad en segundos, adapta la presentación al perfil del comprador, cobra la señal de reserva online y lleva la reserva a firma digital con seguimiento, para cerrar en caliente.",
  benefits: [
  "Asistente y ficha de unidad listos en segundos para el comprador",
  "Presentación adaptada al perfil de cada interesado",
- "Contrato de reserva a firma digital, sin enfriar la venta",
+ "Reserva pagada online y contrato a firma digital, sin enfriar la venta",
  ],
  },
  {

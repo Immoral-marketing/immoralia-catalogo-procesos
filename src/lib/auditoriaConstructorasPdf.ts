@@ -425,7 +425,7 @@ function buildPdfHtml(s: CnAuditState): string {
       <div style="font-size:13px;color:#7AB8CC;max-width:460px;line-height:1.65;margin-bottom:28px">Una conversación de 30 minutos para ver qué frenos tiene tu comercialización, qué ya tenéis montado y qué módulo puede generar impacto antes de que abra la siguiente fase de ventas. Sin compromiso, sin presentaciones largas.</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <div style="padding:12px 24px;background:#22d3ee;color:#0C2030;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.5px">procesos.immoralia.es</div>
-        <div style="padding:12px 24px;background:rgba(255,255,255,.08);color:#fff;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.3px;border:1px solid rgba(255,255,255,.15)">procesos.immoralia.es/sector/construccion-reformas-obra-nueva</div>
+        <div style="padding:12px 24px;background:rgba(255,255,255,.08);color:#fff;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.3px;border:1px solid rgba(255,255,255,.15)">procesos.immoralia.es/sector/desarrolladoras</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
