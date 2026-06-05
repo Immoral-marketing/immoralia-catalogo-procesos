@@ -63,7 +63,8 @@ const App = () => (
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/auditorias" element={<AuditoriasIndex />} />
             <Route path="/auditorias/restaurantes" element={<AuditoriaRestaurantes />} />
-            <Route path="/auditorias/constructoras" element={<AuditoriaConstructoras />} />
+            <Route path="/auditorias/desarrolladoras" element={<AuditoriaConstructoras />} />
+            <Route path="/auditorias/constructoras" element={<Navigate to="/auditorias/desarrolladoras" replace />} />
             <Route path="/auditorias/academias" element={<AuditoriaAcademias />} />
             <Route path="/auditorias/salud" element={<AuditoriaSalud />} />
             <Route path="/auditorias/deportivos" element={<AuditoriaDeportivos />} />

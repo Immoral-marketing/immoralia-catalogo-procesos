@@ -445,7 +445,7 @@ const ConstruccionLanding = () => {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  to="/auditorias/constructoras"
+                  to="/auditorias/desarrolladoras"
                   className="inline-flex items-center justify-center bg-green-600 hover:bg-green-600 text-white h-14 px-7 text-base gap-2 font-bold rounded-md shadow-lg shadow-green-900/30 transition-all hover:scale-[1.02]"
                 >
                   Empezar mi auditoría <ArrowRight className="w-4 h-4" />
