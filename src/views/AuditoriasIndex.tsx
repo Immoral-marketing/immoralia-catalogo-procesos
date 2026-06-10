@@ -95,17 +95,17 @@ const AUDITS: SectorAudit[] = [
   },
   {
     id: "construccion",
-    title: "Construcción & promotoras",
-    short: "Promotoras, constructoras, reformas y rehabilitación",
+    title: "Desarrolladoras e Inmobiliarias",
+    short: "Promotoras, desarrolladoras, obra nueva y reformas",
     icon: HardHat,
-    path: "/auditorias/constructoras",
+    path: "/auditorias/desarrolladoras",
     status: "available",
     color: "green",
     accent: "from-green-500/30 to-green-700/30",
     bullets: [
       "Captación, cualificación y pipeline en tiempo real",
-      "Seguimiento y visitas al piso piloto",
-      "Cierre, firma digital y postventa",
+      "Conversión y cierre: ficha, pago de reserva y contrato digital",
+      "Obra, finanzas y postventa bajo control",
     ],
   },
   {

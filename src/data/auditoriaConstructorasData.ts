@@ -1,5 +1,7 @@
-// Datos de la auditoría de madurez operativa para promotoras y constructoras.
-// Sector: obra nueva, constructoras, reformas y rehabilitación.
+// Datos de la auditoría de madurez comercial para desarrolladoras e inmobiliarias.
+// Bloques alineados con el catálogo del sector (construccionBlocks): B1 Captación,
+// B2 Conversión y cierre, B3 Seguimiento y visitas, B4 Obra y proveedores,
+// B5 Finanzas y cobros, B6 Postventa y dirección.
 
 import type { Process } from "./processes";
 
@@ -95,39 +97,39 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     type: "scale",
     cat: "Bloque 1 · Captación y cualificación",
     block: "B1",
-    title: "Cuando llega un lead, sabemos si tiene presupuesto, urgencia y financiación antes de que el equipo dedique tiempo.",
-    help: "1 = Sin cualificación previa, cualquier consulta va directamente al equipo; 5 = Scoring automático filtra por presupuesto y financiación real",
-    scaleLabels: ["Sin cualificación", "Preguntas básicas", "Formulario", "Scoring parcial", "Scoring automático"],
-    scaleHints: ["1 — Sin cualificación previa al primer contacto", "5 — Scoring automático por presupuesto y financiación"],
+    title: "Cuando entra un interesado, sabemos al momento si tiene presupuesto, urgencia y financiación, y el sistema avisa si empieza a enfriarse.",
+    help: "1 = Cualquier consulta va directa al equipo, sin filtro ni alertas; 5 = Scoring automático por presupuesto y financiación + alerta de enfriamiento",
+    scaleLabels: ["Sin cualificación", "Preguntas básicas", "Formulario", "Scoring parcial", "Scoring + alerta"],
+    scaleHints: ["1 — Sin cualificación ni alertas", "5 — Scoring automático y alerta de enfriamiento"],
   },
   {
     type: "scale",
     cat: "Bloque 1 · Captación y cualificación",
     block: "B1",
-    title: "La dirección comercial tiene el estado del pipeline actualizado sin esperar al informe semanal.",
-    help: "1 = Solo disponible en el informe semanal o la reunión de equipo; 5 = Pipeline en tiempo real accesible desde el móvil en cualquier momento",
-    scaleLabels: ["Nunca disponible", "Informe semanal", "2-3 veces/semana", "Diario", "Tiempo real"],
-    scaleHints: ["1 — Solo disponible en el informe semanal", "5 — Pipeline en tiempo real siempre accesible"],
+    title: "Un asistente atiende y cualifica a los interesados 24/7 en la web y WhatsApp, y la dirección ve el estado del pipeline en tiempo real.",
+    help: "1 = Nadie responde fuera de horario y el pipeline solo se ve en el informe semanal; 5 = Asistente 24/7 que cualifica + pipeline en tiempo real",
+    scaleLabels: ["Nada de esto", "Solo horario laboral", "Web con formulario", "Asistente básico", "Asistente 24/7 + pipeline live"],
+    scaleHints: ["1 — Sin atención 24/7 ni pipeline en vivo", "5 — Asistente 24/7 y pipeline en tiempo real"],
   },
 
-  // ─── B2 · Conversión y argumentación ────────────────────────────────────────
+  // ─── B2 · Conversión y cierre ───────────────────────────────────────────────
   {
     type: "scale",
-    cat: "Bloque 2 · Conversión y argumentación",
+    cat: "Bloque 2 · Conversión y cierre",
     block: "B2",
-    title: "Nuestros agentes pueden responder dudas técnicas del comprador (materiales, plazos, financiación) sin improvisar.",
-    help: "1 = Los agentes improvisan o llaman a alguien ante dudas técnicas; 5 = Asistente IA resuelve cualquier duda técnica al instante en la visita",
-    scaleLabels: ["Siempre improvisamos", "A veces preparados", "Docs básicos", "Base de conocimiento", "Asistente con IA"],
-    scaleHints: ["1 — Los agentes siempre improvisan", "5 — Asistente IA listo para cualquier duda técnica"],
+    title: "El equipo resuelve cualquier duda técnica del comprador y le envía en minutos la ficha de la unidad (plano, precio, condiciones) adaptada a su perfil.",
+    help: "1 = Los agentes improvisan y tardan más de 30 min en armar el dossier; 5 = Asistente que resuelve dudas al instante y ficha personalizada en minutos",
+    scaleLabels: ["Improvisamos", "Docs sueltos", "Plantilla básica", "Ficha rápida", "Asistente + ficha por perfil"],
+    scaleHints: ["1 — Improvisación y dossier lento", "5 — Respuesta instantánea y ficha adaptada al perfil"],
   },
   {
     type: "scale",
-    cat: "Bloque 2 · Conversión y argumentación",
+    cat: "Bloque 2 · Conversión y cierre",
     block: "B2",
-    title: "Cuando un comprador pide información de una unidad, el agente se la envía en menos de 5 minutos con el plano, precio actualizado y condiciones.",
-    help: "1 = Más de 30 minutos buscando documentos y preparando el dossier; 5 = Dossier completo con plano, precio y condiciones generado en menos de 5 minutos",
-    scaleLabels: ["30+ minutos", "15-30 minutos", "5-15 minutos", "Casi siempre en 5", "Siempre en <5 min"],
-    scaleHints: ["1 — Más de 30 minutos buscando documentos", "5 — Dossier completo generado en menos de 5 minutos"],
+    title: "El comprador puede reservar y pagar la señal online, y el contrato de reserva se genera y se envía a firmar automáticamente.",
+    help: "1 = Reserva por transferencia manual y contrato que tarda 1-2 días; 5 = Pago de señal online que dispara el contrato a firma digital al instante",
+    scaleLabels: ["Todo manual", "Transferencia + papeleo", "Firma digital suelta", "Casi automático", "Pago online → contrato auto"],
+    scaleHints: ["1 — Reserva y contrato manuales", "5 — Pago online que dispara el contrato a firma"],
   },
 
   // ─── B3 · Seguimiento y visitas ──────────────────────────────────────────────
@@ -135,61 +137,79 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     type: "scale",
     cat: "Bloque 3 · Seguimiento y visitas",
     block: "B3",
-    title: "Los leads que no compran en la primera visita reciben seguimiento personalizado durante los meses de comercialización.",
-    help: "1 = Sin seguimiento tras la visita o con mensajes genéricos iguales para todos; 5 = Secuencias personalizadas automáticas según perfil y fase del embudo",
-    scaleLabels: ["Sin seguimiento", "Email genérico", "Secuencias básicas", "Personalizadas", "IA + contexto de obra"],
-    scaleHints: ["1 — Sin seguimiento tras la primera visita", "5 — Secuencias personalizadas por perfil y fase de obra"],
+    title: "Los interesados que no compran en la primera visita reciben seguimiento personalizado durante los meses de obra.",
+    help: "1 = Sin seguimiento o con mensajes genéricos iguales para todos; 5 = Secuencias personalizadas ligadas a los avances reales de la obra",
+    scaleLabels: ["Sin seguimiento", "Email genérico", "Secuencias básicas", "Personalizadas", "IA + avances de obra"],
+    scaleHints: ["1 — Sin seguimiento tras la primera visita", "5 — Secuencias personalizadas ligadas a la obra"],
   },
   {
     type: "scale",
     cat: "Bloque 3 · Seguimiento y visitas",
     block: "B3",
-    title: "La gestión de visitas al piso piloto (agenda, confirmación, recordatorios) es automática y no consume tiempo del equipo.",
-    help: "1 = Agenda de visitas completamente manual con no-shows frecuentes; 5 = Confirmación y recordatorios automáticos, no-shows prácticamente inexistentes",
+    title: "La gestión de visitas (agenda, confirmación, recordatorios y seguimiento posterior) es automática y minimiza los no-shows.",
+    help: "1 = Agenda manual con no-shows frecuentes y sin seguimiento posterior; 5 = Agendado, recordatorios y seguimiento post-visita totalmente automáticos",
     scaleLabels: ["100% manual", "Parcialmente manual", "Casi automático", "Auto con errores", "Totalmente automático"],
-    scaleHints: ["1 — Agenda de visitas completamente manual", "5 — Confirmación y recordatorios totalmente automáticos"],
+    scaleHints: ["1 — Agenda de visitas completamente manual", "5 — Agendado y seguimiento post-visita automáticos"],
   },
 
-  // ─── B4 · Cierre y contratación ─────────────────────────────────────────────
+  // ─── B4 · Obra y proveedores ─────────────────────────────────────────────────
   {
     type: "scale",
-    cat: "Bloque 4 · Cierre y contratación",
+    cat: "Bloque 4 · Obra y proveedores",
     block: "B4",
-    title: "Cuando un cliente decide comprar, el contrato de reserva se genera y se envía a firmar en menos de una hora.",
-    help: "1 = El contrato tarda 1-2 días en prepararse de forma manual; 5 = Generado automáticamente y enviado a firmar en menos de 1 hora",
-    scaleLabels: ["1-2 días", "Varias horas", "1-2 horas", "Casi siempre <1h", "Siempre <1h auto"],
-    scaleHints: ["1 — El contrato tarda 1-2 días en prepararse", "5 — Generado y enviado a firmar en menos de 1 hora"],
+    title: "El reporte de avance de obra se genera solo a partir de las fotos y partes de campo, sin armarlo a mano en hojas de cálculo.",
+    help: "1 = El informe de avance se monta a mano y tarda días; 5 = Se genera automáticamente desde el parte de campo, en minutos",
+    scaleLabels: ["A mano en Excel", "Plantilla manual", "Semi-automático", "Casi automático", "Automático desde campo"],
+    scaleHints: ["1 — Reporte de avance manual y lento", "5 — Informe automático desde fotos y partes"],
   },
   {
     type: "scale",
-    cat: "Bloque 4 · Cierre y contratación",
+    cat: "Bloque 4 · Obra y proveedores",
     block: "B4",
-    title: "Los compradores que ya han reservado reciben comunicación regular sobre el avance de obra sin que nadie lo gestione manualmente.",
-    help: "1 = Los compradores no reciben noticias hasta que preguntan; 5 = Comunicación automática de cada hito sin intervención del equipo",
-    scaleLabels: ["Sin comunicar", "Email ocasional", "Mensual manual", "Automático básico", "Personalizado y auto"],
-    scaleHints: ["1 — Los compradores no reciben actualizaciones de obra", "5 — Comunicación automática de hitos y progreso"],
+    title: "Los albaranes y facturas de proveedor se leen y concilian solos, y los permisos y trámites tienen alertas antes de cada vencimiento.",
+    help: "1 = Todo se digita a mano y los permisos se controlan en una hoja aparte; 5 = Lectura y conciliación automática + alertas de vencimientos y normativa",
+    scaleLabels: ["Todo manual", "Digitación parcial", "Lectura básica", "Conciliación parcial", "Lectura + alertas auto"],
+    scaleHints: ["1 — Albaranes a mano y permisos sin control", "5 — Conciliación automática y alertas de vencimiento"],
   },
 
-  // ─── B5 · Postventa ─────────────────────────────────────────────────────────
+  // ─── B5 · Finanzas y cobros ──────────────────────────────────────────────────
   {
     type: "scale",
-    cat: "Bloque 5 · Postventa y propietarios",
+    cat: "Bloque 5 · Finanzas y cobros",
     block: "B5",
-    title: "Cuando entregamos una vivienda, los propietarios pueden reportar incidencias y consultar garantías sin colapsar al equipo de postventa.",
-    help: "1 = Todo el postventa por teléfono y email con el equipo desbordado; 5 = Portal con IA que resuelve el 70% de incidencias sin intervención humana",
-    scaleLabels: ["Todo por teléfono", "Email + teléfono", "Formulario básico", "Portal parcial", "Portal con IA"],
-    scaleHints: ["1 — Todo el postventa por teléfono y email", "5 — Portal con IA que resuelve el 70% sin intervención"],
+    title: "Los cobros de cuotas atrasadas se reclaman automáticamente y cada comprador tiene su estado de cuenta conciliado y al día.",
+    help: "1 = Alguien persigue los pagos a mano y cuadra los cobros en Excel; 5 = Recordatorios automáticos y estado de cuenta conciliado solo",
+    scaleLabels: ["Persecución manual", "Recordatorios sueltos", "Semi-automático", "Casi automático", "Cobro + conciliación auto"],
+    scaleHints: ["1 — Cobranza y conciliación manuales", "5 — Recordatorios y estado de cuenta automáticos"],
   },
-
-  // ─── B6 · Operativa diaria ───────────────────────────────────────────────────
   {
     type: "scale",
-    cat: "Bloque 6 · Operativa diaria",
+    cat: "Bloque 5 · Finanzas y cobros",
+    block: "B5",
+    title: "La factura de cada pago y el reporte a inversionistas (avance comercial, de obra y de caja) se generan sin trabajo manual.",
+    help: "1 = Facturas una a una y reportes a socios montados a mano cada vez; 5 = Facturación automática y reporte a inversionistas generado solo",
+    scaleLabels: ["Todo a mano", "Plantillas manuales", "Facturación parcial", "Reporte semi-auto", "Facturación + reporte auto"],
+    scaleHints: ["1 — Facturas y reportes manuales", "5 — Facturación y reporte a inversionistas automáticos"],
+  },
+
+  // ─── B6 · Postventa y dirección ──────────────────────────────────────────────
+  {
+    type: "scale",
+    cat: "Bloque 6 · Postventa y dirección",
     block: "B6",
-    title: "Cuando una unidad lleva tiempo sin movimiento, el equipo lo detecta automáticamente y tiene recomendaciones de qué hacer.",
-    help: "1 = Solo se detecta en la reunión semanal o al revisar el CRM a mano; 5 = Alertas automáticas con análisis de causa y recomendaciones de reactivación",
-    scaleLabels: ["Reunión semanal", "Revisión manual", "Alertas básicas", "Alertas + datos", "Auto + recomendaciones"],
-    scaleHints: ["1 — Solo se detecta en la reunión semanal", "5 — Alertas automáticas con recomendaciones de reactivación"],
+    title: "Tras la entrega, los propietarios reportan incidencias y consultan sus garantías en un portal con IA, sin saturar al equipo de postventa.",
+    help: "1 = Todo el postventa por teléfono y email con el equipo desbordado; 5 = Portal con IA que resuelve buena parte de las incidencias y controla garantías",
+    scaleLabels: ["Todo por teléfono", "Email + teléfono", "Formulario básico", "Portal parcial", "Portal con IA + garantías"],
+    scaleHints: ["1 — Postventa por teléfono y email", "5 — Portal con IA y control de garantías"],
+  },
+  {
+    type: "scale",
+    cat: "Bloque 6 · Postventa y dirección",
+    block: "B6",
+    title: "Detectamos automáticamente las unidades estancadas con recomendaciones, y la dirección ve el estado de todos los proyectos en un único panel.",
+    help: "1 = Las unidades paradas se detectan en la reunión y dirección pide reportes a cada área; 5 = Alertas automáticas con recomendaciones + panel multiproyecto",
+    scaleLabels: ["Reunión semanal", "Revisión manual", "Alertas básicas", "Panel parcial", "Alertas + panel multiproyecto"],
+    scaleHints: ["1 — Detección manual y reportes a mano", "5 — Alertas con recomendaciones y panel global"],
   },
 
   // ─── Madurez digital (scoreless) ────────────────────────────────────────────
@@ -262,11 +282,12 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
     title: "¿Cuáles son tus prioridades en los próximos 6 meses?",
     help: "Puedes seleccionar varias.",
     options: [
-      { k: "A", label: "Conseguir y cualificar más leads con menos trabajo manual" },
-      { k: "B", label: "Mejorar la conversión visita a reserva" },
-      { k: "C", label: "Reducir el tiempo de cierre y el papeleo documental" },
-      { k: "D", label: "Mantener a los compradores comprometidos durante la obra" },
-      { k: "E", label: "Gestionar mejor el postventa y las incidencias de garantía" },
+      { k: "A", label: "Captar y cualificar más leads con menos trabajo manual" },
+      { k: "B", label: "Convertir y cerrar más rápido: ficha, presentación, pago y contrato" },
+      { k: "C", label: "Mantener al comprador activo durante las visitas y la obra" },
+      { k: "D", label: "Tener la obra y los proveedores bajo control (avance, albaranes, permisos)" },
+      { k: "E", label: "Proteger la caja: cobros, conciliación y reporte a inversionistas" },
+      { k: "F", label: "Ordenar la postventa y la visión de dirección" },
     ],
     scoreless: true,
     priority: true,
@@ -292,20 +313,20 @@ export const CN_AUDIT_QUESTIONS: CnAuditQuestion[] = [
 export const CN_AUDIT_BLOCKS: Record<CnAuditBlockId, CnAuditBlock> = {
   B1: {
     id: "B1",
-    name: "Captación y cualificación de leads",
-    short: "Scoring automático, detección de riesgo y pipeline en tiempo real",
+    name: "Captación y cualificación",
+    short: "Scoring de leads, alerta de enfriamiento, asistente 24/7 y pipeline en tiempo real",
     tips: [
-      "IA que puntúa cada lead por presupuesto, urgencia y financiación — antes de que el equipo llame",
-      "Dashboard comercial en tiempo real sin esperar al informe del lunes",
+      "IA que puntúa cada interesado por presupuesto, urgencia y financiación — antes de que el equipo llame",
+      "Asistente 24/7 en web y WhatsApp + dashboard comercial en tiempo real, sin esperar al informe del lunes",
     ],
   },
   B2: {
     id: "B2",
-    name: "Conversión y argumentación comercial",
-    short: "Asistente digital, dossier instantáneo y resumen de llamadas al CRM",
+    name: "Conversión y cierre",
+    short: "Ficha y presentación por perfil, pago de reserva online y contrato a firma digital",
     tips: [
-      "Asistente en web que atiende y educa al comprador antes del primer contacto humano",
-      "Dossier de unidad generado en segundos — plano, precio y condiciones siempre actualizados",
+      "Ficha de unidad y presentación adaptadas al perfil del comprador, generadas en segundos",
+      "Pago de la señal de reserva online que dispara el contrato a firma digital automáticamente",
     ],
   },
   B3: {
@@ -313,35 +334,35 @@ export const CN_AUDIT_BLOCKS: Record<CnAuditBlockId, CnAuditBlock> = {
     name: "Seguimiento y visitas",
     short: "Nurturing durante la obra, agenda automática y seguimiento post-visita",
     tips: [
-      "Secuencias de seguimiento contextuales que mantienen el lead activo durante meses",
-      "Agenda de visitas con confirmación, recordatorios y check-in automático",
+      "Secuencias de seguimiento ligadas a los avances de obra que mantienen al interesado activo durante meses",
+      "Agenda de visitas con confirmación, recordatorios y seguimiento posterior automáticos",
     ],
   },
   B4: {
     id: "B4",
-    name: "Cierre y contratación",
-    short: "Firma digital, contratos automáticos y comunicación post-reserva",
+    name: "Obra y proveedores",
+    short: "Reporte de avance automático, lectura de albaranes, permisos y control documental",
     tips: [
-      "Contratos de reserva generados y enviados a firmar en menos de una hora",
-      "Comunicación automática de hitos de obra para que el comprador no se enfríe",
+      "Informe de avance de obra generado desde fotos y partes de campo, en minutos",
+      "Albaranes y facturas de proveedor leídos y conciliados solos, con alertas de permisos y normativa",
     ],
   },
   B5: {
     id: "B5",
-    name: "Postventa y propietarios",
-    short: "Portal de incidencias, gestión de garantías y predicción de problemas",
+    name: "Finanzas y cobros",
+    short: "Cobranza de cuotas, conciliación y estado de cuenta, facturación y reporte a inversionistas",
     tips: [
-      "Portal con IA que resuelve el 70% de consultas de propietarios sin saturar al equipo técnico",
-      "Ticketing estructurado de incidencias con priorización y trazabilidad completa",
+      "Recordatorios automáticos de cuotas atrasadas y estado de cuenta de cada comprador al día",
+      "Facturación automática de cada pago y reporte a inversionistas con avance comercial, obra y caja",
     ],
   },
   B6: {
     id: "B6",
-    name: "Operativa diaria",
-    short: "Identificación de unidades estancadas y recomendaciones estratégicas",
+    name: "Postventa y dirección",
+    short: "Entrega digital, portal de incidencias con IA, garantías y panel multiproyecto",
     tips: [
-      "Detección automática de unidades sin movimiento con análisis de causa raíz",
-      "Recomendaciones de reactivación basadas en datos de mercado para dirección",
+      "Portal con IA para propietarios que resuelve incidencias y controla garantías sin saturar al equipo",
+      "Detección de unidades estancadas con recomendaciones y panel de dirección con todos los proyectos",
     ],
   },
 };
@@ -421,8 +442,9 @@ export const CN_AUDIT_CANALES_LEADS: Record<string, string> = {
 
 export const CN_AUDIT_PRIORIDADES: Record<string, string> = {
   A: "Más leads con menos trabajo manual",
-  B: "Mejorar conversión visita a reserva",
-  C: "Reducir papeleo y tiempo de cierre",
-  D: "Mantener compradores durante la obra",
-  E: "Mejor postventa y garantías",
+  B: "Convertir y cerrar más rápido",
+  C: "Mantener al comprador durante visitas y obra",
+  D: "Obra y proveedores bajo control",
+  E: "Proteger la caja y reportar a inversionistas",
+  F: "Mejor postventa y visión de dirección",
 };

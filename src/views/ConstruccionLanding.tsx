@@ -90,7 +90,15 @@ const ConstruccionLanding = () => {
   }, [construccionProcesses, activeBlockTab, searchQuery]);
 
   const selectedProcesses = useMemo((): Process[] => {
-    const real = processes.filter((p) => selectedProcessIds.has(p.id));
+    const real = processes
+      .filter((p) => selectedProcessIds.has(p.id))
+      .map((p) => {
+        if (p.landing_slug === CONSTRUCCION_LANDING_SLUG && p.bloque_negocio) {
+          const block = construccionBlocks.find((b) => b.id === p.bloque_negocio);
+          if (block) return { ...p, categoriaNombre: `${p.bloque_negocio} · ${block.title}` };
+        }
+        return p;
+      });
     const modEntries = construccionModules
       .filter((m) => selectedProcessIds.has(`mod-${m.codigo}`))
       .map((m): Process => {
@@ -253,7 +261,7 @@ const ConstruccionLanding = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-5 tracking-tight">
-              Las áreas donde una constructora{" "}
+              Las áreas donde una desarrolladora{" "}
               <span className="text-green-400">puede vender más, mejor y con menos esfuerzo</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">

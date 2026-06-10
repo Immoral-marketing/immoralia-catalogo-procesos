@@ -25,6 +25,7 @@ const SECTOR_CONFIG: Record<string, { color: string; slug: string }> = {
         'centros-deportivos': { color: '#dc2626', slug: 'centros-deportivos' },
         'gestorias':          { color: '#c4a84c', slug: 'gestorias' },
         'salud':              { color: '#2563eb', slug: 'salud' },
+        'desarrolladoras':    { color: '#16a34a', slug: 'construccion' },
         'construccion':       { color: '#16a34a', slug: 'construccion' },
         'academias':          { color: '#7c3aed', slug: 'academias' },
         'gastronomia-hosteleria': { color: '#ea580c', slug: 'gastronomia-hosteleria' },
