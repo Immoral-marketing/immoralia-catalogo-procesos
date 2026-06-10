@@ -290,9 +290,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Slack (fire-and-forget)
+    // Slack
     if (clickupTaskId) {
-      sendSlackNewLead({
+      await sendSlackNewLead({
         lead: { nombre, email, empresa, telefono, comentario, utm },
         clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
         source: source === 'chatbot' ? 'chatbot' : source === 'onboarding' ? 'onboarding' : 'offer_request',
