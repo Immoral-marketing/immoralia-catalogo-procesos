@@ -2,6 +2,21 @@ import type { NextConfig } from 'next'
 import path from 'path'
 
 const nextConfig: NextConfig = {
+  webpack(config) {
+    // Devuelve URLs string para imports de imágenes (igual que Vite)
+    // Evita tener que cambiar los 22 ficheros que usan `src={immoraliaLogo}`
+    const imageRule = config.module.rules.find(
+      (rule: { test?: RegExp }) => rule.test instanceof RegExp && rule.test.test('.png')
+    )
+    if (imageRule) {
+      imageRule.resourceQuery = { not: [/url/] }
+    }
+    config.module.rules.push({
+      test: /\.(png|jpg|jpeg|gif|webp)$/i,
+      type: 'asset/resource',
+    })
+    return config
+  },
   // Fija el root del proyecto para evitar warning por lockfile en directorio padre
   outputFileTracingRoot: path.resolve(__dirname),
 
