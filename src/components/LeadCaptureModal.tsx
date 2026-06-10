@@ -73,7 +73,7 @@ export const LeadCaptureModal = ({ isOpen, onClose }: LeadCaptureModalProps) => 
           comentario:
             formData.comentario ||
             "Contacto desde '¿Tu sector no está en la lista?'",
-          source: "chatbot",
+          source: "sin_sector",
           selectedProcesses: [],
           n8nHosting: "setup",
         }),
