@@ -15,7 +15,7 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { computeFinalComplexity } from "@/lib/complexity-utils";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 import { Input } from "@/components/ui/input";
 import { getCategoryColorClass } from "@/lib/category-colors";
 import { supabase } from "@/lib/supabase";

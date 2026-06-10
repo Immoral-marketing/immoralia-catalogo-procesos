@@ -14,7 +14,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { getOnboardingAnswers, OnboardingAnswers } from "@/lib/onboarding-utils";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 import { getCategoryColorClass } from "@/lib/category-colors";
 
 const SLUG = "informe-semanal-facturas-vencidas";

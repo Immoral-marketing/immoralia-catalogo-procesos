@@ -33,7 +33,7 @@ import {
   Sparkles,
   ChevronLeft,
 } from "lucide-react";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 
 const GS_MODULES = buildGsModulesByBlock(processes);
 

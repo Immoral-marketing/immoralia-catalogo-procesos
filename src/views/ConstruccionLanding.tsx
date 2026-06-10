@@ -46,7 +46,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 
 const ACCENT = "#22c55e";
 

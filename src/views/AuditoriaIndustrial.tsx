@@ -36,7 +36,7 @@ import {
   Sparkles,
   ChevronLeft,
 } from "lucide-react";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 
 const IND_MODULES = buildIndModulesByBlock(processes);
 

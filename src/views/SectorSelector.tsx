@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   MessageCircle,
 } from "lucide-react";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 import { processes } from "@/data/processes";
 import { LeadCaptureModal } from "@/components/LeadCaptureModal";
 import HomeChatbot from "@/components/HomeChatbot";

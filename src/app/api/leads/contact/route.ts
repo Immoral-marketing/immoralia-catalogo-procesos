@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
     // Guardar en Supabase
     const { error: insertError } = await supabase.from('contact_submissions').insert({
-      nombre, email, empresa, comentario,
+      nombre, email, empresa: empresa || '', comentario,
       selected_processes: selectedProcesses,
       onboarding_answers: onboardingAnswers,
       ip_address: clientIP,
@@ -290,9 +290,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Slack (fire-and-forget)
+    // Slack
     if (clickupTaskId) {
-      sendSlackNewLead({
+      await sendSlackNewLead({
         lead: { nombre, email, empresa, telefono, comentario, utm },
         clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
         source: source === 'chatbot' ? 'chatbot' : source === 'onboarding' ? 'onboarding' : 'offer_request',

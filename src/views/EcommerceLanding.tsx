@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/tabs";
 import { useSelection } from "@/lib/SelectionContext";
 import { isOnboardingCompleted } from "@/lib/onboarding-utils";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 import { StepIndicator } from "@/components/StepIndicator";
 
 const EcommerceLanding = () => {

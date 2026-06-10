@@ -19,7 +19,7 @@ import {
 import { isOnboardingCompleted, getOnboardingAnswers, resetOnboarding, OnboardingAnswers } from "@/lib/onboarding-utils";
 import { useSelection } from "@/lib/SelectionContext";
 import { GuidanceMessage } from "@/components/GuidanceMessage";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 import { StepIndicator } from "@/components/StepIndicator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 

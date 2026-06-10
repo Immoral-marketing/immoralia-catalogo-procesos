@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
-import immoraliaLogo from "@/assets/immoralia_logo.png";
+const immoraliaLogo = "/immoralia_logo.png";
 
 const SetupInfo = () => {
     const router = useRouter();
