@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
     // Guardar en Supabase
     const { error: insertError } = await supabase.from('contact_submissions').insert({
-      nombre, email, empresa, comentario,
+      nombre, email, empresa: empresa || '', comentario,
       selected_processes: selectedProcesses,
       onboarding_answers: onboardingAnswers,
       ip_address: clientIP,
