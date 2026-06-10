@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Bot, Calendar, X, MessageSquare, ChevronDown } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { GHLBookingModal } from './GHLBookingModal';
 import { cn } from '@/lib/utils';
 
@@ -86,11 +85,13 @@ const HomeChatbot: React.FC = () => {
 
     try {
       const history = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
-      const { data, error } = await supabase.functions.invoke('chat-assistant', {
-        body: { message: userMessage, sector: null, history },
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage, sector: null, history }),
       });
-
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok) throw data;
 
       setMessages(prev => [
         ...prev,

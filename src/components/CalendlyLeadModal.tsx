@@ -10,7 +10,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Calendar } from "lucide-react";
 
@@ -42,8 +41,10 @@ export const CalendlyLeadModal = ({
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase.functions.invoke("submit-onboarding-lead", {
-                body: {
+            const res = await fetch('/api/leads/onboarding', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     nombre: formData.nombre,
                     email: formData.email,
                     telefono: formData.telefono,
@@ -55,10 +56,9 @@ export const CalendlyLeadModal = ({
                         procesos_seleccionados: selectedProcessIds,
                         timestamp: new Date().toISOString()
                     }
-                }
+                }),
             });
-
-            if (error) throw error;
+            if (!res.ok) { const errData = await res.json(); throw errData; }
 
             toast({
                 title: "¡Perfecto!",

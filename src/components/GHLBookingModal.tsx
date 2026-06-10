@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from "./ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
-const GHL_BOOKING_URL = "https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta";
+const GHL_BOOKING_URL = process.env.NEXT_PUBLIC_GHL_BOOKING_URL ?? "https://api.leadconnectorhq.com/widget/booking/KMjgjNKzL0zYDoJyU8Ta";
 
 interface GHLBookingModalProps {
     isOpen: boolean;

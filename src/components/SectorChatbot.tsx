@@ -1,7 +1,7 @@
+'use client'
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Send, Loader2, Bot, Calendar, X, MessageSquare, ChevronDown } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { GHLBookingModal } from './GHLBookingModal';
 import { cn } from '@/lib/utils';
 import { processes } from '@/data/processes';
@@ -86,7 +86,7 @@ const ProcessChip: React.FC<{ slug: string; label: string; accentHex: string }> 
 
   return (
     <Link
-      to={`/catalogo/procesos/${slug}`}
+      href={`/catalogo/procesos/${slug}`}
       className="inline-flex items-center gap-1.5 mt-1 mb-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:opacity-90 hover:translate-x-0.5"
       style={{
         background: `rgba(${r},${g},${b},0.12)`,
@@ -126,7 +126,7 @@ const MarkdownContent: React.FC<{ content: string; accentHex: string }> = ({ con
       } else if (match[5] !== undefined) {
         // Sector link
         parts.push(
-          <Link key={`s-${key}-${match.index}`} to={match[6]} className="underline underline-offset-2 font-medium hover:opacity-80 transition-opacity" style={accentStyle}>
+          <Link key={`s-${key}-${match.index}`} href={match[6]} className="underline underline-offset-2 font-medium hover:opacity-80 transition-opacity" style={accentStyle}>
             {match[5]} →
           </Link>
         );
@@ -191,6 +191,7 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
   headline,
 }) => {
   const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window === 'undefined') return [];
     try {
       const stored = localStorage.getItem(STORAGE_KEY(sector));
       return stored ? JSON.parse(stored) : [];
@@ -244,10 +245,13 @@ const SectorChatbot: React.FC<SectorChatbotProps> = ({
 
     try {
       const history = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
-      const { data, error } = await supabase.functions.invoke('chat-assistant', {
-        body: { message: userMessage, sector, history },
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage, sector, history }),
       });
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok) throw data;
       setMessages(prev => [
         ...prev,
         {

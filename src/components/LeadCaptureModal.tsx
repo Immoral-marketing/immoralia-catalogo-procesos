@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Loader2, MessageCircle, Check } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -63,8 +62,10 @@ export const LeadCaptureModal = ({ isOpen, onClose }: LeadCaptureModalProps) => 
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.functions.invoke("send-contact-email", {
-        body: {
+      const res = await fetch('/api/leads/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           nombre: formData.nombre,
           email: formData.email,
           empresa: formData.empresa || undefined,
@@ -75,9 +76,9 @@ export const LeadCaptureModal = ({ isOpen, onClose }: LeadCaptureModalProps) => 
           source: "chatbot",
           selectedProcesses: [],
           n8nHosting: "setup",
-        },
+        }),
       });
-      if (error) throw error;
+      if (!res.ok) { const errData = await res.json(); throw errData; }
       setSubmitted(true);
     } catch {
       toast({
