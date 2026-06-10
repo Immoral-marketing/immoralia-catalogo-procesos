@@ -19,7 +19,7 @@ interface SlackPayload {
     status?: string
     priority?: number | string
   }
-  source: 'offer_request' | 'onboarding' | 'chatbot' | 'quick_form'
+  source: 'offer_request' | 'onboarding' | 'chatbot' | 'quick_form' | 'sin_sector'
 }
 
 function getAdminClient() {
@@ -58,10 +58,11 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
 
   // 2. Construir mensaje
   const sourceLabel: Record<string, string> = {
-    offer_request: 'Solicitud de Oferta',
+    offer_request: 'Catálogo · Web',
     onboarding: 'Formulario Onboarding',
-    chatbot: 'Chatbot (Handover)',
+    chatbot: 'Catálogo · Chatbot',
     quick_form: 'Quick Form Lead (⚡)',
+    sin_sector: 'Catálogo · Sin sector',
   }
 
   const blocks: any[] = [

@@ -37,7 +37,7 @@ const ContactRequestSchema = z.object({
   chatbotContext: z.array(z.string()).optional(),
   n8nHosting: z.enum(['setup', 'own']).default('setup'),
 }).refine((data) => {
-  if (data.source !== 'chatbot' && (!data.selectedProcesses || data.selectedProcesses.length === 0)) return false
+  if (data.source !== 'chatbot' && data.source !== 'sin_sector' && (!data.selectedProcesses || data.selectedProcesses.length === 0)) return false
   return true
 }, { message: 'Selecciona al menos un proceso', path: ['selectedProcesses'] })
 
@@ -94,6 +94,7 @@ export async function POST(req: NextRequest) {
 
     const { nombre, email, empresa, comentario, selectedProcesses, onboardingAnswers, n8nHosting, telefono, utm, source, chatbotContext } = validationResult.data
     const isChatbot = source === 'chatbot'
+    const isSinSector = source === 'sin_sector'
     const isBusinessHours = (() => { const h = getMadridHour(); return h >= 8 && h < 18 })()
 
     const supabase = createAdminClient()
@@ -154,14 +155,18 @@ export async function POST(req: NextRequest) {
           ? `\n### Historial del Chatbot\n${chatbotContext.join('\n')}\n`
           : ''
 
-        const description = `Lead desde ${isChatbot ? 'Chatbot' : 'Web'}\n\n### Información de Contacto\n**Empresa:** ${empresa}\n**Persona:** ${nombre}\n**Email:** ${email}\n**Tel:** ${telefono || 'No proporcionado'}\n\n### Contexto\n**Mensaje:** ${comentario || 'Sin mensaje'}\n**Preferencia n8n:** ${n8nHosting === 'own' ? 'Servidor propio' : 'Setup Auto'}\n**Origen:** ${source || 'Web'}\n**UTM:** ${utm || 'Ninguna'}\n**Fecha:** ${isoDatetime}\n${chatbotHistory}\n### Onboarding\n${onboardingText}\n\n### Procesos Seleccionados\n${processesText}`
+        const sourceLabel = isSinSector ? 'Sin sector' : isChatbot ? 'Chatbot' : 'Web'
+        const description = `Lead desde Catálogo · ${sourceLabel}\n\n### Información de Contacto\n**Empresa:** ${empresa}\n**Persona:** ${nombre}\n**Email:** ${email}\n**Tel:** ${telefono || 'No proporcionado'}\n\n### Contexto\n**Mensaje:** ${comentario || 'Sin mensaje'}\n**Preferencia n8n:** ${n8nHosting === 'own' ? 'Servidor propio' : 'Setup Auto'}\n**Origen:** ${source || 'Web'}\n**UTM:** ${utm || 'Ninguna'}\n**Fecha:** ${isoDatetime}\n${chatbotHistory}\n### Onboarding\n${onboardingText}\n\n### Procesos Seleccionados\n${processesText}`
 
         const createTask = async (withStatus = true) => {
-          let taskName = empresa
-          if (isChatbot) {
-            const isGenericEmpresa = !empresa || empresa.trim() === '' || empresa.toLowerCase() === 'particular' || empresa.toLowerCase() === 'n/a'
-            const identifier = isGenericEmpresa ? nombre : empresa
-            taskName = isBusinessHours ? `🔴 [URGENTE] Chatbot Lead: ${identifier}` : `Chatbot Lead: ${identifier}`
+          const empresaStr = empresa?.trim() || ''
+          let taskName: string
+          if (isSinSector) {
+            taskName = empresaStr ? `Catálogo · Sin sector · ${empresaStr} — ${nombre}` : `Catálogo · Sin sector — ${nombre}`
+          } else if (isChatbot) {
+            taskName = empresaStr ? `Catálogo · Chatbot · ${empresaStr} — ${nombre}` : `Catálogo · Chatbot — ${nombre}`
+          } else {
+            taskName = empresaStr ? `Catálogo · Web · ${empresaStr} — ${nombre}` : `Catálogo · Web — ${nombre}`
           }
           const body: any = { name: taskName, description, priority: 3 }
           if (withStatus) body.status = isChatbot && isBusinessHours ? 'CONTACTAR YA' : 'INTERESADO'
@@ -295,7 +300,7 @@ export async function POST(req: NextRequest) {
       await sendSlackNewLead({
         lead: { nombre, email, empresa, telefono, comentario, utm },
         clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
-        source: source === 'chatbot' ? 'chatbot' : source === 'onboarding' ? 'onboarding' : 'offer_request',
+        source: source === 'chatbot' ? 'chatbot' : source === 'sin_sector' ? 'sin_sector' : source === 'onboarding' ? 'onboarding' : 'offer_request',
       }).catch(err => console.error('Slack notification error:', err))
     }
 
