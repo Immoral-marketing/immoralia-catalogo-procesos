@@ -132,8 +132,13 @@ export const ContactForm = ({
     setShowUpsell(false);
 
     try {
-      const invokePromise = supabase.functions.invoke('send-contact-email', {
-        body: {
+      const controller = new AbortController();
+
+      const fetchPromise = fetch('/api/leads/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
           nombre: formData.nombre,
           email: formData.email,
           empresa: formData.empresa,
@@ -156,16 +161,18 @@ export const ContactForm = ({
               customizations: processCustomizations
             };
           }),
-        },
+        }),
+      }).then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
       });
 
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timed out')), 30000);
+        setTimeout(() => { controller.abort(); reject(new Error('Request timed out')); }, 30000);
       });
 
-      const { data, error } = await Promise.race([invokePromise, timeoutPromise]) as any;
-
-      if (error) throw error;
+      const data = await Promise.race([fetchPromise, timeoutPromise]) as any;
 
       console.log("Email sent successfully:", data);
 

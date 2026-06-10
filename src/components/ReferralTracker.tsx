@@ -1,5 +1,6 @@
+'use client'
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { setReferralCookie } from '@/lib/referral';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -7,14 +8,12 @@ import { supabase } from '@/integrations/supabase/client';
  * Componente invisible que detecta ?ref=slug en la URL,
  * guarda/sobreescribe la cookie de referral (último click gana)
  * y registra el click en Supabase.
- * Debe montarse dentro de <BrowserRouter>.
  */
 export function ReferralTracker() {
-  const location = useLocation();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const ref = params.get('ref');
+    const ref = searchParams.get('ref');
     if (!ref || ref.trim() === '') return;
 
     const slug = ref.trim().toLowerCase();
@@ -34,7 +33,7 @@ export function ReferralTracker() {
     };
 
     registerClick();
-  }, [location.search]);
+  }, [searchParams]);
 
   return null;
 }

@@ -13,7 +13,6 @@ import { Progress } from "./ui/progress";
 import { Search, ChevronRight, ChevronLeft, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OnboardingAnswers, saveOnboardingData, skipOnboarding } from "@/lib/onboarding-utils";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { GuidanceMessage } from "./GuidanceMessage";
@@ -209,16 +208,18 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
         try {
             console.log("Iniciando envío de Quick Form Lead:", answers.email);
 
-            const { data, error } = await supabase.functions.invoke("submit-onboarding-lead", {
-                body: {
+            const res = await fetch('/api/leads/onboarding', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     nombre: answers.nombre,
                     email: answers.email,
                     telefono: answers.telefono,
                     answers: answers
-                }
+                }),
             });
-
-            if (error) throw error;
+            const data = await res.json();
+            if (!res.ok) throw data;
 
             console.log("Lead de Quick Form enviado con éxito:", data);
             

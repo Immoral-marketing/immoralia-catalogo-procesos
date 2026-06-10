@@ -10,7 +10,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Loader2, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { getOnboardingAnswers } from "@/lib/onboarding-utils";
 import { Process } from "@/data/processes";
@@ -50,16 +49,17 @@ export const ShareSelectionModal = ({ isOpen, onClose, selectedProcesses, accent
                 categoria: p.categoriaNombre
             }));
 
-            const { error } = await supabase.functions.invoke("share-selection", {
-                body: {
+            const res = await fetch('/api/share-selection', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     receiverEmail,
                     senderName,
                     senderEmail,
                     selectedProcesses: processList
-                }
+                }),
             });
-
-            if (error) throw error;
+            if (!res.ok) { const errData = await res.json(); throw errData; }
 
             toast({
                 title: "Selección compartida",

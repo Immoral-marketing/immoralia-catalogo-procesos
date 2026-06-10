@@ -28,6 +28,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Next.js
+/.next/
+next-env.d.ts
+
 # Claude Code local config and worktrees
 .claude/launch.json
 .claude/worktrees/
