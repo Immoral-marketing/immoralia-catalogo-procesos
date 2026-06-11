@@ -32,21 +32,28 @@ const ONBOARDING_ANSWERS_KEY = "immoralia_onboarding_answers";
 const LEAD_CAPTURED_KEY = "immoralia_lead_captured";
 const LEAD_SKIPPED_SESSION_KEY = "immoralia_lead_skipped_session";
 
+// Guard SSR: estas funciones solo tienen sentido en el browser
+const isBrowser = typeof window !== 'undefined';
+
 // Lead capture: si el usuario rellena el mini form → localStorage (nunca más)
 export const isLeadCaptured = (): boolean => {
+    if (!isBrowser) return false;
     return localStorage.getItem(LEAD_CAPTURED_KEY) === "true";
 };
 
 export const markLeadCaptured = () => {
+    if (!isBrowser) return;
     localStorage.setItem(LEAD_CAPTURED_KEY, "true");
 };
 
 // Lead capture: si el usuario omite → sessionStorage (solo esta sesión)
 export const isLeadSkippedThisSession = (): boolean => {
+    if (!isBrowser) return false;
     return sessionStorage.getItem(LEAD_SKIPPED_SESSION_KEY) === "true";
 };
 
 export const markLeadSkippedThisSession = () => {
+    if (!isBrowser) return;
     sessionStorage.setItem(LEAD_SKIPPED_SESSION_KEY, "true");
 };
 
@@ -56,11 +63,13 @@ export const shouldShowLeadCapture = (): boolean => {
 };
 
 export const saveOnboardingData = (answers: OnboardingAnswers) => {
+    if (!isBrowser) return;
     localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
     localStorage.setItem(ONBOARDING_ANSWERS_KEY, JSON.stringify(answers));
 };
 
 export const getOnboardingAnswers = (): OnboardingAnswers | null => {
+    if (!isBrowser) return null;
     const saved = localStorage.getItem(ONBOARDING_ANSWERS_KEY);
     if (saved) {
         try {
@@ -73,21 +82,24 @@ export const getOnboardingAnswers = (): OnboardingAnswers | null => {
 };
 
 export const isOnboardingCompleted = (): boolean => {
+    if (!isBrowser) return false;
     return localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true";
 };
 
 export const skipOnboarding = () => {
+    if (!isBrowser) return;
     localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
 };
 
 export const resetOnboarding = () => {
+    if (!isBrowser) return;
     localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
     localStorage.removeItem(ONBOARDING_ANSWERS_KEY);
     // Clear guidance messages state
     localStorage.removeItem("immoralia_guidance_dismissed_inicio_quiz");
     localStorage.removeItem("immoralia_guidance_dismissed_post_quiz");
     localStorage.removeItem("immoralia_guidance_dismissed_catalogo_principal");
-    
+
     // Notify components to update their visibility
     window.dispatchEvent(new Event('immoralia_guidance_reset'));
 };

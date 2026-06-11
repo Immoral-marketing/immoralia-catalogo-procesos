@@ -21,16 +21,17 @@ const SelectionContext = createContext<SelectionContextType | undefined>(undefin
 
 export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>(() => {
+        if (typeof window === 'undefined') return 'setup';
         try {
             const saved = localStorage.getItem("immoralia_n8n_hosting_v2");
             return (saved === 'setup' || saved === 'own') ? saved : 'setup';
         } catch (error) {
-            console.error("Error recuperando hosting:", error);
             return 'setup';
         }
     });
 
     const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(() => {
+        if (typeof window === 'undefined') return new Set();
         try {
             const saved = localStorage.getItem("immoralia_selected_processes");
             if (saved) {
@@ -41,12 +42,13 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 }
             }
         } catch (error) {
-            console.error("Error recuperando selección:", error);
+            // silencioso en SSR
         }
         return new Set();
     });
 
     const [customizations, setCustomizations] = useState<Record<string, CustomizationState>>(() => {
+        if (typeof window === 'undefined') return {};
         try {
             const saved = localStorage.getItem("immoralia_process_customizations");
             if (saved) {
@@ -61,7 +63,6 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                                 if (typeof val === 'string') {
                                     cust.selectedOptions[optKey] = [val];
                                 } else if (!Array.isArray(val)) {
-                                    // Fallback for weird data
                                     cust.selectedOptions[optKey] = [];
                                 }
                             });
@@ -71,7 +72,7 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 return parsed;
             }
         } catch (error) {
-            console.error("Error recuperando customizaciones:", error);
+            // silencioso en SSR
         }
         return {};
     });

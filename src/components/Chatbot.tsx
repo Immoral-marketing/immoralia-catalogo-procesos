@@ -1,11 +1,11 @@
+'use client'
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Bot, User, Loader2, Minimize2, Maximize2 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
     role: 'assistant' | 'user';
@@ -47,10 +47,10 @@ const Chatbot: React.FC = () => {
     const [collectionStep, setCollectionStep] = useState<CollectionStep>('chat');
     const [leadData, setLeadData] = useState<LeadData>({ nombre: '', email: '', telefono: '' });
     const scrollRef = useRef<HTMLDivElement>(null);
-    const location = useLocation();
+    const pathname = usePathname();
 
     const getSectorFromPath = (): { color: string; slug: string } | null => {
-        const path = location.pathname;
+        const path = pathname;
         for (const [key, config] of Object.entries(SECTOR_CONFIG)) {
             if (path.includes(key)) return config;
         }
@@ -60,27 +60,29 @@ const Chatbot: React.FC = () => {
     const currentSector = getSectorFromPath();
     const accentColor = currentSector?.color ?? '#000000';
     const isLanding = currentSector !== null;
-    const isProcessDetail = location.pathname.startsWith('/catalogo/procesos/');
+    const isProcessDetail = pathname.startsWith('/catalogo/procesos/');
 
     const analyzeConversation = async (reason: 'resolved' | 'human' | 'abandoned' | 'unknown') => {
         if (messages.length <= 1 || hasAnalyzed) return;
 
         console.log(`Analyzing conversation. Reason: ${reason}`);
-        setHasAnalyzed(true);
 
         const transcript = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
 
         try {
-            const { data, error } = await supabase.functions.invoke('analyze-chat-conversation', {
-                body: {
+            const res = await fetch('/api/chat/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     transcript,
                     ended_reason: reason,
                     form_opened: reason === 'human'
-                },
+                }),
             });
+            const data = await res.json();
+            if (!res.ok) throw data;
 
-            if (error) throw error;
-
+            setHasAnalyzed(true); // Solo marcamos analizado si la petición tuvo éxito
             console.log('Conversation analyzed and logged:', data);
         } catch (err) {
             console.error('Failed to analyze conversation:', err);
@@ -97,20 +99,22 @@ const Chatbot: React.FC = () => {
     const submitLead = async (finalData: LeadData) => {
         setIsLoading(true);
         try {
-            const { data, error } = await supabase.functions.invoke('send-contact-email', {
-                body: {
+            const res = await fetch('/api/leads/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     nombre: finalData.nombre,
                     email: finalData.email,
                     telefono: finalData.telefono,
-                    empresa: 'Chatbot Lead', // Default for chatbot
+                    empresa: 'Chatbot Lead',
                     source: 'chatbot',
                     chatbotContext: messages.map(m => `${m.role.toUpperCase()}: ${m.content}`),
-                    selectedProcesses: [], // Chatbot leads might not have processes selected yet
+                    selectedProcesses: [],
                     n8nHosting: 'setup'
-                },
+                }),
             });
-
-            if (error) throw error;
+            const data = await res.json();
+            if (!res.ok) throw data;
 
             setMessages(prev => [...prev, {
                 role: 'assistant',
@@ -139,15 +143,17 @@ const Chatbot: React.FC = () => {
             setIsLoading(true);
             try {
                 const history = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
-                const { data, error } = await supabase.functions.invoke('chat-assistant', {
-                    body: {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         message: userMessage,
                         sector: currentSector?.slug ?? null,
                         history,
-                    },
+                    }),
                 });
-
-                if (error) throw error;
+                const data = await res.json();
+                if (!res.ok) throw data;
 
                 if (data?.error) {
                     setMessages(prev => [...prev, { role: 'assistant', content: `Error de la IA: ${data.error}` }]);

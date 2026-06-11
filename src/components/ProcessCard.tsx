@@ -1,5 +1,6 @@
+'use client'
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
@@ -26,7 +27,7 @@ interface ProcessCardProps {
 }
 
 export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }: ProcessCardProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { selectedProcessIds, toggleProcess } = useSelection();
   const isSelected = selectedProcessIds.has(process.id);
 
@@ -41,7 +42,7 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
     const url = sectorSlug
       ? `/catalogo/procesos/${process.slug}?sector=${sectorSlug}`
       : `/catalogo/procesos/${process.slug}`;
-    navigate(url);
+    router.push(url);
   };
 
   const handleToggleSelect = () => {
