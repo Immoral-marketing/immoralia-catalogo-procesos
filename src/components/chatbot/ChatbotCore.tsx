@@ -94,6 +94,7 @@ const ChatbotCore: React.FC<ChatbotCoreProps> = ({
   const [showBooking, setShowBooking] = useState(false)
   const [scheduledDone, setScheduledDone] = useState(false)
   const [handoverConfirmed, setHandoverConfirmed] = useState(false)
+  const [confirmClear, setConfirmClear] = useState(false)
   const collapsedInitialized = useRef(false)
 
   const accentRgb = hexToRgbStr(accentHex)
@@ -483,14 +484,32 @@ const ChatbotCore: React.FC<ChatbotCoreProps> = ({
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Conversación</span>
               <div className="flex items-center gap-3">
+                {confirmClear ? (
+                  <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                    <span className="text-xs text-gray-500">¿Borrar la conversación?</span>
+                    <button
+                      onClick={() => { clear(); setConfirmClear(false) }}
+                      className="text-xs font-medium text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      Sí, borrar
+                    </button>
+                    <button
+                      onClick={() => setConfirmClear(false)}
+                      className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmClear(true)}
+                    className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+                  >
+                    Borrar
+                  </button>
+                )}
                 <button
-                  onClick={clear}
-                  className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
-                >
-                  Borrar
-                </button>
-                <button
-                  onClick={() => setShowMessages(false)}
+                  onClick={() => { setShowMessages(false); setConfirmClear(false) }}
                   className="flex items-center gap-1.5 text-xs font-medium transition-colors px-2 py-1 rounded-lg"
                   style={{ color: ACCENT }}
                 >
