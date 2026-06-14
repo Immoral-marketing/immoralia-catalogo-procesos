@@ -8,7 +8,8 @@ import { industrialModules, getModulesByBlock } from "@/data/industrialModules";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
-import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
+import ChatInlineSector from "@/components/chatbot/ChatInlineSector";
+import { SECTOR_SUGGESTIONS } from "@/components/chatbot/chips";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -248,7 +249,7 @@ const IndustrialLanding = () => {
       </section>
 
       {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
+      <ChatInlineSector
         sector="industrial"
         sectorName="empresa industrial"
         accentHex="#6b7280"

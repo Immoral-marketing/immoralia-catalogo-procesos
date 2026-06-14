@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "brianspec-archive": {
+      "source": "Immoral-marketing/brianspec",
+      "sourceType": "github",
+      "skillPath": "brianspec-archive/SKILL.md",
+      "computedHash": "76eae3958a036c9c4d05abbbd2cb9c6779faa1c28ae023cc207d63d167cfb4f1"
+    },
+    "brianspec-build": {
+      "source": "Immoral-marketing/brianspec",
+      "sourceType": "github",
+      "skillPath": "brianspec-build/SKILL.md",
+      "computedHash": "f39ae61bc2cec48df9d76bc7b13b71e311aedecb6d76559439008677236ee44a"
+    },
+    "brianspec-init": {
+      "source": "Immoral-marketing/brianspec",
+      "sourceType": "github",
+      "skillPath": "brianspec-init/SKILL.md",
+      "computedHash": "5d67aeca8d405cd22399bc36ff8438a51b4cead59b042ad0f8aef78c7fa1dc64"
+    },
+    "brianspec-spec": {
+      "source": "Immoral-marketing/brianspec",
+      "sourceType": "github",
+      "skillPath": "brianspec-spec/SKILL.md",
+      "computedHash": "5e11c0872b8b57bbfea913f7b2612f6378ab3066564757f3f6d7ba861debc5e1"
+    },
+    "brianspec-upgrade": {
+      "source": "Immoral-marketing/brianspec",
+      "sourceType": "github",
+      "skillPath": "brianspec-upgrade/SKILL.md",
+      "computedHash": "fc29ce5820b943fd24fdac0470c031f950c830876a1e8464679f5f714a4660ba"
+    }
+  }
+}

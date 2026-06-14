@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -10,134 +10,709 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.4"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
-      partners: {
+      categories: {
         Row: {
+          created_at: string | null
+          emoji: string | null
           id: string
-          user_id: string | null
-          nombre: string
-          email: string
-          slug: string
-          activo: boolean
-          created_at: string
+          name: string
         }
         Insert: {
-          id?: string
-          user_id?: string | null
-          nombre: string
-          email: string
-          slug: string
-          activo?: boolean
-          created_at?: string
+          created_at?: string | null
+          emoji?: string | null
+          id: string
+          name: string
         }
         Update: {
+          created_at?: string | null
+          emoji?: string | null
           id?: string
-          user_id?: string | null
-          nombre?: string
-          email?: string
-          slug?: string
-          activo?: boolean
-          created_at?: string
+          name?: string
         }
+        Relationships: []
       }
-      referral_clicks: {
+      chat_conversations: {
         Row: {
+          assistant_messages_count: number | null
+          company_name: string | null
+          company_sector: string | null
+          company_size_hint: string | null
+          conversation_text: string | null
+          created_at: string | null
+          ended_reason: string | null
+          feedback_comment: string | null
+          first_question: string | null
+          form_opened: boolean | null
+          form_submitted: boolean | null
+          human_intervention_required: boolean | null
           id: string
-          partner_id: string
-          ip_hash: string | null
-          created_at: string
+          location_hint: string | null
+          resolved: boolean | null
+          total_turns: number | null
+          user_feedback: string | null
+          user_messages_count: number | null
         }
         Insert: {
+          assistant_messages_count?: number | null
+          company_name?: string | null
+          company_sector?: string | null
+          company_size_hint?: string | null
+          conversation_text?: string | null
+          created_at?: string | null
+          ended_reason?: string | null
+          feedback_comment?: string | null
+          first_question?: string | null
+          form_opened?: boolean | null
+          form_submitted?: boolean | null
+          human_intervention_required?: boolean | null
           id?: string
-          partner_id: string
-          ip_hash?: string | null
-          created_at?: string
+          location_hint?: string | null
+          resolved?: boolean | null
+          total_turns?: number | null
+          user_feedback?: string | null
+          user_messages_count?: number | null
         }
         Update: {
+          assistant_messages_count?: number | null
+          company_name?: string | null
+          company_sector?: string | null
+          company_size_hint?: string | null
+          conversation_text?: string | null
+          created_at?: string | null
+          ended_reason?: string | null
+          feedback_comment?: string | null
+          first_question?: string | null
+          form_opened?: boolean | null
+          form_submitted?: boolean | null
+          human_intervention_required?: boolean | null
           id?: string
-          partner_id?: string
-          ip_hash?: string | null
-          created_at?: string
+          location_hint?: string | null
+          resolved?: boolean | null
+          total_turns?: number | null
+          user_feedback?: string | null
+          user_messages_count?: number | null
         }
+        Relationships: []
       }
-      solicitudes: {
+      chatbot_conversations: {
         Row: {
-          id: string
-          partner_id: string | null
-          datos_formulario: Json
-          estado: string
-          importe_cobrado: number | null
-          override_manual: boolean
+          assistant_message_count: number
+          call_scheduled: boolean
           created_at: string
+          id: string
+          initial_route: string | null
+          initial_sector: string | null
+          last_activity_at: string
+          lead_captured: boolean
+          status: string
+          summary: string | null
+          summary_message_count: number
+          surface: string | null
+          user_message_count: number
+        }
+        Insert: {
+          assistant_message_count?: number
+          call_scheduled?: boolean
+          created_at?: string
+          id?: string
+          initial_route?: string | null
+          initial_sector?: string | null
+          last_activity_at?: string
+          lead_captured?: boolean
+          status?: string
+          summary?: string | null
+          summary_message_count?: number
+          surface?: string | null
+          user_message_count?: number
+        }
+        Update: {
+          assistant_message_count?: number
+          call_scheduled?: boolean
+          created_at?: string
+          id?: string
+          initial_route?: string | null
+          initial_sector?: string | null
+          last_activity_at?: string
+          lead_captured?: boolean
+          status?: string
+          summary?: string | null
+          summary_message_count?: number
+          surface?: string | null
+          user_message_count?: number
+        }
+        Relationships: []
+      }
+      chatbot_knowledge: {
+        Row: {
+          content: string
+          created_at: string | null
+          embedding: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
+      chatbot_message_ratings: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          message_id: string
+          rating: string
           updated_at: string
         }
         Insert: {
-          id?: string
-          partner_id?: string | null
-          datos_formulario?: Json
-          estado?: string
-          importe_cobrado?: number | null
-          override_manual?: boolean
+          conversation_id: string
           created_at?: string
+          message_id: string
+          rating: string
           updated_at?: string
         }
         Update: {
-          id?: string
-          partner_id?: string | null
-          datos_formulario?: Json
-          estado?: string
-          importe_cobrado?: number | null
-          override_manual?: boolean
+          conversation_id?: string
           created_at?: string
+          message_id?: string
+          rating?: string
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_message_ratings_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_message_ratings_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: true
+            referencedRelation: "chatbot_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chatbot_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          ip_hash: string | null
+          is_error: boolean
+          recommended_slugs: string[]
+          role: string
+          route: string | null
+          sector: string | null
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          is_error?: boolean
+          recommended_slugs?: string[]
+          role: string
+          route?: string | null
+          sector?: string | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          is_error?: boolean
+          recommended_slugs?: string[]
+          role?: string
+          route?: string | null
+          sector?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       comisiones: {
         Row: {
+          created_at: string
+          estado: string
+          factura_url: string | null
           id: string
-          solicitud_id: string
+          importe_base: number
+          importe_comision: number
+          pagada_at: string | null
           partner_id: string
           porcentaje: number
-          importe_base: number
-          importe_comision: number
-          estado: string
-          created_at: string
-          pagada_at: string | null
+          solicitud_id: string
         }
         Insert: {
+          created_at?: string
+          estado?: string
+          factura_url?: string | null
           id?: string
-          solicitud_id: string
-          partner_id: string
-          porcentaje?: number
           importe_base: number
           importe_comision: number
-          estado?: string
-          created_at?: string
           pagada_at?: string | null
+          partner_id: string
+          porcentaje?: number
+          solicitud_id: string
         }
         Update: {
+          created_at?: string
+          estado?: string
+          factura_url?: string | null
           id?: string
-          solicitud_id?: string
-          partner_id?: string
-          porcentaje?: number
           importe_base?: number
           importe_comision?: number
-          estado?: string
-          created_at?: string
           pagada_at?: string | null
+          partner_id?: string
+          porcentaje?: number
+          solicitud_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "comisiones_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comisiones_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_requests_log: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          ip_address: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      contact_submissions: {
+        Row: {
+          comentario: string | null
+          created_at: string | null
+          email: string
+          empresa: string
+          id: string
+          ip_address: string | null
+          nombre: string
+          onboarding_answers: Json | null
+          selected_processes: Json | null
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string | null
+          email: string
+          empresa: string
+          id?: string
+          ip_address?: string | null
+          nombre: string
+          onboarding_answers?: Json | null
+          selected_processes?: Json | null
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string | null
+          email?: string
+          empresa?: string
+          id?: string
+          ip_address?: string | null
+          nombre?: string
+          onboarding_answers?: Json | null
+          selected_processes?: Json | null
+        }
+        Relationships: []
+      }
+      onboarding_leads: {
+        Row: {
+          answers: Json
+          created_at: string | null
+          email: string
+          id: string
+          ip_address: string | null
+          nombre: string
+          telefono: string | null
+        }
+        Insert: {
+          answers: Json
+          created_at?: string | null
+          email: string
+          id?: string
+          ip_address?: string | null
+          nombre: string
+          telefono?: string | null
+        }
+        Update: {
+          answers?: Json
+          created_at?: string | null
+          email?: string
+          id?: string
+          ip_address?: string | null
+          nombre?: string
+          telefono?: string | null
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          activo: boolean
+          created_at: string
+          email: string
+          id: string
+          nombre: string
+          slug: string
+          user_id: string | null
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          nombre: string
+          slug: string
+          user_id?: string | null
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          nombre?: string
+          slug?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      processes: {
+        Row: {
+          bloque_negocio: string | null
+          canales: string[] | null
+          catalog_active: boolean
+          codigo: string
+          created_at: string | null
+          descripcion_detallada: string | null
+          dolores: string[] | null
+          guion_clickup_url: string | null
+          guion_generado: boolean | null
+          guion_generado_at: string | null
+          herramientas: string[] | null
+          id: string
+          image_subtitle_1: string | null
+          image_subtitle_2: string | null
+          image_subtitle_3: string | null
+          image_url_1: string | null
+          image_url_2: string | null
+          image_url_3: string | null
+          imagenes_generadas: boolean | null
+          imagenes_generadas_at: string | null
+          integration_domains: string[] | null
+          landing_slug: string | null
+          modulo_codigo: string | null
+          nombre: string
+          pasos: Json | null
+          personalizacion: string | null
+          recomendado: boolean | null
+          sectores: string[] | null
+          slug: string | null
+          tagline: string | null
+          video_generado: boolean
+          video_generado_at: string | null
+          video_remotion_url: string | null
+        }
+        Insert: {
+          bloque_negocio?: string | null
+          canales?: string[] | null
+          catalog_active?: boolean
+          codigo: string
+          created_at?: string | null
+          descripcion_detallada?: string | null
+          dolores?: string[] | null
+          guion_clickup_url?: string | null
+          guion_generado?: boolean | null
+          guion_generado_at?: string | null
+          herramientas?: string[] | null
+          id: string
+          image_subtitle_1?: string | null
+          image_subtitle_2?: string | null
+          image_subtitle_3?: string | null
+          image_url_1?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          imagenes_generadas?: boolean | null
+          imagenes_generadas_at?: string | null
+          integration_domains?: string[] | null
+          landing_slug?: string | null
+          modulo_codigo?: string | null
+          nombre: string
+          pasos?: Json | null
+          personalizacion?: string | null
+          recomendado?: boolean | null
+          sectores?: string[] | null
+          slug?: string | null
+          tagline?: string | null
+          video_generado?: boolean
+          video_generado_at?: string | null
+          video_remotion_url?: string | null
+        }
+        Update: {
+          bloque_negocio?: string | null
+          canales?: string[] | null
+          catalog_active?: boolean
+          codigo?: string
+          created_at?: string | null
+          descripcion_detallada?: string | null
+          dolores?: string[] | null
+          guion_clickup_url?: string | null
+          guion_generado?: boolean | null
+          guion_generado_at?: string | null
+          herramientas?: string[] | null
+          id?: string
+          image_subtitle_1?: string | null
+          image_subtitle_2?: string | null
+          image_subtitle_3?: string | null
+          image_url_1?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          imagenes_generadas?: boolean | null
+          imagenes_generadas_at?: string | null
+          integration_domains?: string[] | null
+          landing_slug?: string | null
+          modulo_codigo?: string | null
+          nombre?: string
+          pasos?: Json | null
+          personalizacion?: string | null
+          recomendado?: boolean | null
+          sectores?: string[] | null
+          slug?: string | null
+          tagline?: string | null
+          video_generado?: boolean
+          video_generado_at?: string | null
+          video_remotion_url?: string | null
+        }
+        Relationships: []
+      }
+      referral_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string | null
+          partner_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          partner_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          partner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_clicks_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      slack_notifications_log: {
+        Row: {
+          clickup_task_id: string
+          created_at: string | null
+          error_message: string | null
+          success: boolean | null
+        }
+        Insert: {
+          clickup_task_id: string
+          created_at?: string | null
+          error_message?: string | null
+          success?: boolean | null
+        }
+        Update: {
+          clickup_task_id?: string
+          created_at?: string | null
+          error_message?: string | null
+          success?: boolean | null
+        }
+        Relationships: []
+      }
+      solicitudes: {
+        Row: {
+          created_at: string
+          datos_formulario: Json
+          estado: string
+          id: string
+          importe_cobrado: number | null
+          override_manual: boolean
+          partner_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          datos_formulario?: Json
+          estado?: string
+          id?: string
+          importe_cobrado?: number | null
+          override_manual?: boolean
+          partner_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          datos_formulario?: Json
+          estado?: string
+          id?: string
+          importe_cobrado?: number | null
+          override_manual?: boolean
+          partner_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "solicitudes_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      super_admins: {
+        Row: {
+          created_at: string
+          email: string
+          nombre: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          nombre: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          nombre?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_partner_id_by_slug: {
-        Args: { p_slug: string }
-        Returns: string | null
+      get_partner_id_by_slug: { Args: { p_slug: string }; Returns: string }
+      is_super_admin: { Args: never; Returns: boolean }
+      match_chatbot_knowledge:
+        | {
+            Args: {
+              match_count: number
+              match_threshold: number
+              query_embedding: string
+            }
+            Returns: {
+              content: string
+              id: string
+              metadata: Json
+              similarity: number
+            }[]
+          }
+        | {
+            Args: {
+              match_count: number
+              match_threshold: number
+              query_embedding: string
+              sector_filter?: string
+            }
+            Returns: {
+              content: string
+              id: string
+              metadata: Json
+              similarity: number
+            }[]
+          }
+      set_comision_factura_url: {
+        Args: { p_comision_id: string; p_factura_url: string }
+        Returns: undefined
       }
     }
     Enums: {
@@ -267,6 +842,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { SelectionProvider } from '@/lib/SelectionContext'
 import { ReferralTracker } from '@/components/ReferralTracker'
-import Chatbot from '@/components/Chatbot'
+import ChatbotBubble from '@/components/chatbot/ChatbotBubble'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // QueryClient creado por instancia de cliente — nunca a nivel de módulo (SSR safety)
@@ -24,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <ReferralTracker />
           </Suspense>
           {children}
-          <Chatbot />
+          <ChatbotBubble />
         </SelectionProvider>
       </TooltipProvider>
     </QueryClientProvider>

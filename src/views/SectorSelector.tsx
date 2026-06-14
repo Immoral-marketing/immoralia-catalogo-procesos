@@ -18,7 +18,7 @@ import {
 const immoraliaLogo = "/immoralia_logo.png";
 import { processes } from "@/data/processes";
 import { LeadCaptureModal } from "@/components/LeadCaptureModal";
-import HomeChatbot from "@/components/HomeChatbot";
+import ChatInlineHome from "@/components/chatbot/ChatInlineHome";
 
 const sectors = [
   {
@@ -218,7 +218,7 @@ const SectorSelector = () => {
       </section>
 
       {/* ── HOME CHATBOT ── */}
-      <HomeChatbot />
+      <ChatInlineHome />
 
       {/* ── SECTOR GRID ── */}
       <section id="sectores" className="px-6 pb-0 relative">
