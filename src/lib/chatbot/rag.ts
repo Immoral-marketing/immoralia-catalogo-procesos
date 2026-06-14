@@ -107,6 +107,35 @@ export async function retrieveContext(params: {
     .join('\n\n---\n\n')
 }
 
+/** Keywords por sector para inferir el contexto cuando sector=null en la home. */
+const SECTOR_KEYWORDS: Record<string, string[]> = {
+  'salud': ['clínica', 'clinica', 'dental', 'dentista', 'ortodoncia', 'médico', 'medico', 'hospital', 'fisio', 'psicólogo', 'psicologo', 'farmacia', 'sanitario', 'salud', 'enfermería', 'enfermeria', 'veterinario', 'óptica', 'optica', 'terapeuta', 'consulta', 'paciente', 'pacientes'],
+  'academias': ['academia', 'formación', 'formacion', 'cursos', 'escuela', 'instituto', 'educación', 'educacion', 'aprendizaje', 'alumnos', 'profesores', 'clases', 'docente', 'matrícula', 'matricula'],
+  'centros-deportivos': ['gimnasio', 'gym', 'crossfit', 'deportivo', 'deporte', 'piscina', 'yoga', 'pilates', 'fitness', 'natación', 'natacion', 'entrenamiento', 'socios', 'abonados'],
+  'gestorias': ['gestoría', 'gestoria', 'gestora', 'asesoría', 'asesoria', 'contabilidad', 'fiscal', 'laboral', 'gestor', 'asesor', 'declaración', 'declaracion', 'impuestos', 'nóminas', 'nominas', 'irpf', 'iva', 'autónomos', 'autonomos'],
+  'construccion': ['construcción', 'construccion', 'inmobiliaria', 'obra', 'promotora', 'arquitecto', 'reformas', 'promotor', 'vivienda', 'pisos', 'inmueble', 'parcela', 'urbanización', 'urbanizacion'],
+  'gastronomia-hosteleria': ['restaurante', 'hostelería', 'hosteleria', 'bar', 'cafetería', 'cafeteria', 'hotel', 'gastronomía', 'gastronomia', 'catering', 'cocina', 'menú', 'menu', 'terraza', 'reservas'],
+  'industrial': ['industrial', 'fábrica', 'fabrica', 'manufactura', 'producción', 'produccion', 'almacén', 'almacen', 'logística', 'logistica', 'inventario', 'stock', 'maquinaria', 'taller'],
+}
+
+/**
+ * Intenta inferir el sector del usuario a partir de keywords en su mensaje.
+ * Solo se usa cuando sector=null (home) para mejorar la relevancia del RAG.
+ */
+export function inferSectorFromMessage(message: string): string | null {
+  const lower = message.toLowerCase()
+  let bestSector: string | null = null
+  let bestCount = 0
+  for (const [sector, keywords] of Object.entries(SECTOR_KEYWORDS)) {
+    const count = keywords.filter(kw => lower.includes(kw)).length
+    if (count > bestCount) {
+      bestCount = count
+      bestSector = sector
+    }
+  }
+  return bestCount > 0 ? bestSector : null
+}
+
 /**
  * Extrae los slugs de procesos enlazados en una respuesta del bot.
  * Valida contra el catálogo y repara slugs inventados por nombre (misma

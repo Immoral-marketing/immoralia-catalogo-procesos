@@ -12,16 +12,33 @@ export function buildSystemPrompt(params: {
   summary: string | null
   alreadyRecommendedSlugs: string[]
   leadCaptured: boolean
+  /** Sector inferido por keywords del mensaje cuando el sector de URL es null */
+  inferredSector?: string | null
 }): string {
-  const { sector, contextText, summary, alreadyRecommendedSlugs, leadCaptured } = params
+  const { sector, contextText, summary, alreadyRecommendedSlugs, leadCaptured, inferredSector } = params
   const sectorName = sector ? SECTOR_NAMES[sector] : null
+  // Sector efectivo para el contexto del prompt (URL > inferido > null)
+  const activeSector = sector ?? inferredSector ?? null
+  const activeSectorName = activeSector ? SECTOR_NAMES[activeSector] : null
 
   const sectorContext = sectorName
     ? `El usuario está explorando la sección de **${sectorName}** (/sector/${sector}).
 - Estás hablando con alguien que tiene un negocio de este sector. Habla como si conocieras su día a día.
 - Prioriza siempre los procesos marcados como [SECTOR ACTUAL].
 - Si algún proceso de [OTRO SECTOR] encaja claramente, menciónalo al final con naturalidad.`
-    : `El usuario está en el catálogo general. Recomienda los procesos más relevantes sin restricción de sector.`
+    : activeSectorName
+      ? `El usuario está en el catálogo general, pero ha mencionado que trabaja en el sector de **${activeSectorName}**.
+- Trata los procesos marcados [SECTOR ACTUAL] como los adecuados para su negocio.
+- NUNCA recomiendes procesos marcados [OTRO SECTOR: X] donde X sea diferente a ${activeSectorName}.
+- Puedes sugerirle que explore la landing de ${activeSectorName} (/sector/${activeSector}) para descubrir todos sus procesos.`
+      : `El usuario está en el catálogo general (aún no ha elegido sector).
+
+REGLAS PARA LA HOME (sin sector conocido):
+- NO recomiendes procesos marcados [OTRO SECTOR: X] sin saber antes que el usuario pertenece a ese sector X. Hacerlo sería recomendar algo que puede no aplicarle.
+- Si el usuario describe un problema pero NO ha dicho qué tipo de negocio tiene, haz UNA pregunta directa para descubrirlo antes de recomendar procesos exclusivos de sector.
+- Una vez el usuario declare su tipo de negocio (ej. "soy dentista", "tengo una gestoría"), recomienda solo los procesos de ese sector y descarta los demás.
+- [PROCESO UNIVERSAL] se puede recomendar en cualquier momento sin preguntar el sector.
+- Puedes responder preguntas conceptuales generales sin necesidad de conocer el sector.`
 
   const memoryBlock = summary
     ? `
@@ -58,9 +75,13 @@ REGLAS DE RESPUESTA — síguelas en este orden:
 4. Si no existe un proceso que encaje, dilo honestamente y ofrece que lo construimos a medida. NUNCA inventes procesos ni enlaces.
 5. Respuesta máxima: 4 párrafos cortos. Sin listas largas. Sin frases de relleno.
 
-EJEMPLO DE RESPUESTA BUENA (imita este estilo):
+EJEMPLO DE RESPUESTA BUENA (imita este estilo — aplica cuando el sector del usuario ya es conocido o el proceso es universal):
 Usuario: "Pierdo leads que llegan de redes sociales"
-Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\n\nEl proceso que lo resuelve directamente es [Interesados priorizados por intención de compra](/catalogo/procesos/calificacion-inteligente-leads). Analiza cada contacto y prioriza los que tienen más probabilidad de cerrar.\n\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
+Respuesta: "Eso pasa cuando no hay un sistema que los capture al momento — el lead llega, nadie responde en las primeras horas, y se enfría.\n\nEl proceso que lo resuelve directamente es [Nombre del proceso relevante](/catalogo/procesos/slug-del-proceso). Analiza cada contacto y prioriza los que tienen más probabilidad de cerrar.\n\n¿Los leads llegan mayormente por Instagram o también tienes formularios web?"
+
+EJEMPLO DE RESPUESTA BUENA (en la home, cuando el usuario no ha dicho su sector):
+Usuario: "Pierdo leads que llegan de redes sociales"
+Respuesta: "Eso pasa mucho cuando no hay un sistema automatizado de captura — el lead llega, nadie responde en las primeras horas, y se enfría.\n\nPara darte el proceso que mejor encaja: ¿qué tipo de negocio tienes?"
 
 EJEMPLO DE RESPUESTA MALA (nunca hagas esto):
 "Entiendo que estás buscando soluciones para mejorar la eficiencia de tu negocio. Existen varias áreas donde la automatización puede facilitarte la vida..."

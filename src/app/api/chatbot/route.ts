@@ -37,7 +37,7 @@ import {
   touchConversation,
   updateConversationFlags,
 } from '@/lib/chatbot/store'
-import { extractRecommendedSlugs, retrieveContext } from '@/lib/chatbot/rag'
+import { extractRecommendedSlugs, inferSectorFromMessage, retrieveContext } from '@/lib/chatbot/rag'
 import { buildSystemPrompt } from '@/lib/chatbot/prompt'
 import { refreshSummary, shouldRefreshSummary } from '@/lib/chatbot/summary'
 import type { ChatAction, ChatStreamEvent } from '@/lib/chatbot/types'
@@ -102,11 +102,16 @@ export async function POST(req: NextRequest) {
     })
 
     // 6. Contexto: RAG en dos capas (CA-14) + memoria
+    // Cuando sector=null (home), intentar inferir el sector del mensaje para
+    // mejorar la relevancia del RAG sin alterar el sector persistido en la conversación.
+    const inferredSector = sector === null ? inferSectorFromMessage(body.message) : null
+    const ragSector = sector ?? inferredSector
+
     const lastAssistant = [...history].reverse().find(m => m.role === 'assistant')
     const contextText = await retrieveContext({
       message: body.message,
       lastAssistantContent: lastAssistant?.content ?? null,
-      sector,
+      sector: ragSector,
     })
 
     const alreadyRecommendedSlugs = [...new Set(history.flatMap(m => m.recommended_slugs))]
@@ -116,6 +121,7 @@ export async function POST(req: NextRequest) {
       summary: conversation.summary,
       alreadyRecommendedSlugs,
       leadCaptured: conversation.lead_captured,
+      inferredSector,
     })
 
     // Ventana de últimos N turnos íntegros; lo anterior viaja en el resumen (CA-15)
