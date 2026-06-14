@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { getProfessionalTemplate } from '@/lib/email-templates'
+import { sendEmail } from '@/lib/email-sender'
 import { sendSlackNewLead } from '@/lib/slack'
 
 const CLICKUP_LIST_ID = '901521069796'
@@ -54,7 +55,6 @@ function formatOnboarding(ans: any): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY
     const CLICKUP_TOKEN = process.env.CLICKUP_TOKEN
 
     const body = await req.json()
@@ -78,55 +78,47 @@ export async function POST(req: NextRequest) {
 
     const onboardingText = formatOnboarding(answers)
 
-    // Emails
-    if (RESEND_API_KEY) {
+    // Emails — SPEC-05: vía sendEmail (registra en email_logs)
+    {
       const safeNombre = escapeHtml(nombre)
       const safeEmail = escapeHtml(email)
       const safeTelefono = escapeHtml(telefono || 'No indicado')
       const safeUtm = escapeHtml(utm || 'Ninguna')
 
-      try {
-        const internalHtml = `
-          <p class="field-label">Nombre del Lead</p><div class="field-value">${safeNombre}</div>
-          <p class="field-label">Email de Contacto</p><div class="field-value">${safeEmail}</div>
-          <p class="field-label">Teléfono</p><div class="field-value">${safeTelefono}</div>
-          <p class="field-label">UTM / Origen</p><div class="field-value">${safeUtm}</div>
-          <h2 class="section-title">Respuestas del Formulario</h2>
-          <pre>${onboardingText}</pre>
-        `
-        const clientHtml = `
-          <h2 style="margin-top:0">¡Gracias por tu interés, ${safeNombre}!</h2>
-          <p>Hemos recibido correctamente la información que nos has facilitado a través de nuestro catálogo de procesos.</p>
-          <p>Nuestro equipo de consultores está revisando tu perfil para identificar las mejores oportunidades de automatización para tu caso específico.</p>
-          <p><strong>Nos pondremos en contacto contigo en menos de 24 horas laborables para agendar una breve sesión de diagnóstico.</strong></p>
-          <p>Mientras tanto, puedes seguir explorando nuestro catálogo para descubrir cómo la IA y la automatización pueden transformar tu negocio.</p>
-        `
-        await Promise.all([
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-            body: JSON.stringify({
-              from: 'Immoralia Notificaciones <noreply@immoralia.es>',
-              to: ['team@immoralia.es'],
-              subject: `⚡ Quick Form Lead - ${safeNombre}`,
-              html: getProfessionalTemplate({ title: 'Nuevo Quick Form Lead', preheader: `Nuevo lead de ${safeNombre}`, mainContent: internalHtml }),
-            }),
-          }),
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-            body: JSON.stringify({
-              from: 'Immoralia <noreply@immoralia.es>',
-              to: [email],
-              subject: 'Confirmación de recepción - Immoralia',
-              html: getProfessionalTemplate({ title: 'Confirmación recibida', preheader: 'Hemos recibido tu información correctamente', mainContent: clientHtml }),
-            }),
-          }),
-        ])
-        console.log('Emails Quick Form enviados con éxito')
-      } catch (emailErr) {
-        console.error('Error enviando emails Quick Form:', emailErr)
-      }
+      const internalHtml = `
+        <p class="field-label">Nombre del Lead</p><div class="field-value">${safeNombre}</div>
+        <p class="field-label">Email de Contacto</p><div class="field-value">${safeEmail}</div>
+        <p class="field-label">Teléfono</p><div class="field-value">${safeTelefono}</div>
+        <p class="field-label">UTM / Origen</p><div class="field-value">${safeUtm}</div>
+        <h2 class="section-title">Respuestas del Formulario</h2>
+        <pre>${onboardingText}</pre>
+      `
+      const clientHtml = `
+        <h2>¡Gracias por tu interés, ${safeNombre}!</h2>
+        <p>Hemos recibido correctamente la información que nos has facilitado a través de nuestro catálogo de procesos.</p>
+        <p>Nuestro equipo de consultores está revisando tu perfil para identificar las mejores oportunidades de automatización para tu caso específico.</p>
+        <div class="info-card">
+          <strong>Nos pondremos en contacto contigo en menos de 24 horas laborables para agendar una breve sesión de diagnóstico.</strong>
+        </div>
+        <p>Mientras tanto, puedes seguir explorando nuestro catálogo para descubrir cómo la IA y la automatización pueden transformar tu negocio.</p>
+      `
+
+      await Promise.all([
+        sendEmail({
+          kind: 'onboarding_internal',
+          to: 'team@immoralia.es',
+          subject: `⚡ Quick Form Lead - ${safeNombre}`,
+          from: 'Immoralia Notificaciones <noreply@procesos.immoralia.es>',
+          html: getProfessionalTemplate({ title: 'Nuevo Quick Form Lead', preheader: `Nuevo lead de ${safeNombre}`, mainContent: internalHtml }),
+          metadata: { source: source || 'quick_form', utm },
+        }),
+        sendEmail({
+          kind: 'onboarding_client',
+          to: email,
+          subject: 'Confirmación de recepción — Immoralia',
+          html: getProfessionalTemplate({ title: 'Confirmación recibida', preheader: 'Hemos recibido tu información correctamente', mainContent: clientHtml }),
+        }),
+      ])
     }
 
     // ClickUp

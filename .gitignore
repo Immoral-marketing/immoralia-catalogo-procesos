@@ -35,3 +35,12 @@ next-env.d.ts
 # Claude Code local config and worktrees
 .claude/launch.json
 .claude/worktrees/
+.claude/settings.local.json
+
+# BrianSpec — ignora settings locales de cada máquina,
+# pero NO las skills copiadas (.agents/skills/ y skills-lock.json SÍ se commitean).
+Thumbs.db
+*~
+*.sublime-*
+build/
+coverage/
