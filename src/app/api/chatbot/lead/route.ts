@@ -147,8 +147,8 @@ export async function POST(req: NextRequest) {
 
     // 4. Lead en BBDD — SIEMPRE primero: si lo externo falla, el lead existe (CA-13)
     const consentNote = `Consentimiento RGPD aceptado el ${new Date().toISOString()} (chatbot v3, política /privacidad)`
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: leadRow, error: insertError } = await (supabase.from('contact_submissions') as any)
+    const { data: leadRow, error: insertError } = await supabase
+      .from('contact_submissions')
       .insert({
         nombre: body.nombre,
         email: body.email,
