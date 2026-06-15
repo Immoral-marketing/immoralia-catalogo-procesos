@@ -5,11 +5,14 @@
  * La salida es markdown plano (streaming) — sin JSON.
  */
 import { HANDOVER_MARKER, LEAD_FORM_MARKER, SECTOR_NAMES } from './constants'
+import type { StructuredSummary } from './types'
 
 export function buildSystemPrompt(params: {
   sector: string | null
   contextText: string
   summary: string | null
+  /** SPEC-08 — Resumen estructurado (si existe, tiene prioridad sobre summary) */
+  structuredSummary?: StructuredSummary | null
   alreadyRecommendedSlugs: string[]
   leadCaptured: boolean
   /** Sector inferido por keywords del mensaje cuando el sector de URL es null */
@@ -17,7 +20,7 @@ export function buildSystemPrompt(params: {
   /** Número de turno del usuario en esta conversación (1-based) */
   userCount?: number
 }): string {
-  const { sector, contextText, summary, alreadyRecommendedSlugs, leadCaptured, inferredSector, userCount = 1 } = params
+  const { sector, contextText, summary, structuredSummary, alreadyRecommendedSlugs, leadCaptured, inferredSector, userCount = 1 } = params
   const sectorName = sector ? SECTOR_NAMES[sector] : null
   // Sector efectivo para el contexto del prompt (URL > inferido > null)
   const activeSector = sector ?? inferredSector ?? null
@@ -42,12 +45,21 @@ REGLAS PARA LA HOME (sin sector conocido):
 - [PROCESO UNIVERSAL] se puede recomendar en cualquier momento sin preguntar el sector.
 - Puedes responder preguntas conceptuales generales sin necesidad de conocer el sector.`
 
-  const memoryBlock = summary
+  // SPEC-08: preferir el resumen estructurado si existe; si no, caer al texto libre (retrocompat.)
+  const memoryBlock = structuredSummary
     ? `
+MEMORIA DE LA CONVERSACIÓN (contexto de lo hablado antes — no lo repitas ni lo vuelvas a preguntar):
+- Sector: ${structuredSummary.sector ? (SECTOR_NAMES[structuredSummary.sector] ?? structuredSummary.sector) : 'no especificado'}
+- Dolores mencionados: ${structuredSummary.pain_points.length ? structuredSummary.pain_points.map(p => `"${p}"`).join(', ') : 'ninguno'}
+- Procesos discutidos: ${structuredSummary.procesos_vistos.length ? structuredSummary.procesos_vistos.join(', ') : 'ninguno'}
+- Nivel de interés estimado: ${structuredSummary.nivel_interes}
+`
+    : summary
+      ? `
 MEMORIA DE LA CONVERSACIÓN (lo hablado antes de los últimos mensajes — trátalo como contexto cierto, no lo vuelvas a preguntar):
 ${summary}
 `
-    : ''
+      : ''
 
   const antiRedundancyBlock = alreadyRecommendedSlugs.length > 0
     ? `

@@ -11,7 +11,7 @@ import {
   MAX_MESSAGES_PER_CONVERSATION_PER_HOUR,
   MAX_MESSAGES_PER_IP_PER_DAY,
 } from './constants'
-import type { ChatSurface, ConversationRow, MessageRow, MessageRating } from './types'
+import type { ChatSurface, ConversationRow, MessageRow, MessageRating, StructuredSummary } from './types'
 
 function db(): SupabaseClient {
   return createClient(
@@ -153,6 +153,18 @@ export async function updateSummary(
   await db()
     .from('chatbot_conversations')
     .update({ summary, summary_message_count: summaryMessageCount })
+    .eq('id', conversationId)
+}
+
+/** SPEC-08 — Persiste el resumen estructurado (JSONB) en lugar del texto libre. */
+export async function updateStructuredSummary(
+  conversationId: string,
+  structuredSummary: StructuredSummary,
+  summaryMessageCount: number,
+): Promise<void> {
+  await db()
+    .from('chatbot_conversations')
+    .update({ structured_summary: structuredSummary, summary_message_count: summaryMessageCount })
     .eq('id', conversationId)
 }
 

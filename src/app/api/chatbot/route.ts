@@ -122,6 +122,7 @@ export async function POST(req: NextRequest) {
       sector,
       contextText,
       summary: conversation.summary,
+      structuredSummary: conversation.structured_summary,
       alreadyRecommendedSlugs,
       leadCaptured: conversation.lead_captured,
       inferredSector,

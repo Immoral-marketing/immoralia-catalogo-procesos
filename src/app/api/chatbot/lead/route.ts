@@ -13,7 +13,7 @@ import { sendSlackNewLead } from '@/lib/slack'
 import { sendChatbotEmail } from '@/lib/chatbot/emails'
 import { getConversation, getMessages, isExpired, updateConversationFlags } from '@/lib/chatbot/store'
 import { SECTOR_NAMES } from '@/lib/chatbot/constants'
-import type { ConversationRow, MessageRow } from '@/lib/chatbot/types'
+import type { ConversationRow, MessageRow, StructuredSummary } from '@/lib/chatbot/types'
 
 const CLICKUP_LIST_ID = '901521069796' // misma lista que /api/leads/contact
 const GHL_LEAD_WEBHOOK_URL = process.env.GHL_LEAD_WEBHOOK_URL
@@ -34,16 +34,35 @@ function getMadridHour(): number {
   return parseInt(formatter.format(new Date()))
 }
 
-/** Resumen del contexto del cliente para la tarea de ClickUp (CA-16). */
+/** Resumen del contexto del cliente para la tarea de ClickUp (CA-16).
+ *  SPEC-08: si existe structured_summary, tiene prioridad sobre el texto libre. */
 function buildContextSummary(conversation: ConversationRow, messages: MessageRow[]): string {
-  const sectorName = conversation.initial_sector
-    ? SECTOR_NAMES[conversation.initial_sector] ?? conversation.initial_sector
-    : 'Sin sector identificado'
+  const ss = conversation.structured_summary as StructuredSummary | null
+
+  const sectorName = (ss?.sector ? SECTOR_NAMES[ss.sector] ?? ss.sector : null)
+    ?? (conversation.initial_sector ? SECTOR_NAMES[conversation.initial_sector] ?? conversation.initial_sector : 'Sin sector identificado')
+
   const recommended = [...new Set(messages.flatMap(m => m.recommended_slugs))]
 
+  if (ss) {
+    const painBlock = ss.pain_points.length
+      ? ss.pain_points.map(p => `- ${p}`).join('\n')
+      : '- (ninguno capturado)'
+    return [
+      `**Sector:** ${sectorName}`,
+      `**Nivel de interés:** ${ss.nivel_interes}`,
+      `**Turnos de conversación:** ${conversation.user_message_count}`,
+      '',
+      '**Dolores mencionados:**',
+      painBlock,
+      '',
+      recommended.length ? `**Procesos recomendados:** ${recommended.join(', ')}` : '**Procesos recomendados:** ninguno todavía',
+    ].join('\n')
+  }
+
+  // Fallback: resumen de texto libre (conversaciones antiguas o sin structured_summary)
   let summary = conversation.summary
   if (!summary) {
-    // Conversación corta sin resumen acumulado: derivarlo de los mensajes del usuario
     const userLines = messages.filter(m => m.role === 'user').slice(0, 4).map(m => `- ${m.content}`)
     summary = userLines.length ? `Lo que contó el visitante:\n${userLines.join('\n')}` : 'Conversación muy breve.'
   }
@@ -64,6 +83,23 @@ function buildLastMessages(messages: MessageRow[], n = 6): string {
     .slice(-n)
     .map(m => `${m.role === 'user' ? '👤 Usuario' : '🤖 Bot'}: ${m.content}`)
     .join('\n\n')
+}
+
+/** SPEC-07 — Extrae los slugs de procesos recomendados durante la conversación.
+ *  allSlugs: todos los únicos (para CRM e historial completo).
+ *  primarySlug: el último recomendado en el mensaje del bot más reciente con slugs. */
+function extractProcessInterest(messages: MessageRow[]): {
+  allSlugs: string[]
+  primarySlug: string | null
+} {
+  const allSlugs = [...new Set(messages.flatMap(m => m.recommended_slugs))]
+  const lastWithSlugs = [...messages].reverse().find(
+    m => m.role === 'assistant' && m.recommended_slugs.length > 0,
+  )
+  const primarySlug = lastWithSlugs
+    ? (lastWithSlugs.recommended_slugs[lastWithSlugs.recommended_slugs.length - 1] ?? null)
+    : null
+  return { allSlugs, primarySlug }
 }
 
 export async function POST(req: NextRequest) {
@@ -107,11 +143,12 @@ export async function POST(req: NextRequest) {
     const messages = await getMessages(conversation.id)
     const contextSummary = buildContextSummary(conversation, messages)
     const lastMessages = buildLastMessages(messages)
+    const { allSlugs: interestedSlugs, primarySlug: primaryInterestedSlug } = extractProcessInterest(messages)
 
     // 4. Lead en BBDD — SIEMPRE primero: si lo externo falla, el lead existe (CA-13)
     const consentNote = `Consentimiento RGPD aceptado el ${new Date().toISOString()} (chatbot v3, política /privacidad)`
-    const { data: leadRow, error: insertError } = await supabase
-      .from('contact_submissions')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: leadRow, error: insertError } = await (supabase.from('contact_submissions') as any)
       .insert({
         nombre: body.nombre,
         email: body.email,
@@ -119,6 +156,8 @@ export async function POST(req: NextRequest) {
         comentario: `${isHandover ? '🔴 PIDE CONTACTO HUMANO (compromiso 24h)\n\n' : ''}Lead capturado por el chatbot v3.\n${consentNote}`,
         selected_processes: [],
         ip_address: clientIP,
+        interested_process_slugs: interestedSlugs,
+        primary_interested_slug: primaryInterestedSlug,
       })
       .select('id')
       .single()
@@ -142,6 +181,9 @@ export async function POST(req: NextRequest) {
       try {
         const isBusinessHours = (() => { const h = getMadridHour(); return h >= 8 && h < 18 })()
         const taskName = `${isHandover ? '🔴 ' : ''}Catálogo · Chatbot — ${body.nombre}`
+        const processInterestBlock = interestedSlugs.length
+          ? `**Todos:** ${interestedSlugs.join(', ')}\n**Principal:** ${primaryInterestedSlug ?? interestedSlugs[0]}`
+          : 'ninguno todavía'
         const description = [
           `Lead desde Catálogo · Chatbot${isHandover ? ' · **PIDE CONTACTO HUMANO — responder en <24h**' : ''}`,
           '',
@@ -149,6 +191,9 @@ export async function POST(req: NextRequest) {
           `**Persona:** ${body.nombre}`,
           `**Email:** ${body.email}`,
           `**Conversación:** ${conversation.id} (tabla chatbot_conversations)`,
+          '',
+          '### Procesos de interés',
+          processInterestBlock,
           '',
           '### Resumen del contexto',
           contextSummary,
@@ -196,6 +241,10 @@ export async function POST(req: NextRequest) {
             chatbot_sector: conversation.initial_sector || 'sin_sector',
             chatbot_summary: (conversation.summary || '').slice(0, 500),
             chatbot_human_requested: isHandover,
+            chatbot_interested_slugs: interestedSlugs.join(', '),
+            chatbot_primary_slug: primaryInterestedSlug ?? '',
+            chatbot_nivel_interes: conversation.structured_summary?.nivel_interes ?? '',
+            chatbot_pain_points: (conversation.structured_summary?.pain_points ?? []).join(' | ').slice(0, 500),
           },
           tags: ['chatbot_lead', ...(conversation.initial_sector ? [conversation.initial_sector] : []), ...(isHandover ? ['pide_humano'] : [])],
         }),
