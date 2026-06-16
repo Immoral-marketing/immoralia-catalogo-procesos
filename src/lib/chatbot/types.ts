@@ -5,6 +5,14 @@
  */
 
 export type ChatRole = 'user' | 'assistant'
+
+/** SPEC-08 — Resumen estructurado de la conversación (sustituye al resumen libre en nuevas convs). */
+export interface StructuredSummary {
+  sector: string | null
+  pain_points: string[]
+  procesos_vistos: string[]
+  nivel_interes: 'explorando' | 'interesado' | 'listo_para_comprar'
+}
 export type ChatSurface = 'bubble' | 'home' | 'sector'
 export type MessageRating = 'useful' | 'not_useful'
 
@@ -16,6 +24,7 @@ export interface ConversationRow {
   initial_sector: string | null
   initial_route: string | null
   summary: string | null
+  structured_summary: StructuredSummary | null
   summary_message_count: number
   user_message_count: number
   assistant_message_count: number

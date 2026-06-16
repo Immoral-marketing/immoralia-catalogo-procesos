@@ -42,8 +42,10 @@ export async function retrieveContext(params: {
   message: string
   lastAssistantContent: string | null
   sector: string | null
+  /** Slugs ya recomendados — se excluyen del resultado para forzar variedad */
+  excludeSlugs?: string[]
 }): Promise<string> {
-  const { message, lastAssistantContent, sector } = params
+  const { message, lastAssistantContent, sector, excludeSlugs = [] } = params
 
   const embeddingInput = lastAssistantContent
     ? `${lastAssistantContent}\n\nUsuario: ${message}`
@@ -77,7 +79,9 @@ export async function retrieveContext(params: {
   if (globalResults) globalDocs = globalResults as KnowledgeDoc[]
 
   const sectorIds = new Set(sectorDocs.map(d => d.id))
-  const documents = [...sectorDocs, ...globalDocs.filter(d => !sectorIds.has(d.id))].slice(0, 5)
+  const documents = [...sectorDocs, ...globalDocs.filter(d => !sectorIds.has(d.id))]
+    .filter(d => !excludeSlugs.includes(d.metadata?.slug ?? ''))
+    .slice(0, 5)
 
   if (documents.length === 0) {
     return 'No se encontró información relevante en el catálogo.'

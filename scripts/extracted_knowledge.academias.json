@@ -1,0 +1,296 @@
+[
+  {
+    "content": "# Comunicación de calendario y exámenes\nSector: Academias y Formación\nEnvía recordatorios de exámenes, cambios de horario y fechas clave con la antelación suficiente para que alumnos y padres no se pillen por sorpresa\n\n## Problemas que resuelve (en palabras del cliente)\n- Alumnos que llegan sin saber que había examen\n- Padres que no se enteran de los cambios de horario\n- El equipo envía mensajes de recordatorio de forma manual\n\n## Qué hace este proceso\nLas academias cambian horarios, programan exámenes y modifican el calendario con frecuencia. Sin comunicación proactiva, estas novedades llegan tarde o no llegan. Este proceso envía automáticamente avisos con la antelación configurada para cada tipo de evento.\n\n## Cómo funciona\n1. Se registra el evento en el calendario de la academia\n2. El sistema calcula el momento de envío del aviso\n3. Se envía el recordatorio al grupo correspondiente\n4. Se confirma la recepción y se registra el envío\n\n## Personalización\nAntelación del aviso configurable por tipo de evento",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-3.2",
+      "process_name": "Comunicación de calendario y exámenes",
+      "slug": "academias-comunicacion-calendario",
+      "landing_slug": "academias",
+      "bloque_negocio": "B3",
+      "modulo_codigo": "3.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Programa de referidos para alumnos satisfechos\nSector: Academias y Formación\nConvierte a los alumnos más satisfechos en embajadores que traen nuevos alumnos a cambio de incentivos automáticos\n\n## Problemas que resuelve (en palabras del cliente)\n- Alto coste de captación por dependencia de publicidad pagada\n- Alumnos satisfechos que no recomiendan porque no se les pide\n- Sin sistema para rastrear de dónde vienen las recomendaciones\n\n## Qué hace este proceso\nUn alumno satisfecho es la mejor publicidad que tiene una academia. Un programa de referidos bien estructurado — con incentivos claros, seguimiento automático y comunicación proactiva — puede generar entre el 15 y el 25% de nuevas matriculaciones sin coste de adquisición.\n\n## Cómo funciona\n1. El sistema identifica alumnos con alta satisfacción\n2. Se les invita automáticamente al programa de referidos\n3. Se genera un código o enlace de referido personalizado\n4. El incentivo se aplica automáticamente cuando el referido se matricula\n\n## Personalización\nIncentivos y criterios de elegibilidad configurables",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-4.3",
+      "process_name": "Programa de referidos para alumnos satisfechos",
+      "slug": "academias-programa-referidos",
+      "landing_slug": "academias",
+      "bloque_negocio": "B4",
+      "modulo_codigo": "4.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Recordatorios escalonados de mensualidad\nSector: Academias y Formación\nGestión automática del ciclo de cobro: aviso previo, confirmación de pago y escalado de impagos sin intervención del equipo\n\n## Problemas que resuelve (en palabras del cliente)\n- Horas semanales persiguiendo impagos por teléfono\n- Sin registro centralizado del estado de pagos\n- Relación tensa con alumnos cuando hay reclamaciones de pago\n\n## Qué hace este proceso\nEl seguimiento manual de mensualidades en academias con decenas o cientos de alumnos es ineficiente y fuente de tensiones. Este proceso automatiza el ciclo completo: aviso 3 días antes del vencimiento, confirmación el día del cobro y secuencia escalonada de recordatorios para impagos, con escalado a gestión humana si no se resuelve.\n\n## Cómo funciona\n1. El sistema identifica cuotas próximas a vencer\n2. Se envía aviso previo automático 3 días antes\n3. En caso de impago\n4. se activa secuencia escalonada de recordatorios\n5. Si persiste\n6. se escala a gestión humana con historial completo\n\n## Personalización\nPlazos y canales de recordatorio configurables por academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-5.1",
+      "process_name": "Recordatorios escalonados de mensualidad",
+      "slug": "academias-recordatorio-mensualidad",
+      "landing_slug": "academias",
+      "bloque_negocio": "B5",
+      "modulo_codigo": "5.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Captura y centralización de leads multicanal\nSector: Academias y Formación\nUnifica en una sola bandeja de entrada todos los canales de contacto: teléfono, WhatsApp, web e Instagram\n\n## Problemas que resuelve (en palabras del cliente)\n- No llenamos los grupos en la nueva convocatoria por falta de seguimiento de interesados\n- Campañas de captación que no se traducen en matriculaciones\n- Leads que llegan por canales distintos y se pierden\n- Sin visibilidad de qué canal genera más matriculaciones\n- Mensajes de Instagram sin responder durante horas\n\n## Qué hace este proceso\nUn alumno potencial puede llegar por llamada, WhatsApp, formulario web, DM de Instagram o incluso TikTok. Sin un sistema unificado, estos leads se pierden en bandejas de entrada distintas. Este proceso centraliza todos los canales en un único CRM con calificación automática y asignación al asesor correcto.\n\n## Cómo funciona\n1. El interesado contacta por cualquier canal disponible\n2. El sistema unifica la conversación en el CRM\n3. Se asigna automáticamente al asesor según disponibilidad\n4. El asesor ve el historial completo del lead en un solo lugar\n\n## Personalización\nIntegrable con los canales activos de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-1.2",
+      "process_name": "Captura y centralización de leads multicanal",
+      "slug": "academias-captura-multicanal",
+      "landing_slug": "academias",
+      "bloque_negocio": "B1",
+      "modulo_codigo": "1.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Cualificación automática de alumnos potenciales\nSector: Academias y Formación\nFiltra y puntúa automáticamente a los interesados según objetivo, nivel y modalidad antes de que lleguen al asesor\n\n## Problemas que resuelve (en palabras del cliente)\n- Interesados en la nueva convocatoria que no acaban matriculándose\n- Sin proceso de captación y cualificación de nuevas matrículas\n- Asesores que invierten tiempo igual en todos los leads\n- Sin criterio claro para priorizar a quién llamar primero\n- Tasa de conversión baja por falta de filtro previo\n\n## Qué hace este proceso\nNo todos los interesados tienen el mismo potencial de conversión. Este proceso asigna una puntuación automática a cada lead según los datos recogidos (objetivo, nivel previo, modalidad preferida, urgencia) para que el asesor priorice su tiempo en los más propensos a matricularse.\n\n## Cómo funciona\n1. El lead llega por cualquier canal\n2. El sistema recoge datos clave mediante preguntas automatizadas\n3. Se asigna una puntuación de cualificación\n4. Los leads de mayor puntuación se priorizan para el asesor\n\n## Personalización\nLos criterios de puntuación se adaptan al tipo de academia y curso",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-1.4",
+      "process_name": "Cualificación automática de alumnos potenciales",
+      "slug": "academias-cualificacion-alumno",
+      "landing_slug": "academias",
+      "bloque_negocio": "B1",
+      "modulo_codigo": "1.4",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Avisos automáticos de faltas a padres\nSector: Academias y Formación\nNotifica automáticamente a los padres cuando su hijo no asiste a clase, sin que el equipo tenga que hacerlo manualmente\n\n## Problemas que resuelve (en palabras del cliente)\n- Padres que llaman para preguntar si su hijo ha ido a clase\n- El equipo pierde tiempo en llamadas de seguimiento de asistencia\n- Faltas no comunicadas que generan conflictos\n\n## Qué hace este proceso\nEn academias con alumnos menores, los padres quieren saber si su hijo ha asistido. Hacer esto de forma manual consume tiempo del equipo y genera errores. Este proceso envia avisos automáticos de falta por WhatsApp o email tan pronto como se registra la ausencia en el sistema.\n\n## Cómo funciona\n1. El profesor registra la falta en el sistema\n2. El sistema detecta la ausencia en tiempo real\n3. Se envía aviso automático al padre/tutor por WhatsApp o email\n4. El aviso queda registrado en el historial del alumno\n\n## Personalización\nCanal de aviso configurable según preferencia de cada familia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-3.1",
+      "process_name": "Avisos automáticos de faltas a padres",
+      "slug": "academias-avisos-faltas",
+      "landing_slug": "academias",
+      "bloque_negocio": "B3",
+      "modulo_codigo": "3.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Detección automática de alumnos en riesgo de baja\nSector: Academias y Formación\nIdentifica patrones de abandono antes de que el alumno pida la baja y activa una intervención personalizada\n\n## Problemas que resuelve (en palabras del cliente)\n- Bajas que llegan de sorpresa sin señales previas visibles\n- Sin sistema para detectar alumnos desmotivados a tiempo\n- Coste de retener un alumno muy inferior al de captar uno nuevo\n\n## Qué hace este proceso\nUn alumno que empieza a faltar más, no abre los mensajes o lleva semanas sin conectarse a la plataforma está enviando señales de abandono. Este sistema detecta esas señales de forma automática y activa una respuesta personalizada — una llamada del coordinador, un descuento de renovación o una sesión de tutoría — antes de que el alumno tome la decisión de irse.\n\n## Cómo funciona\n1. El sistema monitoriza señales de riesgo: faltas\n2. engagement\n3. pagos\n4. Al superar el umbral configurado\n5. se activa una alerta\n6. Se lanza automáticamente una acción de retención personalizada\n7. El coordinador recibe un aviso para seguimiento humano si es necesario\n\n## Personalización\nUmbrales de riesgo y acciones de retención configurables",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-4.1",
+      "process_name": "Detección automática de alumnos en riesgo de baja",
+      "slug": "academias-deteccion-riesgo-baja",
+      "landing_slug": "academias",
+      "bloque_negocio": "B4",
+      "modulo_codigo": "4.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Matrícula automática y asignación al grupo según nivel del alumno\nSector: Academias y Formación\nDel formulario al grupo correcto, sin intervención manual.\n\n## Qué hace este proceso\nCuando un nuevo alumno completa el formulario de inscripción o la prueba de nivel, el sistema lo asigna automáticamente al grupo adecuado, le envía el horario y la documentación de bienvenida, y notifica al profesor del grupo. Aplica a academias de idiomas, música, autoescuelas, formación profesional y cualquier formación por niveles.\n\n## Cómo funciona\n1. Recibimos los datos de inscripción o resultado de prueba de nivel\n2. Asignamos al alumno al grupo disponible más adecuado\n3. Enviamos bienvenida al alumno y aviso al profesor del grupo\n\n## Personalización\nPersonaliza el criterio de asignación, el contenido del kit de bienvenida y los avisos al equipo docente.",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "AC27",
+      "process_name": "Matrícula automática y asignación al grupo según nivel del alumno",
+      "slug": "matricula-asignacion-nivel-automatica",
+      "landing_slug": "academias",
+      "bloque_negocio": "B2",
+      "modulo_codigo": "2.4",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Gestión inteligente de sustituciones\nSector: Academias y Formación\nCuando un profesor no puede dar clase, el sistema identifica automáticamente el sustituto más adecuado según disponibilidad y nivel, sin llamadas urgentes del coordinador\n\n## Problemas que resuelve (en palabras del cliente)\n- Horas del coordinador gestionando sustituciones de última hora\n- Sin criterio claro para elegir el sustituto más adecuado\n- Los alumnos se enteran tarde de los cambios de profesor\n\n## Qué hace este proceso\nUna baja de última hora de un profesor puede arruinar el día del coordinador: llamadas urgentes, grupos de WhatsApp, negociaciones de disponibilidad. Este sistema gestiona las sustituciones de forma automática: detecta la ausencia, identifica al sustituto óptimo según disponibilidad y competencia, lo notifica y confirma la sustitución.\n\n## Cómo funciona\n1. Se registra la ausencia del profesor (manual o automática)\n2. El sistema identifica el sustituto óptimo disponible\n3. Se notifica al sustituto y se solicita confirmación\n4. Se avisa automáticamente a los alumnos del cambio\n\n## Personalización\nCriterios de selección de sustituto configurables por academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-6.3",
+      "process_name": "Gestión inteligente de sustituciones",
+      "slug": "academias-sustituciones-inteligentes",
+      "landing_slug": "academias",
+      "bloque_negocio": "B6",
+      "modulo_codigo": "6.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Mensajes automáticos en fechas clave\nSector: Academias y Formación\nFelicitaciones de cumpleaños, inicio de curso, fin de trimestre y otras fechas importantes enviadas automáticamente para mantener el vínculo con el alumno\n\n## Problemas que resuelve (en palabras del cliente)\n- Fechas importantes pasan sin ninguna comunicación\n- Los alumnos no sienten que la academia se preocupa por ellos\n- Sin fidelización\n- la renovación depende solo del precio\n\n## Qué hace este proceso\nLas pequeñas atenciones — un mensaje de cumpleaños, una felicitación al terminar el trimestre, un recordatorio del inicio de curso — generan vínculos que fidelizan. Este proceso los gestiona automáticamente para que ninguna fecha importante pase sin un mensaje personalizado.\n\n## Cómo funciona\n1. El sistema sincroniza las fechas clave de cada alumno\n2. Se programan los mensajes con antelación configurable\n3. Los mensajes se envían automáticamente en la fecha correcta\n4. Se registra el envío para seguimiento de engagement\n\n## Personalización\nCalendario de fechas clave y tono de mensaje configurables",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-3.4",
+      "process_name": "Mensajes automáticos en fechas clave",
+      "slug": "academias-mensajes-fechas-clave",
+      "landing_slug": "academias",
+      "bloque_negocio": "B3",
+      "modulo_codigo": "3.4",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Comunicación individual de horarios con confirmación\nSector: Academias y Formación\nCada profesor recibe su horario semanal por WhatsApp con confirmación de lectura, eliminando los grupos caóticos de equipo\n\n## Problemas que resuelve (en palabras del cliente)\n- Grupos de WhatsApp de profesores ingobernables\n- Sin confirmación de que el profesor ha visto su horario\n- Confusión de turnos por mensajes malinterpretados en grupos\n\n## Qué hace este proceso\nLos grupos de WhatsApp de profesores son un caos: mensajes importantes enterrados bajo conversaciones irrelevantes, confirmaciones de lectura imposibles de rastrear. Este proceso envía el horario semanal de forma individual a cada profesor con confirmación y alerta automática al coordinador si no hay respuesta.\n\n## Cómo funciona\n1. El coordinador publica el horario en el sistema\n2. El sistema envía el horario individual a cada profesor\n3. El profesor confirma con un botón de respuesta\n4. Las no-respuestas generan alerta automática al coordinador\n\n## Personalización\nFormato de horario y canal de envío configurables",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-6.1",
+      "process_name": "Comunicación individual de horarios con confirmación",
+      "slug": "academias-comunicacion-turnos",
+      "landing_slug": "academias",
+      "bloque_negocio": "B6",
+      "modulo_codigo": "6.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Onboarding automático de nuevo profesor\nSector: Academias y Formación\nEl profesor nuevo recibe automáticamente toda la documentación, protocolos y asignaciones del primer día sin que el coordinador tenga que enviarlo manualmente\n\n## Problemas que resuelve (en palabras del cliente)\n- Incorporación de nuevos profesores que depende de tiempo del coordinador\n- Profesores que arrancan sin tener toda la información necesaria\n- Documentación de protocolos dispersa y difícil de encontrar\n\n## Qué hace este proceso\nCada vez que se incorpora un nuevo profesor, el coordinador dedica horas a explicar protocolos, enviar documentación y asignar las primeras clases. Este proceso lo automatiza: en cuanto se da de alta al profesor en el sistema, se lanza una secuencia de onboarding con todo lo que necesita para arrancar operativo.\n\n## Cómo funciona\n1. Se da de alta al nuevo profesor en el sistema\n2. Se lanza automáticamente la secuencia de onboarding\n3. El profesor recibe documentación\n4. protocolos y accesos\n5. Las primeras clases se asignan automáticamente según disponibilidad\n\n## Personalización\nContenido de onboarding adaptado al tipo de academia y área de enseñanza",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-6.2",
+      "process_name": "Onboarding automático de nuevo profesor",
+      "slug": "academias-onboarding-profesor",
+      "landing_slug": "academias",
+      "bloque_negocio": "B6",
+      "modulo_codigo": "6.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Chatbot informativo de cursos y horarios\nSector: Academias y Formación\nResponde automáticamente preguntas frecuentes sobre cursos, precios, horarios y modalidades en web y WhatsApp\n\n## Problemas que resuelve (en palabras del cliente)\n- El equipo pierde tiempo respondiendo las mismas preguntas\n- Interesados que no reciben respuesta y se van a otra academia\n- Sin filtro previo\n- el asesor habla con personas sin interés real\n\n## Qué hace este proceso\nEl 80% de las consultas que recibe una academia son siempre las mismas: ¿qué cursos tenéis?, ¿cuánto cuesta?, ¿hay plazas?. Un chatbot bien configurado responde estas preguntas al instante, filtra a quienes tienen interés real y los prepara para hablar con un asesor.\n\n## Cómo funciona\n1. El visitante entra a la web o escribe por WhatsApp\n2. El chatbot responde preguntas frecuentes al instante\n3. Si hay interés real\n4. recoge datos de contacto\n5. Deriva al asesor solo los leads cualificados\n\n## Personalización\nAdaptado al catálogo de cursos y FAQs de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-1.3",
+      "process_name": "Chatbot informativo de cursos y horarios",
+      "slug": "academias-chatbot-info",
+      "landing_slug": "academias",
+      "bloque_negocio": "B1",
+      "modulo_codigo": "1.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Welcome pack automático al nuevo alumno\nSector: Academias y Formación\nEl alumno recibe al instante acceso a plataforma, materiales de bienvenida y toda la información que necesita para empezar\n\n## Problemas que resuelve (en palabras del cliente)\n- Alumnos que no saben cómo empezar tras matricularse\n- El equipo envía manualmente la bienvenida a cada nuevo alumno\n- Primeras impresiones negativas por falta de comunicación\n\n## Qué hace este proceso\nCuando un alumno se matricula, espera recibir la información de acceso, los materiales del curso y las instrucciones de funcionamiento de inmediato. Sin automatización, esto depende de que alguien del equipo lo gestione manualmente. Con este proceso, el welcome pack se envía automáticamente en el momento en que se confirma la matrícula.\n\n## Cómo funciona\n1. Se confirma la matriculación del alumno\n2. El sistema genera automáticamente el welcome pack personalizado\n3. El alumno recibe acceso a plataforma\n4. materiales y calendario\n5. Se registra la entrega y se marca como onboarding completado\n\n## Personalización\nContenido personalizado según el curso y modalidad",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-2.2",
+      "process_name": "Welcome pack automático al nuevo alumno",
+      "slug": "academias-welcome-pack",
+      "landing_slug": "academias",
+      "bloque_negocio": "B2",
+      "modulo_codigo": "2.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Captura de gastos con foto sin tecleo manual\nSector: Academias y Formación\nEl equipo fotografía cualquier ticket o factura y el gasto queda registrado automáticamente en la categoría correcta\n\n## Problemas que resuelve (en palabras del cliente)\n- Gastos que no se registran hasta fin de mes\n- Tickets perdidos que no entran en la contabilidad\n- El equipo dedica tiempo a formularios de gastos\n\n## Qué hace este proceso\nLas academias tienen gastos continuos de material didáctico, mantenimiento e imprevistos. Registrarlos manualmente — con formularios, Excel o notas de papel — genera retrasos y errores. Con este proceso, cualquier miembro del equipo fotografía el ticket y el sistema extrae los datos, categoriza el gasto y lo registra automáticamente.\n\n## Cómo funciona\n1. El empleado fotografía el ticket desde el móvil\n2. El sistema extrae los datos con OCR automático\n3. El gasto se categoriza y registra automáticamente\n4. Queda disponible para el reporte financiero del mes\n\n## Personalización\nCategorías de gasto adaptadas a la estructura de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-5.2",
+      "process_name": "Captura de gastos con foto sin tecleo manual",
+      "slug": "academias-registro-gastos",
+      "landing_slug": "academias",
+      "bloque_negocio": "B5",
+      "modulo_codigo": "5.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Atención de consultas de cursos 24/7 por voz\nSector: Academias y Formación\nUn sistema automatizado que atiende llamadas fuera de horario, cualifica al interesado y lo prepara para matriculación\n\n## Problemas que resuelve (en palabras del cliente)\n- Llamadas perdidas fuera del horario de secretaría\n- Alumnos que llaman y no encuentran atención\n- El equipo no puede atender consultas 24/7\n\n## Qué hace este proceso\nMuchas academias pierden alumnos potenciales porque no pueden atender llamadas fuera del horario de secretaría. Un sistema de atención de voz automatizada recoge la consulta, detecta el interés (idiomas, oposiciones, formación profesional), cualifica al interesado y lo prepara para que el asesor lo contacte en horario de oficina con toda la información necesaria.\n\n## Cómo funciona\n1. El alumno potencial llama a la academia\n2. El sistema de voz recibe la llamada y recoge datos básicos\n3. Se cualifica el interés y modalidad del curso\n4. Se notifica al asesor con toda la información lista para el seguimiento\n\n## Personalización\nSe adapta al catálogo de cursos y horarios de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-1.1",
+      "process_name": "Atención de consultas de cursos 24/7 por voz",
+      "slug": "academias-voz-cursos-247",
+      "landing_slug": "academias",
+      "bloque_negocio": "B1",
+      "modulo_codigo": "1.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Matriculación 100% digital\nSector: Academias y Formación\nEl alumno firma el contrato, sube documentación y completa la matrícula sin visitar la academia ni imprimir nada\n\n## Problemas que resuelve (en palabras del cliente)\n- Proceso de matriculación lento que depende de visita presencial\n- Contratos en papel que se pierden o deterioran\n- El equipo pierde horas gestionando papeleo administrativo\n\n## Qué hace este proceso\nLa matriculación manual implica citas presenciales, impresión de contratos, recogida de documentos y entrada manual de datos. Todo este proceso se puede digitalizar: el alumno recibe un enlace, firma digitalmente, sube los documentos requeridos y queda matriculado en minutos, sin que el equipo tenga que intervenir.\n\n## Cómo funciona\n1. El alumno recibe un enlace de matriculación personalizado\n2. Firma digitalmente el contrato y acepta condiciones\n3. Sube la documentación requerida (DNI\n4. foto\n5. etc.)\n6. Queda matriculado automáticamente en el sistema\n\n## Personalización\nSe adapta a los requisitos de documentación de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-2.1",
+      "process_name": "Matriculación 100% digital",
+      "slug": "academias-matricula-digital",
+      "landing_slug": "academias",
+      "bloque_negocio": "B2",
+      "modulo_codigo": "2.1",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Control de cuotas y pagos fraccionados\nSector: Academias y Formación\nGestión automática de mensualidades, recordatorios de pago y seguimiento de impagos sin intervención manual\n\n## Problemas que resuelve (en palabras del cliente)\n- Horas semanales persiguiendo impagos manualmente\n- Sin registro claro de qué alumnos han pagado\n- Relación incómoda con alumnos cuando hay que reclamar pagos\n\n## Qué hace este proceso\nLas academias que ofrecen pago fraccionado dedican horas a recordar mensualidades, perseguir impagos y actualizar hojas de cálculo. Este proceso automatiza el ciclo completo: recordatorio previo al vencimiento, notificación el día del cobro y escalonado de alertas para impagos, con registro automático en el sistema.\n\n## Cómo funciona\n1. El sistema identifica las cuotas próximas a vencer\n2. Se envía recordatorio automático 3 días antes\n3. En caso de impago\n4. se activa una secuencia de recordatorios escalonados\n5. El estado de pago se actualiza automáticamente en el CRM\n\n## Personalización\nConfigurable según política de pagos y tolerancia de cada academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-2.3",
+      "process_name": "Control de cuotas y pagos fraccionados",
+      "slug": "academias-pago-fraccionado",
+      "landing_slug": "academias",
+      "bloque_negocio": "B2",
+      "modulo_codigo": "2.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Encuesta de satisfacción post-clase\nSector: Academias y Formación\nRecoge feedback de alumnos y padres de forma automática tras cada clase para detectar problemas antes de que escalen\n\n## Problemas que resuelve (en palabras del cliente)\n- No hay visibilidad sobre la satisfacción de los alumnos\n- Los problemas de calidad se detectan demasiado tarde\n- Bajas sin aviso previo que podrían haberse evitado\n\n## Qué hace este proceso\nSin un sistema de feedback regular, los problemas de calidad solo se detectan cuando el alumno ya se ha dado de baja. Una encuesta breve enviada de forma automática tras cada sesión permite identificar tendencias, actuar sobre profesores con valoraciones bajas y retener alumnos insatisfechos a tiempo.\n\n## Cómo funciona\n1. Finaliza la clase y se registra en el sistema\n2. Se envía automáticamente una encuesta breve al alumno/padre\n3. Las respuestas se agregan en un dashboard de calidad\n4. Las valoraciones bajas generan alerta automática al coordinador\n\n## Personalización\nFrecuencia y canal de encuesta configurables por academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-3.3",
+      "process_name": "Encuesta de satisfacción post-clase",
+      "slug": "academias-encuesta-post-clase",
+      "landing_slug": "academias",
+      "bloque_negocio": "B3",
+      "modulo_codigo": "3.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Reactivación de exalumnos\nSector: Academias y Formación\nRecupera alumnos que dejaron el curso con una secuencia de mensajes personalizados en el momento adecuado\n\n## Problemas que resuelve (en palabras del cliente)\n- Exalumnos que se fueron y no han recibido ningún contacto desde entonces\n- Base de datos de bajas que no se aprovecha\n- Coste de captación alto cuando hay potencial de reactivación sin explotar\n\n## Qué hace este proceso\nUn exalumno que dejó el curso hace 3 o 6 meses es mucho más fácil de recuperar que captar uno nuevo. Este proceso identifica exalumnos según el tiempo transcurrido desde la baja y lanza una secuencia de reactivación con un motivo personalizado y concreto para volver.\n\n## Cómo funciona\n1. El sistema identifica exalumnos según criterios de tiempo y motivo de baja\n2. Se selecciona el mensaje de reactivación más adecuado\n3. Se lanza la secuencia personalizada por WhatsApp o email\n4. Los interesados en volver entran directamente al flujo de matriculación\n\n## Personalización\nCriterios de segmentación y mensajes configurables por academia",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-4.2",
+      "process_name": "Reactivación de exalumnos",
+      "slug": "academias-reactivacion-exalumnos",
+      "landing_slug": "academias",
+      "bloque_negocio": "B4",
+      "modulo_codigo": "4.2",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  },
+  {
+    "content": "# Reporte diario con cifras clave de la academia\nSector: Academias y Formación\nRecibe cada mañana un resumen automático con alumnos activos, cobros del día, faltas y alertas relevantes sin necesidad de abrir ningún sistema\n\n## Problemas que resuelve (en palabras del cliente)\n- Sin visibilidad diaria del estado real de la academia\n- Los reportes se generan manualmente con retraso\n- Decisiones tomadas sin datos actualizados\n\n## Qué hace este proceso\nLa dirección de una academia necesita visibilidad diaria sin tener que acceder a múltiples sistemas. Este proceso genera automáticamente un reporte matutino con los indicadores más relevantes: alumnos activos, cobros esperados del día, faltas registradas, alertas de impago y cualquier dato configurado como prioritario.\n\n## Cómo funciona\n1. El sistema recoge datos de todos los módulos activos\n2. Se genera el reporte automáticamente a la hora configurada\n3. Se envía por WhatsApp o email al director/coordinador\n4. Incluye alertas destacadas que requieren atención inmediata\n\n## Personalización\nKPIs y hora de envío configurables por academia o sede",
+    "metadata": {
+      "source": "catalog_process",
+      "process_id": "ACA-5.3",
+      "process_name": "Reporte diario con cifras clave de la academia",
+      "slug": "academias-reporte-diario",
+      "landing_slug": "academias",
+      "bloque_negocio": "B5",
+      "modulo_codigo": "5.3",
+      "sector_name": "Academias y Formación",
+      "template_version": "v2"
+    }
+  }
+]

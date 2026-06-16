@@ -1,12 +1,44 @@
 /**
- * SPEC-01 — Resumen acumulado de la conversación (memoria larga).
- * Cubre los mensajes que quedan fuera de la ventana de turnos íntegros.
- * Se regenera cada SUMMARY_REFRESH_EVERY mensajes nuevos fuera de ventana
- * y se persiste en la conversación (CA-15, CA-16).
+ * SPEC-08 — Resumen estructurado de la conversación (sustituye al texto libre de SPEC-01).
+ * El modelo devuelve un JSON con sector, pain_points, procesos_vistos y nivel_interes.
+ * Si el JSON viene malformado, se descarta silenciosamente — nunca rompe el chat.
+ * Retrocompatibilidad: conversaciones con solo 'summary' text siguen funcionando
+ * en el system prompt vía el fallback en prompt.ts.
  */
 import { CHAT_MODEL, HISTORY_WINDOW, SUMMARY_REFRESH_EVERY } from './constants'
-import { updateSummary } from './store'
-import type { ConversationRow, MessageRow } from './types'
+import { updateStructuredSummary } from './store'
+import type { ConversationRow, MessageRow, StructuredSummary } from './types'
+
+const VALID_INTEREST_LEVELS = ['explorando', 'interesado', 'listo_para_comprar'] as const
+
+function normalizeNivelInteres(value: unknown): StructuredSummary['nivel_interes'] {
+  if (VALID_INTEREST_LEVELS.includes(value as StructuredSummary['nivel_interes'])) {
+    return value as StructuredSummary['nivel_interes']
+  }
+  return 'explorando'
+}
+
+function parseStructuredSummary(raw: string): StructuredSummary | null {
+  try {
+    // El modelo a veces envuelve el JSON en ```json … ```: se limpia.
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
+    const parsed: unknown = JSON.parse(cleaned)
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null
+    const obj = parsed as Record<string, unknown>
+    return {
+      sector: typeof obj.sector === 'string' && obj.sector !== 'null' ? obj.sector : null,
+      pain_points: Array.isArray(obj.pain_points)
+        ? obj.pain_points.filter((p): p is string => typeof p === 'string').slice(0, 5)
+        : [],
+      procesos_vistos: Array.isArray(obj.procesos_vistos)
+        ? obj.procesos_vistos.filter((p): p is string => typeof p === 'string')
+        : [],
+      nivel_interes: normalizeNivelInteres(obj.nivel_interes),
+    }
+  } catch {
+    return null
+  }
+}
 
 export function shouldRefreshSummary(conversation: ConversationRow, totalMessages: number): boolean {
   const outsideWindow = totalMessages - HISTORY_WINDOW
@@ -15,7 +47,7 @@ export function shouldRefreshSummary(conversation: ConversationRow, totalMessage
 }
 
 /**
- * Regenera el resumen acumulado: resumen previo + mensajes nuevos fuera de ventana.
+ * Regenera el resumen estructurado: resumen previo + mensajes nuevos fuera de ventana.
  * Falla en silencio (log) — un resumen desactualizado no debe romper el chat.
  */
 export async function refreshSummary(
@@ -44,11 +76,23 @@ export async function refreshSummary(
         messages: [
           {
             role: 'system',
-            content: `Mantienes la memoria de un asistente comercial. Actualiza el resumen de la conversación incorporando los mensajes nuevos al resumen previo. Conserva SIEMPRE: qué negocio/sector tiene el usuario, qué dolores y problemas ha contado, qué procesos se le han recomendado (con sus slugs), qué preferencias o decisiones ha expresado, y cualquier dato que dio sobre su situación. Máximo 200 palabras. Devuelve SOLO el resumen actualizado, sin preámbulos.`,
+            content: `Eres un asistente que mantiene la memoria estructurada de una conversación comercial. Actualiza el resumen incorporando los mensajes nuevos y devuelve un JSON con exactamente estos cuatro campos:
+{
+  "sector": "<slug del sector declarado por el usuario, o null>",
+  "pain_points": ["<dolor en primera persona del cliente, máximo 5>"],
+  "procesos_vistos": ["<slug-de-proceso>"],
+  "nivel_interes": "explorando" | "interesado" | "listo_para_comprar"
+}
+Instrucciones:
+- sector: uno de los slugs válidos (salud, gestorias, centros-deportivos, construccion, academias, gastronomia-hosteleria, industrial) o null si el usuario no declaró su tipo de negocio.
+- pain_points: máximo 5 dolores o problemas que el usuario mencionó, en primera persona sin tecnicismos. Ejemplo: "pierdo leads porque no respondo rápido".
+- procesos_vistos: todos los slugs que aparecen en enlaces /catalogo/procesos/<slug> en el hilo. Extráelos exactamente del texto, no los inventes.
+- nivel_interes: "explorando" si solo hace preguntas generales, "interesado" si muestra interés claro por algún proceso, "listo_para_comprar" si pregunta por precios, plazos o cómo contratar.
+Devuelve SOLO el JSON. Sin markdown, sin texto adicional.`,
           },
           {
             role: 'user',
-            content: `RESUMEN PREVIO:\n${conversation.summary || '(ninguno)'}\n\nMENSAJES NUEVOS:\n${transcript}`,
+            content: `RESUMEN ESTRUCTURADO PREVIO:\n${JSON.stringify(conversation.structured_summary) ?? 'null'}\n\nMENSAJES NUEVOS:\n${transcript}`,
           },
         ],
       }),
@@ -57,9 +101,10 @@ export async function refreshSummary(
     const result = await response.json()
     if (result.error) throw new Error(result.error.message)
 
-    const newSummary = result.choices?.[0]?.message?.content?.trim()
-    if (newSummary) {
-      await updateSummary(conversation.id, newSummary, cutoff)
+    const raw: string = result.choices?.[0]?.message?.content?.trim() ?? ''
+    const structuredSummary = parseStructuredSummary(raw)
+    if (structuredSummary) {
+      await updateStructuredSummary(conversation.id, structuredSummary, cutoff)
     }
   } catch (error) {
     console.error('refreshSummary falló (no bloqueante):', error)

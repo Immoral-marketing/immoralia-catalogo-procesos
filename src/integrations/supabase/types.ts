@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -128,12 +128,17 @@ export type Database = {
           assistant_message_count: number
           call_scheduled: boolean
           created_at: string
+          human_requested: boolean
           id: string
           initial_route: string | null
           initial_sector: string | null
           last_activity_at: string
           lead_captured: boolean
+          lead_form_dismissed: boolean
+          lead_form_offered: boolean
+          lead_id: string | null
           status: string
+          structured_summary: Json | null
           summary: string | null
           summary_message_count: number
           surface: string | null
@@ -143,12 +148,17 @@ export type Database = {
           assistant_message_count?: number
           call_scheduled?: boolean
           created_at?: string
+          human_requested?: boolean
           id?: string
           initial_route?: string | null
           initial_sector?: string | null
           last_activity_at?: string
           lead_captured?: boolean
+          lead_form_dismissed?: boolean
+          lead_form_offered?: boolean
+          lead_id?: string | null
           status?: string
+          structured_summary?: Json | null
           summary?: string | null
           summary_message_count?: number
           surface?: string | null
@@ -158,12 +168,17 @@ export type Database = {
           assistant_message_count?: number
           call_scheduled?: boolean
           created_at?: string
+          human_requested?: boolean
           id?: string
           initial_route?: string | null
           initial_sector?: string | null
           last_activity_at?: string
           lead_captured?: boolean
+          lead_form_dismissed?: boolean
+          lead_form_offered?: boolean
+          lead_id?: string | null
           status?: string
+          structured_summary?: Json | null
           summary?: string | null
           summary_message_count?: number
           surface?: string | null
@@ -366,9 +381,11 @@ export type Database = {
           email: string
           empresa: string
           id: string
+          interested_process_slugs: string[] | null
           ip_address: string | null
           nombre: string
           onboarding_answers: Json | null
+          primary_interested_slug: string | null
           selected_processes: Json | null
         }
         Insert: {
@@ -377,9 +394,11 @@ export type Database = {
           email: string
           empresa: string
           id?: string
+          interested_process_slugs?: string[] | null
           ip_address?: string | null
           nombre: string
           onboarding_answers?: Json | null
+          primary_interested_slug?: string | null
           selected_processes?: Json | null
         }
         Update: {
@@ -388,10 +407,54 @@ export type Database = {
           email?: string
           empresa?: string
           id?: string
+          interested_process_slugs?: string[] | null
           ip_address?: string | null
           nombre?: string
           onboarding_answers?: Json | null
+          primary_interested_slug?: string | null
           selected_processes?: Json | null
+        }
+        Relationships: []
+      }
+      email_logs: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          kind: string
+          lead_id: string | null
+          metadata: Json | null
+          recipient: string
+          resend_id: string | null
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          kind: string
+          lead_id?: string | null
+          metadata?: Json | null
+          recipient: string
+          resend_id?: string | null
+          status: string
+          subject?: string | null
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          kind?: string
+          lead_id?: string | null
+          metadata?: Json | null
+          recipient?: string
+          resend_id?: string | null
+          status?: string
+          subject?: string | null
         }
         Relationships: []
       }

@@ -108,20 +108,25 @@ export async function POST(req: NextRequest) {
     const ragSector = sector ?? inferredSector
 
     const lastAssistant = [...history].reverse().find(m => m.role === 'assistant')
+    const alreadyRecommendedSlugs = [...new Set(history.flatMap(m => m.recommended_slugs))]
+    const userCount = history.filter(m => m.role === 'user').length + 1
+
     const contextText = await retrieveContext({
       message: body.message,
       lastAssistantContent: lastAssistant?.content ?? null,
       sector: ragSector,
+      excludeSlugs: alreadyRecommendedSlugs,
     })
 
-    const alreadyRecommendedSlugs = [...new Set(history.flatMap(m => m.recommended_slugs))]
     const systemPrompt = buildSystemPrompt({
       sector,
       contextText,
       summary: conversation.summary,
+      structuredSummary: conversation.structured_summary,
       alreadyRecommendedSlugs,
       leadCaptured: conversation.lead_captured,
       inferredSector,
+      userCount,
     })
 
     // Ventana de últimos N turnos íntegros; lo anterior viaja en el resumen (CA-15)
@@ -251,7 +256,6 @@ export async function POST(req: NextRequest) {
           })
 
           // 9. Actividad + contadores → rolling de 7 días (CA-08)
-          const userCount = history.filter(m => m.role === 'user').length + 1
           const assistantCount = history.filter(m => m.role === 'assistant').length + 1
           await touchConversation(conversation.id, {
             userMessages: userCount,
@@ -269,7 +273,12 @@ export async function POST(req: NextRequest) {
           let action: ChatAction = null
           if (handoverDetected) {
             action = 'offer_handover'
-          } else if (leadFormDetected && !conversation.lead_captured) {
+          } else if (
+            leadFormDetected &&
+            !conversation.lead_captured &&
+            !conversation.lead_form_offered &&
+            userCount >= 3
+          ) {
             action = 'offer_lead_form'
           } else if (
             !conversation.lead_captured &&
