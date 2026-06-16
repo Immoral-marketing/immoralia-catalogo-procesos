@@ -15,12 +15,14 @@ export function buildSystemPrompt(params: {
   structuredSummary?: StructuredSummary | null
   alreadyRecommendedSlugs: string[]
   leadCaptured: boolean
+  /** Si el formulario ya se ofreció antes (el visitante lo ignoró o no lo completó). */
+  leadFormOffered?: boolean
   /** Sector inferido por keywords del mensaje cuando el sector de URL es null */
   inferredSector?: string | null
   /** Número de turno del usuario en esta conversación (1-based) */
   userCount?: number
 }): string {
-  const { sector, contextText, summary, structuredSummary, alreadyRecommendedSlugs, leadCaptured, inferredSector, userCount = 1 } = params
+  const { sector, contextText, summary, structuredSummary, alreadyRecommendedSlugs, leadCaptured, leadFormOffered = false, inferredSector, userCount = 1 } = params
   const sectorName = sector ? SECTOR_NAMES[sector] : null
   // Sector efectivo para el contexto del prompt (URL > inferido > null)
   const activeSector = sector ?? inferredSector ?? null
@@ -75,13 +77,20 @@ PROCESOS YA RECOMENDADOS EN ESTA CONVERSACIÓN (slugs): ${alreadyRecommendedSlug
     : userCount < 3
       ? `- Llevamos ${userCount} turno(s) de conversación. Es demasiado pronto para ofrecer contacto. NO escribas ${LEAD_FORM_MARKER} todavía — primero entiende bien el problema.
 - Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER} (esta es la única excepción).`
-      : `- Si el usuario muestra interés claro de contratación o contacto (pregunta precios, plazos, "cómo lo implementáis", "me interesa", "quiero que me contactéis", quiere empezar), termina tu respuesta con el marcador ${LEAD_FORM_MARKER} en una línea nueva. Ejemplo:
+      : leadFormOffered
+        ? `- El formulario de contacto YA SE OFRECIÓ antes en esta conversación y el visitante no lo completó. NO lo ofrezcas de nuevo a la ligera — solo vuelve a emitir ${LEAD_FORM_MARKER} si el visitante muestra intención MUY clara de cerrar AHORA (frases como "quiero contratar", "me interesa avanzar", "cómo procedemos", "comparto mis datos", "estoy interesado en contratar").
+- Si solo está pidiendo más información o sigue explorando, NO emitas ${LEAD_FORM_MARKER}. La interfaz ya tiene el formulario disponible para él si quiere usarlo.
+- NUNCA pidas los datos en prosa ("comparte tu nombre y email"): si crees que toca cerrar, emite ${LEAD_FORM_MARKER} y la interfaz mostrará el formulario automáticamente.
+- Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER} (tiene prioridad).
+- Como máximo UN marcador por respuesta.`
+        : `- Si el usuario muestra interés claro de contratación o contacto (pregunta precios, plazos, "cómo lo implementáis", "me interesa", "quiero que me contactéis", quiere empezar), termina tu respuesta con el marcador ${LEAD_FORM_MARKER} en una línea nueva. Ejemplo:
 "Los plazos típicos son de 1-2 semanas. Cuéntame un poco más y el equipo te prepara una propuesta.
 ${LEAD_FORM_MARKER}"
 - Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER} en su lugar (tiene prioridad).
 - Como máximo UN marcador por respuesta. No los menciones ni los expliques: son señales internas que la interfaz convierte en un formulario o botones.
 - NO añadas marcador si solo está explorando o haciendo preguntas informativas.
-- NUNCA digas "haz clic en el enlace para agendar" ni inventes enlaces de contacto: la interfaz muestra el formulario o los botones automáticamente debajo de tu mensaje.`
+- NUNCA digas "haz clic en el enlace para agendar" ni inventes enlaces de contacto: la interfaz muestra el formulario o los botones automáticamente debajo de tu mensaje.
+- NUNCA pidas el nombre y email en prosa ("comparte tu información de contacto"): emite ${LEAD_FORM_MARKER} y la interfaz mostrará el formulario.`
 
   return `Eres el asistente de Immoralia. Ayudas a negocios a automatizar procesos con IA. Hablas como un consultor directo que conoce el sector, no como un chatbot corporativo.
 
