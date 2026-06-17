@@ -174,7 +174,9 @@ export async function POST(req: NextRequest) {
         let tail = ''
         // Doble detección: marcador del modelo + fallback determinista sobre el
         // mensaje del usuario (el modelo a veces olvida el marcador).
-        let leadFormDetected = LEAD_INTENT_REGEX.test(body.message)
+        // userExplicitIntent: el usuario pidió explícitamente dejar sus datos — bypasea el guard de 3 turnos.
+        const userExplicitIntent = LEAD_INTENT_REGEX.test(body.message)
+        let leadFormDetected = userExplicitIntent
         let handoverDetected = HANDOVER_INTENT_REGEX.test(body.message)
 
         const extractMarkers = () => {
@@ -281,7 +283,7 @@ export async function POST(req: NextRequest) {
             leadFormDetected &&
             !conversation.lead_captured &&
             !conversation.lead_form_dismissed &&
-            userCount >= 3
+            (userExplicitIntent || userCount >= 3)
           ) {
             action = 'offer_lead_form'
           } else if (

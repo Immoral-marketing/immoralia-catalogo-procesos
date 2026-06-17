@@ -75,8 +75,9 @@ PROCESOS YA RECOMENDADOS EN ESTA CONVERSACIÓN (slugs): ${alreadyRecommendedSlug
     ? `- Este visitante YA dejó sus datos de contacto. NUNCA escribas ${LEAD_FORM_MARKER}.
 - Si pide expresamente hablar con una persona del equipo O quiere agendar una llamada ("agendar llamada", "podemos hablar", "quiero una llamada", etc.), añade ${HANDOVER_MARKER} al FINAL de tu respuesta. La interfaz mostrará el botón de calendario automáticamente — no expliques dónde está el botón ni digas "busca el botón".`
     : userCount < 3
-      ? `- Llevamos ${userCount} turno(s) de conversación. Es demasiado pronto para ofrecer contacto. NO escribas ${LEAD_FORM_MARKER} todavía — primero entiende bien el problema.
-- Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER} (esta es la única excepción).`
+      ? `- Llevamos ${userCount} turno(s) de conversación. Es demasiado pronto para ofrecer contacto proactivamente. NO escribas ${LEAD_FORM_MARKER} salvo que el usuario lo pida explícitamente.
+- EXCEPCIÓN OBLIGATORIA: si el usuario dice que quiere dejar sus datos o que le contactemos ("te puedo dejar mis datos", "quiero que me contactéis", "puedo compartir mi email"), escribe ${LEAD_FORM_MARKER} inmediatamente. NUNCA pidas los datos en prosa ni confirmes una captura que no ha ocurrido.
+- Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER}.`
       : leadFormOffered
         ? `- El formulario de contacto YA SE OFRECIÓ antes en esta conversación y el visitante no lo completó. NO lo ofrezcas de nuevo a la ligera — solo vuelve a emitir ${LEAD_FORM_MARKER} si el visitante muestra intención MUY clara de cerrar AHORA (frases como "quiero contratar", "me interesa avanzar", "cómo procedemos", "comparto mis datos", "estoy interesado en contratar").
 - Si solo está pidiendo más información o sigue explorando, NO emitas ${LEAD_FORM_MARKER}. La interfaz ya tiene el formulario disponible para él si quiere usarlo.
