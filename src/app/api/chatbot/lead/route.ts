@@ -222,6 +222,15 @@ export async function POST(req: NextRequest) {
         try { task = await createTask(true) } catch { task = await createTask(false) }
         clickupTaskId = task.id
         clickupTaskUrl = task.url || `https://app.clickup.com/t/${clickupTaskId}`
+
+        // SPEC-10: persistir el id de la tarea en BBDD para reconstruir su URL
+        // al recibir el evento `schedule_completed` (aviso Slack al agendar llamada).
+        if (clickupTaskId) {
+          await supabase
+            .from('contact_submissions')
+            .update({ clickup_task_id: clickupTaskId })
+            .eq('id', leadRow.id)
+        }
       } catch (clickupError) {
         console.error('Fallo ClickUp (lead chatbot):', clickupError)
       }
@@ -266,11 +275,13 @@ export async function POST(req: NextRequest) {
       }).catch(err => console.error('Slack (lead chatbot):', err))
     }
 
-    // 9. Email provisional (CA-18) — handover tiene su propio copy
-    await sendChatbotEmail(isHandover ? 'handover_written' : 'lead_captured', {
-      to: body.email,
-      nombre: body.nombre,
-    })
+    // 9. Email — lead_captured lo gestiona GHL (workflow "New Lead"); handover mantiene email propio
+    if (isHandover) {
+      await sendChatbotEmail('handover_written', {
+        to: body.email,
+        nombre: body.nombre,
+      })
+    }
 
     // 10. Log de éxito (rate limiting compartido)
     await supabase.from('contact_requests_log').insert({ ip_address: clientIP, email: body.email, status: 'success' })

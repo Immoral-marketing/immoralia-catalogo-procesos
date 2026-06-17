@@ -16,6 +16,9 @@ export type EmailKind =
   // Chatbot (SPEC-03)
   | 'chatbot_lead_captured'
   | 'chatbot_handover_written'
+  // SPEC-10: el envío de 'chatbot_call_scheduled' se eliminó (GHL ya manda
+  // la confirmación de la reserva). El valor se conserva en el enum por
+  // compatibilidad con los registros históricos en `email_logs`.
   | 'chatbot_call_scheduled'
   // Leads (formulario contacto del catálogo)
   | 'contact_internal'
