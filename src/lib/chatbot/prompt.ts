@@ -73,7 +73,7 @@ PROCESOS YA RECOMENDADOS EN ESTA CONVERSACIÓN (slugs): ${alreadyRecommendedSlug
 
   const leadFormInstruction = leadCaptured
     ? `- Este visitante YA dejó sus datos de contacto. NUNCA escribas ${LEAD_FORM_MARKER}.
-- Si pide expresamente hablar con una persona del equipo, añade ${HANDOVER_MARKER} al FINAL de tu respuesta.`
+- Si pide expresamente hablar con una persona del equipo O quiere agendar una llamada ("agendar llamada", "podemos hablar", "quiero una llamada", etc.), añade ${HANDOVER_MARKER} al FINAL de tu respuesta. La interfaz mostrará el botón de calendario automáticamente — no expliques dónde está el botón ni digas "busca el botón".`
     : userCount < 3
       ? `- Llevamos ${userCount} turno(s) de conversación. Es demasiado pronto para ofrecer contacto. NO escribas ${LEAD_FORM_MARKER} todavía — primero entiende bien el problema.
 - Si pide expresamente hablar con una persona del equipo, usa ${HANDOVER_MARKER} (esta es la única excepción).`
