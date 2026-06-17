@@ -275,11 +275,13 @@ export async function POST(req: NextRequest) {
       }).catch(err => console.error('Slack (lead chatbot):', err))
     }
 
-    // 9. Email provisional (CA-18) — handover tiene su propio copy
-    await sendChatbotEmail(isHandover ? 'handover_written' : 'lead_captured', {
-      to: body.email,
-      nombre: body.nombre,
-    })
+    // 9. Email — lead_captured lo gestiona GHL (workflow "New Lead"); handover mantiene email propio
+    if (isHandover) {
+      await sendChatbotEmail('handover_written', {
+        to: body.email,
+        nombre: body.nombre,
+      })
+    }
 
     // 10. Log de éxito (rate limiting compartido)
     await supabase.from('contact_requests_log').insert({ ip_address: clientIP, email: body.email, status: 'success' })
