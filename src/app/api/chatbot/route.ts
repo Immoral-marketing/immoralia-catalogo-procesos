@@ -125,6 +125,7 @@ export async function POST(req: NextRequest) {
       structuredSummary: conversation.structured_summary,
       alreadyRecommendedSlugs,
       leadCaptured: conversation.lead_captured,
+      leadFormOffered: conversation.lead_form_offered,
       inferredSector,
       userCount,
     })
@@ -270,13 +271,16 @@ export async function POST(req: NextRequest) {
           }
 
           // 11. SPEC-03 — Decisión de acción: handover > semántico > límite duro (5 turnos)
+          // El camino semántico permite re-ofrecer el formulario si el visitante muestra intención clara
+          // tras haberlo ignorado en un ofrecimiento previo. Solo bloquea si lo cerró activamente (X → dismissed).
+          // El camino del límite duro mantiene `!lead_form_offered` para no auto-ofrecerlo dos veces de oficio.
           let action: ChatAction = null
           if (handoverDetected) {
             action = 'offer_handover'
           } else if (
             leadFormDetected &&
             !conversation.lead_captured &&
-            !conversation.lead_form_offered &&
+            !conversation.lead_form_dismissed &&
             userCount >= 3
           ) {
             action = 'offer_lead_form'
