@@ -46,7 +46,7 @@ export const STREAM_HOLDBACK_CHARS = 32
  * intención clara, la acción se dispara aunque el modelo olvide el marcador.
  */
 export const HANDOVER_INTENT_REGEX =
-  /hablar con (una persona|alguien|un humano|el equipo|un comercial|un consultor)|atienda una persona|persona real|humano por favor/i
+  /hablar con (una persona|alguien|un humano|el equipo|un comercial|un consultor)|atienda una persona|persona real|humano por favor|agendar (una )?llamada|quiero (una )?llamada|podemos (hablar|llamar|agendar)|reservar (una )?llamada/i
 
 export const LEAD_INTENT_REGEX =
   /cu[aá]nto (cuesta|vale|costar[ií]a)|precio|presupuesto|contact[eé]is|contactarme|contactadme|escribidme|ll[aá]mame|llamadme|quiero (empezar|contratar|que me llam)|c[oó]mo (empezamos|lo contrato|contratar)|me interesa (contratar|empezar|implantar|implementar)|agendar (una )?llamada|p[oó]nte en contacto|poneos en contacto/i

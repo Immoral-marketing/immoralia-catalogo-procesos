@@ -16,8 +16,16 @@ import { SECTOR_NAMES } from '@/lib/chatbot/constants'
 import type { ConversationRow, MessageRow, StructuredSummary } from '@/lib/chatbot/types'
 
 const CLICKUP_LIST_ID = '901521069796' // misma lista que /api/leads/contact
-const GHL_LEAD_WEBHOOK_URL = process.env.GHL_LEAD_WEBHOOK_URL
-  ?? 'https://services.leadconnectorhq.com/hooks/oAgj6wUxweXdbWMvz0Gn/webhook-trigger/673af019-7b64-4d52-ac6b-e0adbcb12a60'
+const GHL_API_KEY = process.env.GHL_API_KEY
+const GHL_LOCATION_ID = 'oAgj6wUxweXdbWMvz0Gn'
+const GHL_PIPELINE_ID = 'j9WpjWFG6LKRRJ5ti84W'
+const GHL_STAGE_NEW_LEAD = '67c9e715-c68a-47fa-94d5-196c559e6407'
+const GHL_API_BASE = 'https://services.leadconnectorhq.com'
+const GHL_API_HEADERS = (key: string) => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${key}`,
+  Version: '2021-07-28',
+})
 const MAX_LEADS_PER_IP_PER_HOUR = 5
 
 const bodySchema = z.object({
@@ -236,30 +244,51 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 7. GHL — webhook de entrada (mismo patrón que las auditorías)
-    try {
-      await fetch(GHL_LEAD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: body.nombre.split(' ')[0],
-          last_name: body.nombre.split(' ').slice(1).join(' '),
-          email: body.email,
-          custom_fields: {
-            chatbot_conversation_id: conversation.id,
-            chatbot_sector: conversation.initial_sector || 'sin_sector',
-            chatbot_summary: (conversation.summary || '').slice(0, 500),
-            chatbot_human_requested: isHandover,
-            chatbot_interested_slugs: interestedSlugs.join(', '),
-            chatbot_primary_slug: primaryInterestedSlug ?? '',
-            chatbot_nivel_interes: conversation.structured_summary?.nivel_interes ?? '',
-            chatbot_pain_points: (conversation.structured_summary?.pain_points ?? []).join(' | ').slice(0, 500),
-          },
-          tags: ['chatbot_lead', ...(conversation.initial_sector ? [conversation.initial_sector] : []), ...(isHandover ? ['pide_humano'] : [])],
-        }),
-      })
-    } catch (ghlError) {
-      console.error('Fallo GHL webhook (lead chatbot):', ghlError)
+    // 7. GHL — crear contacto + oportunidad directamente via API
+    if (GHL_API_KEY) {
+      try {
+        const firstName = body.nombre.split(' ')[0]
+        const lastName = body.nombre.split(' ').slice(1).join(' ')
+        const tags = [
+          'catalogo',
+          ...(conversation.initial_sector ? [`catalogo-${conversation.initial_sector}`] : []),
+          'chatbot_lead',
+          ...(isHandover ? ['pide_humano'] : []),
+        ]
+
+        // Upsert contacto (crea o actualiza si ya existe por email)
+        const contactRes = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
+          method: 'POST',
+          headers: GHL_API_HEADERS(GHL_API_KEY),
+          body: JSON.stringify({
+            locationId: GHL_LOCATION_ID,
+            firstName,
+            lastName,
+            email: body.email,
+            tags,
+          }),
+        })
+        const contactData = await contactRes.json()
+        const contactId = contactData?.contact?.id
+
+        // Crear oportunidad en stage "New Lead"
+        if (contactId) {
+          await fetch(`${GHL_API_BASE}/opportunities/`, {
+            method: 'POST',
+            headers: GHL_API_HEADERS(GHL_API_KEY),
+            body: JSON.stringify({
+              locationId: GHL_LOCATION_ID,
+              pipelineId: GHL_PIPELINE_ID,
+              pipelineStageId: GHL_STAGE_NEW_LEAD,
+              contactId,
+              name: `Catálogo · Chatbot — ${body.nombre}`,
+              status: 'open',
+            }),
+          })
+        }
+      } catch (ghlError) {
+        console.error('Fallo GHL API (lead chatbot):', ghlError)
+      }
     }
 
     // 8. Slack — notificación simple
