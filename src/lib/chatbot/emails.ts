@@ -2,16 +2,20 @@
  * SPEC-05 — Emails del chatbot con la plantilla de marca Immoralia.
  * (Antes — SPEC-03 — usaban una plantilla provisional. Ahora pasan por
  * el sender centralizado que registra cada envío en `email_logs`.)
+ *
+ * SPEC-10: la plantilla `call_scheduled` se eliminó — GHL ya envía la
+ * confirmación de la reserva al visitante; el catálogo solo avisa al
+ * equipo por Slack. Los registros históricos con
+ * `kind = 'chatbot_call_scheduled'` en `email_logs` se conservan.
  */
 import { getProfessionalTemplate } from '@/lib/email-templates'
 import { sendEmail, type EmailKind } from '@/lib/email-sender'
 
-export type ChatbotEmailKind = 'lead_captured' | 'handover_written' | 'call_scheduled'
+export type ChatbotEmailKind = 'lead_captured' | 'handover_written'
 
 const KIND_TO_LOG_KIND: Record<ChatbotEmailKind, EmailKind> = {
   lead_captured: 'chatbot_lead_captured',
   handover_written: 'chatbot_handover_written',
-  call_scheduled: 'chatbot_call_scheduled',
 }
 
 const CONTENT: Record<ChatbotEmailKind, { subject: string; preheader: string; build: (nombre: string) => string }> = {
@@ -37,18 +41,6 @@ const CONTENT: Record<ChatbotEmailKind, { subject: string; preheader: string; bu
         <strong>Nos pondremos en contacto contigo en un plazo máximo de 24 horas laborables</strong> para ver en qué podemos ayudarte.
       </div>
       <p>Tu conversación con el asistente queda guardada: el consultor llegará con todo el contexto, así no tendrás que repetir nada.</p>
-    `,
-  },
-  call_scheduled: {
-    subject: '¡Llamada agendada! — Immoralia',
-    preheader: 'Recibirás la convocatoria de calendario en breve',
-    build: nombre => `
-      <h2>¡Gracias por agendar, ${nombre}!</h2>
-      <p>Tu llamada con el equipo de Immoralia ha quedado registrada.</p>
-      <div class="info-card">
-        En breve recibirás un email con la <strong>convocatoria de calendario</strong> para que no se te olvide — revisa también la carpeta de promociones por si acaso.
-      </div>
-      <p>Llegaremos a la llamada con el contexto de tu conversación: cuéntanos solo lo nuevo.</p>
     `,
   },
 }

@@ -376,6 +376,7 @@ export type Database = {
       }
       contact_submissions: {
         Row: {
+          clickup_task_id: string | null
           comentario: string | null
           created_at: string | null
           email: string
@@ -389,6 +390,7 @@ export type Database = {
           selected_processes: Json | null
         }
         Insert: {
+          clickup_task_id?: string | null
           comentario?: string | null
           created_at?: string | null
           email: string
@@ -402,6 +404,7 @@ export type Database = {
           selected_processes?: Json | null
         }
         Update: {
+          clickup_task_id?: string | null
           comentario?: string | null
           created_at?: string | null
           email?: string

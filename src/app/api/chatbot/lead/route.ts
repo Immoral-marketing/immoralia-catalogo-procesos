@@ -222,6 +222,15 @@ export async function POST(req: NextRequest) {
         try { task = await createTask(true) } catch { task = await createTask(false) }
         clickupTaskId = task.id
         clickupTaskUrl = task.url || `https://app.clickup.com/t/${clickupTaskId}`
+
+        // SPEC-10: persistir el id de la tarea en BBDD para reconstruir su URL
+        // al recibir el evento `schedule_completed` (aviso Slack al agendar llamada).
+        if (clickupTaskId) {
+          await supabase
+            .from('contact_submissions')
+            .update({ clickup_task_id: clickupTaskId })
+            .eq('id', leadRow.id)
+        }
       } catch (clickupError) {
         console.error('Fallo ClickUp (lead chatbot):', clickupError)
       }
