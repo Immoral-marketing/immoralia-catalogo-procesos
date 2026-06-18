@@ -311,6 +311,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Upsert contacto (crea o actualiza si ya existe por email)
+        // NOTA: el endpoint /contacts/upsert ignora customFields silenciosamente — se actualizan después vía PUT
         const contactRes = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
           method: 'POST',
           headers: GHL_API_HEADERS(GHL_API_KEY),
@@ -320,11 +321,19 @@ export async function POST(req: NextRequest) {
             lastName,
             email: body.email,
             tags,
-            ...(ghlCustomFields.length ? { customFields: ghlCustomFields } : {}),
           }),
         })
         const contactData = await contactRes.json()
         const contactId = contactData?.contact?.id
+
+        // SPEC-11 (CA-07): custom fields via PUT separado — upsert los ignora
+        if (contactId && ghlCustomFields.length > 0) {
+          await fetch(`${GHL_API_BASE}/contacts/${contactId}`, {
+            method: 'PUT',
+            headers: GHL_API_HEADERS(GHL_API_KEY),
+            body: JSON.stringify({ customFields: ghlCustomFields }),
+          }).catch(err => console.error('No se pudieron actualizar custom fields GHL:', err))
+        }
 
         // Crear oportunidad en stage "New Lead"
         if (contactId) {
