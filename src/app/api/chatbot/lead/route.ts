@@ -11,9 +11,18 @@ import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { sendSlackNewLead } from '@/lib/slack'
 import { sendChatbotEmail } from '@/lib/chatbot/emails'
-import { getConversation, getMessages, isExpired, updateConversationFlags } from '@/lib/chatbot/store'
+import {
+  getConversation,
+  getMessages,
+  getVisitor,
+  getVisitorConversationHistoryText,
+  isExpired,
+  linkVisitorToLead,
+  mergeVisitorsByEmail,
+  updateConversationFlags,
+} from '@/lib/chatbot/store'
 import { SECTOR_NAMES } from '@/lib/chatbot/constants'
-import type { ConversationRow, MessageRow, StructuredSummary } from '@/lib/chatbot/types'
+import type { ConversationRow, MessageRow, StructuredSummary, VisitorRow } from '@/lib/chatbot/types'
 
 const CLICKUP_LIST_ID = '901521069796' // misma lista que /api/leads/contact
 const GHL_API_KEY = process.env.GHL_API_KEY
@@ -110,6 +119,25 @@ function extractProcessInterest(messages: MessageRow[]): {
   return { allSlugs, primarySlug }
 }
 
+// SPEC-11: custom fields de GHL para datos del visitante (IDs configurados en env vars)
+function buildGHLVisitorFields(
+  visitor: Pick<VisitorRow, 'created_at' | 'conversation_count'>,
+  historyText: string,
+  contextSummary: string,
+): Array<{ id: string; field_value: string }> {
+  const fields: Array<{ id: string; field_value: string }> = []
+  const F_FIRST_SEEN = process.env.GHL_FIELD_VISITOR_FIRST_SEEN
+  const F_CONV_COUNT = process.env.GHL_FIELD_VISITOR_CONV_COUNT
+  const F_HISTORY = process.env.GHL_FIELD_VISITOR_HISTORY
+  const F_SUMMARY = process.env.GHL_FIELD_CHATBOT_SUMMARY
+
+  if (F_FIRST_SEEN) fields.push({ id: F_FIRST_SEEN, field_value: visitor.created_at })
+  if (F_CONV_COUNT) fields.push({ id: F_CONV_COUNT, field_value: String(visitor.conversation_count) })
+  if (F_HISTORY && historyText) fields.push({ id: F_HISTORY, field_value: historyText })
+  if (F_SUMMARY && contextSummary) fields.push({ id: F_SUMMARY, field_value: contextSummary })
+  return fields
+}
+
 export async function POST(req: NextRequest) {
   let body: z.infer<typeof bodySchema>
   try {
@@ -180,6 +208,16 @@ export async function POST(req: NextRequest) {
       lead_id: leadRow.id,
       ...(isHandover ? { human_requested: true } : {}),
     })
+
+    // 5b. SPEC-11: vincular visitante al lead y fusionar por email (CA-06)
+    if (conversation.visitor_id) {
+      try {
+        await linkVisitorToLead(conversation.visitor_id, leadRow.id)
+        await mergeVisitorsByEmail(body.email, leadRow.id)
+      } catch (visitorErr) {
+        console.error('No se pudo vincular visitante al lead:', visitorErr)
+      }
+    }
 
     // 6. ClickUp — descripción con resumen de contexto + últimos mensajes (CA-16)
     let clickupTaskId: string | null = null
@@ -256,6 +294,22 @@ export async function POST(req: NextRequest) {
           ...(isHandover ? ['pide_humano'] : []),
         ]
 
+        // SPEC-11: custom fields del visitante para GHL (CA-07)
+        let ghlCustomFields: Array<{ id: string; field_value: string }> = []
+        if (conversation.visitor_id) {
+          try {
+            const [visitorData, historyText] = await Promise.all([
+              getVisitor(conversation.visitor_id),
+              getVisitorConversationHistoryText(conversation.visitor_id),
+            ])
+            if (visitorData) {
+              ghlCustomFields = buildGHLVisitorFields(visitorData, historyText, contextSummary)
+            }
+          } catch (visitorErr) {
+            console.error('No se pudo obtener datos del visitante para GHL:', visitorErr)
+          }
+        }
+
         // Upsert contacto (crea o actualiza si ya existe por email)
         const contactRes = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
           method: 'POST',
@@ -266,6 +320,7 @@ export async function POST(req: NextRequest) {
             lastName,
             email: body.email,
             tags,
+            ...(ghlCustomFields.length ? { customFields: ghlCustomFields } : {}),
           }),
         })
         const contactData = await contactRes.json()
