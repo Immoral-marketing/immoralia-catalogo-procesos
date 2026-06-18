@@ -1,10 +1,11 @@
 /**
  * SPEC-01 — Prompt de sistema del motor conversacional v3.
  * SPEC-12 — Tono WhatsApp: máx. 2 párrafos, sin emojis, sin fórmulas corporativas.
+ * SPEC-11 — Bloque de bienvenida para visitante recurrente.
  * La salida es markdown plano (streaming) — sin JSON.
  */
 import { HANDOVER_MARKER, LEAD_FORM_MARKER, SECTOR_NAMES } from './constants'
-import type { StructuredSummary } from './types'
+import type { StructuredSummary, VisitorContext } from './types'
 
 export function buildSystemPrompt(params: {
   sector: string | null
@@ -20,8 +21,10 @@ export function buildSystemPrompt(params: {
   inferredSector?: string | null
   /** Número de turno del usuario en esta conversación (1-based) */
   userCount?: number
+  /** SPEC-11 — Contexto del visitante recurrente (solo en primer turno de nueva sesión). */
+  visitorContext?: VisitorContext | null
 }): string {
-  const { sector, contextText, summary, structuredSummary, alreadyRecommendedSlugs, leadCaptured, leadFormOffered = false, inferredSector, userCount = 1 } = params
+  const { sector, contextText, summary, structuredSummary, alreadyRecommendedSlugs, leadCaptured, leadFormOffered = false, inferredSector, userCount = 1, visitorContext = null } = params
   const sectorName = sector ? SECTOR_NAMES[sector] : null
   // Sector efectivo para el contexto del prompt (URL > inferido > null)
   const activeSector = sector ?? inferredSector ?? null
@@ -61,6 +64,19 @@ MEMORIA DE LA CONVERSACIÓN (lo hablado antes de los últimos mensajes — trát
 ${summary}
 `
       : ''
+
+  // SPEC-11: bloque de bienvenida para visitante recurrente (solo en primer turno de nueva sesión)
+  const returningVisitorBlock = visitorContext && userCount === 1
+    ? `
+VISITANTE QUE REGRESA (${visitorContext.conversation_count} visita${visitorContext.conversation_count !== 1 ? 's' : ''} anterior${visitorContext.conversation_count !== 1 ? 'es' : ''}):
+- Sector previo: ${visitorContext.sector ? (SECTOR_NAMES[visitorContext.sector] ?? visitorContext.sector) : 'no especificado'}
+- Dolores que mencionó antes: ${visitorContext.pain_points.length ? visitorContext.pain_points.join(', ') : 'ninguno registrado'}
+- Procesos que vio: ${visitorContext.procesos_vistos.length ? visitorContext.procesos_vistos.join(', ') : 'ninguno'}
+- Nivel de interés previo: ${visitorContext.nivel_interes}
+
+Es tu PRIMER mensaje en esta nueva sesión. Salúdalo como alguien que ya conoces — usa uno o dos datos del contexto anterior (sector, un dolor o un proceso). No repitas todo. Pregunta qué le trae de vuelta hoy. Máximo 2 frases.
+`
+    : ''
 
   const antiRedundancyBlock = alreadyRecommendedSlugs.length > 0
     ? `
@@ -107,7 +123,7 @@ MANTÉN EL HILO:
 - Una respuesta corta ("sí", "Instagram", "el primero") es una respuesta a tu pregunta anterior. Interprétala en ese contexto.
 - Si ya recomendaste un proceso y el usuario sigue preguntando sobre él, profundiza en ese proceso. No saltes a otros.
 - No repitas lo que ya dijiste. Si toca volver sobre algo, referéncialo en una frase y aporta lo nuevo.
-${memoryBlock}${antiRedundancyBlock}
+${returningVisitorBlock}${memoryBlock}${antiRedundancyBlock}
 DESCUBRE EL DOLOR ANTES DE VENDER:
 - Entiende el problema antes de recomendar: cuánto le roba, quién lo sufre, qué herramientas usa.
 - Máximo UNA pregunta por turno.

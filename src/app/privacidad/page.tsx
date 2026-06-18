@@ -76,7 +76,26 @@ export default function PrivacidadPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-white mb-2">7. Tus derechos</h2>
+            <h2 className="text-lg font-semibold text-white mb-2">7. Cookies funcionales del asistente</h2>
+            <p>
+              El asistente conversacional del catálogo utiliza una <strong>cookie funcional estrictamente necesaria</strong>{' '}
+              para mantener el hilo de la conversación entre visitas:
+            </p>
+            <ul className="mt-2 ml-4 list-disc space-y-1">
+              <li><strong>Nombre:</strong> <code className="text-cyan-300 text-xs">imm_vid</code></li>
+              <li><strong>Finalidad:</strong> identificar al visitante entre sesiones para que el asistente pueda retomar el contexto de conversaciones anteriores sin necesidad de que te identifiques.</li>
+              <li><strong>Duración:</strong> 90 días desde la última actividad.</li>
+              <li><strong>Tipo:</strong> cookie de primera parte, HttpOnly (no accesible desde JavaScript), solo enviada por HTTPS.</li>
+            </ul>
+            <p className="mt-2">
+              Esta cookie es funcional/necesaria para el correcto funcionamiento del asistente y no requiere consentimiento previo
+              según el criterio de la AEPD (Agencia Española de Protección de Datos). No se utiliza con fines publicitarios ni
+              de seguimiento entre sitios web. No se instala cookie banner para ella.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-white mb-2">8. Tus derechos</h2>
             <p>
               Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición,
               limitación del tratamiento y portabilidad escribiendo a{' '}

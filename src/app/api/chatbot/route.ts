@@ -1,5 +1,6 @@
 /**
  * POST /api/chatbot — SPEC-01: Motor conversacional v3.
+ * SPEC-11 — Cookie imm_vid de 90 días para identificar visitantes recurrentes.
  *
  * Chat con memoria real: el historial se reconstruye SIEMPRE server-side
  * desde la BBDD (el cliente solo envía su mensaje + conversationId).
@@ -30,11 +31,14 @@ import {
 import {
   conversationHourlyCount,
   getMessages,
+  getVisitorContext,
   hashIp,
   insertMessage,
   ipDailyCount,
   resolveConversation,
+  resolveVisitor,
   touchConversation,
+  touchVisitor,
   updateConversationFlags,
 } from '@/lib/chatbot/store'
 import { extractRecommendedSlugs, inferSectorFromMessage, retrieveContext } from '@/lib/chatbot/rag'
@@ -72,18 +76,36 @@ export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
   const ipHash = hashIp(ip)
 
+  // SPEC-11: resolver visitante desde cookie
+  const VISITOR_COOKIE = 'imm_vid'
+  const visitorIdFromCookie = req.cookies.get(VISITOR_COOKIE)?.value ?? null
+
   try {
     // 2. Rate limit por IP (CA-17)
     if ((await ipDailyCount(ipHash)) >= MAX_MESSAGES_PER_IP_PER_DAY) {
       return Response.json({ error: 'Límite diario de mensajes alcanzado' }, { status: 429 })
     }
 
+    // SPEC-11: resolver visitante (crea nuevo si cookie ausente o inválida — CA-05)
+    const visitor = await resolveVisitor(visitorIdFromCookie)
+    const priorConversationCount = visitor.conversation_count
+
     // 3. Conversación: reanudar vigente o crear nueva (CA-01, CA-07, CA-09)
-    const { conversation, previousExpired } = await resolveConversation(body.conversationId, {
+    const { conversation, previousExpired, createdNew } = await resolveConversation(body.conversationId, {
       surface: body.surface ?? null,
       sector,
       route: body.route ?? null,
+      visitorId: visitor.id,
     })
+
+    // SPEC-11: si creamos conversación nueva, incrementar contador del visitante
+    if (createdNew) {
+      await touchVisitor(visitor.id, priorConversationCount + 1)
+    }
+
+    // SPEC-11: contexto para saludo personalizado en primera visita de retorno
+    const isReturningVisitor = createdNew && priorConversationCount > 0
+    const visitorContext = isReturningVisitor ? await getVisitorContext(visitor) : null
 
     // 4. Rate limit por conversación (CA-17)
     if ((await conversationHourlyCount(conversation.id)) >= MAX_MESSAGES_PER_CONVERSATION_PER_HOUR) {
@@ -128,6 +150,7 @@ export async function POST(req: NextRequest) {
       leadFormOffered: conversation.lead_form_offered,
       inferredSector,
       userCount,
+      visitorContext,
     })
 
     // Ventana de últimos N turnos íntegros; lo anterior viaja en el resumen (CA-15)
@@ -323,11 +346,15 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // SPEC-11: cookie de visitante — HttpOnly, Secure, SameSite=Lax, 90 días (CA-01, CA-04)
+    const visitorCookie = `${VISITOR_COOKIE}=${visitor.id}; HttpOnly; Secure; SameSite=Lax; Max-Age=7776000; Path=/`
+
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache, no-transform',
         Connection: 'keep-alive',
+        'Set-Cookie': visitorCookie,
       },
     })
   } catch (error) {

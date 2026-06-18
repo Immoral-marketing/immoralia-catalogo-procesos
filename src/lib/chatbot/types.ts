@@ -1,5 +1,6 @@
 /**
  * SPEC-01 — Tipos del motor conversacional v3.
+ * SPEC-11 — Añade VisitorRow, VisitorContext; actualiza ConversationRow con visitor_id.
  * Las filas se tipan a mano hasta regenerar src/integrations/supabase/types.ts
  * tras aplicar la migración (supabase gen types typescript --linked).
  */
@@ -13,8 +14,27 @@ export interface StructuredSummary {
   procesos_vistos: string[]
   nivel_interes: 'explorando' | 'interesado' | 'listo_para_comprar'
 }
+
 export type ChatSurface = 'bubble' | 'home' | 'sector'
 export type MessageRating = 'useful' | 'not_useful'
+
+/** SPEC-11 — Visitante anónimo identificado por cookie de 90 días. */
+export interface VisitorRow {
+  id: string
+  created_at: string
+  last_seen_at: string
+  lead_id: string | null
+  conversation_count: number
+}
+
+/** SPEC-11 — Contexto del visitante recurrente para personalizar el saludo. */
+export interface VisitorContext {
+  sector: string | null
+  pain_points: string[]
+  procesos_vistos: string[]
+  nivel_interes: string
+  conversation_count: number
+}
 
 export interface ConversationRow {
   id: string
@@ -35,6 +55,8 @@ export interface ConversationRow {
   lead_form_offered: boolean
   lead_id: string | null
   status: 'active' | 'expired'
+  /** SPEC-11 — Visitante al que pertenece esta conversación. */
+  visitor_id: string
 }
 
 /** Acción estructurada que acompaña a una respuesta del bot (SPEC-03) */

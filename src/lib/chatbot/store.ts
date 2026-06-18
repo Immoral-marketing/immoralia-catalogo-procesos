@@ -1,8 +1,7 @@
 /**
  * SPEC-01 — Persistencia del motor conversacional v3.
+ * SPEC-11 — Añade visitantes (chatbot_visitors), cookie larga, vinculación a lead.
  * Todas las operaciones usan el cliente service_role desde API routes.
- * Acceso sin tipos generados: las tablas v3 aún no están en types.ts
- * (regenerar tras aplicar la migración).
  */
 import { createHash } from 'crypto'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
@@ -10,8 +9,11 @@ import {
   CONVERSATION_EXPIRY_DAYS,
   MAX_MESSAGES_PER_CONVERSATION_PER_HOUR,
   MAX_MESSAGES_PER_IP_PER_DAY,
+  SECTOR_NAMES,
 } from './constants'
-import type { ChatSurface, ConversationRow, MessageRow, MessageRating, StructuredSummary } from './types'
+import type { ChatSurface, ConversationRow, MessageRow, MessageRating, StructuredSummary, VisitorContext, VisitorRow } from './types'
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function db(): SupabaseClient {
   return createClient(
@@ -31,6 +33,131 @@ export function isExpired(conversation: Pick<ConversationRow, 'last_activity_at'
   return Date.now() - new Date(conversation.last_activity_at).getTime() > expiryMs
 }
 
+// ─── Visitantes (SPEC-11) ──────────────────────────────────────────────────
+
+async function createVisitorInternal(): Promise<VisitorRow> {
+  const { data, error } = await db()
+    .from('chatbot_visitors')
+    .insert({})
+    .select('*')
+    .single()
+  if (error) throw new Error(`No se pudo crear el visitante: ${error.message}`)
+  return data as VisitorRow
+}
+
+export async function getVisitor(id: string): Promise<VisitorRow | null> {
+  const { data } = await db()
+    .from('chatbot_visitors')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
+  return (data as VisitorRow) ?? null
+}
+
+/**
+ * Resuelve el visitante desde la cookie. Si el id no existe en la BD o no es UUID válido,
+ * crea uno nuevo (degradación silenciosa per CA-05).
+ */
+export async function resolveVisitor(visitorIdFromCookie: string | null): Promise<VisitorRow> {
+  if (visitorIdFromCookie && UUID_RE.test(visitorIdFromCookie)) {
+    const visitor = await getVisitor(visitorIdFromCookie)
+    if (visitor) return visitor
+  }
+  return createVisitorInternal()
+}
+
+/** Actualiza last_seen_at y opcionalmente conversation_count del visitante. */
+export async function touchVisitor(id: string, conversationCount?: number): Promise<void> {
+  const patch: Record<string, unknown> = { last_seen_at: new Date().toISOString() }
+  if (conversationCount !== undefined) patch.conversation_count = conversationCount
+  await db().from('chatbot_visitors').update(patch).eq('id', id)
+}
+
+/**
+ * Devuelve el contexto del visitante (de su conversación previa más reciente con resumen)
+ * para personalizar el mensaje de bienvenida en visitas de retorno.
+ */
+export async function getVisitorContext(visitor: VisitorRow): Promise<VisitorContext | null> {
+  if (visitor.conversation_count === 0) return null
+
+  const { data } = await db()
+    .from('chatbot_conversations')
+    .select('structured_summary, initial_sector')
+    .eq('visitor_id', visitor.id)
+    .not('structured_summary', 'is', null)
+    .order('last_activity_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (!data) return null
+  const ss = data.structured_summary as StructuredSummary | null
+  if (!ss) return null
+
+  return {
+    sector: ss.sector ?? data.initial_sector ?? null,
+    pain_points: ss.pain_points,
+    procesos_vistos: ss.procesos_vistos,
+    nivel_interes: ss.nivel_interes,
+    conversation_count: visitor.conversation_count,
+  }
+}
+
+/**
+ * Genera texto consolidado del historial de conversaciones del visitante
+ * para enviar como custom field a GHL.
+ */
+export async function getVisitorConversationHistoryText(visitorId: string): Promise<string> {
+  const { data: conversations } = await db()
+    .from('chatbot_conversations')
+    .select('created_at, structured_summary, summary, initial_sector')
+    .eq('visitor_id', visitorId)
+    .order('created_at', { ascending: true })
+
+  if (!conversations?.length) return ''
+
+  return conversations.map(c => {
+    const date = new Date(c.created_at).toLocaleDateString('es-ES')
+    const ss = c.structured_summary as StructuredSummary | null
+    if (ss) {
+      const sectorName = ss.sector ? (SECTOR_NAMES[ss.sector] ?? ss.sector) : 'Sin sector'
+      const pains = ss.pain_points.join(', ') || 'ninguno'
+      return `[${date}] ${sectorName} | Dolores: ${pains} | Interés: ${ss.nivel_interes}`
+    }
+    const sectorName = c.initial_sector ? (SECTOR_NAMES[c.initial_sector] ?? c.initial_sector) : 'Sin sector'
+    return `[${date}] ${sectorName}${c.summary ? ` | ${c.summary.slice(0, 100)}` : ''}`
+  }).join('\n')
+}
+
+/** Vincula el visitante actual al lead recién creado. */
+export async function linkVisitorToLead(visitorId: string, leadId: string): Promise<void> {
+  await db()
+    .from('chatbot_visitors')
+    .update({ lead_id: leadId })
+    .eq('id', visitorId)
+}
+
+/**
+ * Fusiona visitantes con el mismo email: todos los chatbot_visitors vinculados
+ * a leads anteriores con el mismo email pasan a apuntar al lead actual.
+ */
+export async function mergeVisitorsByEmail(email: string, leadId: string): Promise<void> {
+  const { data: priorLeads } = await db()
+    .from('contact_submissions')
+    .select('id')
+    .eq('email', email)
+    .neq('id', leadId)
+
+  if (!priorLeads?.length) return
+
+  const priorLeadIds = priorLeads.map(l => l.id)
+  await db()
+    .from('chatbot_visitors')
+    .update({ lead_id: leadId })
+    .in('lead_id', priorLeadIds)
+}
+
+// ─── Conversaciones ────────────────────────────────────────────────────────
+
 export async function getConversation(id: string): Promise<ConversationRow | null> {
   const { data } = await db()
     .from('chatbot_conversations')
@@ -44,6 +171,7 @@ interface CreateConversationInput {
   surface: ChatSurface | null
   sector: string | null
   route: string | null
+  visitorId: string
 }
 
 export async function createConversation(input: CreateConversationInput): Promise<ConversationRow> {
@@ -53,6 +181,7 @@ export async function createConversation(input: CreateConversationInput): Promis
       surface: input.surface,
       initial_sector: input.sector,
       initial_route: input.route,
+      visitor_id: input.visitorId,
     })
     .select('*')
     .single()
@@ -63,22 +192,23 @@ export async function createConversation(input: CreateConversationInput): Promis
 /**
  * Resuelve la conversación de trabajo: reanuda si existe y está vigente,
  * crea una nueva si no hay id, no existe o caducó (rolling 7 días).
+ * SPEC-11: requiere visitorId para crear conversaciones nuevas.
  */
 export async function resolveConversation(
   conversationId: string | undefined,
   input: CreateConversationInput,
-): Promise<{ conversation: ConversationRow; previousExpired: boolean }> {
+): Promise<{ conversation: ConversationRow; previousExpired: boolean; createdNew: boolean }> {
   if (conversationId) {
     const existing = await getConversation(conversationId)
     if (existing && !isExpired(existing)) {
-      return { conversation: existing, previousExpired: false }
+      return { conversation: existing, previousExpired: false, createdNew: false }
     }
     if (existing && isExpired(existing)) {
       await db().from('chatbot_conversations').update({ status: 'expired' }).eq('id', existing.id)
-      return { conversation: await createConversation(input), previousExpired: true }
+      return { conversation: await createConversation(input), previousExpired: true, createdNew: true }
     }
   }
-  return { conversation: await createConversation(input), previousExpired: false }
+  return { conversation: await createConversation(input), previousExpired: false, createdNew: true }
 }
 
 export async function getMessages(conversationId: string): Promise<MessageRow[]> {
