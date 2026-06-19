@@ -29,12 +29,25 @@ function getAdminClient() {
 }
 
 /**
+ * Devuelve el canal Slack según el entorno Vercel.
+ * En cualquier entorno distinto de production (preview/development), si existe
+ * SLACK_CHANNEL_ID_STAGING se usa ese canal para no contaminar el canal de prod
+ * con notificaciones de pruebas.
+ */
+function getSlackChannelId(): string {
+  const stagingChannel = process.env.SLACK_CHANNEL_ID_STAGING
+  const isProduction = process.env.VERCEL_ENV === 'production'
+  if (!isProduction && stagingChannel) return stagingChannel
+  return process.env.SLACK_CHANNEL_ID || 'C08F24QQFB2'
+}
+
+/**
  * Envía notificación Slack cuando se crea un nuevo lead.
  * Incluye reintentos, timeout e idempotencia.
  */
 export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPayload) {
   const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
-  const SLACK_CHANNEL_ID = process.env.SLACK_CHANNEL_ID || 'C08F24QQFB2'
+  const SLACK_CHANNEL_ID = getSlackChannelId()
 
   if (!SLACK_BOT_TOKEN) {
     console.error('SLACK_BOT_TOKEN no configurado. Saltando notificación Slack.')
@@ -139,7 +152,7 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
 /** Envía notificación genérica de texto a Slack. */
 export async function sendSlackNotification(text: string) {
   const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
-  const SLACK_CHANNEL_ID = process.env.SLACK_CHANNEL_ID || 'C08F24QQFB2'
+  const SLACK_CHANNEL_ID = getSlackChannelId()
 
   if (!SLACK_BOT_TOKEN) {
     console.error('SLACK_BOT_TOKEN no configurado. Saltando notificación Slack.')
