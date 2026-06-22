@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { getProfessionalTemplate } from '@/lib/email-templates'
+import { sendEmail } from '@/lib/email-sender'
 import { sendSlackNewLead } from '@/lib/slack'
 
 const CLICKUP_LIST_ID = '901521069796'
@@ -78,7 +79,6 @@ function formatOnboarding(answers: any): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY
     const CLICKUP_TOKEN = process.env.CLICKUP_TOKEN
 
     const clientIP = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown'
@@ -194,8 +194,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Emails
-    if (RESEND_API_KEY) {
+    // Emails — SPEC-05: vía sendEmail (registra en email_logs automáticamente)
+    {
       const safeNombre = escapeHtml(nombre)
       const safeEmail = escapeHtml(email)
       const safeEmpresa = escapeHtml(empresa || '')
@@ -206,92 +206,86 @@ export async function POST(req: NextRequest) {
         ? `<ul>${selectedProcesses.map((p: any) => `<li><strong>${escapeHtml(p.codigo)}</strong> - ${escapeHtml(p.nombre)}</li>`).join('')}</ul>`
         : '<p>Sin procesos seleccionados</p>'
 
-      try {
-        const emailsToBatch: Promise<any>[] = []
+      const internalMainContent = `
+        <p class="field-label">Origen de la solicitud</p>
+        <div class="field-value">${sourceLabel} ${isChatbot && isBusinessHours ? '<strong>(En horario laboral - Atención inmediata)</strong>' : ''}</div>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td width="50%" valign="top" style="padding-right:10px;"><p class="field-label">Persona</p><div class="field-value">${safeNombre}</div></td>
+            <td width="50%" valign="top" style="padding-left:10px;"><p class="field-label">Empresa</p><div class="field-value">${safeEmpresa || '—'}</div></td>
+          </tr>
+          <tr>
+            <td width="50%" valign="top" style="padding-right:10px;"><p class="field-label">Email</p><div class="field-value">${safeEmail}</div></td>
+            <td width="50%" valign="top" style="padding-left:10px;"><p class="field-label">Teléfono</p><div class="field-value">${safeTelefono}</div></td>
+          </tr>
+        </table>
+        <h2 class="section-title">Detalles de la Solicitud</h2>
+        ${!isChatbot ? `<h3>Procesos Seleccionados:</h3>${processesListHTML}` : ''}
+        <p class="field-label">Comentario</p>
+        <div class="field-value">${safeComentario}</div>
+        ${isChatbot && chatbotContext?.length ? `<h2 class="section-title">Historial del Chat</h2><pre>${chatbotContext.join('\n')}</pre>` : ''}
+        ${clickupTaskUrl ? `<a href="${clickupTaskUrl}" class="cta-button">Ver en ClickUp</a>` : ''}
+      `
 
-        const internalMainContent = `
-          <p class="field-label">Origen de la solicitud</p>
-          <div class="field-value">${sourceLabel} ${isChatbot && isBusinessHours ? '<strong>(En horario laboral - Atención inmediata)</strong>' : ''}</div>
-          <div style="display:flex;gap:20px;">
-            <div style="flex:1"><p class="field-label">Persona</p><div class="field-value">${safeNombre}</div></div>
-            <div style="flex:1"><p class="field-label">Empresa</p><div class="field-value">${safeEmpresa}</div></div>
-          </div>
-          <div style="display:flex;gap:20px;">
-            <div style="flex:1"><p class="field-label">Email</p><div class="field-value">${safeEmail}</div></div>
-            <div style="flex:1"><p class="field-label">Teléfono</p><div class="field-value">${safeTelefono}</div></div>
-          </div>
-          <h2 class="section-title">Detalles de la Solicitud</h2>
-          ${!isChatbot ? `<h3>Procesos Seleccionados:</h3>${processesListHTML}` : ''}
-          <p class="field-label">Comentario</p>
-          <div class="field-value">${safeComentario}</div>
-          ${isChatbot && chatbotContext?.length ? `<h2 class="section-title">Historial del Chat</h2><pre>${chatbotContext.join('\n')}</pre>` : ''}
-          ${clickupTaskUrl ? `<a href="${clickupTaskUrl}" class="cta-button">Ver en ClickUp</a>` : ''}
-        `
+      // Email interno al equipo
+      await sendEmail({
+        kind: 'contact_internal',
+        to: 'team@immoralia.es',
+        subject: `${isChatbot && isBusinessHours ? '⚡ [INMEDIATO] ' : '🚀 '}Lead: ${safeEmpresa} - ${safeNombre}`,
+        from: 'Immoralia Notificaciones <noreply@procesos.immoralia.es>',
+        html: getProfessionalTemplate({
+          title: 'Nueva Solicitud de Lead',
+          preheader: `Nueva solicitud de ${safeNombre} (${safeEmpresa})`,
+          mainContent: internalMainContent,
+        }),
+        metadata: { source: source || 'web', empresa, isChatbot, isBusinessHours },
+      })
 
-        emailsToBatch.push(
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-            body: JSON.stringify({
-              from: 'Immoralia Notificaciones <noreply@immoralia.es>',
-              to: ['team@immoralia.es'],
-              subject: `${isChatbot && isBusinessHours ? '⚡ [INMEDIATO] ' : '🚀 '}Lead: ${safeEmpresa} - ${safeNombre}`,
-              html: getProfessionalTemplate({ title: 'Nueva Solicitud de Lead', preheader: `Nueva solicitud de ${safeNombre} (${safeEmpresa})`, mainContent: internalMainContent }),
-            }),
-          })
-        )
+      // Email al cliente (solo si aplica)
+      let shouldSendUserEmail = true
+      let clientMainContent = ''
+      let clientSubject = 'Hemos recibido tu solicitud — Immoralia'
 
-        // Email al usuario (solo si aplica)
-        let shouldSendUserEmail = true
-        let clientMainContent = ''
-        let clientSubject = 'Hemos recibido tu solicitud - Immoralia'
-
-        if (isChatbot) {
-          if (isBusinessHours) {
-            shouldSendUserEmail = false
-          } else {
-            clientSubject = 'Recibido: Revisaremos tu consulta lo antes posible'
-            clientMainContent = `
-              <h2 style="margin-top:0">¡Hola, ${safeNombre}!</h2>
-              <p>Hemos recibido tu solicitud de contacto a través de nuestro asistente virtual.</p>
-              <p>Te escribimos para confirmarte que <strong>estamos fuera de nuestro horario de atención habitual (08:00 - 18:00)</strong>.</p>
-              <p>Un consultor humano revisará tu caso en cuanto volvamos a estar operativos.</p>
-              <p><strong>Nos pondremos en contacto contigo lo antes posible.</strong></p>
-            `
-          }
+      if (isChatbot) {
+        if (isBusinessHours) {
+          shouldSendUserEmail = false
         } else {
+          clientSubject = 'Recibido: Revisaremos tu consulta lo antes posible'
           clientMainContent = `
-            <h2 style="margin-top:0">¡Gracias por tu solicitud, ${safeNombre}!</h2>
-            <p>Hemos recibido tu interés en automatizar procesos para <strong>${safeEmpresa}</strong>.</p>
-            <p>Nuestro equipo está analizando los procesos que has seleccionado para preparar una propuesta personalizada.</p>
-            <p><strong>Un consultor se pondrá en contacto contigo en las próximas 24 horas laborables.</strong></p>
-            <br>
-            <div style="background-color:#f8fafc;padding:20px;border-radius:8px;">
-              <h4 style="margin-top:0">Resumen de procesos seleccionados:</h4>
-              ${processesListHTML}
+            <h2>¡Hola, ${safeNombre}!</h2>
+            <p>Hemos recibido tu solicitud de contacto a través de nuestro asistente virtual.</p>
+            <p>Te escribimos para confirmarte que <strong>estamos fuera de nuestro horario de atención habitual (08:00 - 18:00)</strong>.</p>
+            <div class="info-card">
+              Un consultor humano revisará tu caso en cuanto volvamos a estar operativos.<br />
+              <strong>Nos pondremos en contacto contigo lo antes posible.</strong>
             </div>
           `
         }
+      } else {
+        clientMainContent = `
+          <h2>¡Gracias por tu solicitud, ${safeNombre}!</h2>
+          <p>Hemos recibido tu interés en automatizar procesos para <strong>${safeEmpresa || 'tu negocio'}</strong>.</p>
+          <p>Nuestro equipo está analizando los procesos que has seleccionado para preparar una propuesta personalizada.</p>
+          <div class="info-card">
+            <strong>Un consultor se pondrá en contacto contigo en las próximas 24 horas laborables.</strong>
+          </div>
+          <h3>Resumen de procesos seleccionados:</h3>
+          ${processesListHTML}
+        `
+      }
 
-        if (shouldSendUserEmail) {
-          emailsToBatch.push(
-            fetch('https://api.resend.com/emails', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-              body: JSON.stringify({
-                from: 'Immoralia <noreply@immoralia.es>',
-                to: [email],
-                subject: clientSubject,
-                html: getProfessionalTemplate({ title: 'Confirmación de solicitud', preheader: 'Hemos recibido tu solicitud correctamente', mainContent: clientMainContent }),
-              }),
-            })
-          )
-        }
-
-        await Promise.all(emailsToBatch)
-        console.log('Lead emails procesados con éxito')
-      } catch (err) {
-        console.error('Error procesando emails:', err)
+      if (shouldSendUserEmail) {
+        await sendEmail({
+          kind: 'contact_client',
+          to: email,
+          subject: clientSubject,
+          html: getProfessionalTemplate({
+            title: 'Confirmación de solicitud',
+            preheader: 'Hemos recibido tu solicitud correctamente',
+            mainContent: clientMainContent,
+          }),
+          metadata: { source: source || 'web', isChatbot },
+        })
       }
     }
 

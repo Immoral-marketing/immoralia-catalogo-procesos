@@ -8,7 +8,8 @@ import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
-import SectorChatbot, { SECTOR_SUGGESTIONS } from "@/components/SectorChatbot";
+import ChatInlineSector from "@/components/chatbot/ChatInlineSector";
+import { SECTOR_SUGGESTIONS } from "@/components/chatbot/chips";
 import { ShareSelectionModal } from "@/components/ShareSelectionModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -288,7 +289,7 @@ const SportsLanding = () => {
       </section>
 
       {/* ───────────────────── CHATBOT ───────────────────── */}
-      <SectorChatbot
+      <ChatInlineSector
         sector="centros-deportivos"
         sectorName="centro deportivo"
         accentHex="#dc2626"

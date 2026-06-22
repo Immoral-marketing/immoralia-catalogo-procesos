@@ -7,10 +7,11 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { getProfessionalTemplate } from '@/lib/email-templates'
+import { sendEmail } from '@/lib/email-sender'
 
 export async function POST(req: NextRequest) {
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY
     const { email, redirectTo } = await req.json()
 
     if (!email) {
@@ -53,45 +54,32 @@ export async function POST(req: NextRequest) {
 
     const resetLink = data.properties.action_link
 
-    if (RESEND_API_KEY) {
-      const resendRes = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-        body: JSON.stringify({
-          from: 'Portal de Afiliados Immoralia <noreply@immoralia.es>',
-          to: [email],
-          subject: 'Restablece tu contraseña — Portal de Afiliados',
-          html: `
-            <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#fff;">
-              <h2 style="color:#111;margin-bottom:8px;">Hola, ${partner.nombre}</h2>
-              <p style="color:#444;line-height:1.6;">
-                Recibimos una solicitud para restablecer la contraseña de tu cuenta
-                en el <strong>Portal de Afiliados de Immoralia</strong>.
-              </p>
-              <p style="color:#444;line-height:1.6;">Haz clic en el botón para crear una nueva contraseña:</p>
-              <div style="text-align:center;margin:32px 0;">
-                <a href="${resetLink}"
-                  style="display:inline-block;background:#6366f1;color:#fff;padding:14px 28px;
-                         border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;">
-                  Restablecer contraseña
-                </a>
-              </div>
-              <p style="color:#888;font-size:13px;line-height:1.5;">
-                Este enlace expira en <strong>1 hora</strong>.<br/>
-                Si no solicitaste este cambio, puedes ignorar este email.
-              </p>
-              <hr style="border:none;border-top:1px solid #eee;margin:24px 0;"/>
-              <p style="color:#bbb;font-size:12px;">Immoral Group · procesos.immoralia.es</p>
-            </div>
-          `,
-        }),
-      })
+    const mainContent = `
+      <h2>Hola, ${partner.nombre}</h2>
+      <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en el <strong>Portal de Afiliados de Immoralia</strong>.</p>
+      <p>Pulsa el botón para crear una nueva contraseña:</p>
+      <p style="text-align:center;margin:24px 0;">
+        <a href="${resetLink}" class="cta-button">Restablecer contraseña</a>
+      </p>
+      <div class="info-card">
+        Este enlace expira en <strong>1 hora</strong>. Si no solicitaste este cambio, puedes ignorar este email.
+      </div>
+    `
 
-      if (!resendRes.ok) {
-        const resendError = await resendRes.text()
-        throw new Error(`Resend error: ${resendError}`)
-      }
-    }
+    const result = await sendEmail({
+      kind: 'partners_reset_password',
+      to: email,
+      subject: 'Restablece tu contraseña — Portal de Afiliados',
+      from: 'Portal de Afiliados Immoralia <noreply@procesos.immoralia.es>',
+      html: getProfessionalTemplate({
+        title: 'Restablece tu contraseña',
+        preheader: 'Enlace válido durante 1 hora',
+        mainContent,
+      }),
+      metadata: { partnerId: partner.id },
+    })
+
+    if (!result.ok) throw new Error(result.error || 'No se pudo enviar el email')
 
     return NextResponse.json({ success: true })
   } catch (err: any) {

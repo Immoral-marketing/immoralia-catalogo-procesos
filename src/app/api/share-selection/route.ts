@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getProfessionalTemplate } from '@/lib/email-templates'
+import { sendEmail } from '@/lib/email-sender'
 import { sendSlackNotification } from '@/lib/slack'
 
 const shareSchema = z.object({
@@ -32,7 +33,6 @@ function escapeHtml(text: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY
     const body = await req.json()
 
     const parseResult = shareSchema.safeParse(body)
@@ -42,42 +42,31 @@ export async function POST(req: NextRequest) {
 
     const { receiverEmail, senderName, senderEmail, selectedProcesses } = parseResult.data
 
-    console.log(`Procesando share-selection de ${senderName} a ${receiverEmail}`)
+    const safeSenderName = escapeHtml(senderName)
+    const processListHtml = selectedProcesses.map(p =>
+      `<li><strong>${escapeHtml(p.nombre)}</strong> ${p.categoria ? `(<em>${escapeHtml(p.categoria)}</em>)` : ''}</li>`
+    ).join('')
 
-    if (RESEND_API_KEY) {
-      const safeSenderName = escapeHtml(senderName)
-      const processListHtml = selectedProcesses.map(p =>
-        `<li><strong>${escapeHtml(p.nombre)}</strong> ${p.categoria ? `(<em>${escapeHtml(p.categoria)}</em>)` : ''}</li>`
-      ).join('')
+    const clientHtml = `
+      <h2>¡Hola!</h2>
+      <p><strong>${safeSenderName}</strong> (${escapeHtml(senderEmail)}) ha compartido su selección de procesos del catálogo de Immoralia contigo.</p>
+      <p>Estos son los procesos seleccionados:</p>
+      <ul>${processListHtml}</ul>
+      <p>Si tienes alguna duda o quieres saber cómo podemos ayudarte a automatizar estos procesos, <a href="https://immoralia.com/contacto">contacta con nosotros</a>.</p>
+      <p>Un saludo,<br />El equipo de Immoralia</p>
+    `
 
-      try {
-        const clientHtml = `
-          <h2 style="margin-top:0">¡Hola!</h2>
-          <p><strong>${safeSenderName}</strong> (${escapeHtml(senderEmail)}) ha compartido su selección de procesos del catálogo de Immoralia contigo.</p>
-          <p>A continuación, puedes ver los procesos que ha seleccionado:</p>
-          <ul style="margin-left: 20px;">${processListHtml}</ul>
-          <p>Si tienes alguna duda o quieres saber cómo podemos ayudarte a automatizar estos procesos, <a href="https://immoralia.com/contacto">contacta con nosotros</a>.</p>
-          <p>Un saludo,<br>El equipo de Immoralia</p>
-        `
-        await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_API_KEY}` },
-          body: JSON.stringify({
-            from: 'Immoralia <noreply@immoralia.es>',
-            to: [receiverEmail],
-            subject: `${safeSenderName} ha compartido su selección de procesos contigo`,
-            html: getProfessionalTemplate({
-              title: 'Procesos Compartidos',
-              preheader: 'Te han compartido una selección de procesos',
-              mainContent: clientHtml,
-            }),
-          }),
-        })
-        console.log('Email de share-selection enviado con éxito')
-      } catch (emailErr) {
-        console.error('Error enviando email de share:', emailErr)
-      }
-    }
+    await sendEmail({
+      kind: 'share_selection',
+      to: receiverEmail,
+      subject: `${safeSenderName} ha compartido su selección de procesos contigo`,
+      html: getProfessionalTemplate({
+        title: 'Procesos Compartidos',
+        preheader: 'Te han compartido una selección de procesos',
+        mainContent: clientHtml,
+      }),
+      metadata: { senderName, senderEmail, processCount: selectedProcesses.length },
+    })
 
     // Slack (fire-and-forget)
     try {
