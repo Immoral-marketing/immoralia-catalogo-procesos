@@ -1,14 +1,18 @@
-User-agent: Googlebot
+# Rastreadores de IA — acceso completo para GEO (SPEC-21 / SPEC-22)
+User-agent: GPTBot
 Allow: /
 
-User-agent: Bingbot
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Twitterbot
+User-agent: PerplexityBot
 Allow: /
 
-User-agent: facebookexternalhit
-Allow: /
-
+# Buscadores y rastreadores generales
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /afiliado
+Disallow: /api/
+
+Sitemap: https://procesos.immoralia.es/sitemap.xml
