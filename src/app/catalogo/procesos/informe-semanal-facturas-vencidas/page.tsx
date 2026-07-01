@@ -1,6 +1,26 @@
-'use client'
 import ProcessDetailFacturasVencidas from '@/pages/ProcessDetailFacturasVencidas'
+import JsonLd from '@/components/JsonLd'
+import { breadcrumbList, serviceSchema, BASE_URL } from '@/lib/schema-org'
+import { processes } from '@/data/processes'
+
+const SLUG = 'informe-semanal-facturas-vencidas'
 
 export default function Page() {
-  return <ProcessDetailFacturasVencidas />
+  const proc = processes.find(p => p.slug === SLUG)
+  const crumbs = proc
+    ? breadcrumbList([
+        { name: 'Inicio', url: `${BASE_URL}/` },
+        { name: 'Catálogo', url: `${BASE_URL}/catalogo/completo` },
+        { name: proc.nombre, url: `${BASE_URL}/catalogo/procesos/${SLUG}` },
+      ])
+    : null
+  const service = proc ? serviceSchema(proc) : null
+
+  return (
+    <>
+      {crumbs && <JsonLd data={crumbs} />}
+      {service && <JsonLd data={service} />}
+      <ProcessDetailFacturasVencidas />
+    </>
+  )
 }
