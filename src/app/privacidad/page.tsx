@@ -4,10 +4,20 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { BASE_URL } from '@/lib/schema-org'
 
 export const metadata: Metadata = {
   title: 'Política de privacidad — Immoralia',
   description: 'Política de privacidad del catálogo de procesos de Immoralia.',
+  alternates: { canonical: `${BASE_URL}/privacidad` },
+  openGraph: {
+    type: 'website',
+    siteName: 'Immoralia',
+    locale: 'es_ES',
+    title: 'Política de privacidad — Immoralia',
+    description: 'Política de privacidad del catálogo de procesos de Immoralia.',
+    url: `${BASE_URL}/privacidad`,
+  },
 }
 
 export default function PrivacidadPage() {

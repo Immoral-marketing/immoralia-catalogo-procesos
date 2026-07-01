@@ -1,10 +1,18 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import ProcessDetail from '@/pages/ProcessDetail'
 import JsonLd from '@/components/JsonLd'
 import { breadcrumbList, serviceSchema, SECTOR_NAMES, BASE_URL } from '@/lib/schema-org'
+import { buildProcessMetadata } from '@/lib/metadata'
 import { processes } from '@/data/processes'
 
-// ProcessDetail uses useParams() + useSearchParams() — needs Suspense
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const proc = processes.find(p => p.slug === slug && !p.hidden)
+  if (!proc) return { title: 'Proceso | Immoralia' }
+  return buildProcessMetadata(proc)
+}
+
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const proc = processes.find(p => p.slug === slug && !p.hidden)
