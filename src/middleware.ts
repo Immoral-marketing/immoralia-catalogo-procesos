@@ -11,9 +11,28 @@
  * el token en el hash de la URL (#access_token=...), que el servidor nunca
  * recibe. Si redirigiéramos, esos flujos quedarían rotos. Los componentes
  * cliente gestionan esos casos con window.location.hash.
+ *
+ * SPEC-13 — Bloqueo de indexación en hosts no canónicos.
+ *
+ * Cualquier host distinto del definido en NEXT_PUBLIC_SITE_URL (staging,
+ * previews de Vercel, IPs, dominios alternativos) recibe el header
+ * X-Robots-Tag: noindex, nofollow para evitar que Google indexe contenido
+ * duplicado proveniente de entornos no productivos.
  */
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+
+// Extraer solo el hostname de la URL canónica (sin protocolo ni trailing slash).
+// Se evalúa una sola vez al arrancar el proceso, no en cada request.
+const CANONICAL_HOST = (() => {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL
+  if (!raw) return null
+  try {
+    return new URL(raw).host
+  } catch {
+    return null
+  }
+})()
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -45,6 +64,13 @@ export async function middleware(request: NextRequest) {
   // el access_token si está caducado. No usamos getSession() porque puede
   // devolver datos de cookie sin validar contra el servidor.
   await supabase.auth.getUser()
+
+  // SPEC-13: si el host de la request no coincide exactamente con el host
+  // canónico, marcar como noindex para evitar indexación de entornos no prod.
+  const requestHost = request.headers.get('host') ?? ''
+  if (CANONICAL_HOST && requestHost !== CANONICAL_HOST) {
+    supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
 
   return supabaseResponse
 }
