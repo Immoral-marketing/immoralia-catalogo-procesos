@@ -145,8 +145,8 @@ Skills del ecosistema Immoralia que este proyecto consume o invoca desde otros e
 
 ### ClickUp — espacio del proyecto
 
-- **clickup_space:** {{PENDIENTE — confirmar espacio de ClickUp donde se trackean specs del catálogo}}
-- **clickup_list:** {{PENDIENTE — confirmar lista donde se crean tareas de cada SPEC aprobada}}
+- **clickup_space:** `90153322032` (Hubs)
+- **clickup_list:** `901520197330` ("Catálogo de Procesos" en Hubs → Immoralia, configurada 2026-06-30 al aprobar SPEC-13)
 
 ---
 
