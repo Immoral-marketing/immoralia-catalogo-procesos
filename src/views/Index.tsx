@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, categories, Process } from "@/data/processes";
 import Link from "next/link";
+import Image from "next/image";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
 import { ContactForm } from "@/components/ContactForm";
@@ -133,7 +134,7 @@ const Index = () => {
           <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
             <div className="flex flex-col pl-2">
               <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
-                <img src={immoraliaLogo} alt="Immoralia" className="h-8 md:h-10" />
+                <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 md:h-10 w-auto" />
               </Link>
             </div>
 

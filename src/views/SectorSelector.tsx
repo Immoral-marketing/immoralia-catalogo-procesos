@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Dumbbell,
   Briefcase,
@@ -155,7 +156,7 @@ const SectorSelector = () => {
 
       {/* ── NAV ── */}
       <nav className="absolute top-0 left-0 right-0 z-30 px-6 py-5 flex items-center justify-between">
-        <img src={immoraliaLogo} alt="Immoralia" className="h-7 opacity-90" />
+        <Image src={immoraliaLogo} alt="Immoralia" width={140} height={35} className="h-7 w-auto opacity-90" />
       </nav>
 
       {/* ── HERO ── */}
@@ -430,10 +431,11 @@ const SectorSelector = () => {
 
               {/* RIGHT: imagen */}
               <div className="md:flex-1 relative overflow-hidden min-h-[180px] md:min-h-0 rounded-b-2xl md:rounded-b-none md:rounded-r-2xl">
-                <img
+                <Image
                   src="/auditorias-banner.webp"
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+                  alt="Banner de auditorías de automatización"
+                  fill
+                  className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
               </div>
@@ -453,7 +455,7 @@ const SectorSelector = () => {
       {/* ── FOOTER ── */}
       <footer className="border-t border-white/5 bg-black/50 py-10">
         <div className="container mx-auto px-6 text-center">
-          <img src={immoraliaLogo} alt="Immoralia" className="h-5 mx-auto mb-4 opacity-25 grayscale" />
+          <Image src={immoraliaLogo} alt="Immoralia" width={100} height={25} className="h-5 w-auto mx-auto mb-4 opacity-25 grayscale" />
           <p className="text-xs text-gray-700">
             immoralia · Automatización & IA · Parte de Immoral Group · www.immoral.es
           </p>

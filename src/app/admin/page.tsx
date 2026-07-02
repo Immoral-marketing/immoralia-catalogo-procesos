@@ -8,6 +8,8 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import AdminPage from '@/pages/AdminPage'
 import type { User } from '@supabase/supabase-js'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   let initialUser: User | null = null
   let initialIsAdmin = false
