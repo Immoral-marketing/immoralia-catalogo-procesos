@@ -83,6 +83,9 @@ const SYNC_WHITELIST = [
     'modulo_codigo',
     'recomendado',
     'catalog_active',
+    // GEO — SPEC-22
+    'descripcion_citable',
+    'faqs_citables',
 ];
 
 // Columnas que existen como array TEXT en Postgres (no jsonb)
@@ -170,6 +173,46 @@ function extractBool(block, key) {
 }
 
 /**
+ * Extrae un array de objetos { q, a } para faqs_citables (SPEC-22).
+ * Usa balance de llaves para extraer cada { q: "...", a: "..." } del array.
+ */
+function extractQAObjectArray(block, key) {
+    const keyStart = block.indexOf(key + ':');
+    if (keyStart === -1) return null;
+    const rest = block.slice(keyStart + key.length + 1).trimStart();
+    if (!rest.startsWith('[')) return null;
+
+    // Encuentra el ] de cierre del array externo
+    let depth = 0, end = -1;
+    for (let i = 0; i < rest.length; i++) {
+        const c = rest[i];
+        if (c === '[' || c === '{') depth++;
+        else if (c === ']' || c === '}') { depth--; if (depth === 0) { end = i; break; } }
+    }
+    if (end === -1) return null;
+    const arrayContent = rest.slice(1, end);
+
+    // Extrae cada { ... } usando balance de llaves
+    const objects = [];
+    let od = 0, ostart = -1;
+    for (let i = 0; i < arrayContent.length; i++) {
+        if (arrayContent[i] === '{') { if (od === 0) ostart = i; od++; }
+        else if (arrayContent[i] === '}') {
+            od--;
+            if (od === 0 && ostart !== -1) { objects.push(arrayContent.slice(ostart, i + 1)); ostart = -1; }
+        }
+    }
+
+    const result = [];
+    for (const obj of objects) {
+        const q = extractValue(obj, 'q');
+        const a = extractValue(obj, 'a');
+        if (q !== null && a !== null) result.push({ q, a });
+    }
+    return result.length > 0 ? result : null;
+}
+
+/**
  * Convierte un bloque TS a un objeto listo para UPSERT respetando la whitelist
  * y el mapeo `hidden: true` → `catalog_active: false` (CA-05).
  */
@@ -199,6 +242,9 @@ function blockToRow(block) {
         modulo_codigo: extractValue(block, 'modulo_codigo'),
         recomendado: recomendado ?? false,
         catalog_active: hidden === true ? false : true,
+        // GEO — SPEC-22
+        descripcion_citable: extractValue(block, 'descripcion_citable') ?? null,
+        faqs_citables: extractQAObjectArray(block, 'faqs_citables') ?? null,
     };
 
     // Filtrar a whitelist: cualquier campo extra que el parser haya recogido se descarta.

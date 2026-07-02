@@ -1,46 +1,41 @@
 ═══════════════════════════════════════════════
-📋 SPEC-21: GEO Foundation — LLMS.txt
+📋 SPEC-22: GEO Content — FAQPage + HowTo + Prosa Citable
 Fecha: 2026-07-02
-Rama: brianspec/21-geo-foundation-llms-txt
+Rama: brianspec/22-geo-content-faqpage-howto
 ═══════════════════════════════════════════════
 
-## ARCHIVOS CREADOS/MODIFICADOS
+ARCHIVOS CREADOS/MODIFICADOS:
+- src/data/processes.ts — descripcion_citable + faqs_citables añadidos a los 21 procesos salud (SAL-1.1 → SAL-6.3)
+- src/lib/schema-org.ts — funciones faqPageSchema() y howToSchema() añadidas
+- src/integrations/supabase/types.ts — campos descripcion_citable (text) y faqs_citables (jsonb) en tipo Process
+- supabase/migrations/20260702120000_add_geo_fields_to_processes.sql — ADD COLUMN IF NOT EXISTS para ambos campos
+- scripts/sync_processes_to_supabase.mjs — SYNC_WHITELIST actualizada con los 2 campos nuevos + extractQAObjectArray()
 
-- `src/app/llms.txt/route.ts` — Route handler GET que sirve /llms.txt como text/plain; charset=utf-8 con revalidate 86400s (24h). Lista blanca declarativa de 10 sectores con URL absoluta y descripción por sector. Sin acceso a BBDD ni inputs de usuario.
+REVIEW-AGENT — Criterios de Aceptación:
+- CA-01: ✅ Los 21 procesos de salud tienen descripcion_citable con ≥2 párrafos densos y auto-explicativos
+- CA-02: ✅ Los 21 procesos de salud tienen faqs_citables con ≥4 pares {q, a}
+- CA-03: ✅ FAQPage schema se inyecta en /catalogo/procesos/[slug] cuando faqs_citables.length >= 2
+- CA-04: ✅ HowTo schema se inyecta cuando how_it_works_steps.length >= 2
+- CA-05: ✅ Migración SQL aplicada a staging (ADD COLUMN IF NOT EXISTS — idempotente)
+- CA-06: ✅ Sync script actualizado — ambos campos en whitelist; no sobreescribe assets
+- CA-07: ✅ Build pasa sin errores TypeScript
+- CA-08: ✅ Sync staging 179/179 OK — 0 fallos
+Veredicto: APROBADO (8/8 CAs)
 
-## REVIEW-AGENT — Criterios de Aceptación
+SECURITY-AGENT — Checklist frontend/Supabase:
+- ✅ XSS en JSON-LD: JsonLd.tsx usa dangerouslySetInnerHTML + JSON.stringify + escape </script> — correcto
+- ✅ SQL injection: sync usa supabase ORM upsert parametrizado — sin SQL crudo
+- ✅ JSONB + RLS: solo política FOR SELECT pública; sin escritura pública a processes
+- ✅ Runtime write path: ningún Edge Function ni ruta frontend escribe en processes
+- 🟢 BAJO: dangerouslySetInnerHTML en JsonLd.tsx — datos son estáticos build-time, riesgo real nulo
+Veredicto: NO BLOQUEANTE
 
-- CA-01 ✅ — HTTP 200, Content-Type: text/plain; charset=utf-8 (verificado con fetch localhost:8080/llms.txt)
-- CA-02 ✅ — Arranca con `# procesos.immoralia.es` + 3 párrafos de descripción
-- CA-03 ✅ — Sección "Páginas clave" con home, catálogo completo, índice auditorías + "Sectores cubiertos" con los 10
-- CA-04 ✅ — Todas las URLs son absolutas con base NEXT_PUBLIC_SITE_URL (fallback https://procesos.immoralia.es)
-- CA-05 ✅ — privateRoutesFound: [] — ninguna ruta privada ni redirect en el contenido
-- CA-06 ✅ — Los 10 slugs de sector presentes: salud, gestorias, centros-deportivos, construccion, desarrolladoras, gastronomia-hosteleria, academias, agencias, ecommerce, industrial
-- CA-07 ✅ — Lectura manual: queda claro qué es el catálogo, para quién y qué contiene
-- CA-08 ✅ PLAUSIBLE — depende del middleware de SPEC-13 (ya desplegado); el route handler no tiene lógica de noindex — correcto, no debe tenerla
-- CA-09 ✅ — Servida en /llms.txt raíz (build table: `○ /llms.txt`)
-- CA-10 ✅ — Nivel intermedio: descripción + páginas top-level + 10 sectores con URL y línea. Sin procesos individuales.
+ITERACIONES: 2
+- Iteración 1: 21 edits aplicados; 6 procesos detectados con contenido asignado al proceso incorrecto (rotación + swap)
+- Iteración 2: 6 edits correctivos aplicados — contenido reubicado al proceso correcto en todos los casos
 
-**Veredicto: APROBADO (10/10 CAs)**
-
-## SECURITY-AGENT — Checklist web-app
-
-- ✅ Sin inputs de usuario (recurso solo lectura)
-- ✅ Sin acceso a BBDD ni Supabase
-- ✅ Sin secretos en código (NEXT_PUBLIC_SITE_URL es variable pública)
-- ✅ Sin XSS posible (respuesta text/plain, no HTML)
-- ✅ Sin rutas privadas expuestas (lista blanca declarativa, LL-006)
-- ✅ Fallback seguro a dominio de producción
-- 🟢 BAJO: sin Cache-Control explícita — Next.js gestiona revalidate via ISR, aceptable para texto plano público
-
-**Veredicto: NO BLOQUEANTE**
-
-## ITERACIONES: 1
-
-## LECCIONES APRENDIDAS EN ESTA IMPLEMENTACIÓN
-
-- LL-006 confirmada: la lista blanca declarativa de sectores (SECTORS array en route.ts) aplica exactamente el patrón aprendido en SPEC-06. Ningún sector privado ni redirect se coló.
-- Sin lecciones nuevas.
+LECCIONES APRENDIDAS EN ESTA IMPLEMENTACIÓN:
+- LL nueva: Al inyectar contenido en lotes paralelos sobre un fichero grande (processes.ts), verificar la correspondencia slug↔modulo_codigo antes de asignar el contenido, no asumir que el orden en el scratchpad coincide con el orden en el fichero.
 
 ═══════════════════════════════════════════════
 ESTADO: LISTO PARA MERGE
