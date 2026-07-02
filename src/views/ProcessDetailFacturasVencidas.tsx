@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -51,12 +52,7 @@ const ProcessDetailFacturasVencidas = () => {
             {/* Nav */}
             <header className="border-b border-border bg-background sticky top-0 z-40">
                 <div className="mx-auto max-w-[860px] px-4 md:px-6 py-4 flex items-center justify-between gap-6">
-                    <img
-                        src={immoraliaLogo}
-                        alt="Immoralia"
-                        className="h-8 cursor-pointer"
-                        onClick={() => router.push("/")}
-                    />
+                    <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto cursor-pointer" onClick={() => router.push("/")} />
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button

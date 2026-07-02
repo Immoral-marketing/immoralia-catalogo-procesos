@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import Link from "next/link";
+import Image from "next/image";
 import { processes } from "@/data/processes";
 import { ProcessCard } from "@/components/ProcessCard";
 import { SelectionSummary } from "@/components/SelectionSummary";
@@ -97,7 +98,7 @@ const AgenciasLanding = () => {
       <nav className="border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/">
-            <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
+            <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-3">
             <Sheet>
@@ -389,7 +390,7 @@ const AgenciasLanding = () => {
       {/* Footnote */}
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
-          <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
+          <Image src={immoraliaLogo} alt="Immoralia" width={120} height={30} className="h-6 w-auto mx-auto mb-6 opacity-30 grayscale" />
           <p className="text-gray-600 text-sm">© 2026 Immoralia. Soluciones de Automatización para Agencias & Consultoría.</p>
         </div>
       </footer>
