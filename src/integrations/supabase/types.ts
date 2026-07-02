@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.4"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       categories: {
@@ -143,6 +118,7 @@ export type Database = {
           summary_message_count: number
           surface: string | null
           user_message_count: number
+          visitor_id: string
         }
         Insert: {
           assistant_message_count?: number
@@ -163,6 +139,7 @@ export type Database = {
           summary_message_count?: number
           surface?: string | null
           user_message_count?: number
+          visitor_id: string
         }
         Update: {
           assistant_message_count?: number
@@ -183,8 +160,17 @@ export type Database = {
           summary_message_count?: number
           surface?: string | null
           user_message_count?: number
+          visitor_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_conversations_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_visitors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       chatbot_knowledge: {
         Row: {
@@ -292,6 +278,38 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "chatbot_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chatbot_visitors: {
+        Row: {
+          conversation_count: number
+          created_at: string
+          id: string
+          last_seen_at: string
+          lead_id: string | null
+        }
+        Insert: {
+          conversation_count?: number
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          lead_id?: string | null
+        }
+        Update: {
+          conversation_count?: number
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          lead_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_visitors_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "contact_submissions"
             referencedColumns: ["id"]
           },
         ]
@@ -528,8 +546,10 @@ export type Database = {
           catalog_active: boolean
           codigo: string
           created_at: string | null
+          descripcion_citable: string | null
           descripcion_detallada: string | null
           dolores: string[] | null
+          faqs_citables: Json | null
           guion_clickup_url: string | null
           guion_generado: boolean | null
           guion_generado_at: string | null
@@ -563,8 +583,10 @@ export type Database = {
           catalog_active?: boolean
           codigo: string
           created_at?: string | null
+          descripcion_citable?: string | null
           descripcion_detallada?: string | null
           dolores?: string[] | null
+          faqs_citables?: Json | null
           guion_clickup_url?: string | null
           guion_generado?: boolean | null
           guion_generado_at?: string | null
@@ -598,8 +620,10 @@ export type Database = {
           catalog_active?: boolean
           codigo?: string
           created_at?: string | null
+          descripcion_citable?: string | null
           descripcion_detallada?: string | null
           dolores?: string[] | null
+          faqs_citables?: Json | null
           guion_clickup_url?: string | null
           guion_generado?: boolean | null
           guion_generado_at?: string | null
@@ -908,9 +932,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
