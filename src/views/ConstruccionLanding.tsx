@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { processes, type Process } from "@/data/processes";
 import { construccionBlocks, type ConstruccionBlockId } from "@/data/construccionBlocks";
@@ -137,7 +138,7 @@ const ConstruccionLanding = () => {
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/">
-            <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
+            <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-3">
             <Sheet>
@@ -348,13 +349,12 @@ const ConstruccionLanding = () => {
               >
                 {/* Imagen con marco y badge */}
                 <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/3] lg:aspect-[5/4]">
-                  <img
+                  <Image
                     src={activeBlock.image}
                     alt={activeBlock.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
-                    }}
+                    fill
+                    className="object-cover"
+                    priority
                   />
                   <div
                     className="absolute inset-0 mix-blend-overlay opacity-30"
@@ -563,11 +563,11 @@ const ConstruccionLanding = () => {
                 <div className="relative px-4">
                   <div className="relative aspect-[4/5]">
                     <div className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 group">
-                      <img
+                      <Image
                         src={b.image}
                         alt={b.title}
-                        className="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-105"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
+                        fill
+                        className="object-cover transition-transform duration-[3000ms] group-hover:scale-105"
                       />
                       <div className={`absolute inset-0 bg-gradient-to-t ${b.accentGradient} mix-blend-soft-light`} />
                       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -761,7 +761,7 @@ const ConstruccionLanding = () => {
       {/* ───────────────────── FOOTER ───────────────────── */}
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
-          <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
+          <Image src={immoraliaLogo} alt="Immoralia" width={120} height={30} className="h-6 w-auto mx-auto mb-6 opacity-30 grayscale" />
           <p className="text-xs text-gray-600">
             immoralia · Automatización & IA · Parte de Immoral Group · www.immoral.es
           </p>

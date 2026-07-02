@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import Link from "next/link";
+import Image from "next/image";
 import { processes, type Process } from "@/data/processes";
 import { industrialBlocks, type BlockId } from "@/data/industrialBlocks";
 import { industrialModules, getModulesByBlock } from "@/data/industrialModules";
@@ -144,7 +145,7 @@ const IndustrialLanding = () => {
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/">
-            <img src={immoraliaLogo} alt="Immoralia" className="h-8 transition-opacity hover:opacity-80" />
+            <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto transition-opacity hover:opacity-80" />
           </Link>
           <div className="flex items-center gap-3">
             <Sheet>
@@ -381,15 +382,12 @@ const IndustrialLanding = () => {
 
                 {/* Imagen 16:9 */}
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 aspect-video">
-                  <img
+                  <Image
                     src={activeBlock.image}
                     alt={activeBlock.title}
-                    loading="eager"
-                    decoding="async"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
-                    }}
+                    fill
+                    className="object-cover"
+                    priority
                   />
                   <div
                     className="absolute inset-0 mix-blend-overlay opacity-20"
@@ -589,13 +587,11 @@ const IndustrialLanding = () => {
                       style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                       onClick={() => b.id === "B1" && setFlippedBlock("B1")}
                     >
-                      <img
+                      <Image
                         src={b.image}
                         alt={b.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-105"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
+                        fill
+                        className="object-cover transition-transform duration-[3000ms] group-hover:scale-105"
                       />
                       <div className={`absolute inset-0 bg-gradient-to-t ${b.accentGradient} mix-blend-soft-light`} />
                       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -843,7 +839,7 @@ const IndustrialLanding = () => {
       {/* ───────────────────── FOOTER ───────────────────── */}
       <footer className="py-12 border-t border-white/5 bg-black/50">
         <div className="container mx-auto px-6 text-center">
-          <img src={immoraliaLogo} alt="Immoralia" className="h-6 mx-auto mb-6 opacity-30 grayscale" />
+          <Image src={immoraliaLogo} alt="Immoralia" width={120} height={30} className="h-6 w-auto mx-auto mb-6 opacity-30 grayscale" />
           <p className="text-xs text-gray-600">
             immoralia · Automatización & IA · Parte de Immoral Group · www.immoral.es
           </p>
