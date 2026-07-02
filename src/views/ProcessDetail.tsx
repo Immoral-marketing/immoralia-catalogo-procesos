@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -408,12 +409,7 @@ const ProcessDetail = () => {
             {/* Nav */}
             <header className="border-b border-border bg-background sticky top-0 z-40">
                 <div className="mx-auto max-w-[860px] px-4 md:px-6 py-4 flex items-center justify-between gap-6">
-                    <img
-                        src={immoraliaLogo}
-                        alt="Immoralia"
-                        className="h-8 cursor-pointer"
-                        onClick={() => router.push("/")}
-                    />
+                    <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto cursor-pointer" onClick={() => router.push("/")} />
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button
@@ -623,7 +619,7 @@ const ProcessDetail = () => {
                                         <div className="relative w-full bg-card aspect-[3/2] flex items-center justify-center overflow-hidden">
                                             {stepImages[carouselStep] ? (
                                                 <>
-                                                    <img src={stepImages[carouselStep]!} alt={`Paso ${carouselStep + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                                                    <Image src={stepImages[carouselStep]!} alt={`Paso ${carouselStep + 1}`} fill className="object-cover" />
                                                     {stepSubtitles[carouselStep] && (
                                                         <div className="absolute bottom-0 left-0 right-0 h-[18%] flex items-end justify-center pb-3 pointer-events-none" style={{ zIndex: 6 }}>
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />

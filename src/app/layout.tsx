@@ -6,10 +6,6 @@ import { Providers } from './providers'
 import JsonLd from '@/components/JsonLd'
 import { ORGANIZATION, WEBSITE, BASE_URL } from '@/lib/schema-org'
 
-// Evita prerender estático en build: el catálogo usa localStorage, contextos de cliente y Supabase.
-// SPEC-06 implementará el cliente SSR correcto con @supabase/ssr.
-export const dynamic = 'force-dynamic'
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

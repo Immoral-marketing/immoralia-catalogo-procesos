@@ -1,6 +1,7 @@
 ﻿'use client'
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   GS_AUDIT_BLOCKS,
@@ -243,11 +244,7 @@ const AuditoriaGestorias = () => {
       <nav className="border-b border-white/5 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/auditorias">
-            <img
-              src={immoraliaLogo}
-              alt="Immoralia"
-              className="h-8 transition-opacity hover:opacity-80"
-            />
+            <Image src={immoraliaLogo} alt="Immoralia" width={160} height={40} className="h-8 w-auto transition-opacity hover:opacity-80" />
           </Link>
           <button
             onClick={() => router.push("/auditorias")}

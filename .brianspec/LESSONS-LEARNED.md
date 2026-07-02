@@ -70,7 +70,7 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 **Stack afectado:** scripts de sync TS→BBDD
 **Lección:** El script original mandaba el objeto procesos completo a Supabase. Cuando se eliminó la columna `categoria` del schema, el script siguió enviándola — y todos los UPSERT fallaron silenciosamente. Una whitelist explícita de columnas (declarada como constante en el script) habría detectado el cambio de schema antes de fallar en producción.
 **Cómo aplicar:** cualquier script que escriba a una tabla debe declarar explícitamente qué columnas envía. Cuando el schema cambia, se actualiza la whitelist a propósito — no a posteriori, debugging fallos.
-**Severidad:** Media · **Confirmada en:** SPEC-04, SPEC-06
+**Severidad:** Media · **Confirmada en:** SPEC-04, SPEC-06, SPEC-21
 
 ## LL-004 — El script de sync TS→Supabase está desactualizado
 **Fecha:** 2026-06-12

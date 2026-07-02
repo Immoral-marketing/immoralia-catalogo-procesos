@@ -6,6 +6,12 @@ import { breadcrumbList, serviceSchema, faqPageSchema, howToSchema, SECTOR_NAMES
 import { buildProcessMetadata } from '@/lib/metadata'
 import { processes } from '@/data/processes'
 
+export async function generateStaticParams() {
+  return processes
+    .filter(p => !p.hidden)
+    .map(p => ({ slug: p.slug }))
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const proc = processes.find(p => p.slug === slug && !p.hidden)
