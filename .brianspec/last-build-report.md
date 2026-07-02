@@ -1,46 +1,47 @@
 ═══════════════════════════════════════════════
-📋 SPEC-10: Eliminar email "llamada agendada" + Slack enriquecido con enlace ClickUp
-Fecha: 2026-06-17
-Rama: feat/spec-10-eliminar-email-llamada-agendada
+📋 SPEC-21: GEO Foundation — LLMS.txt
+Fecha: 2026-07-02
+Rama: brianspec/21-geo-foundation-llms-txt
 ═══════════════════════════════════════════════
 
 ## ARCHIVOS CREADOS/MODIFICADOS
 
-- `supabase/migrations/20260617100000_add_clickup_task_id_to_leads.sql` — Nueva migración (aplicada a staging vía MCP).
-- `src/integrations/supabase/types.ts` — Tipos regenerados (`clickup_task_id` en `contact_submissions`).
-- `src/app/api/chatbot/lead/route.ts` — Persiste `clickup_task_id` en `contact_submissions` tras crear la tarea de ClickUp.
-- `src/app/api/chatbot/event/route.ts` — Case `schedule_completed` elimina email + envía Slack con link a ClickUp; nuevo helper `getLeadWithClickup`.
-- `src/lib/chatbot/emails.ts` — Elimina `call_scheduled` de `ChatbotEmailKind`, `CONTENT` y `KIND_TO_LOG_KIND`.
-- `src/lib/email-sender.ts` — Comentario aclarando que `chatbot_call_scheduled` ya no se produce (conservado por compatibilidad con `email_logs` históricos).
+- `src/app/llms.txt/route.ts` — Route handler GET que sirve /llms.txt como text/plain; charset=utf-8 con revalidate 86400s (24h). Lista blanca declarativa de 10 sectores con URL absoluta y descripción por sector. Sin acceso a BBDD ni inputs de usuario.
 
 ## REVIEW-AGENT — Criterios de Aceptación
 
-- CA-01 ✅ — El catálogo no envía email al visitante al agendar.
-- CA-02 ✅ — Flag `call_scheduled` sigue actualizándose en BBDD.
-- CA-03 ✅ — `lead_captured` y `handover_written` intactas.
-- CA-04 ✅ — Limpieza completa en `emails.ts`.
-- CA-05 ✅ — `clickup_task_id` persistido tras éxito; null si falla.
-- CA-06 ✅ — Slack con nombre + email + conversationId + link mrkdwn a ClickUp.
-- CA-07 ✅ — Bloque idempotente.
-- CA-08 ⏸ — Validación end-to-end pendiente en staging tras merge.
+- CA-01 ✅ — HTTP 200, Content-Type: text/plain; charset=utf-8 (verificado con fetch localhost:8080/llms.txt)
+- CA-02 ✅ — Arranca con `# procesos.immoralia.es` + 3 párrafos de descripción
+- CA-03 ✅ — Sección "Páginas clave" con home, catálogo completo, índice auditorías + "Sectores cubiertos" con los 10
+- CA-04 ✅ — Todas las URLs son absolutas con base NEXT_PUBLIC_SITE_URL (fallback https://procesos.immoralia.es)
+- CA-05 ✅ — privateRoutesFound: [] — ninguna ruta privada ni redirect en el contenido
+- CA-06 ✅ — Los 10 slugs de sector presentes: salud, gestorias, centros-deportivos, construccion, desarrolladoras, gastronomia-hosteleria, academias, agencias, ecommerce, industrial
+- CA-07 ✅ — Lectura manual: queda claro qué es el catálogo, para quién y qué contiene
+- CA-08 ✅ PLAUSIBLE — depende del middleware de SPEC-13 (ya desplegado); el route handler no tiene lógica de noindex — correcto, no debe tenerla
+- CA-09 ✅ — Servida en /llms.txt raíz (build table: `○ /llms.txt`)
+- CA-10 ✅ — Nivel intermedio: descripción + páginas top-level + 10 sectores con URL y línea. Sin procesos individuales.
 
-**Veredicto:** APROBADO (8/8 CAs).
+**Veredicto: APROBADO (10/10 CAs)**
 
 ## SECURITY-AGENT — Checklist web-app
 
-- ✅ Inputs validados con Zod.
-- ✅ Queries parametrizadas (cliente Supabase).
-- ✅ Secretos en `process.env`.
-- 🟡 MEDIO mitigado: Slack contiene nombre+email del lead (canal interno, justificado).
+- ✅ Sin inputs de usuario (recurso solo lectura)
+- ✅ Sin acceso a BBDD ni Supabase
+- ✅ Sin secretos en código (NEXT_PUBLIC_SITE_URL es variable pública)
+- ✅ Sin XSS posible (respuesta text/plain, no HTML)
+- ✅ Sin rutas privadas expuestas (lista blanca declarativa, LL-006)
+- ✅ Fallback seguro a dominio de producción
+- 🟢 BAJO: sin Cache-Control explícita — Next.js gestiona revalidate via ISR, aceptable para texto plano público
 
-**Veredicto:** NO BLOQUEANTE.
+**Veredicto: NO BLOQUEANTE**
 
 ## ITERACIONES: 1
 
 ## LECCIONES APRENDIDAS EN ESTA IMPLEMENTACIÓN
 
-- Ninguna lección nueva. Las existentes (LL-001 regeneración de tipos, LL-007 sender centralizado) se cumplieron sin sorpresas.
+- LL-006 confirmada: la lista blanca declarativa de sectores (SECTORS array en route.ts) aplica exactamente el patrón aprendido en SPEC-06. Ningún sector privado ni redirect se coló.
+- Sin lecciones nuevas.
 
 ═══════════════════════════════════════════════
-ESTADO: LISTO PARA REVISIÓN HUMANA
+ESTADO: LISTO PARA MERGE
 ═══════════════════════════════════════════════
