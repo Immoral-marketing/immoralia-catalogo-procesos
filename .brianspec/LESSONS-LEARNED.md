@@ -17,6 +17,14 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 
 ---
 
+## LL-010 — next/image requiere whitelist de dominios remotos en next.config.ts
+**Fecha:** 2026-07-02
+**Spec origen:** SPEC-17 (detectado en SPEC-22)
+**Stack afectado:** Next.js App Router + next/image + Supabase Storage
+**Lección:** Al migrar de `<img>` a `<Image>` (next/image), las imágenes de dominios externos dejan de renderizarse silenciosamente en producción/staging si el dominio no está en `images.remotePatterns` del `next.config.ts`. No hay error en build ni en consola de desarrollo — simplemente no se ven. Afectó a `image_url_1/2/3` de todos los procesos (sección "Cómo funciona").
+**Cómo aplicar:** cualquier PR que introduzca `<Image>` de next/image con URLs remotas DEBE incluir la actualización de `next.config.ts` con `images.remotePatterns`. Smoke test mínimo tras desplegar: abrir una ficha de proceso y confirmar visualmente que se ven las imágenes del carrusel. El patrón ya configurado es `*.supabase.co/storage/v1/object/public/**`.
+**Severidad:** Alta
+
 ## LL-009 — Verificar slug↔modulo_codigo antes de inyectar contenido en lotes paralelos
 **Fecha:** 2026-07-02
 **Spec origen:** SPEC-22
