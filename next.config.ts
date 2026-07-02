@@ -2,6 +2,15 @@ import type { NextConfig } from 'next'
 import path from 'path'
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
   webpack(config) {
     // Devuelve URLs string para imports de imágenes (igual que Vite)
     // Evita tener que cambiar los 22 ficheros que usan `src={immoraliaLogo}`
