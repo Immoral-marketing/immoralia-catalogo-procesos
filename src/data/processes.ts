@@ -39,6 +39,9 @@ export interface Process {
     gallery?: string[];
   };
   faqs?: { q: string; a: string }[];
+  // GEO — campos citables para FAQPage/HowTo schemas (SPEC-22)
+  descripcion_citable?: string;
+  faqs_citables?: { q: string; a: string }[];
   use_cases?: string[];
   common_mistakes_avoided?: string[];
   related_processes?: string[]; // slugs
@@ -5672,7 +5675,19 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B1",
     modulo_codigo: "1.1",
-    related_processes: ["salud-captura-multicanal", "salud-cualificacion-previa"]
+    related_processes: ["salud-captura-multicanal", "salud-cualificacion-previa"],
+    descripcion_citable: `El asistente de voz 24/7 para pedir cita en clínicas es un sistema de atención telefónica automatizada con inteligencia artificial que recibe llamadas entrantes cuando recepción está ocupada o fuera de horario. El sistema conversa en castellano de forma natural, recoge el motivo de consulta, el grado de urgencia, la aseguradora y la preferencia de profesional, consulta disponibilidad real en el software de gestión clínica y deja la cita creada y confirmada sin intervención humana. El paciente recibe confirmación por WhatsApp o SMS al instante tras colgar.
+
+Cuando el motivo detectado indica urgencia (dolor agudo, emergencia médica), el sistema no completa la reserva en agenda: deriva la llamada al teléfono de guardia o al protocolo de urgencias del centro, configurado durante la implantación. Este comportamiento diferenciado es clave en entornos sanitarios, donde una cita estándar y una urgencia requieren respuestas distintas.
+
+La implantación habitual dura entre 2 y 3 semanas e integra la telefonía del centro con el software de gestión clínica y la mensajería (WhatsApp Business API o SMS vía Twilio). Es especialmente útil para clínicas con horario partido, grupos con varios centros y cualquier centro con alto volumen de llamadas que actualmente van a contestador sin resultado.`,
+    faqs_citables: [
+      { q: "¿Qué hace el asistente de voz 24/7 cuando un paciente llama fuera de horario a una clínica?", a: "Atiende la llamada de forma automática, conversa con el paciente para recoger motivo de consulta, urgencia, aseguradora y preferencia de profesional, consulta disponibilidad real en la agenda del centro y deja la cita creada. El paciente recibe confirmación por WhatsApp o SMS sin intervención humana." },
+      { q: "¿Cómo gestiona el asistente de voz las llamadas urgentes en una clínica?", a: "Si el motivo de la llamada indica urgencia (dolor agudo, emergencia), el asistente no completa una reserva en agenda estándar: deriva al paciente al teléfono de guardia o al protocolo de urgencias del centro, según las reglas definidas en la configuración." },
+      { q: "¿Qué diferencia hay entre el asistente de voz IA y un contestador automático para clínicas?", a: "El contestador graba un mensaje y no hace nada. El asistente de voz IA conversa, recoge la información necesaria, comprueba disponibilidad real en agenda y deja la cita confirmada, igual que haría un recepcionista." },
+      { q: "¿Cuánto tiempo tarda en ponerse en marcha el asistente de voz para clínicas?", a: "La implantación habitual es de 2 a 3 semanas, incluyendo configuración de la voz, reglas de urgencias, aseguradoras admitidas e integración con el software de gestión clínica." },
+      { q: "¿Con qué sistemas de gestión clínica funciona el asistente de voz?", a: "Con cualquier software de gestión clínica que disponga de API o agenda compartida. También requiere una línea telefónica derivable y canal de mensajería (WhatsApp Business API o SMS)." },
+    ],
   },
   {
     id: "SAL-1.2",
@@ -5725,7 +5740,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B1",
     modulo_codigo: "1.2",
-    related_processes: ["salud-voz-citas-247", "salud-chatbot-info"]
+    related_processes: ["salud-voz-citas-247", "salud-chatbot-info"],
+    descripcion_citable: `La captura unificada de peticiones multicanal para clínicas es un sistema que centraliza en un único panel todas las solicitudes de cita que llegan por canales distintos: WhatsApp Business, Instagram Direct Messages, formulario web y llamadas telefónicas. Cada petición entra etiquetada con su canal de origen, sin duplicados y sin que recepción tenga que revisar aplicaciones distintas en paralelo.
+
+El sistema detecta automáticamente cuando el mismo paciente contacta por dos canales distintos (por ejemplo, escribe por WhatsApp y también por Instagram DM) e identifica al paciente por número de teléfono o email, consolidando ambas entradas en una sola. Las peticiones que requieren intervención humana (casos especiales, urgencias, peticiones VIP) generan notificación al responsable; el resto fluyen directamente al proceso de reserva.
+
+La implementación habitual dura entre 1 y 2 semanas. Requiere cuenta Instagram Business activa, WhatsApp Business API, formulario web y conexión con el software de gestión clínica. El resultado es una única bandeja de entrada con visibilidad completa del canal de origen, que elimina peticiones perdidas y reduce el tiempo de respuesta.`,
+    faqs_citables: [
+      { q: "¿Qué canales unifica el sistema de captura multicanal para clínicas?", a: "WhatsApp Business, Instagram Direct Messages, formulario web y llamadas telefónicas, todo en un único panel con el canal de origen identificado para cada petición." },
+      { q: "¿Qué pasa si el mismo paciente escribe por WhatsApp y por Instagram el mismo día?", a: "El sistema detecta duplicados por número de teléfono o email, consolida las dos peticiones en una sola entrada y evita que recepción gestione el mismo caso dos veces." },
+      { q: "¿Qué peticiones pasan directamente al proceso de reserva y cuáles van a recepción?", a: "Las peticiones de cita estándar fluyen directamente al proceso de reserva. Las marcadas como casos especiales (urgencias, VIP, grupos) generan notificación al responsable para gestión manual." },
+      { q: "¿Qué se necesita para implementar la captura multicanal en una clínica?", a: "Cuenta Instagram Business activa, WhatsApp Business API, formulario web operativo y software de gestión clínica. La implementación habitual es de 1 a 2 semanas." },
+    ],
   },
   {
     id: "SAL-1.3",
@@ -5778,7 +5804,19 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B1",
     modulo_codigo: "1.3",
-    related_processes: ["salud-captura-multicanal", "salud-voz-citas-247"]
+    related_processes: ["salud-captura-multicanal", "salud-voz-citas-247"],
+    descripcion_citable: `El chatbot informativo de una clínica es un asistente conversacional disponible las 24 horas en WhatsApp, Instagram Direct y widget de chat web, que responde de forma inmediata y precisa las preguntas habituales de los pacientes: servicios disponibles, rangos de precio orientativos, aseguradoras aceptadas, dirección y acceso, horarios, parking y política de primera visita. Las respuestas se basan en la información actualizada del centro y son consistentes con independencia del canal o el momento del día.
+
+Cuando el asistente detecta intención de reserva, puede gestionar la cita directamente (si está conectado al sistema de agenda) o derivar la conversación con el contexto recogido. Cuando detecta urgencia, queja o cualquier situación que requiera juicio humano, escala al equipo con el historial completo de la conversación, de modo que el agente no necesita que el paciente repita nada.
+
+La implementación es de 1 a 2 semanas. Requiere cartera de servicios actualizada, WhatsApp Business o widget web y opcionalmente cuenta Instagram Business. El beneficio más directo es liberar a recepción de las preguntas repetidas (las mismas 10 preguntas que llegan cada día) y garantizar que la información que recibe el paciente es coherente y está actualizada, sin depender de quién esté en mostrador.`,
+    faqs_citables: [
+      { q: "¿Qué preguntas puede responder el chatbot de una clínica?", a: "Servicios disponibles, rangos de precio orientativos, aseguradoras aceptadas, dirección y acceso, horarios, parking y política de primera visita. La información se actualiza cuando el centro actualiza su cartera." },
+      { q: "¿Puede el chatbot de una clínica gestionar reservas de cita?", a: "Sí, si está conectado al sistema de agenda del centro puede gestionar la reserva directamente. Si no, recoge el contexto y deriva al proceso de reserva o a recepción con toda la información." },
+      { q: "¿Cómo responde el chatbot ante una urgencia o una queja?", a: "Escala la conversación al equipo humano con el historial completo, para que puedan intervenir con el contexto completo sin que el paciente tenga que repetir nada." },
+      { q: "¿En qué canales funciona el chatbot informativo de una clínica?", a: "WhatsApp Business, Instagram Direct Messages y widget de chat web. El centro elige qué canales activar según dónde sus pacientes suelen contactar." },
+      { q: "¿Cuánto tarda en ponerse en marcha el chatbot informativo?", a: "Entre 1 y 2 semanas, incluyendo carga de información del centro, ajuste del tono y conexión a los canales seleccionados." },
+    ],
   },
   {
     id: "SAL-1.4",
@@ -5830,7 +5868,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B1",
     modulo_codigo: "1.4",
-    related_processes: ["salud-voz-citas-247", "salud-captura-multicanal"]
+    related_processes: ["salud-voz-citas-247", "salud-captura-multicanal"],
+    descripcion_citable: `La cualificación previa de paciente es un proceso automatizado de triage previo a la reserva de cita que recoge motivo de consulta, grado de urgencia, si es primera visita o revisión, aseguradora y preferencia de profesional antes de bloquear una franja en agenda. Con esta información, el sistema aplica las reglas del centro para asignar el profesional adecuado, la duración correcta para el tipo de visita y el contexto relevante visible en la agenda del profesional.
+
+El beneficio principal es doble: la agenda queda mejor cargada (sin huecos de 30 minutos asignados cuando hacían falta 60, sin citas asignadas al profesional equivocado) y el profesional llega a consulta con el motivo ya documentado, sin sorpresas en sala. El proceso opera sobre el canal por el que llega la petición (WhatsApp, web, voz) mediante 3 a 5 preguntas concretas antes de proponer hueco.
+
+La implementación requiere software de gestión clínica con asignación por profesional, reglas de asignación definidas y conectores a WhatsApp o web, y tarda habitualmente 2 semanas. Es especialmente útil en centros con varios profesionales y especialidades distintas, y en clínicas donde el tipo y duración de la visita varía significativamente según el motivo.`,
+    faqs_citables: [
+      { q: "¿Qué es la cualificación previa de paciente en una clínica?", a: "Es un triage automatizado que, antes de confirmar la cita, pregunta al paciente el motivo, urgencia, si es primera visita, aseguradora y preferencia de profesional, y usa esa información para asignar el profesional correcto y la duración adecuada." },
+      { q: "¿Qué preguntas hace el sistema al paciente en la cualificación previa?", a: "Habitualmente entre 3 y 5 preguntas: motivo de consulta, grado de urgencia, si es primera visita o revisión, aseguradora y preferencia de profesional." },
+      { q: "¿Cómo mejora la cualificación previa la agenda de una clínica?", a: "Evita citas asignadas al profesional equivocado o con duración incorrecta. La cita se crea con el profesional adecuado, la duración correcta para el tipo de visita y el contexto visible en la agenda del profesional." },
+      { q: "¿En qué canales funciona la cualificación previa de paciente?", a: "Opera sobre el canal por el que llega la petición: WhatsApp, formulario web o sistema de voz. El flujo de preguntas se adapta al canal." },
+    ],
   },
 
   // ── BLOQUE B2 · Gestión de citas y ausencias ────────────────────────
@@ -5885,7 +5934,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B2",
     modulo_codigo: "2.1",
-    related_processes: ["salud-reprogramacion-citas", "salud-lista-espera"]
+    related_processes: ["salud-reprogramacion-citas", "salud-lista-espera"],
+    descripcion_citable: `Los recordatorios automáticos pre-cita son mensajes enviados por WhatsApp o SMS al paciente 24 horas y 2 horas antes de su cita, con opción de confirmar o cancelar con un solo toque. El sistema detecta automáticamente las citas del día siguiente y del turno próximo, envía el recordatorio y registra la respuesta. Si el paciente confirma, la cita queda asegurada. Si responde que no puede venir, se activa el flujo de reprogramación o cancelación. Si no responde tras los dos mensajes, recepción recibe una alerta para gestión activa.
+
+El impacto típico es una reducción del 50 al 70% en ausencias sin aviso (no-shows), que en clínicas de estética, dental u otras especialidades con citas de coste alto representa un beneficio económico directo significativo. El resultado se consigue sin que recepción dedique tiempo a confirmar citas por teléfono.
+
+La implementación es de aproximadamente 1 semana y requiere software de gestión clínica con datos de contacto del paciente, WhatsApp Business API o SMS vía Twilio. Se puede configurar el canal (WhatsApp, SMS o ambos), el tono del recordatorio, los intervalos de envío y la acción ante no-respuesta.`,
+    faqs_citables: [
+      { q: "¿Cuándo se envían los recordatorios automáticos de cita a los pacientes?", a: "Se envían 24 horas antes y 2 horas antes de la cita por WhatsApp o SMS. El paciente puede confirmar o cancelar con un solo toque en respuesta al mensaje." },
+      { q: "¿Qué pasa si el paciente no responde al recordatorio de cita?", a: "Si tras los dos recordatorios (24h y 2h antes) el paciente no ha respondido, recepción recibe una alerta para que puedan gestionar ese caso activamente." },
+      { q: "¿En cuánto se reducen las ausencias con los recordatorios automáticos?", a: "La reducción típica es del 50 al 70% en ausencias sin aviso, pasando de tasas habituales del 15-25% a un 5-10%, sin que recepción dedique tiempo a confirmar por teléfono." },
+      { q: "¿Qué canales se pueden usar para los recordatorios automáticos de cita?", a: "WhatsApp Business API y SMS. El centro puede elegir uno, ambos, o configurar cuál usar según la preferencia de cada paciente." },
+    ],
   },
   {
     id: "SAL-2.2",
@@ -5938,7 +5998,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B2",
     modulo_codigo: "2.2",
-    related_processes: ["salud-recordatorios-citas", "salud-lista-espera"]
+    related_processes: ["salud-recordatorios-citas", "salud-lista-espera"],
+    descripcion_citable: `La reprogramación automática de citas permite a los pacientes cambiar su cita sin llamar a recepción. Cuando el paciente responde que no puede venir a un recordatorio, el sistema le propone automáticamente tres fechas alternativas basadas en la disponibilidad del profesional preferido y la preferencia horaria del paciente. El paciente elige una opción con un solo toque y la cita queda reagendada. La cita anterior se libera al instante y se ofrece a la lista de espera.
+
+El proceso opera íntegramente a través de WhatsApp Business, sin intervención humana en el caso estándar. Si el paciente no selecciona ninguna de las tres opciones en el tiempo definido o solicita algo fuera del flujo automatizado, el caso escala a recepción con el contexto completo.
+
+La implementación habitual dura 2 semanas y requiere software de gestión clínica con acceso a disponibilidad del profesional y WhatsApp Business. Es especialmente útil en clínicas donde las reagendas manuales consumen tiempo de recepción y en centros con agenda apretada donde los huecos liberados tienen alta demanda.`,
+    faqs_citables: [
+      { q: "¿Cómo puede un paciente cambiar su cita en una clínica sin llamar?", a: "Si el paciente responde que no puede venir a un recordatorio de cita por WhatsApp, el sistema le propone automáticamente tres fechas alternativas. El paciente elige una con un toque y la cita queda reagendada sin intervención de recepción." },
+      { q: "¿Qué ocurre con el hueco liberado cuando un paciente reprograma?", a: "La cita anterior se libera al instante en el momento en que el paciente confirma la nueva fecha. El hueco queda disponible para ofrecerlo a la lista de espera de forma inmediata." },
+      { q: "¿Qué pasa si el paciente no escoge ninguna de las alternativas propuestas?", a: "Si el paciente no selecciona ninguna opción en el tiempo definido o solicita algo fuera del flujo, el caso escala a recepción con el contexto completo de la conversación." },
+      { q: "¿Cuánto tarda en implementarse la reprogramación automática de citas?", a: "La implementación habitual es de 2 semanas, requiriendo acceso a la disponibilidad del profesional en el software de gestión clínica y WhatsApp Business API." },
+    ],
   },
   {
     id: "SAL-2.3",
@@ -5991,7 +6062,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B2",
     modulo_codigo: "2.3",
-    related_processes: ["salud-recordatorios-citas", "salud-reprogramacion-citas"]
+    related_processes: ["salud-recordatorios-citas", "salud-reprogramacion-citas"],
+    descripcion_citable: `La lista de espera activa para clínicas es un sistema que convierte automáticamente una cancelación en una oportunidad de cita para el siguiente paciente en la lista, sin que recepción tenga que llamar a nadie. Cuando una cita se libera (cancelación o reprogramación), el sistema identifica al primer candidato de la lista de espera según el criterio configurado (FIFO, urgencia o fidelidad), le envía el hueco disponible por WhatsApp con opción de aceptar con un solo toque y espera respuesta durante el tiempo definido. Si no responde, pasa automáticamente al siguiente candidato.
+
+El proceso garantiza que los huecos liberados se cubren en minutos en lugar de quedar vacíos o requerir que recepción llame a una lista manualmente. El canal de comunicación es WhatsApp Business, que permite respuesta directa sin que el paciente tenga que llamar ni navegar por ningún sistema.
+
+La implementación es de 1 a 2 semanas y requiere software de gestión clínica, WhatsApp Business API y una lista de espera mantenida actualizada. Se puede configurar el criterio de orden en la lista, el tiempo de respuesta antes de pasar al siguiente candidato y el número máximo de pacientes a contactar por hueco.`,
+    faqs_citables: [
+      { q: "¿Cómo funciona la lista de espera activa en una clínica?", a: "Cuando una cita se libera, el sistema envía el hueco por WhatsApp al primero de la lista. Si acepta, la cita queda ocupada. Si no responde en el tiempo definido, pasa al siguiente candidato automáticamente." },
+      { q: "¿Cuánto tarda en llenarse un hueco cancelado con el sistema de lista de espera?", a: "Los huecos cancelados se cubren en minutos, frente al proceso manual de llamar a una lista que puede llevar horas. El sistema opera por WhatsApp con respuesta de un solo toque." },
+      { q: "¿Con qué criterio se ordena la lista de espera activa?", a: "El criterio es configurable por el centro: orden de llegada (FIFO), urgencia clínica o fidelidad del paciente. El sistema aplica el criterio definido de forma automática." },
+      { q: "¿Qué se necesita para implementar la lista de espera activa?", a: "Software de gestión clínica con API, WhatsApp Business API y una lista de espera actualizada. La implementación habitual es de 1 a 2 semanas." },
+    ],
   },
   {
     id: "SAL-2.4",
@@ -6044,7 +6126,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B2",
     modulo_codigo: "2.4",
-    related_processes: ["salud-recordatorios-citas", "salud-comunicacion-turnos"]
+    related_processes: ["salud-recordatorios-citas", "salud-comunicacion-turnos"],
+    descripcion_citable: `La reasignación inteligente de citas por baja de profesional es un proceso automatizado que, cuando un profesional causa baja imprevista, reasigna sus citas del día o la semana según la especialidad del sustituto, la disponibilidad de agenda y la preferencia del paciente, y notifica a cada paciente afectado con la nueva asignación, opciones de confirmar, cambiar de profesional o cancelar, todo por WhatsApp. El proceso se completa en minutos desde que se registra la baja en el sistema, sin que recepción tenga que llamar a cada paciente uno por uno.
+
+La lógica de reasignación respeta las restricciones de especialidad (no asigna a un profesional sin la habilitación para el tipo de visita), la preferencia de profesional del paciente si está registrada y la disponibilidad real del sustituto. Si no hay ningún profesional disponible para una cita concreta, el sistema ofrece al paciente reprogramar para la próxima disponibilidad del profesional original o de uno equivalente.
+
+La implementación dura entre 2 y 3 semanas y requiere software de gestión clínica con datos de especialidad por profesional, WhatsApp Business API y el proceso de sustituciones operativo. Es el proceso que cierra el ciclo de gestión de bajas: cubre al profesional, reasigna sus citas y mantiene a los pacientes informados en tiempo real.`,
+    faqs_citables: [
+      { q: "¿Cómo se notifica a los pacientes cuando su cita se reasigna por baja del profesional?", a: "El sistema envía un WhatsApp a cada paciente afectado con el nuevo profesional asignado y opciones de confirmar, solicitar cambio o cancelar. El proceso se completa en minutos desde que se registra la baja." },
+      { q: "¿Puede el sistema asignar a cualquier profesional disponible, independientemente de su especialidad?", a: "No. La lógica respeta las restricciones de especialidad y habilitación. No asigna a un profesional sin la competencia para el tipo de visita del paciente." },
+      { q: "¿Qué pasa si no hay ningún profesional disponible para una cita concreta?", a: "El sistema ofrece al paciente dos opciones: reprogramar con el profesional original en su próxima disponibilidad, o con otro profesional equivalente disponible antes." },
+      { q: "¿Cuánto tarda en completarse la reasignación de citas cuando un profesional causa baja?", a: "En minutos desde que se registra la baja en el sistema. No requiere intervención de recepción salvo los casos excepcionales que el sistema no puede resolver automáticamente." },
+    ],
   },
 
   // ── BLOQUE B3 · Reputación y reseñas ────────────────────────────────────
@@ -6099,7 +6192,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B3",
     modulo_codigo: "3.1",
-    related_processes: ["salud-alertas-resenas-negativas"]
+    related_processes: ["salud-alertas-resenas-negativas"],
+    descripcion_citable: `La solicitud automatizada de reseñas a pacientes satisfechos es un sistema que detecta las visitas completadas con resultado favorable (primera visita, tratamiento finalizado o cita de revisión sin incidencia) e invita al paciente a valorar el centro en Google, Doctoralia, Top Doctors o cualquier plataforma de reputación, a través de WhatsApp, enviado en el momento de mayor disposición: entre 2 y 6 horas después de la visita. El mensaje incluye el enlace directo a la plataforma elegida y un texto personalizado con el nombre del paciente y el profesional que le atendió.
+
+La lógica de invitación respeta condiciones de exclusión: no se invita a pacientes con visita reciente ya valorada, a pacientes que han indicado no querer recibir comunicaciones o a visitas con incidencia registrada. El sistema mantiene un registro de los pacientes invitados para evitar mensajes duplicados.
+
+La implementación dura entre 1 y 2 semanas y requiere datos de visitas completadas del software de gestión clínica y WhatsApp Business API. Los centros que la implementan suelen multiplicar el volumen mensual de reseñas en Google en 6 a 10 semanas, lo que impacta directamente en el posicionamiento local y en la tasa de conversión de pacientes nuevos que buscan el centro antes de su primera visita.`,
+    faqs_citables: [
+      { q: "¿Cómo aumenta una clínica sus reseñas en Google sin pedir a los pacientes de forma invasiva?", a: "Enviando un mensaje de WhatsApp personalizado 2-6 horas después de la visita, cuando el paciente está satisfecho y el recuerdo es fresco. El mensaje incluye enlace directo a la plataforma de valoración y solo se envía tras visitas con resultado favorable." },
+      { q: "¿En qué plataformas de reputación puede solicitar valoraciones el sistema?", a: "Google Business, Doctoralia, Top Doctors y cualquier plataforma con enlace directo a perfil. El centro elige la plataforma prioritaria en la configuración." },
+      { q: "¿Cómo evita el sistema enviar solicitudes de reseña a pacientes insatisfechos?", a: "Solo invita tras visitas sin incidencia registrada. Excluye pacientes que ya han valorado recientemente, que han pedido no recibir comunicaciones o cuya visita tiene una incidencia documentada." },
+      { q: "¿En cuánto tiempo se nota el efecto en el número de reseñas?", a: "Los centros que lo implementan suelen multiplicar el volumen mensual de reseñas en 6 a 10 semanas, lo que mejora el posicionamiento en Google Maps y la conversión de búsquedas locales." },
+    ],
   },
   {
     id: "SAL-3.2",
@@ -6152,7 +6256,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B3",
     modulo_codigo: "3.2",
-    related_processes: ["salud-solicitud-resenas"]
+    related_processes: ["salud-solicitud-resenas"],
+    descripcion_citable: `El sistema de alertas ante reseñas negativas para clínicas monitoriza en tiempo real las plataformas de reputación configuradas (Google Business, Doctoralia, Top Doctors) y notifica al responsable del centro por WhatsApp o email en los 15 minutos siguientes a la publicación de una reseña con valoración igual o inferior a 3 estrellas. La notificación incluye el texto completo de la reseña, el nombre del perfil que la publica y el enlace directo para responder desde la plataforma.
+
+Al mismo tiempo, el sistema genera un borrador de respuesta adaptado al contexto de la reseña (queja de espera, problema de trato, error de facturación) que el responsable puede usar, modificar o descartar. Este borrador se basa en plantillas ajustadas al tipo de queja y al tono del centro, que se configuran durante la implementación.
+
+La implementación dura entre 1 y 2 semanas. No requiere ningún cambio en la plataforma de reseñas: el sistema accede por las APIs públicas o mediante monitorización web. El beneficio principal es que el centro puede responder en el mismo día, lo que tiene impacto directo en cómo perciben la gestión los pacientes potenciales que leen las reseñas antes de elegir clínica.`,
+    faqs_citables: [
+      { q: "¿Cómo sabe una clínica que alguien ha publicado una reseña negativa en Google?", a: "El sistema monitoriza las plataformas de reputación en tiempo real y envía una alerta al responsable por WhatsApp o email en los 15 minutos siguientes a cualquier reseña con 3 estrellas o menos." },
+      { q: "¿Qué incluye la alerta de reseña negativa que recibe el responsable?", a: "El texto completo de la reseña, el nombre del perfil y el enlace directo para responder desde la plataforma. También incluye un borrador de respuesta adaptado al tipo de queja." },
+      { q: "¿En qué plataformas funciona el sistema de alertas de reseñas negativas?", a: "Google Business, Doctoralia y Top Doctors. El centro puede activar las plataformas donde tiene más presencia." },
+      { q: "¿Por qué es importante responder rápido a las reseñas negativas de una clínica?", a: "Los pacientes potenciales leen las reseñas antes de elegir centro. Una respuesta rápida, profesional y empática puede contrarrestar el impacto de una reseña negativa y demostrar cómo el centro gestiona los problemas." },
+    ],
   },
 
   // ── BLOQUE B4 · Seguimiento clínico y fidelización ──────────────────────
@@ -6207,7 +6322,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B4",
     modulo_codigo: "4.1",
-    related_processes: ["salud-reactivacion-pacientes", "salud-mensajes-programados"]
+    related_processes: ["salud-reactivacion-pacientes", "salud-mensajes-programados"],
+    descripcion_citable: `Los recordatorios de revisión periódica son mensajes automáticos enviados por WhatsApp cuando se aproxima la fecha de revisión recomendada de un paciente, calculada a partir del protocolo de seguimiento de su especialidad o tratamiento. Por ejemplo: 6 meses después de una limpieza dental, 12 meses después de una revisión oftalmológica, 3 meses después del final de un tratamiento de fisioterapia. El mensaje menciona el motivo del recordatorio y ofrece al paciente reservar directamente o contactar con el centro.
+
+El sistema no requiere que el profesional cree manualmente ninguna alerta: los plazos de revisión se configuran por tipo de visita o especialidad una sola vez durante la implementación y el sistema los aplica automáticamente a todos los pacientes que cumplen las condiciones.
+
+La implementación dura entre 1 y 2 semanas y requiere historial de visitas con tipo de consulta registrado y WhatsApp Business API. Es el proceso con mayor impacto directo en la recurrencia de pacientes sin inversión en captación nueva: convierte pacientes de visita única o puntual en pacientes de ciclo completo.`,
+    faqs_citables: [
+      { q: "¿Cómo sabe el sistema cuándo enviar el recordatorio de revisión a un paciente?", a: "El plazo de revisión se configura por tipo de visita o especialidad una sola vez. El sistema aplica ese plazo automáticamente a cada paciente a partir de la fecha de su última visita del tipo correspondiente." },
+      { q: "¿Qué tipos de visitas pueden generar recordatorios de revisión periódica?", a: "Cualquier tipo de visita con protocolo de seguimiento definido: revisión dental, oftalmológica, fisioterapia, dermatología, revisiones post-cirugía y cualquier especialidad con seguimiento periódico." },
+      { q: "¿Qué impacto tiene en la recurrencia de pacientes?", a: "Es el proceso con mayor impacto directo en recurrencia sin inversión en captación. Convierte pacientes de visita única en pacientes de ciclo completo al no dejar que pasen a ser inactivos por olvido." },
+      { q: "¿Necesita el profesional crear alertas manualmente para cada paciente?", a: "No. Los plazos de revisión se configuran por tipo de visita una vez. El sistema los aplica automáticamente a todos los pacientes sin ninguna acción manual del profesional." },
+    ],
   },
   {
     id: "SAL-4.2",
@@ -6260,7 +6386,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B4",
     modulo_codigo: "4.2",
-    related_processes: ["salud-recordatorios-revision", "salud-mensajes-programados"]
+    related_processes: ["salud-recordatorios-revision", "salud-mensajes-programados"],
+    descripcion_citable: `La reactivación de pacientes que no han vuelto es un proceso automatizado que identifica pacientes con tiempo de última visita superior al umbral definido (3, 6 o 12 meses según la especialidad) y les envía un mensaje personalizado por WhatsApp con una propuesta de cita directa, sin que recepción tenga que revisar manualmente el historial de pacientes. El mensaje menciona la fecha de la última visita, el profesional que les atendió y una CTA para reservar directamente o hablar con el centro.
+
+El sistema excluye automáticamente pacientes con visita futura ya programada, pacientes dados de baja, pacientes fallecidos (si está marcado en el sistema) y cualquier paciente que haya solicitado no recibir comunicaciones. Solo envía mensajes a pacientes con consentimiento registrado para ese tipo de comunicación, respeta la frecuencia máxima configurada y registra las bajas.
+
+La implementación dura 2 a 3 semanas y requiere historial de visitas del software de gestión clínica, lista de consentimientos y WhatsApp Business API. Los centros que lo implementan suelen recuperar entre el 10 y el 20% de los pacientes contactados, que de otra forma quedarían en la base de datos sin actividad.`,
+    faqs_citables: [
+      { q: "¿Cómo funciona la reactivación automática de pacientes inactivos en una clínica?", a: "El sistema detecta pacientes sin visita en los últimos N meses (según la especialidad), les envía un mensaje personalizado por WhatsApp con la fecha de su última visita y una propuesta de nueva cita, sin intervención de recepción." },
+      { q: "¿Qué porcentaje de pacientes inactivos vuelve tras recibir el mensaje de reactivación?", a: "Los centros que lo implementan recuperan habitualmente entre el 10 y el 20% de los pacientes contactados, que de otra forma quedarían en la base de datos sin actividad." },
+      { q: "¿Cómo garantiza el sistema el cumplimiento del RGPD en la reactivación de pacientes?", a: "Solo envía mensajes a pacientes con consentimiento registrado para comunicaciones comerciales, respeta la frecuencia máxima por paciente y registra las bajas de forma inmediata." },
+      { q: "¿A qué pacientes NO contacta el sistema de reactivación?", a: "Excluye pacientes con visita futura programada, dados de baja, sin consentimiento registrado o que ya han recibido un mensaje de reactivación recientemente." },
+    ],
   },
   {
     id: "SAL-3.3",
@@ -6316,7 +6453,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B3",
     modulo_codigo: "3.3",
-    related_processes: ["salud-solicitud-resenas", "salud-reactivacion-pacientes"]
+    related_processes: ["salud-solicitud-resenas", "salud-reactivacion-pacientes"],
+    descripcion_citable: `La encuesta de satisfacción post-visita automatizada para clínicas es un sistema que envía al paciente, entre 4 y 24 horas después de su cita, un cuestionario breve de 2 a 4 preguntas por WhatsApp, con respuestas mediante botones o escala numérica, sin necesidad de que el paciente navegue a ninguna URL. Las preguntas típicas incluyen valoración general de la visita, trato recibido, limpieza y tiempo de espera, configurables según las prioridades del centro.
+
+Si la valoración supera el umbral definido (habitualmente 4 sobre 5 o equivalente), el sistema invita automáticamente al paciente a dejar una reseña pública. Si la valoración es baja o el paciente reporta un problema concreto, el sistema escala al responsable con el detalle de la respuesta para gestión proactiva del caso antes de que se publique ninguna reseña negativa.
+
+La implementación dura 1 a 2 semanas y requiere datos de citas completadas del software de gestión clínica y WhatsApp Business API. El resultado es un flujo continuo de feedback interno estructurado y, de forma paralela, una captación activa de reseñas positivas, todo sin carga adicional para el equipo de recepción.`,
+    faqs_citables: [
+      { q: "¿En qué se diferencia esta encuesta de un NPS estándar?", a: "Opera por WhatsApp con botones de respuesta, sin redirigir a ninguna URL. Se envía al momento justo (4-24h post visita) y está conectada a un flujo de derivación: si la nota es alta, invita a dejar reseña pública; si es baja, escala al responsable." },
+      { q: "¿Cuántas preguntas tiene la encuesta de satisfacción post-visita?", a: "Entre 2 y 4 preguntas configurables: valoración general, trato, tiempo de espera y limpieza son las más habituales. El diseño corto aumenta la tasa de respuesta." },
+      { q: "¿Qué pasa si un paciente da una nota baja en la encuesta?", a: "El sistema escala al responsable con el detalle de la respuesta para que pueda intervenir de forma proactiva, antes de que el paciente publique una reseña negativa en plataformas públicas." },
+      { q: "¿Cómo conecta la encuesta con el sistema de reseñas en Google?", a: "Si la valoración supera el umbral configurado, el sistema invita automáticamente al paciente a publicar una reseña en la plataforma elegida, con enlace directo." },
+    ],
   },
   {
     id: "SAL-4.3",
@@ -6369,7 +6517,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B4",
     modulo_codigo: "4.3",
-    related_processes: ["salud-reactivacion-pacientes", "salud-recordatorios-revision"]
+    related_processes: ["salud-reactivacion-pacientes", "salud-recordatorios-revision"],
+    descripcion_citable: `Los mensajes programados de seguimiento para pacientes son comunicaciones automatizadas enviadas por WhatsApp en momentos clave del ciclo de atención: el día de la intervención o el día de inicio de un tratamiento (mensaje de ánimo y recordatorio de cuidados), a los 3 días (comprobación del estado), a la semana (recordatorio de la próxima cita de revisión si aplica) o en la fecha de su próximo aniversario de primera visita. Cada mensaje se activa por un evento registrado en el software de gestión clínica y se envía de forma personalizada con el nombre del paciente y el contexto del tratamiento.
+
+Los mensajes programados no son newsletters ni campañas: son comunicaciones 1 a 1, contextuales y esperadas, lo que las diferencia de la comunicación masiva y explica su alta tasa de apertura y respuesta. El paciente no percibe automatización: percibe seguimiento por parte del centro.
+
+La implementación dura 2 semanas y requiere integración con el software de gestión clínica para detectar los eventos trigger y WhatsApp Business API. Es especialmente útil en clínicas de estética, dental y especialidades donde el tratamiento tiene una duración conocida y el seguimiento post-tratamiento es parte del protocolo clínico.`,
+    faqs_citables: [
+      { q: "¿Qué tipo de mensajes envía el sistema de seguimiento programado a pacientes?", a: "Mensajes 1 a 1 en momentos clave: día del tratamiento, 3 días después, a la semana y en el aniversario de primera visita. Cada mensaje es personalizado con el nombre del paciente y el contexto del tratamiento." },
+      { q: "¿En qué se diferencia el seguimiento programado de una campaña de email marketing?", a: "Son comunicaciones 1 a 1 activadas por eventos clínicos específicos, no campañas masivas. El paciente los percibe como seguimiento personalizado por parte del centro, lo que genera alta tasa de apertura y respuesta." },
+      { q: "¿Qué eventos activan el envío de un mensaje de seguimiento?", a: "Visita completada, inicio de tratamiento, finalización de tratamiento, próxima cita programada o aniversario de primera visita, según la configuración del centro." },
+      { q: "¿Para qué especialidades médicas es más útil el seguimiento programado?", a: "Especialmente en estética, dental y especialidades con tratamientos de duración conocida, donde el seguimiento post-tratamiento es parte del protocolo clínico." },
+    ],
   },
 
   // ── BLOQUE B5 · Administración y facturación ────────────────────────────
@@ -6423,7 +6582,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B5",
     modulo_codigo: "5.1",
-    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"]
+    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"],
+    descripcion_citable: `La facturación automática de mutuas y seguros en clínicas es un sistema que genera y envía los partes de facturación a cada aseguradora (Adeslas, Asisa, Sanitas, MUFACE y cualquier otra con protocolo XML o portal propio) al finalizar cada acto médico o al cierre de sesión del día, sin que el personal administrativo tenga que rellenar formularios manualmente. El sistema cruza los datos de la visita (prestación, código de acto, profesional, fecha) con la tarifa pactada con cada mutua y genera el parte en el formato correcto para cada aseguradora.
+
+Cuando una aseguradora rechaza o devuelve un parte, el sistema identifica el motivo del rechazo, clasifica el error (código incorrecto, paciente no activo, profesional no habilitado) y alerta al administrativo con la información concreta necesaria para corregirlo, sin que tenga que entrar al portal de la mutua a buscarlo.
+
+La implementación dura entre 3 y 5 semanas por la complejidad de integrar los formatos de distintas aseguradoras, y requiere credenciales de acceso a los portales o APIs de cada una. El beneficio principal es la reducción del tiempo administrativo dedicado a facturación y la disminución de rechazos por errores de formato, que en clínicas con alto volumen de mutuas representan una pérdida significativa de ingresos.`,
+    faqs_citables: [
+      { q: "¿Cómo funciona la facturación automática a mutuas en una clínica?", a: "Al finalizar cada acto médico, el sistema genera el parte en el formato de cada aseguradora (XML, portal propio) con los datos de la visita y la tarifa pactada, y lo envía sin intervención del personal administrativo." },
+      { q: "¿Qué pasa cuando una aseguradora rechaza un parte de facturación?", a: "El sistema identifica el motivo del rechazo (código incorrecto, paciente no activo, profesional no habilitado) y alerta al administrativo con la información concreta para corregirlo, sin que tenga que buscar el error en el portal de la mutua." },
+      { q: "¿Con cuántas mutuas puede integrarse el sistema de facturación automática?", a: "Con cualquier aseguradora que disponga de portal web, API o acepte formato XML: Adeslas, Asisa, Sanitas, MUFACE y cualquier otra con protocolo estándar. La implementación varía por aseguradora." },
+      { q: "¿Cuánto tiempo ahorra la facturación automática a mutuas?", a: "Depende del volumen, pero clínicas con más de 50 actos médicos diarios con mutuas reportan reducir hasta un 70% del tiempo administrativo dedicado a facturación." },
+    ],
   },
   {
     id: "SAL-5.2",
@@ -6476,7 +6646,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B5",
     modulo_codigo: "5.2",
-    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"]
+    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"],
+    descripcion_citable: `El seguimiento de cobros pendientes automatizado para clínicas es un proceso que identifica facturas o copagos impagados pasado el plazo acordado y envía recordatorios de cobro personalizados por WhatsApp o email al paciente, de forma escalonada: primer aviso a los 3 días del vencimiento, segundo aviso a los 7 días y escalada al responsable administrativo a los 15 días si sigue sin pagarse. Cada mensaje incluye el detalle de lo pendiente y el enlace de pago si el centro tiene pasarela de cobro configurada.
+
+El sistema distingue entre deudas de pacientes particulares (gestión directa) y diferencias de copago o saldos pendientes de aseguradoras (que escalan al equipo de facturación), y nunca envía recordatorios a pacientes que ya han solicitado un aplazamiento o tienen un acuerdo de pago activo.
+
+La implementación dura entre 1 y 2 semanas y requiere software de gestión clínica con estado de facturación por paciente y canal de mensajería. El resultado práctico es reducir la morosidad y el tiempo que el equipo administrativo dedica a hacer seguimiento manual de cobros, que en clínicas con alto volumen de particulares puede representar varias horas semanales.`,
+    faqs_citables: [
+      { q: "¿Cómo hace seguimiento automático de cobros pendientes una clínica?", a: "El sistema identifica facturas impagadas pasado el plazo e inicia una secuencia de recordatorios por WhatsApp o email: primer aviso a los 3 días, segundo a los 7, y escalada al administrativo a los 15 días." },
+      { q: "¿Qué incluye el recordatorio de cobro que recibe el paciente?", a: "El detalle del importe pendiente, la fecha de vencimiento y, si el centro tiene pasarela de pago, el enlace directo para pagar online sin llamar." },
+      { q: "¿Cómo evita el sistema molestar a pacientes que ya tienen un acuerdo de pago?", a: "Excluye de los recordatorios a pacientes con aplazamiento activo o acuerdo de pago registrado en el software de gestión clínica." },
+      { q: "¿Distingue el sistema entre deuda de paciente particular y saldo pendiente de aseguradora?", a: "Sí. Los recordatorios a pacientes particulares los gestiona el sistema de forma directa. Las diferencias con aseguradoras escalan al equipo de facturación para gestión específica." },
+    ],
   },
   {
     id: "SAL-5.3",
@@ -6528,7 +6709,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B5",
     modulo_codigo: "5.3",
-    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"]
+    related_processes: ["salud-seguimiento-cobros", "salud-reporte-diario"],
+    descripcion_citable: `El registro automatizado de gastos para clínicas es un sistema que digitaliza y categoriza albaranes, facturas de proveedores y tickets de gasto utilizando OCR e inteligencia artificial, eliminando la entrada manual de datos en el software de contabilidad o gestión. El sistema extrae automáticamente proveedor, importe, fecha, IVA y categoría de gasto usando OCR e inteligencia artificial, y registra el gasto en el sistema contable del centro en el plazo de minutos desde la recepción del documento.
+
+Los documentos pueden llegar por múltiples vías: email del proveedor (el sistema los procesa en el buzón configurado), foto desde el móvil del responsable de compras, o escaneo desde el punto de recepción de mercancía. El sistema aprende de las correcciones manuales para mejorar la categorización de cada proveedor habitual.
+
+La implementación dura entre 2 y 3 semanas y requiere acceso al software contable del centro y configuración del canal de entrada de documentos. El resultado práctico es que el equipo administrativo no dedica tiempo a teclear datos de facturas, que el registro de gastos está al día sin retraso de fin de mes y que la categorización es consistente para el análisis de costes por área.`,
+    faqs_citables: [
+      { q: "¿Cómo funciona el registro automático de gastos en una clínica?", a: "El sistema recibe facturas o albaranes por email, foto o escáner, extrae automáticamente proveedor, importe, fecha, IVA y categoría con OCR e IA, y registra el gasto en el software contable sin entrada manual." },
+      { q: "¿Por qué canales pueden entrar los documentos de gasto al sistema?", a: "Por email del proveedor, foto desde el móvil del responsable de compras o escáner en recepción. El sistema procesa automáticamente los documentos según el canal de entrada configurado." },
+      { q: "¿Con qué software contable es compatible el registro automático de gastos?", a: "Con cualquier software contable que disponga de API o importación de asientos. La implementación incluye la configuración del conector con el sistema contable del centro." },
+      { q: "¿Qué pasa cuando el sistema categoriza un gasto incorrectamente?", a: "El administrativo corrige la categoría manualmente y el sistema aprende de esa corrección para aplicarla automáticamente en futuras facturas del mismo proveedor." },
+    ],
   },
   {
     id: "SAL-5.4",
@@ -6581,7 +6773,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B5",
     modulo_codigo: "5.4",
-    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"]
+    related_processes: ["salud-facturacion-mutuas", "salud-registro-gastos"],
+    descripcion_citable: `El reporte diario de gestión para clínicas es un resumen automatizado enviado cada mañana al responsable o gerente del centro con los indicadores clave del día anterior: citas realizadas vs. planificadas, tasa de ausencias, ingresos facturados, cobros pendientes y principales incidencias registradas (cancelaciones tardías, quejas, errores de facturación). El reporte llega por WhatsApp o email antes de las 8:30, listo para la reunión de apertura del centro si la hay.
+
+El reporte no requiere que nadie lo prepare: se genera automáticamente a partir de los datos del software de gestión clínica y el sistema de facturación. Cada indicador tiene su umbral de alerta definido durante la implementación, de modo que el responsable puede identificar de un vistazo los puntos que requieren atención sin tener que revisar múltiples pantallas.
+
+La implementación dura entre 1 y 2 semanas y requiere integración con el software de gestión clínica y el sistema de facturación. Es especialmente útil para directores médicos o gerentes de clínicas con varios profesionales, que necesitan visibilidad del negocio sin dedicar tiempo a consolidar datos manualmente.`,
+    faqs_citables: [
+      { q: "¿Qué información incluye el reporte diario automatizado de una clínica?", a: "Citas realizadas vs. planificadas, tasa de ausencias, ingresos facturados, cobros pendientes e incidencias del día (cancelaciones tardías, quejas, errores de facturación)." },
+      { q: "¿Cuándo recibe el responsable el reporte diario de gestión?", a: "Antes de las 8:30 del día siguiente, listo para la apertura del centro. El horario de envío es configurable según las necesidades del centro." },
+      { q: "¿Cómo se genera el reporte diario sin que nadie lo prepare?", a: "Se genera automáticamente a partir de los datos del software de gestión clínica y el sistema de facturación, sin intervención manual. El responsable recibe el reporte ya consolidado." },
+      { q: "¿Por qué canal llega el reporte diario al responsable?", a: "Por WhatsApp o email, según la preferencia del responsable. Si el centro tiene varios responsables (director médico y gerente), cada uno puede recibir un reporte con los indicadores relevantes para su rol." },
+    ],
   },
 
   // ── BLOQUE B6 · Gestión del equipo clínico ──────────────────────────────
@@ -6639,7 +6842,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B6",
     modulo_codigo: "6.1",
-    related_processes: ["salud-onboarding-personal", "salud-sustituciones-bajas"]
+    related_processes: ["salud-onboarding-personal", "salud-sustituciones-bajas"],
+    descripcion_citable: `La gestión de comunicación de turnos para personal sanitario es un sistema que automatiza el envío de los horarios de trabajo semanales o quincenales al personal clínico vía WhatsApp, con confirmación de lectura y posibilidad de reportar incidencias directamente desde el mensaje. Cada profesional recibe solo su turno con la información relevante (día, hora de entrada y salida, centro si hay varios, cobertura asignada), sin necesidad de acceder a ninguna aplicación adicional.
+
+Cuando un profesional reporta una incidencia de turno (baja, imposibilidad de asistir, solicitud de cambio), el sistema registra la incidencia y alerta al responsable de RRHH o coordinación con el contexto completo. El responsable gestiona el cambio desde el panel y el sistema envía la actualización al profesional afectado y, si aplica, al que asume la cobertura.
+
+La implementación dura entre 1 y 2 semanas y requiere el calendario o cuadrante de turnos del centro en formato digital y WhatsApp Business API. Es especialmente útil para clínicas con varios profesionales, con turnos rotativos o con múltiples sedes, donde la comunicación de cuadrante por email o PDF genera confusión y consultas repetidas a coordinación.`,
+    faqs_citables: [
+      { q: "¿Cómo reciben los sanitarios su turno de trabajo de forma automática?", a: "El sistema envía el turno por WhatsApp a cada profesional con la información relevante (día, horario, centro), con opción de confirmar lectura e informar de incidencias directamente desde el mensaje." },
+      { q: "¿Qué pasa cuando un sanitario reporta una baja o no puede acudir a su turno?", a: "El sistema registra la incidencia y alerta al responsable con el contexto completo. Una vez resuelto el cambio, envía la actualización al profesional afectado y al que asume la cobertura." },
+      { q: "¿Es necesario que el personal descargue una app para recibir los turnos?", a: "No. La comunicación se hace por WhatsApp, que la mayoría del personal ya tiene instalado. No se requiere acceso a ninguna aplicación adicional ni formación específica." },
+      { q: "¿Qué formato necesita el cuadrante de turnos para conectarse al sistema?", a: "Cualquier formato digital: hoja de cálculo, archivo exportado del software de gestión o calendario. El sistema procesa el cuadrante y distribuye la información personalizada a cada profesional." },
+    ],
   },
   {
     id: "SAL-6.2",
@@ -6692,7 +6906,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B6",
     modulo_codigo: "6.2",
-    related_processes: ["salud-comunicacion-turnos", "salud-sustituciones-bajas"]
+    related_processes: ["salud-comunicacion-turnos", "salud-sustituciones-bajas"],
+    descripcion_citable: `El onboarding digital de nuevo personal sanitario es un proceso automatizado que entrega a cada nueva incorporación, el día de inicio, todos los documentos, protocolos y recursos que necesita para comenzar a trabajar: manual de bienvenida, protocolo de cada especialidad, credenciales de acceso a sistemas, formularios de firma de RGPD y normativa del centro, acceso a la formación obligatoria y calendario de las primeras semanas. Todo se entrega por WhatsApp con confirmación de lectura y firma digital para los documentos que lo requieren.
+
+El proceso está estructurado en fases según el rol (recepcionista, auxiliar, médico especialista, fisioterapeuta) y se adapta automáticamente según el contrato registrado. No requiere que RRHH prepare ningún paquete de bienvenida manualmente: el sistema activa el flujo al crear el trabajador en el software de gestión con fecha de inicio.
+
+La implementación dura entre 2 y 3 semanas y requiere software de gestión de personal, los documentos del centro digitalizados y WhatsApp Business API. El resultado práctico es que la nueva incorporación llega al primer día con toda la información necesaria y que RRHH no dedica tiempo a preparar ni hacer seguimiento del onboarding.`,
+    faqs_citables: [
+      { q: "¿Qué documentos y recursos recibe el nuevo personal sanitario en el onboarding digital?", a: "Manual de bienvenida, protocolos de especialidad, credenciales de acceso a sistemas, documentos de firma RGPD, normativa del centro, acceso a formación obligatoria y calendario de primeras semanas." },
+      { q: "¿Cómo se activa el onboarding digital de un nuevo empleado?", a: "Al registrar al trabajador en el software de gestión con fecha de inicio. El sistema lanza automáticamente el flujo de bienvenida adaptado al rol sin que RRHH tenga que intervenir." },
+      { q: "¿Cómo firma el nuevo personal los documentos de RGPD y normativa?", a: "El sistema solicita firma digital directamente en el flujo de WhatsApp, con confirmación de lectura para cada documento. No se necesita firma en papel ni presencia física en RRHH." },
+      { q: "¿Se adapta el onboarding según el rol del nuevo empleado?", a: "Sí. El flujo es distinto para recepcionista, auxiliar, médico especialista o fisioterapeuta, según el rol registrado en el contrato." },
+    ],
   },
   {
     id: "SAL-6.3",
@@ -6745,7 +6970,18 @@ export const processes: Process[] = [
     landing_slug: "salud",
     bloque_negocio: "B6",
     modulo_codigo: "6.3",
-    related_processes: ["salud-comunicacion-turnos", "salud-reasignacion-profesional"]
+    related_processes: ["salud-comunicacion-turnos", "salud-reasignacion-profesional"],
+    descripcion_citable: `El sistema de gestión de sustituciones por bajas en clínicas automatiza el proceso de cubrir la ausencia de un profesional sanitario cuando se produce una baja imprevista: notifica a la bolsa de sustitutos disponibles según su especialidad, los días libres registrados y la cercanía al centro, ofrece el turno por WhatsApp con respuesta de un solo toque y confirma la sustitución al profesional, al responsable y al software de gestión en cuanto hay aceptación.
+
+El sistema gestiona la lógica de cobertura completa sin intervención del coordinador: si el primero no puede, pasa al segundo candidato automáticamente. Si ningún sustituto disponible acepta en el tiempo definido, escala al responsable con la lista de candidatos contactados y el estado de cada uno, para que pueda intervenir con el contexto completo.
+
+La implementación dura entre 2 y 3 semanas y requiere bolsa de sustitutos configurada con disponibilidad, especialidad y contacto, software de gestión clínica y WhatsApp Business API. Es especialmente útil para clínicas con alta rotación de personal o que trabajan con bolsa de sustitutos frecuente (fisioterapia, enfermería, especialidades con agenda muy cargada).`,
+    faqs_citables: [
+      { q: "¿Cómo cubre automáticamente una clínica la baja de un profesional?", a: "El sistema notifica a los sustitutos disponibles de la misma especialidad por WhatsApp, con respuesta de un toque. El primero en aceptar confirma la cobertura y el sistema actualiza el software de gestión automáticamente." },
+      { q: "¿Qué pasa si ningún sustituto acepta en el tiempo definido?", a: "El sistema escala al responsable con la lista de candidatos contactados y el estado de cada uno, para que pueda intervenir con el contexto completo y buscar alternativas." },
+      { q: "¿Qué criterios usa el sistema para seleccionar el sustituto a contactar?", a: "Especialidad, disponibilidad registrada, cercanía al centro y orden de prioridad configurado. El sistema aplica los criterios automáticamente sin que el coordinador tenga que revisar ninguna lista." },
+      { q: "¿Se notifica a los pacientes afectados cuando un profesional causa baja?", a: "El sistema de sustituciones puede conectarse con el proceso de reasignación de citas para notificar automáticamente a los pacientes afectados una vez confirmada la cobertura." },
+    ],
   },
   // ─── Academias / Formación ───────────────────────────────────────────────
   {

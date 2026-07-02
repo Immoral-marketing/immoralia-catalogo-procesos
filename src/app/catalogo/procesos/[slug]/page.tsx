@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import ProcessDetail from '@/pages/ProcessDetail'
 import JsonLd from '@/components/JsonLd'
-import { breadcrumbList, serviceSchema, SECTOR_NAMES, BASE_URL } from '@/lib/schema-org'
+import { breadcrumbList, serviceSchema, faqPageSchema, howToSchema, SECTOR_NAMES, BASE_URL } from '@/lib/schema-org'
 import { buildProcessMetadata } from '@/lib/metadata'
 import { processes } from '@/data/processes'
 
@@ -31,11 +31,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     : null
 
   const service = proc ? serviceSchema(proc) : null
+  const faqPage = proc?.faqs_citables && proc.faqs_citables.length >= 2
+    ? faqPageSchema(proc.faqs_citables)
+    : null
+  const howTo = proc?.how_it_works_steps && proc.how_it_works_steps.length >= 2
+    ? howToSchema(proc)
+    : null
 
   return (
     <>
       {crumbs && <JsonLd data={crumbs} />}
       {service && <JsonLd data={service} />}
+      {faqPage && <JsonLd data={faqPage} />}
+      {howTo && <JsonLd data={howTo} />}
       <Suspense>
         <ProcessDetail />
       </Suspense>

@@ -85,3 +85,36 @@ export function serviceSchema(proc: {
     url: `${BASE_URL}/catalogo/procesos/${proc.slug}`,
   }
 }
+
+export function faqPageSchema(faqs: { q: string; a: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
+      },
+    })),
+  }
+}
+
+export function howToSchema(proc: {
+  nombre: string
+  tagline?: string
+  how_it_works_steps: { title: string; short: string; detail?: string }[]
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: proc.nombre,
+    description: proc.tagline ?? '',
+    step: proc.how_it_works_steps.map(s => ({
+      '@type': 'HowToStep',
+      name: s.title,
+      text: s.detail ? `${s.short} ${s.detail}` : s.short,
+    })),
+  }
+}

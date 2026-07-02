@@ -17,6 +17,14 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 
 ---
 
+## LL-009 — Verificar slug↔modulo_codigo antes de inyectar contenido en lotes paralelos
+**Fecha:** 2026-07-02
+**Spec origen:** SPEC-22
+**Stack afectado:** src/data/processes.ts (edición masiva de contenido)
+**Lección:** Al inyectar contenido en lotes paralelos sobre processes.ts, el orden en el scratchpad de generación NO coincide necesariamente con el orden en el fichero. Se inyectó contenido de 6 procesos en los procesos incorrectos (2 swaps y 1 ciclo de 4). El build TypeScript no detecta este error porque los tipos son correctos; solo una revisión semántica lo descubre.
+**Cómo aplicar:** antes de hacer edits en lote de contenido por proceso, leer el slug y el nombre de cada proceso directamente del fichero y cruzarlos con el contenido a inyectar. No asumir que "proceso N de la lista" = "proceso con modulo_codigo N.X" sin verificar. Anclar el edit con el slug o el nombre del proceso como parte del old_string.
+**Severidad:** Media
+
 ## Entradas
 
 <!-- brianspec-build añadirá entradas aquí siguiendo este formato:
