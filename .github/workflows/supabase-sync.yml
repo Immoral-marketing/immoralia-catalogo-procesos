@@ -42,38 +42,9 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
-      - name: Deploy Edge Functions to production
-        id: functions
-        # DEPLOY_FAILED propaga el fallo al final del paso: sin esto, un deploy
-        # fallido solo quedaba escrito en el log y el job seguía en verde.
-        run: |
-          FUNCTIONS_OUTPUT=""
-          DEPLOY_FAILED=0
-          if [ -d "supabase/functions" ]; then
-            for func_dir in supabase/functions/*/; do
-              func_name=$(basename "$func_dir")
-              if [ "$func_name" != "_shared" ]; then
-                echo "Deploying function: $func_name"
-                if result=$(supabase functions deploy "$func_name" \
-                  --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
-                  2>&1); then
-                  echo "$result"
-                else
-                  echo "FALLO en $func_name: $result"
-                  DEPLOY_FAILED=1
-                fi
-                FUNCTIONS_OUTPUT="$FUNCTIONS_OUTPUT\n- $func_name: $result"
-              fi
-            done
-          else
-            FUNCTIONS_OUTPUT="No edge functions found"
-          fi
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$FUNCTIONS_OUTPUT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          exit $DEPLOY_FAILED
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      # El paso "Deploy Edge Functions" se eliminó (07/2026): las 5 functions de
+      # supabase/functions/ son legacy del stack Vite — todas fueron portadas a
+      # API routes de Next.js (src/app/api/*) y ya nada las invoca.
 
       - name: Setup Node.js for embeddings
         uses: actions/setup-node@v4
@@ -103,7 +74,6 @@ jobs:
         env:
           CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
           MIGRATIONS_OUTPUT: ${{ steps.migrations.outputs.output }}
-          FUNCTIONS_OUTPUT: ${{ steps.functions.outputs.output }}
           PR_NUMBER: ${{ github.event.pull_request.number || '0' }}
           PR_TITLE: ${{ github.event.pull_request.title || 'Ejecución manual (workflow_dispatch)' }}
           PR_URL: ${{ github.event.pull_request.html_url || github.server_url }}
@@ -116,7 +86,6 @@ jobs:
 
           token = os.environ["CLICKUP_TOKEN"]
           migrations = os.environ.get("MIGRATIONS_OUTPUT", "Sin cambios")
-          functions = os.environ.get("FUNCTIONS_OUTPUT", "Sin cambios")
           pr_number = os.environ["PR_NUMBER"]
           pr_title = os.environ["PR_TITLE"]
           pr_url = os.environ["PR_URL"]
@@ -136,9 +105,6 @@ jobs:
           content += "---\n\n"
           content += "## Migraciones SQL aplicadas\n\n"
           content += "```\n" + migrations.strip() + "\n```\n\n"
-          content += "---\n\n"
-          content += "## Edge Functions desplegadas\n\n"
-          content += "```\n" + functions.strip() + "\n```\n\n"
           content += "---\n\n"
           content += "## Estado: Produccion sincronizada con Staging\n"
 
