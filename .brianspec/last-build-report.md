@@ -1,41 +1,43 @@
 ═══════════════════════════════════════════════
-📋 SPEC-22: GEO Content — FAQPage + HowTo + Prosa Citable
-Fecha: 2026-07-02
-Rama: brianspec/22-geo-content-faqpage-howto
+📋 SPEC-23: Análisis SEO continuo asistido por Claude sobre GSC
+Fecha: 2026-07-03
+Rama: brianspec/23-analisis-gsc-continuo-claude
 ═══════════════════════════════════════════════
 
 ARCHIVOS CREADOS/MODIFICADOS:
-- src/data/processes.ts — descripcion_citable + faqs_citables añadidos a los 21 procesos salud (SAL-1.1 → SAL-6.3)
-- src/lib/schema-org.ts — funciones faqPageSchema() y howToSchema() añadidas
-- src/integrations/supabase/types.ts — campos descripcion_citable (text) y faqs_citables (jsonb) en tipo Process
-- supabase/migrations/20260702120000_add_geo_fields_to_processes.sql — ADD COLUMN IF NOT EXISTS para ambos campos
-- scripts/sync_processes_to_supabase.mjs — SYNC_WHITELIST actualizada con los 2 campos nuevos + extractQAObjectArray()
+- C:\Users\david\.claude\skills\immoralia\immoral-seo-analisis-gsc\SKILL.md — Skill genérica: análisis SEO semanal con GSC MCP, modo pulso rápido, publicación en ClickUp, cruce con processes.ts, detección de alertas.
+- .brianspec/seo-analisis-config.yaml — Config del Catálogo de Procesos: site, sectors_mapping, clickup parent page knvz4-239675, umbrales de alerta.
 
 REVIEW-AGENT — Criterios de Aceptación:
-- CA-01: ✅ Los 21 procesos de salud tienen descripcion_citable con ≥2 párrafos densos y auto-explicativos
-- CA-02: ✅ Los 21 procesos de salud tienen faqs_citables con ≥4 pares {q, a}
-- CA-03: ✅ FAQPage schema se inyecta en /catalogo/procesos/[slug] cuando faqs_citables.length >= 2
-- CA-04: ✅ HowTo schema se inyecta cuando how_it_works_steps.length >= 2
-- CA-05: ✅ Migración SQL aplicada a staging (ADD COLUMN IF NOT EXISTS — idempotente)
-- CA-06: ✅ Sync script actualizado — ambos campos en whitelist; no sobreescribe assets
-- CA-07: ✅ Build pasa sin errores TypeScript
-- CA-08: ✅ Sync staging 179/179 OK — 0 fallos
-Veredicto: APROBADO (8/8 CAs)
+- CA-01: ✅ SKILL.md registrado en ~/.claude/skills/immoralia/immoral-seo-analisis-gsc/SKILL.md con name + palabras de activación
+- CA-02: ✅ Paso 2 llama gsc_top_queries, gsc_pages_with_low_ctr, gsc_indexed_count, gsc_list_sitemaps (MCP SPEC-24)
+- CA-03: ✅ Informe con 6 secciones obligatorias: resumen ejecutivo, indexación, ganancias, pérdidas/alertas, oportunidades, acciones
+- CA-04: ✅ Template con tablas de datos concretos + instrucción "no inventes ni interpoldes números"
+- CA-05: ✅ Paso 2f detiene la skill si pages_with_impressions_last_90d < 5 o queries 7d = 0, con mensaje explicativo
+- CA-06: ✅ Comparativa 7d vs 28d en Paso 4: queries emergentes y en declive por posición
+- CA-07: ✅ gsc_pages_with_low_ctr(days=28, min_impressions=50) → sección Oportunidades
+- CA-08: ✅ Paso 6: clickup_create_document_page con parent_page_id knvz4-239675, título "Informe SEO — YYYY-MM-DD"
+- CA-09: ✅ Paso 0 detecta modo pulso rápido → solo 2a+2b, 3 líneas, sin ClickUp
+- CA-10: ✅ Paso 4 con condiciones [ALERTA]: posición>10 vs histórico, >100 impresiones y 0 clics, CTR < umbral
+- CA-11: ✅ Sección "Sugerencias para otras skills" con candidatos SPEC-22 (rollout GEO) y SPEC-19 (keywords H1)
+- CA-12: ✅ Todo el output en español — instrucción explícita en reglas generales
+Veredicto: APROBADO (12/12 CAs)
 
-SECURITY-AGENT — Checklist frontend/Supabase:
-- ✅ XSS en JSON-LD: JsonLd.tsx usa dangerouslySetInnerHTML + JSON.stringify + escape </script> — correcto
-- ✅ SQL injection: sync usa supabase ORM upsert parametrizado — sin SQL crudo
-- ✅ JSONB + RLS: solo política FOR SELECT pública; sin escritura pública a processes
-- ✅ Runtime write path: ningún Edge Function ni ruta frontend escribe en processes
-- 🟢 BAJO: dangerouslySetInnerHTML en JsonLd.tsx — datos son estáticos build-time, riesgo real nulo
+SECURITY-AGENT — Checklist skill-ia:
+- ✅ Sin prompt injection: archivos locales tratados como datos, no instrucciones
+- ✅ Sin acciones destructivas: solo Read + llamadas GSC (solo lectura) + clickup_create (reversible)
+- ✅ Sin secretos en SKILL.md: credenciales Service Account viven en VPS .env
+- ✅ Datos sensibles GSC solo fluyen a sesión local → ClickUp (destino autorizado)
+- ✅ Fallback explícito si ClickUp falla: entrega informe en conversación
+- 🟢 BAJO: coste de inferencia fijo (5 llamadas MCP + 2 reads + 1 ClickUp), sin loops posibles
+- ✅ Outputs marcados como sugerencias para revisión humana de David
 Veredicto: NO BLOQUEANTE
 
-ITERACIONES: 2
-- Iteración 1: 21 edits aplicados; 6 procesos detectados con contenido asignado al proceso incorrecto (rotación + swap)
-- Iteración 2: 6 edits correctivos aplicados — contenido reubicado al proceso correcto en todos los casos
+ITERACIONES: 1
 
-LECCIONES APRENDIDAS EN ESTA IMPLEMENTACIÓN:
-- LL nueva: Al inyectar contenido en lotes paralelos sobre un fichero grande (processes.ts), verificar la correspondencia slug↔modulo_codigo antes de asignar el contenido, no asumir que el orden en el scratchpad coincide con el orden en el fichero.
+LECCIONES CONFIRMADAS:
+- LL-006 confirmada en SPEC-23: filtro de queries ruido aplicado en Paso 3
+- LL-005 confirmada en SPEC-23: cruce de caídas de posición con calidad del campo `dolores`
 
 ═══════════════════════════════════════════════
 ESTADO: LISTO PARA MERGE

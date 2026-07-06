@@ -1,0 +1,30 @@
+# Configuración de la skill immoral-seo-analisis-gsc para el Catálogo de Procesos
+# Proyecto: procesos.immoralia.es
+# Skill: C:\Users\david\.claude\skills\immoralia\immoral-seo-analisis-gsc\SKILL.md
+
+site: https://procesos.immoralia.es/
+
+processes_file: src/data/processes.ts
+
+sectors_mapping:
+  salud: "Centros de Salud"
+  gestorias: "Gestorías"
+  centros-deportivos: "Centros Deportivos"
+  construccion: "Construcción & Inmobiliaria"
+  academias: "Academias / Formación"
+  gastronomia-hosteleria: "Gastronomía y Hotelería"
+  industrial: "Industrial"
+
+report_destinations:
+  - clickup_subpage
+
+clickup:
+  parent_page_id: knvz4-239675
+  workspace_id: "20639716"
+  page_title_prefix: "Informe SEO"
+
+thresholds:
+  position_drop_alert: 5       # Alertar si una query cae más de N posiciones
+  ctr_low_alert: 0.005         # CTR < 0.5% con impresiones altas = alerta/oportunidad
+  min_impressions_opportunity: 50   # Impresiones mínimas para aparecer en sección Oportunidades
+  min_impressions_alert: 100   # Impresiones mínimas para disparar alerta de 0 clics
