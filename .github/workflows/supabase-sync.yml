@@ -6,10 +6,13 @@ on:
       - main
     types:
       - closed
+  # Disparo manual desde Actions para verificar el pipeline sin esperar a un
+  # merge staging→main (añadido tras el incidente del pipeline silencioso).
+  workflow_dispatch:
 
 jobs:
   sync-supabase:
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'staging'
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'staging')
     runs-on: ubuntu-latest
 
     steps:
@@ -23,41 +26,25 @@ jobs:
 
       - name: Run migrations on production
         id: migrations
+        # set -o pipefail: sin esto, el `| tee` enmascara el exit code de
+        # `supabase db push` y el job queda en verde aunque las migraciones
+        # fallen (incidente 22/06-26/06: prod estuvo semanas sin migraciones).
         run: |
-          supabase db push \
-            --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
-            --password "" \
+          set -o pipefail
+          supabase link --project-ref "${{ secrets.SUPABASE_PROD_PROJECT_ID }}" \
             2>&1 | tee /tmp/migrations_output.txt
+          supabase db push \
+            2>&1 | tee -a /tmp/migrations_output.txt
           echo "output<<EOF" >> $GITHUB_OUTPUT
           cat /tmp/migrations_output.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
-      - name: Deploy Edge Functions to production
-        id: functions
-        run: |
-          FUNCTIONS_OUTPUT=""
-          if [ -d "supabase/functions" ]; then
-            for func_dir in supabase/functions/*/; do
-              func_name=$(basename "$func_dir")
-              if [ "$func_name" != "_shared" ]; then
-                echo "Deploying function: $func_name"
-                result=$(supabase functions deploy "$func_name" \
-                  --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
-                  2>&1)
-                echo "$result"
-                FUNCTIONS_OUTPUT="$FUNCTIONS_OUTPUT\n- $func_name: $result"
-              fi
-            done
-          else
-            FUNCTIONS_OUTPUT="No edge functions found"
-          fi
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$FUNCTIONS_OUTPUT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      # El paso "Deploy Edge Functions" se eliminó (07/2026): las 5 functions de
+      # supabase/functions/ son legacy del stack Vite — todas fueron portadas a
+      # API routes de Next.js (src/app/api/*) y ya nada las invoca.
 
       - name: Setup Node.js for embeddings
         uses: actions/setup-node@v4
@@ -87,12 +74,11 @@ jobs:
         env:
           CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
           MIGRATIONS_OUTPUT: ${{ steps.migrations.outputs.output }}
-          FUNCTIONS_OUTPUT: ${{ steps.functions.outputs.output }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          AUTHOR: ${{ github.event.pull_request.user.login }}
-          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+          PR_NUMBER: ${{ github.event.pull_request.number || '0' }}
+          PR_TITLE: ${{ github.event.pull_request.title || 'Ejecución manual (workflow_dispatch)' }}
+          PR_URL: ${{ github.event.pull_request.html_url || github.server_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login || github.actor }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at || github.event.repository.updated_at }}
         run: |
           python3 << 'PYEOF'
           import os, json, urllib.request
@@ -100,7 +86,6 @@ jobs:
 
           token = os.environ["CLICKUP_TOKEN"]
           migrations = os.environ.get("MIGRATIONS_OUTPUT", "Sin cambios")
-          functions = os.environ.get("FUNCTIONS_OUTPUT", "Sin cambios")
           pr_number = os.environ["PR_NUMBER"]
           pr_title = os.environ["PR_TITLE"]
           pr_url = os.environ["PR_URL"]
@@ -120,9 +105,6 @@ jobs:
           content += "---\n\n"
           content += "## Migraciones SQL aplicadas\n\n"
           content += "```\n" + migrations.strip() + "\n```\n\n"
-          content += "---\n\n"
-          content += "## Edge Functions desplegadas\n\n"
-          content += "```\n" + functions.strip() + "\n```\n\n"
           content += "---\n\n"
           content += "## Estado: Produccion sincronizada con Staging\n"
 

@@ -27,7 +27,7 @@ VITE_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY
 ```
 
-Variables del script de sync (gitignored, ver `scripts/sync_processes_to_supabase.v2.mjs`):
+Variables del script de sync (gitignored, ver `scripts/sync_processes_to_supabase.mjs`):
 ```
 STAGING_SUPABASE_URL
 STAGING_SUPABASE_SERVICE_ROLE_KEY
@@ -69,16 +69,16 @@ Cuando añadas un proceso o cambies cualquier campo de la whitelist:
 **Paso 2.** Ejecutar el sync script:
 ```bash
 # Dry-run (te dice qué cambiará sin aplicar)
-node scripts/sync_processes_to_supabase.v2.mjs --verbose
+node scripts/sync_processes_to_supabase.mjs --verbose
 
 # Aplicar a staging
-node scripts/sync_processes_to_supabase.v2.mjs --apply
+node scripts/sync_processes_to_supabase.mjs --apply
 
 # Aplicar a producción (solo cuando esté validado en staging)
-node scripts/sync_processes_to_supabase.v2.mjs --target=prod --apply
+node scripts/sync_processes_to_supabase.mjs --target=prod --apply
 
 # Borrar registros que ya no existen en TS
-node scripts/sync_processes_to_supabase.v2.mjs --apply --delete-orphans
+node scripts/sync_processes_to_supabase.mjs --apply --delete-orphans
 ```
 
 El script:
@@ -382,7 +382,7 @@ supabase/
 └── functions/                   # Edge functions Deno
 
 scripts/
-├── sync_processes_to_supabase.v2.mjs   # Script SYNC (REGLA #1)
+├── sync_processes_to_supabase.mjs   # Script SYNC (REGLA #1)
 ├── manual_sync_staging_to_prod.mjs
 ├── generate_embeddings.mjs
 └── knowledge/                          # Base de conocimiento del chatbot
@@ -403,10 +403,10 @@ npm run build
 npm run lint
 
 # Sync de procesos TS → Supabase (REGLA #1)
-node scripts/sync_processes_to_supabase.v2.mjs --verbose                # dry-run staging
-node scripts/sync_processes_to_supabase.v2.mjs --apply                  # aplica staging
-node scripts/sync_processes_to_supabase.v2.mjs --target=prod --apply    # aplica prod
-node scripts/sync_processes_to_supabase.v2.mjs --apply --delete-orphans # borra huérfanos
+node scripts/sync_processes_to_supabase.mjs --verbose                # dry-run staging
+node scripts/sync_processes_to_supabase.mjs --apply                  # aplica staging
+node scripts/sync_processes_to_supabase.mjs --target=prod --apply    # aplica prod
+node scripts/sync_processes_to_supabase.mjs --apply --delete-orphans # borra huérfanos
 
 # Supabase CLI
 supabase db push                                                # migraciones a linked project
