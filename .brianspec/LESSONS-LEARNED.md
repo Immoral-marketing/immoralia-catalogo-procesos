@@ -78,7 +78,7 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 **Stack afectado:** scripts de sync TS→BBDD
 **Lección:** El script original mandaba el objeto procesos completo a Supabase. Cuando se eliminó la columna `categoria` del schema, el script siguió enviándola — y todos los UPSERT fallaron silenciosamente. Una whitelist explícita de columnas (declarada como constante en el script) habría detectado el cambio de schema antes de fallar en producción.
 **Cómo aplicar:** cualquier script que escriba a una tabla debe declarar explícitamente qué columnas envía. Cuando el schema cambia, se actualiza la whitelist a propósito — no a posteriori, debugging fallos.
-**Severidad:** Media · **Confirmada en:** SPEC-04, SPEC-06, SPEC-21
+**Severidad:** Media · **Confirmada en:** SPEC-04, SPEC-06, SPEC-21, SPEC-23
 
 ## LL-004 — El script de sync TS→Supabase está desactualizado
 **Fecha:** 2026-06-12
@@ -94,7 +94,7 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 **Stack afectado:** chatbot RAG + processes.dolores
 **Lección:** En la batería de tests baseline, los 4 fallos (de 24 preguntas) tenían en común que el proceso esperado o (a) tenía `dolores: []` vacío o (b) tenía dolores en jerga interna en lugar de vocabulario del cliente. Tras reescribir solo los `dolores` de esos 4 procesos (sin tocar nombres, descripciones ni pasos), la batería pasó de 83% a 100% en ambos sectores piloto.
 **Cómo aplicar:** la revisión editorial de cada sector debe priorizar `dolores` antes que cualquier otro campo. Cada proceso debe tener 4-8 dolores en primera persona, sin tecnicismos, incluyendo sinónimos cuando el mismo dolor se exprese de distintas formas en el lenguaje real.
-**Severidad:** Alta
+**Severidad:** Alta · **Confirmada en:** SPEC-23
 
 ## LL-003 — No destruir estado local por errores transitorios del servidor
 **Fecha:** 2026-06-12
