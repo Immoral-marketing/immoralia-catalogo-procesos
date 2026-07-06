@@ -153,13 +153,17 @@ function parseProcessesFile() {
     return blocks;
 }
 
+// (?<![\w$]) impide que una key matchee dentro de otra que la contiene como
+// sufijo (ej. `slug:` dentro de `landing_slug:`, `codigo:` dentro de
+// `modulo_codigo:`). Sin este límite, el valor extraído depende del orden de
+// los campos en el bloque TS y puede corromper la BBDD.
 function extractValue(block, key) {
-    const m = block.match(new RegExp(`${key}:\\s*["'\`]([\\s\\S]*?)["'\`](?:,|\\s*})`));
+    const m = block.match(new RegExp(`(?<![\\w$])${key}:\\s*["'\`]([\\s\\S]*?)["'\`](?:,|\\s*})`));
     return m ? m[1] : null;
 }
 
 function extractArray(block, key) {
-    const m = block.match(new RegExp(`${key}:\\s*\\[([\\s\\S]*?)\\]`));
+    const m = block.match(new RegExp(`(?<![\\w$])${key}:\\s*\\[([\\s\\S]*?)\\]`));
     if (!m) return null;
     return m[1]
         .split(',')
@@ -168,7 +172,7 @@ function extractArray(block, key) {
 }
 
 function extractBool(block, key) {
-    const m = block.match(new RegExp(`${key}:\\s*(true|false)`));
+    const m = block.match(new RegExp(`(?<![\\w$])${key}:\\s*(true|false)`));
     return m ? m[1] === 'true' : null;
 }
 
@@ -177,9 +181,9 @@ function extractBool(block, key) {
  * Usa balance de llaves para extraer cada { q: "...", a: "..." } del array.
  */
 function extractQAObjectArray(block, key) {
-    const keyStart = block.indexOf(key + ':');
-    if (keyStart === -1) return null;
-    const rest = block.slice(keyStart + key.length + 1).trimStart();
+    const keyMatch = block.match(new RegExp(`(?<![\\w$])${key}:`));
+    if (!keyMatch) return null;
+    const rest = block.slice(keyMatch.index + key.length + 1).trimStart();
     if (!rest.startsWith('[')) return null;
 
     // Encuentra el ] de cierre del array externo
