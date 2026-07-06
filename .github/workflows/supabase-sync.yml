@@ -6,10 +6,13 @@ on:
       - main
     types:
       - closed
+  # Disparo manual desde Actions para verificar el pipeline sin esperar a un
+  # merge staging→main (añadido tras el incidente del pipeline silencioso).
+  workflow_dispatch:
 
 jobs:
   sync-supabase:
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'staging'
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'staging')
     runs-on: ubuntu-latest
 
     steps:
@@ -23,30 +26,42 @@ jobs:
 
       - name: Run migrations on production
         id: migrations
+        # set -o pipefail: sin esto, el `| tee` enmascara el exit code de
+        # `supabase db push` y el job queda en verde aunque las migraciones
+        # fallen (incidente 22/06-26/06: prod estuvo semanas sin migraciones).
         run: |
-          supabase db push \
-            --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
-            --password "" \
+          set -o pipefail
+          supabase link --project-ref "${{ secrets.SUPABASE_PROD_PROJECT_ID }}" \
             2>&1 | tee /tmp/migrations_output.txt
+          supabase db push \
+            2>&1 | tee -a /tmp/migrations_output.txt
           echo "output<<EOF" >> $GITHUB_OUTPUT
           cat /tmp/migrations_output.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
       - name: Deploy Edge Functions to production
         id: functions
+        # DEPLOY_FAILED propaga el fallo al final del paso: sin esto, un deploy
+        # fallido solo quedaba escrito en el log y el job seguía en verde.
         run: |
           FUNCTIONS_OUTPUT=""
+          DEPLOY_FAILED=0
           if [ -d "supabase/functions" ]; then
             for func_dir in supabase/functions/*/; do
               func_name=$(basename "$func_dir")
               if [ "$func_name" != "_shared" ]; then
                 echo "Deploying function: $func_name"
-                result=$(supabase functions deploy "$func_name" \
+                if result=$(supabase functions deploy "$func_name" \
                   --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_ID }} \
-                  2>&1)
-                echo "$result"
+                  2>&1); then
+                  echo "$result"
+                else
+                  echo "FALLO en $func_name: $result"
+                  DEPLOY_FAILED=1
+                fi
                 FUNCTIONS_OUTPUT="$FUNCTIONS_OUTPUT\n- $func_name: $result"
               fi
             done
@@ -56,6 +71,7 @@ jobs:
           echo "output<<EOF" >> $GITHUB_OUTPUT
           echo -e "$FUNCTIONS_OUTPUT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          exit $DEPLOY_FAILED
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
@@ -88,11 +104,11 @@ jobs:
           CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
           MIGRATIONS_OUTPUT: ${{ steps.migrations.outputs.output }}
           FUNCTIONS_OUTPUT: ${{ steps.functions.outputs.output }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          AUTHOR: ${{ github.event.pull_request.user.login }}
-          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+          PR_NUMBER: ${{ github.event.pull_request.number || '0' }}
+          PR_TITLE: ${{ github.event.pull_request.title || 'Ejecución manual (workflow_dispatch)' }}
+          PR_URL: ${{ github.event.pull_request.html_url || github.server_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login || github.actor }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at || github.event.repository.updated_at }}
         run: |
           python3 << 'PYEOF'
           import os, json, urllib.request
