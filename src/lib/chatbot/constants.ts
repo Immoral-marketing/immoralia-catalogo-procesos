@@ -12,8 +12,16 @@ export const CONVERSATION_EXPIRY_DAYS = 7
 /** Ventana de mensajes íntegros que se envían al modelo */
 export const HISTORY_WINDOW = 12
 
-/** El resumen se (re)genera cuando hay este nº de mensajes nuevos fuera de la ventana */
-export const SUMMARY_REFRESH_EVERY = 6
+/**
+ * Nº mínimo de mensajes (user+bot) para generar el primer resumen estructurado.
+ * 4 = a partir del 2º turno del usuario. Antes el primer resumen esperaba a que
+ * hubiera mensajes fuera de la ventana (mensaje ~18): la mayoría de conversaciones
+ * nunca llegaban y structured_summary quedaba NULL — rompiendo el contexto de
+ * visitante recurrente (SPEC-11), el historial de GHL y el resumen de ClickUp.
+ */
+export const SUMMARY_MIN_MESSAGES = 4
+/** El resumen se refresca cuando hay este nº de mensajes nuevos desde el último (2 = cada turno) */
+export const SUMMARY_REFRESH_EVERY = 2
 
 /** Límites anti-abuso (SPEC-01, ambigüedad 3) */
 export const MAX_MESSAGE_LENGTH = 2000

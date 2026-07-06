@@ -5,7 +5,7 @@
  * Retrocompatibilidad: conversaciones con solo 'summary' text siguen funcionando
  * en el system prompt vía el fallback en prompt.ts.
  */
-import { CHAT_MODEL, HISTORY_WINDOW, SUMMARY_REFRESH_EVERY } from './constants'
+import { CHAT_MODEL, SUMMARY_MIN_MESSAGES, SUMMARY_REFRESH_EVERY } from './constants'
 import { updateStructuredSummary } from './store'
 import type { ConversationRow, MessageRow, StructuredSummary } from './types'
 
@@ -41,13 +41,15 @@ function parseStructuredSummary(raw: string): StructuredSummary | null {
 }
 
 export function shouldRefreshSummary(conversation: ConversationRow, totalMessages: number): boolean {
-  const outsideWindow = totalMessages - HISTORY_WINDOW
-  if (outsideWindow <= 0) return false
-  return outsideWindow - conversation.summary_message_count >= SUMMARY_REFRESH_EVERY
+  if (totalMessages < SUMMARY_MIN_MESSAGES) return false
+  return totalMessages - conversation.summary_message_count >= SUMMARY_REFRESH_EVERY
 }
 
 /**
- * Regenera el resumen estructurado: resumen previo + mensajes nuevos fuera de ventana.
+ * Regenera el resumen estructurado de forma incremental: resumen previo +
+ * mensajes nuevos desde el último refresco. Cubre la conversación COMPLETA
+ * (no solo lo que cae fuera de la ventana): el resumen alimenta el contexto
+ * de visitante recurrente, GHL y ClickUp, que necesitan la foto entera.
  * Falla en silencio (log) — un resumen desactualizado no debe romper el chat.
  */
 export async function refreshSummary(
@@ -55,10 +57,11 @@ export async function refreshSummary(
   messages: MessageRow[],
 ): Promise<void> {
   try {
-    const cutoff = messages.length - HISTORY_WINDOW
-    if (cutoff <= 0) return
+    const cutoff = messages.length
 
-    const newPortion = messages.slice(conversation.summary_message_count, cutoff)
+    const newPortion = messages
+      .slice(conversation.summary_message_count, cutoff)
+      .filter(m => !m.is_error)
     if (newPortion.length === 0) return
 
     const transcript = newPortion
