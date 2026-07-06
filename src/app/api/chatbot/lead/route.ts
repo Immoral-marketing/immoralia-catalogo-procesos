@@ -355,18 +355,19 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 8. Slack — notificación simple
-    if (clickupTaskId) {
-      await sendSlackNewLead({
-        lead: {
-          nombre: body.nombre,
-          email: body.email,
-          comentario: isHandover ? '🔴 Pide contacto humano — responder en <24h' : 'Lead capturado por el chatbot',
-        },
-        clickupTask: { id: clickupTaskId, url: clickupTaskUrl },
-        source: 'chatbot',
-      }).catch(err => console.error('Slack (lead chatbot):', err))
-    }
+    // 8. Slack — SIEMPRE, haya o no tarea ClickUp: si ClickUp falla, el aviso
+    // al equipo es aún más importante (el lead solo existe en Supabase).
+    // Idempotencia por id del lead, no por tarea.
+    await sendSlackNewLead({
+      lead: {
+        nombre: body.nombre,
+        email: body.email,
+        comentario: isHandover ? '🔴 Pide contacto humano — responder en <24h' : 'Lead capturado por el chatbot',
+      },
+      clickupTask: clickupTaskId ? { id: clickupTaskId, url: clickupTaskUrl } : null,
+      source: 'chatbot',
+      dedupeKey: `lead:${leadRow.id}`,
+    }).catch(err => console.error('Slack (lead chatbot):', err))
 
     // 9. Email — lead_captured lo gestiona GHL (workflow "New Lead"); handover mantiene email propio
     if (isHandover) {

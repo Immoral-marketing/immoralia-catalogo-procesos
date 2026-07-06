@@ -13,13 +13,19 @@ interface SlackPayload {
     comentario?: string
     utm?: string
   }
-  clickupTask: {
+  /** null cuando la tarea ClickUp no se pudo crear — la notificación se envía igual */
+  clickupTask?: {
     id: string
     url: string
     status?: string
     priority?: number | string
-  }
+  } | null
   source: 'offer_request' | 'onboarding' | 'chatbot' | 'quick_form' | 'sin_sector'
+  /**
+   * Clave de idempotencia propia (ej. `lead:<uuid>`). Sin ella se usa el id de
+   * la tarea ClickUp; si tampoco hay tarea, se envía sin deduplicación.
+   */
+  dedupeKey?: string
 }
 
 function getAdminClient() {
@@ -45,7 +51,7 @@ function getSlackChannelId(): string {
  * Envía notificación Slack cuando se crea un nuevo lead.
  * Incluye reintentos, timeout e idempotencia.
  */
-export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPayload) {
+export async function sendSlackNewLead({ lead, clickupTask, source, dedupeKey }: SlackPayload) {
   const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
   const SLACK_CHANNEL_ID = getSlackChannelId()
 
@@ -55,18 +61,20 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
   }
 
   const supabase = getAdminClient()
-  const taskId = clickupTask.id
+  const idempotencyKey = dedupeKey ?? clickupTask?.id ?? null
 
-  // 1. Idempotencia
-  const { data: existingLog } = await supabase
-    .from('slack_notifications_log')
-    .select('clickup_task_id')
-    .eq('clickup_task_id', taskId)
-    .single()
+  // 1. Idempotencia (la columna clickup_task_id del log guarda la clave, sea tarea o lead)
+  if (idempotencyKey) {
+    const { data: existingLog } = await supabase
+      .from('slack_notifications_log')
+      .select('clickup_task_id')
+      .eq('clickup_task_id', idempotencyKey)
+      .single()
 
-  if (existingLog) {
-    console.log(`Notificación Slack ya enviada para tarea ${taskId}. Skipping.`)
-    return
+    if (existingLog) {
+      console.log(`Notificación Slack ya enviada para ${idempotencyKey}. Skipping.`)
+      return
+    }
   }
 
   // 2. Construir mensaje
@@ -79,7 +87,7 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
   }
 
   const blocks: any[] = [
-    { type: 'header', text: { type: 'plain_text', text: `🚀 Nuevo Lead: ${taskId}`, emoji: true } },
+    { type: 'header', text: { type: 'plain_text', text: `🚀 Nuevo Lead: ${clickupTask?.id ?? lead.nombre}`, emoji: true } },
     {
       type: 'section',
       fields: [
@@ -105,10 +113,17 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
     blocks.push({ type: 'section', text: { type: 'mrkdwn', text: `*Comentario:*\n${lead.comentario}` } })
   }
 
-  blocks.push({
-    type: 'actions',
-    elements: [{ type: 'button', text: { type: 'plain_text', text: 'Ver en ClickUp', emoji: true }, url: clickupTask.url, action_id: 'view_clickup' }],
-  })
+  if (clickupTask?.url) {
+    blocks.push({
+      type: 'actions',
+      elements: [{ type: 'button', text: { type: 'plain_text', text: 'Ver en ClickUp', emoji: true }, url: clickupTask.url, action_id: 'view_clickup' }],
+    })
+  } else {
+    blocks.push({
+      type: 'section',
+      text: { type: 'mrkdwn', text: '⚠️ *No se pudo crear la tarea en ClickUp* — gestionar este lead manualmente' },
+    })
+  }
 
   // 3. Enviar con reintentos
   let attempt = 0
@@ -131,7 +146,9 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
       const result = await response.json()
 
       if (result.ok) {
-        await supabase.from('slack_notifications_log').insert({ clickup_task_id: taskId, success: true })
+        if (idempotencyKey) {
+          await supabase.from('slack_notifications_log').insert({ clickup_task_id: idempotencyKey, success: true })
+        }
         console.log(`Notificación Slack enviada en intento ${attempt + 1}`)
         return
       } else {
@@ -141,7 +158,9 @@ export async function sendSlackNewLead({ lead, clickupTask, source }: SlackPaylo
       attempt++
       console.error(`Intento ${attempt} fallido enviando notificación Slack:`, err.message)
       if (attempt > maxRetries) {
-        await supabase.from('slack_notifications_log').insert({ clickup_task_id: taskId, success: false, error_message: err.message })
+        if (idempotencyKey) {
+          await supabase.from('slack_notifications_log').insert({ clickup_task_id: idempotencyKey, success: false, error_message: err.message })
+        }
         break
       }
       await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 1000))

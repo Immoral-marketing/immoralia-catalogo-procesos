@@ -73,7 +73,10 @@ export async function POST(req: NextRequest) {
   }
 
   const sector = body.sector && SECTOR_NAMES[body.sector] ? body.sector : null
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  // x-real-ip lo fija Vercel y no es falsificable por el cliente. El primer valor
+  // de x-forwarded-for sí lo es (el cliente puede prefijar IPs arbitrarias y rotar
+  // "identidades" para saltarse el rate limit) — solo se usa como fallback local.
+  const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
   const ipHash = hashIp(ip)
 
   // SPEC-11: resolver visitante desde cookie
@@ -288,14 +291,7 @@ export async function POST(req: NextRequest) {
             assistantMessages: assistantCount,
           })
 
-          // 10. Refrescar el resumen acumulado si toca (CA-15, CA-16)
-          const totalMessages = history.length + 2
-          if (shouldRefreshSummary(conversation, totalMessages)) {
-            const allMessages = await getMessages(conversation.id)
-            await refreshSummary(conversation, allMessages)
-          }
-
-          // 11. SPEC-03 — Decisión de acción: handover > semántico > límite duro (5 turnos)
+          // 10. SPEC-03 — Decisión de acción: handover > semántico > límite duro (5 turnos)
           // El camino semántico permite re-ofrecer el formulario si el visitante muestra intención clara
           // tras haberlo ignorado en un ofrecimiento previo. Solo bloquea si lo cerró activamente (X → dismissed).
           // El camino del límite duro mantiene `!lead_form_offered` para no auto-ofrecerlo dos veces de oficio.
@@ -327,6 +323,15 @@ export async function POST(req: NextRequest) {
             recommendedSlugs,
             action,
           })))
+
+          // 11. Refrescar el resumen estructurado (CA-15, CA-16). Va DESPUÉS de
+          // emitir `done` para no añadir latencia percibida: el cliente ya tiene
+          // la respuesta completa y el stream sigue abierto mientras se resume.
+          const totalMessages = history.length + 2
+          if (shouldRefreshSummary(conversation, totalMessages)) {
+            const allMessages = await getMessages(conversation.id)
+            await refreshSummary(conversation, allMessages)
+          }
         } catch (error) {
           // Fallo de IA: turno registrado con marca de error + mensaje amable (CA-12)
           console.error('Error en streaming de /api/chatbot:', error)
