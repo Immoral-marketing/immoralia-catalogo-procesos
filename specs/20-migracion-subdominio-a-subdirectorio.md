@@ -1,9 +1,9 @@
 # SPEC-20: Migración de subdominio a subdirectorio — `procesos.immoralia.es` → `immoralia.es/procesos`
 
-**Versión:** 1.4
-**Estado:** aprobada (condicional — implementación sujeta a decisión D2)
+**Versión:** 1.5
+**Estado:** aprobada
 **Tipo de proyecto:** web-app (infraestructura + SEO)
-**Última actualización:** 2026-06-30
+**Última actualización:** 2026-07-06
 **Owner:** David Navarrete
 
 ---
@@ -12,11 +12,14 @@
 
 Migrar el catálogo de procesos del subdominio actual `procesos.immoralia.es` al subdirectorio `immoralia.es/procesos` bajo el dominio principal. Google trata los subdominios como entidades separadas: toda la autoridad SEO que acumule el catálogo hoy no beneficia a `immoralia.es`, y viceversa. Al mover el catálogo a subdirectorio, la autoridad se consolida en un único dominio y ambos sitios se benefician mutuamente.
 
-**Esta SPEC es CONDICIONAL.** Su ejecución depende de la decisión interna D2 (documentada en el plan SEO+GEO en ClickUp `knvz4-239675`). Se aprueba y se deja preparada, pero solo se implementa cuando:
+**Decisión D2 RESUELTA (2026-07-06): la spec deja de ser condicional.** La condición original (esperar 4-6 semanas de datos GSC para decidir *si* migrar) quedó obsoleta por dos hechos:
 
-1. Haya al menos 4-6 semanas de datos GSC en `procesos.immoralia.es` (post-SPEC-14 en producción).
-2. Los datos justifiquen que el subdominio está limitando el crecimiento (o el análisis con Claude sugiera lo contrario).
-3. Se confirme viabilidad técnica de la migración con el equipo que gestiona la infraestructura de `immoralia.es`.
+1. **Decisión a nivel de empresa:** David fijó "subdirectorio" como estándar de dominios del Estándar SEO/GEO Immoral (doc imseo, ClickUp `knvz4-82755`). El *si* ya no depende de datos.
+2. **Ventana de coste mínimo:** la auditoría del 06/07/2026 reveló que el catálogo tiene cero historia de indexación (el sitemap estuvo mal registrado en GSC hasta ese día). No hay rankings ni autoridad que transferir — es el momento más barato posible para migrar. Cada semana de espera acumula historia en el subdominio y encarece la migración.
+
+La viabilidad técnica está confirmada: `immoralia.es` es Next.js en Vercel (proyecto `immoralia`), verificado en vivo el 06/07/2026 — el mecanismo de rewrites del plan de implementación aplica sin cambios.
+
+**Orden de ejecución:** implementar DESPUÉS de SPEC-26 (SSR de fichas), para que lo que Google indexe en las URLs nuevas tenga contenido completo desde el primer rastreo.
 
 ---
 
@@ -239,8 +242,9 @@ Cinco piezas:
 
 ### Dependencias con otras specs
 
-- **Bloqueada por:** decisión D2 (interna, con datos GSC de 4-6 semanas post-Fase 1).
-- **Bloqueada por:** acceso a infraestructura de `immoralia.es` (externa al repo del catálogo).
+- ~~Bloqueada por: decisión D2~~ — **RESUELTA 2026-07-06** (subdirectorio como estándar de empresa + ventana de coste mínimo).
+- **Implementar después de:** SPEC-26 (SSR de fichas) — que las URLs nuevas se indexen con contenido completo.
+- **Requiere:** acceso al repo/proyecto Vercel de `immoralia.es` (los rewrites se configuran allí, fuera del repo del catálogo).
 - **Afecta a:** todas las specs que usan `NEXT_PUBLIC_SITE_URL` (SPEC-13, 14, 15, 16, 22, 24) — pero el impacto es solo cambio de valor de la variable, no de código.
 - **No bloquea a:** ninguna spec del plan actual.
 
@@ -288,3 +292,4 @@ Recomendable un test manual del golden path completo con múltiples user agents 
 | 1.2 | 2026-06-30 | Ambigüedad 2 (mecanismo técnico rewrite/proxy) marcada como {{BLOQUEANTE}} — pendiente confirmar dónde está alojada `immoralia.es`. David revisará captura del panel de hosting. La spec no se puede aprobar hasta cerrar esto. | David Navarrete |
 | 1.3 | 2026-06-30 | Resuelta ambigüedad 2: `immoralia.es` confirmado en Vercel (proyecto `immoralia` separado del `immoralia-hub`). Mecanismo = Vercel rewrites en `next.config.ts`/`vercel.json` del proyecto `immoralia`, apuntando `/procesos/:path*` al deploy del catálogo. El `Host` original se preserva → middleware SPEC-13 sigue funcionando. Bloqueante desmarcado. | David Navarrete |
 | 1.4 | 2026-06-30 | Spec aprobada para implementación. Estado condicional preservado: la implementación efectiva depende de decisión D2 (con datos GSC post-Fase 1). | David Navarrete |
+| 1.5 | 2026-07-06 | Decisión D2 resuelta: subdirectorio fijado como estándar de empresa (doc imseo) + ventana de coste mínimo (cero historia de indexación tras corrección del sitemap). Condición eliminada. Orden: implementar tras SPEC-26. Viabilidad técnica re-confirmada (immoralia.es = Next.js en Vercel). | David Navarrete |

@@ -20,41 +20,37 @@ interface SelectionContextType {
 const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
 
 export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>(() => {
-        if (typeof window === 'undefined') return 'setup';
-        try {
-            const saved = localStorage.getItem("immoralia_n8n_hosting_v2");
-            return (saved === 'setup' || saved === 'own') ? saved : 'setup';
-        } catch (error) {
-            return 'setup';
-        }
-    });
+    // El estado inicial debe coincidir con el HTML del servidor: leer localStorage
+    // en el inicializador de useState rompe la hidratación en las páginas SSR/SSG
+    // (el servidor renderiza "sin selección" y el cliente "con selección").
+    // Se carga tras el montaje, y los efectos de guardado esperan a esa carga
+    // para no pisar lo guardado con el estado vacío inicial.
+    const [hydrated, setHydrated] = useState(false);
+    const [n8nHosting, setN8nHosting] = useState<'setup' | 'own'>('setup');
+    const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(new Set());
+    const [customizations, setCustomizations] = useState<Record<string, CustomizationState>>({});
 
-    const [selectedProcessIds, setSelectedProcessIds] = useState<Set<string>>(() => {
-        if (typeof window === 'undefined') return new Set();
+    useEffect(() => {
         try {
-            const saved = localStorage.getItem("immoralia_selected_processes");
-            if (saved) {
-                const parsed = JSON.parse(saved);
+            const savedHosting = localStorage.getItem("immoralia_n8n_hosting_v2");
+            if (savedHosting === 'setup' || savedHosting === 'own') {
+                setN8nHosting(savedHosting);
+            }
+
+            const savedSelection = localStorage.getItem("immoralia_selected_processes");
+            if (savedSelection) {
+                const parsed = JSON.parse(savedSelection);
                 if (Array.isArray(parsed)) {
                     const validIds = parsed.filter((id) => processes.some((p) => p.id === id));
-                    return new Set(validIds);
+                    setSelectedProcessIds(new Set(validIds));
                 }
             }
-        } catch (error) {
-            // silencioso en SSR
-        }
-        return new Set();
-    });
 
-    const [customizations, setCustomizations] = useState<Record<string, CustomizationState>>(() => {
-        if (typeof window === 'undefined') return {};
-        try {
-            const saved = localStorage.getItem("immoralia_process_customizations");
-            if (saved) {
-                const parsed = JSON.parse(saved);
+            const savedCustomizations = localStorage.getItem("immoralia_process_customizations");
+            if (savedCustomizations) {
+                const parsed = JSON.parse(savedCustomizations);
                 // Migrate legacy string options to arrays
-                if (typeof parsed === 'object') {
+                if (typeof parsed === 'object' && parsed !== null) {
                     Object.keys(parsed).forEach(key => {
                         const cust = parsed[key];
                         if (cust?.selectedOptions) {
@@ -68,29 +64,32 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                             });
                         }
                     });
+                    setCustomizations(parsed);
                 }
-                return parsed;
             }
         } catch (error) {
-            // silencioso en SSR
+            // datos corruptos en localStorage: se mantienen los valores por defecto
         }
-        return {};
-    });
+        setHydrated(true);
+    }, []);
 
     useEffect(() => {
+        if (!hydrated) return;
         localStorage.setItem(
             "immoralia_selected_processes",
             JSON.stringify(Array.from(selectedProcessIds))
         );
-    }, [selectedProcessIds]);
+    }, [hydrated, selectedProcessIds]);
 
     useEffect(() => {
+        if (!hydrated) return;
         localStorage.setItem("immoralia_n8n_hosting_v2", n8nHosting);
-    }, [n8nHosting]);
+    }, [hydrated, n8nHosting]);
 
     useEffect(() => {
+        if (!hydrated) return;
         localStorage.setItem("immoralia_process_customizations", JSON.stringify(customizations));
-    }, [customizations]);
+    }, [hydrated, customizations]);
 
     const toggleProcess = (id: string) => {
         setSelectedProcessIds((prev) => {

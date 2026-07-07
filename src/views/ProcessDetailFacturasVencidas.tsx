@@ -31,10 +31,13 @@ const ProcessDetailFacturasVencidas = () => {
   const [showBookingModal, setShowBookingModal] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
-    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+    // Cargado tras el montaje: leerlo en el inicializador rompe la hidratación
+    // (el servidor renderiza sin respuestas y el cliente con ellas).
+    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
     const [carouselStep, setCarouselStep] = useState(0);
 
     useEffect(() => {
+        setOnboardingAnswers(getOnboardingAnswers());
         window.scrollTo(0, 0);
         document.title = `Immoralia - ${process.nombre}`;
     }, []);
