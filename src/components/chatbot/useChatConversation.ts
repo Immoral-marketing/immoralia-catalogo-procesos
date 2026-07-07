@@ -5,6 +5,7 @@
  * el identificador vive en localStorage (rolling 7 días, alineado con SPEC-01)
  * y el historial SIEMPRE se rehidrata desde el backend.
  */
+import { withBasePath } from "@/lib/base-path";
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type Rating = 'useful' | 'not_useful'
@@ -80,7 +81,7 @@ export function useChatConversation() {
     if (!stored) return
     conversationIdRef.current = stored.id
 
-    fetch(`/api/chatbot/history?conversationId=${stored.id}`)
+    fetch(withBasePath(`/api/chatbot/history?conversationId=${stored.id}`))
       .then(async res => {
         if (res.status === 404 || res.status === 410) {
           // Conversación inexistente o caducada: empezar de cero (CA-09)
@@ -117,7 +118,7 @@ export function useChatConversation() {
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
 
     try {
-      const res = await fetch('/api/chatbot', {
+      const res = await fetch(withBasePath('/api/chatbot'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -229,7 +230,7 @@ export function useChatConversation() {
     // Optimista: marca primero, revierte si falla
     setMessages(prev => prev.map(m => (m.id === messageId ? { ...m, rating } : m)))
     try {
-      const res = await fetch('/api/chatbot/feedback', {
+      const res = await fetch(withBasePath('/api/chatbot/feedback'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ conversationId: conversationIdRef.current, messageId, rating }),
@@ -259,7 +260,7 @@ export function useChatConversation() {
   }): Promise<{ ok: boolean; error?: string }> => {
     if (!conversationIdRef.current) return { ok: false, error: 'Empieza una conversación primero' }
     try {
-      const res = await fetch('/api/chatbot/lead', {
+      const res = await fetch(withBasePath('/api/chatbot/lead'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -285,7 +286,7 @@ export function useChatConversation() {
   ) => {
     if (!conversationIdRef.current) return
     try {
-      await fetch('/api/chatbot/event', {
+      await fetch(withBasePath('/api/chatbot/event'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ conversationId: conversationIdRef.current, event }),

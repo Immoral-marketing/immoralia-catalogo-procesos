@@ -21,6 +21,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           max_timeout: 180
           check_interval: 10
+          # SPEC-20: el catálogo vive bajo basePath /procesos — la raíz devuelve 404
+          path: '/procesos'
 
       - name: Comentar URL en el PR
         uses: marocchino/sticky-pull-request-comment@v2

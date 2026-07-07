@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { useState, useEffect } from "react";
 import {
     Dialog,
@@ -208,7 +209,7 @@ export const OnboardingModal = ({ isOpen, onClose, initialAnswers, prefilledSect
         try {
             console.log("Iniciando envío de Quick Form Lead:", answers.email);
 
-            const res = await fetch('/api/leads/onboarding', {
+            const res = await fetch(withBasePath('/api/leads/onboarding'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

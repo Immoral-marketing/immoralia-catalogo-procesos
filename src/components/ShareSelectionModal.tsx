@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { useState } from "react";
 import {
     Dialog,
@@ -49,7 +50,7 @@ export const ShareSelectionModal = ({ isOpen, onClose, selectedProcesses, accent
                 categoria: p.categoriaNombre
             }));
 
-            const res = await fetch('/api/share-selection', {
+            const res = await fetch(withBasePath('/api/share-selection'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

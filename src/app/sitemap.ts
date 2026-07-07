@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { processes } from '@/data/processes'
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://procesos.immoralia.es').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://immoralia.es/procesos').replace(/\/$/, '')
 
 // Slugs confirmados en src/app/sector/ — NO incluir aliases de redirect
 // (restauracion → gastronomia-hosteleria, inmobiliaria → construccion)

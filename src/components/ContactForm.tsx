@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { useState, useEffect } from "react";
 import { Loader2, Server, Sparkles } from "lucide-react";
 import { Process } from "@/data/processes";
@@ -134,7 +135,7 @@ export const ContactForm = ({
     try {
       const controller = new AbortController();
 
-      const fetchPromise = fetch('/api/leads/contact', {
+      const fetchPromise = fetch(withBasePath('/api/leads/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,

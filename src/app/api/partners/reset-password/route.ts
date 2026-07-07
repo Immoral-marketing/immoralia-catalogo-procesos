@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true })
     }
 
-    const siteUrl = process.env.SITE_URL ?? 'https://procesos.immoralia.es'
+    const siteUrl = process.env.SITE_URL ?? 'https://immoralia.es/procesos'
 
     // Validar redirectTo: solo se acepta si empieza por el dominio propio
     // para prevenir open redirect (el token de recovery se appendea a la URL como fragment)
