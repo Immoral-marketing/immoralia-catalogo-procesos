@@ -52,6 +52,14 @@ const nextConfig: NextConfig = {
         permanent: true,
         basePath: false,
       },
+      // Cortesía: la raíz de los dominios propios (staging, *.vercel.app)
+      // redirige al basePath — sin esto devolverían 404 en /.
+      {
+        source: '/',
+        destination: '/procesos',
+        permanent: false,
+        basePath: false,
+      },
       // Sector restauración → gastronomía-hostelería (slug actualizado)
       {
         source: '/sector/restauracion',
