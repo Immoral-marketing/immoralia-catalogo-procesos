@@ -1,4 +1,5 @@
 ﻿'use client'
+import { withBasePath } from "@/lib/base-path";
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -616,7 +617,7 @@ const AcademiasLanding = () => {
                       >
                         <video
                           ref={videoRef}
-                          src="/academias/modulo1.mp4"
+                          src={withBasePath("/academias/modulo1.mp4")}
                           className="w-full h-full object-cover"
                           loop
                           playsInline

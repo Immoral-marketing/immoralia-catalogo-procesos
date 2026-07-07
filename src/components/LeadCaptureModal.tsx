@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { useState } from "react";
 import { Loader2, MessageCircle, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -62,7 +63,7 @@ export const LeadCaptureModal = ({ isOpen, onClose }: LeadCaptureModalProps) => 
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/leads/contact', {
+      const res = await fetch(withBasePath('/api/leads/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

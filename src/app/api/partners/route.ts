@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `El slug "${slug}" ya está en uso` }, { status: 409 })
     }
 
-    const siteUrl = process.env.SITE_URL ?? 'https://procesos.immoralia.es'
+    const siteUrl = process.env.SITE_URL ?? 'https://immoralia.es/procesos'
 
     // Invitar usuario — Supabase envía email con enlace para establecer contraseña
     const { data: newUser, error: createError } = await adminClient.auth.admin.inviteUserByEmail(

@@ -1,4 +1,5 @@
 'use client'
+import { withBasePath } from "@/lib/base-path";
 import { useState, useMemo, useEffect, useRef } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import Link from "next/link";
@@ -616,7 +617,7 @@ const IndustrialLanding = () => {
                       >
                         <video
                           ref={videoRef}
-                          src="/industrial/modulo1.mp4"
+                          src={withBasePath("/industrial/modulo1.mp4")}
                           className="w-full h-full object-cover"
                           loop
                           playsInline

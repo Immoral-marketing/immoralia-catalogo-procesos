@@ -2,6 +2,13 @@ import type { NextConfig } from 'next'
 import path from 'path'
 
 const nextConfig: NextConfig = {
+  // SPEC-20: el catálogo vive bajo immoralia.es/procesos (servido vía rewrites
+  // desde el proyecto Vercel de immoralia.es). Next ajusta rutas, links y assets.
+  basePath: '/procesos',
+  // Expuesto al cliente para fetch()/vídeos, que no reciben basePath automático
+  // (ver src/lib/base-path.ts).
+  env: { NEXT_PUBLIC_BASE_PATH: '/procesos' },
+
   images: {
     remotePatterns: [
       {
@@ -36,6 +43,15 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // SPEC-20: el subdominio antiguo redirige permanentemente al subdirectorio.
+      // basePath: false — las URLs antiguas no llevan el prefijo /procesos.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'procesos.immoralia.es' }],
+        destination: 'https://immoralia.es/procesos/:path*',
+        permanent: true,
+        basePath: false,
+      },
       // Sector restauración → gastronomía-hostelería (slug actualizado)
       {
         source: '/sector/restauracion',
