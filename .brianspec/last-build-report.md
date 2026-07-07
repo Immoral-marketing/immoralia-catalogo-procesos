@@ -1,43 +1,45 @@
 ═══════════════════════════════════════════════
-📋 SPEC-23: Análisis SEO continuo asistido por Claude sobre GSC
-Fecha: 2026-07-03
-Rama: brianspec/23-analisis-gsc-continuo-claude
+📋 SPEC-26: SSR del contenido en fichas de proceso
+Fecha: 2026-07-06
+Rama: brianspec/26-ssr-contenido-fichas-proceso
 ═══════════════════════════════════════════════
 
 ARCHIVOS CREADOS/MODIFICADOS:
-- C:\Users\david\.claude\skills\immoralia\immoral-seo-analisis-gsc\SKILL.md — Skill genérica: análisis SEO semanal con GSC MCP, modo pulso rápido, publicación en ClickUp, cruce con processes.ts, detección de alertas.
-- .brianspec/seo-analisis-config.yaml — Config del Catálogo de Procesos: site, sectors_mapping, clickup parent page knvz4-239675, umbrales de alerta.
+- src/views/ProcessDetail.tsx — eliminado useSearchParams (forzaba render solo-cliente de toda la ficha en rutas estáticas); ?sector= se lee tras el montaje con window.location.search. Sección FAQs pasa a renderizar faqs_citables (con fallback a faqs legacy) para paridad con el schema FAQPage. onboardingAnswers se carga tras el montaje (evita mismatch de hidratación).
+- src/components/SeoAccordionContent.tsx (NUEVO) — variante de AccordionContent con forceMount + data-[state=closed]:hidden: las respuestas FAQ existen en el HTML del servidor aunque el acordeón esté cerrado. Wrapper propio porque el de shadcn aplica className a un div interno sin data-state.
+- src/lib/SelectionContext.tsx — estado inicializado con valores por defecto y cargado desde localStorage tras el montaje (patrón SSR-safe), con flag `hydrated` que retiene los efectos de guardado hasta completar la carga (evita pisar la selección guardada del usuario). Antes leía localStorage en el inicializador de useState → mismatch servidor/cliente en cualquier página SSR con selección guardada (bug latente que el SSR de fichas hizo visible).
+- src/views/ProcessDetailFacturasVencidas.tsx — mismo fix de onboardingAnswers.
 
 REVIEW-AGENT — Criterios de Aceptación:
-- CA-01: ✅ SKILL.md registrado en ~/.claude/skills/immoralia/immoral-seo-analisis-gsc/SKILL.md con name + palabras de activación
-- CA-02: ✅ Paso 2 llama gsc_top_queries, gsc_pages_with_low_ctr, gsc_indexed_count, gsc_list_sitemaps (MCP SPEC-24)
-- CA-03: ✅ Informe con 6 secciones obligatorias: resumen ejecutivo, indexación, ganancias, pérdidas/alertas, oportunidades, acciones
-- CA-04: ✅ Template con tablas de datos concretos + instrucción "no inventes ni interpoldes números"
-- CA-05: ✅ Paso 2f detiene la skill si pages_with_impressions_last_90d < 5 o queries 7d = 0, con mensaje explicativo
-- CA-06: ✅ Comparativa 7d vs 28d en Paso 4: queries emergentes y en declive por posición
-- CA-07: ✅ gsc_pages_with_low_ctr(days=28, min_impressions=50) → sección Oportunidades
-- CA-08: ✅ Paso 6: clickup_create_document_page con parent_page_id knvz4-239675, título "Informe SEO — YYYY-MM-DD"
-- CA-09: ✅ Paso 0 detecta modo pulso rápido → solo 2a+2b, 3 líneas, sin ClickUp
-- CA-10: ✅ Paso 4 con condiciones [ALERTA]: posición>10 vs histórico, >100 impresiones y 0 clics, CTR < umbral
-- CA-11: ✅ Sección "Sugerencias para otras skills" con candidatos SPEC-22 (rollout GEO) y SPEC-19 (keywords H1)
-- CA-12: ✅ Todo el output en español — instrucción explícita en reglas generales
-Veredicto: APROBADO (12/12 CAs)
+- CA-01: ✅ HTML estático con exactamente 1 <h1> con el nombre del proceso (verificado en 3 fichas)
+- CA-02: ✅ Descripción, pasos y FAQs (preguntas en triggers + respuestas en divs ocultos hasta clic — patrón aceptado por Google) como texto del HTML, no solo JSON-LD
+- CA-03: ✅ Verificado en salud-voz-citas-247, industrial-captacion-peticiones-oferta y recopilacion-mensual-documentos (3 sectores)
+- CA-04: ✅ Mecanismo ?sector= operativo tras montaje. Nota: ningún proceso define sector_variants en processes.ts hoy — riesgo real de regresión nulo
+- CA-05: ✅ Cero errores/warnings de consola cargando ficha con y sin ?sector=, incluido el escenario con selección previa guardada en localStorage (que en la iteración 2 aún producía error de hidratación — detectado por David en su navegador)
+- CA-06: ✅ Selección de proceso (toggle + persistencia verificados), modal de reserva GHL abre, acordeón FAQ abre/cierra
+- CA-07: ✅ npm run build exit 0 — 159 fichas .html generadas estáticamente (SSG)
+- CA-08: ✅ Schemas FAQPage/HowTo/Service presentes; el texto visible de FAQs ahora sale de faqs_citables — misma fuente que el schema → paridad exacta
+Veredicto: APROBADO (8/8 CAs)
 
-SECURITY-AGENT — Checklist skill-ia:
-- ✅ Sin prompt injection: archivos locales tratados como datos, no instrucciones
-- ✅ Sin acciones destructivas: solo Read + llamadas GSC (solo lectura) + clickup_create (reversible)
-- ✅ Sin secretos en SKILL.md: credenciales Service Account viven en VPS .env
-- ✅ Datos sensibles GSC solo fluyen a sesión local → ClickUp (destino autorizado)
-- ✅ Fallback explícito si ClickUp falla: entrega informe en conversación
-- 🟢 BAJO: coste de inferencia fijo (5 llamadas MCP + 2 reads + 1 ClickUp), sin loops posibles
-- ✅ Outputs marcados como sugerencias para revisión humana de David
+SECURITY-AGENT — Checklist web-app:
+- ✅ Input ?sector= parseado con URLSearchParams, usado solo como clave de lookup en objeto conocido — sin riesgo de inyección
+- ✅ Sin dangerouslySetInnerHTML, sin eval, sin superficie nueva
+- ✅ Contenido forzado a DOM (FAQ) es público — sin exposición de datos sensibles
+- ✅ Sin cambios en auth, endpoints ni secretos
 Veredicto: NO BLOQUEANTE
 
-ITERACIONES: 1
+ITERACIONES: 3
+- Iteración 1: fix searchParams — el HTML ganó H1/contenido pero las FAQs no aparecían (la UI usaba el campo legacy `faqs` y Radix no montaba respuestas cerradas).
+- Iteración 2: SeoAccordionContent + faqs_citables.
+- Iteración 3: error de hidratación detectado por David con selección guardada — SelectionContext y onboardingAnswers leían localStorage en el inicializador de useState (bug latente en TODAS las páginas SSR, invisible hasta ahora porque las fichas no renderizaban nada en servidor). Fix SSR-safe con flag hydrated que además protege el localStorage del usuario de ser pisado.
 
-LECCIONES CONFIRMADAS:
-- LL-006 confirmada en SPEC-23: filtro de queries ruido aplicado en Paso 3
-- LL-005 confirmada en SPEC-23: cruce de caídas de posición con calidad del campo `dolores`
+LECCIONES APRENDIDAS EN ESTA IMPLEMENTACIÓN:
+- LL-011 (nueva): useSearchParams en rutas estáticas degrada todo el árbol a render cliente → HTML vacío. Verificación curl obligatoria en páginas SEO-críticas.
+- LL-012 (nueva): el contenido dentro de acordeones/tabs Radix NO existe en el HTML del servidor salvo forceMount; el wrapper shadcn no permite ocultarlo por estado (className va a un div interno).
+- LL-013 (nueva): nunca leer localStorage en el inicializador de useState en componentes que se renderizan en servidor — mismatch de hidratación. Cargar tras el montaje con guard para no pisar lo guardado.
+
+OBSERVACIÓN FUERA DE SCOPE (proponer aparte):
+- descripcion_citable (SPEC-22) no se consume en el frontend — solo fluye a Supabase vía sync. Valorar si debe renderizarse en la ficha o usarse como meta description. No se toca en esta spec.
 
 ═══════════════════════════════════════════════
 ESTADO: LISTO PARA MERGE

@@ -17,6 +17,30 @@ Este archivo es la **memoria de errores y aprendizajes del proyecto**. Lo escrib
 
 ---
 
+## LL-013 — localStorage en el inicializador de useState rompe la hidratación
+**Fecha:** 2026-07-06
+**Spec origen:** SPEC-26
+**Stack afectado:** React SSR/SSG + estado persistido en localStorage (SelectionContext, onboarding)
+**Lección:** leer localStorage dentro del inicializador de `useState` hace que el primer render del cliente difiera del HTML del servidor (que renderizó el valor por defecto) → error de hidratación y re-render completo del árbol. El bug estuvo latente en todas las páginas SSR del catálogo y solo se hizo visible cuando las fichas empezaron a renderizar contenido en servidor (SPEC-26). El guard `typeof window === 'undefined'` NO lo evita — evita el crash en servidor, no el mismatch en cliente.
+**Cómo aplicar:** inicializar con el valor por defecto y cargar de localStorage en un `useEffect` de montaje. Si hay efectos que GUARDAN ese estado, deben esperar a que la carga termine (flag `hydrated`) — si no, el estado vacío inicial pisa lo guardado del usuario (relación con LL-003).
+**Severidad:** Alta
+
+## LL-012 — Contenido en acordeones Radix no existe en el HTML del servidor
+**Fecha:** 2026-07-06
+**Spec origen:** SPEC-26
+**Stack afectado:** Radix UI (Accordion/Collapsible/Tabs) + shadcn/ui + SSG
+**Lección:** Radix desmonta el contenido cerrado: las respuestas de un acordeón NO están en el HTML prerenderizado salvo que se pase `forceMount`. Además el wrapper shadcn `AccordionContent` aplica el `className` a un div interno sin `data-state`, así que `data-[state=closed]:hidden` sobre el wrapper no funciona — hay que crear un wrapper propio sobre el primitivo (patrón `SeoAccordionContent`). El contenido oculto-hasta-clic pero presente en el DOM es aceptado por Google para FAQPage.
+**Cómo aplicar:** cualquier contenido SEO-crítico dentro de acordeones/tabs debe usar un wrapper con `forceMount` + ocultación por estado en el propio primitivo. Verificar con el HTML estático, no con el navegador.
+**Severidad:** Alta
+
+## LL-011 — useSearchParams en rutas estáticas vacía el HTML prerenderizado
+**Fecha:** 2026-07-06
+**Spec origen:** SPEC-26
+**Stack afectado:** Next.js App Router (SSG con generateStaticParams) + componentes cliente
+**Lección:** `useSearchParams()` en un componente cliente de una ruta estática fuerza el render solo-cliente de TODO el árbol hasta el Suspense más cercano. Resultado: las 160 fichas de proceso prerenderizaban un shell vacío (sin H1, sin contenido) — invisible para bots de IA y despriorizado por Google — durante semanas sin que nadie lo notara, porque el navegador siempre ejecuta JS y enmascara el problema. La verificación de SPEC-22 dio falso positivo por grep contra el JSON-LD.
+**Cómo aplicar:** (1) en rutas estáticas, leer query params con `window.location.search` tras el montaje (mejora progresiva), nunca con `useSearchParams` salvo aislado en una isla mínima bajo su propio Suspense; (2) tras CUALQUIER cambio en páginas SEO-críticas, verificar el HTML del servidor con `curl <url> | grep "<h1"` — excluyendo los `<script>` del grep para no dar por visible lo que solo está en JSON-LD.
+**Severidad:** Alta
+
 ## LL-010 — next/image requiere whitelist de dominios remotos en next.config.ts
 **Fecha:** 2026-07-02
 **Spec origen:** SPEC-17 (detectado en SPEC-22)
