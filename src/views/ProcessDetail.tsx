@@ -1,12 +1,13 @@
 'use client'
 import React, { useState, useEffect, useMemo } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { SeoAccordionContent } from "@/components/SeoAccordionContent";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Check, ArrowRight, LayoutGrid, Calendar, Bell, BarChart2, Zap, Settings2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/lib/SelectionContext";
@@ -101,7 +102,6 @@ const ProcessDetail = () => {
     const params = useParams();
     const slug = params.slug as string;
     const router = useRouter();
-    const searchParams = useSearchParams();
     const { selectedProcessIds, toggleProcess, n8nHosting, setN8nHosting, customizations, updateCustomization } = useSelection();
 
     const baseProcess = processes.find((p) => p.slug === slug);
@@ -117,8 +117,14 @@ const ProcessDetail = () => {
     const dbLoading = !baseProcess && dbFetchedSlug !== slug;
 
 
-    // Aplicar variante de sector si existe
-    const sectorSlug = searchParams.get("sector") ?? undefined;
+    // Aplicar variante de sector si existe. Se lee tras el montaje (no con
+    // useSearchParams) porque ese hook fuerza render solo-cliente de todo el
+    // árbol en rutas estáticas y dejaría el HTML prerenderizado vacío (SPEC-26).
+    const [sectorSlug, setSectorSlug] = useState<string | undefined>(undefined);
+    useEffect(() => {
+        const sector = new URLSearchParams(window.location.search).get("sector");
+        if (sector) setSectorSlug(sector);
+    }, []);
     const process = useMemo(() => {
         const bp = baseProcess || dbProcess;
         if (!bp) return undefined;
@@ -144,7 +150,12 @@ const ProcessDetail = () => {
     const [showContactForm, setShowContactForm] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
-    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(getOnboardingAnswers());
+    // Cargado tras el montaje: leerlo en el inicializador rompe la hidratación
+    // (el servidor renderiza sin respuestas y el cliente con ellas).
+    const [onboardingAnswers, setOnboardingAnswers] = useState<OnboardingAnswers | null>(null);
+    useEffect(() => {
+        setOnboardingAnswers(getOnboardingAnswers());
+    }, []);
     const [carouselStep, setCarouselStep] = useState(0);
     const [flippedCard, setFlippedCard] = useState<number | null>(null);
     const [stepImages, setStepImages] = useState<(string | null)[]>([null, null, null]);
@@ -883,28 +894,35 @@ const ProcessDetail = () => {
                     );
                 })()}
 
-                {/* FAQs */}
-                {process.faqs && process.faqs.length > 0 && (
-                    <section className="space-y-6">
-                        <h2 className="text-2xl font-medium">Preguntas frecuentes</h2>
-                        <Accordion type="single" collapsible className="space-y-2">
-                            {process.faqs.map((faq, i) => (
-                                <AccordionItem
-                                    key={i}
-                                    value={`faq-${i}`}
-                                    className="rounded-xl border border-border px-5 transition-colors duration-200 hover:border-primary/40 data-[state=open]:border-primary/50"
-                                >
-                                    <AccordionTrigger className="text-sm font-medium text-foreground py-4 hover:no-underline [&>svg]:text-primary [&>svg]:w-4 [&>svg]:h-4">
-                                        {faq.q}
-                                    </AccordionTrigger>
-                                    <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
-                                        {faq.a}
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
-                    </section>
-                )}
+                {/* FAQs — prioriza faqs_citables para que el texto visible coincida
+                    con el schema FAQPage (requisito de Google para rich results).
+                    forceMount + hidden: las respuestas deben existir en el HTML del
+                    servidor aunque el acordeón esté cerrado (SPEC-26 / GEO). */}
+                {(() => {
+                    const faqList = process.faqs_citables?.length ? process.faqs_citables : process.faqs;
+                    if (!faqList || faqList.length === 0) return null;
+                    return (
+                        <section className="space-y-6">
+                            <h2 className="text-2xl font-medium">Preguntas frecuentes</h2>
+                            <Accordion type="single" collapsible className="space-y-2">
+                                {faqList.map((faq, i) => (
+                                    <AccordionItem
+                                        key={i}
+                                        value={`faq-${i}`}
+                                        className="rounded-xl border border-border px-5 transition-colors duration-200 hover:border-primary/40 data-[state=open]:border-primary/50"
+                                    >
+                                        <AccordionTrigger className="text-sm font-medium text-foreground py-4 hover:no-underline [&>svg]:text-primary [&>svg]:w-4 [&>svg]:h-4">
+                                            {faq.q}
+                                        </AccordionTrigger>
+                                        <SeoAccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
+                                            {faq.a}
+                                        </SeoAccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </section>
+                    );
+                })()}
 
             </main>
 
