@@ -3,11 +3,11 @@
  *
  * - form_dismissed     → el visitante cerró el formulario con la X (consume el límite duro)
  * - handover_written   → con lead YA capturado, eligió «que me escribáis» (prioritario + email)
- * - schedule_completed → reserva completada en el calendario GHL (flag + aviso Slack al equipo)
+ * - schedule_completed → reserva detectada en el cliente (fallback: solo marca el flag)
  *
  * SPEC-10: el email propio de "llamada agendada" se eliminó — GHL ya envía la
- * confirmación al visitante. El catálogo ahora solo guarda el flag y avisa al
- * equipo por Slack con enlace a la tarea de ClickUp del lead.
+ * confirmación al visitante. El aviso Slack de reserva lo envía el webhook
+ * server-to-server del WF de GHL (/api/webhooks/ghl-booking), no este endpoint.
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -25,18 +25,6 @@ async function getLeadContact(leadId: string): Promise<{ nombre: string; email: 
   const { data } = await createAdminClient()
     .from('contact_submissions')
     .select('nombre, email')
-    .eq('id', leadId)
-    .maybeSingle()
-  return data ?? null
-}
-
-/** SPEC-10: lead + id de la tarea de ClickUp (para reconstruir la URL en el Slack de "llamada agendada"). */
-async function getLeadWithClickup(
-  leadId: string,
-): Promise<{ nombre: string; email: string; clickup_task_id: string | null } | null> {
-  const { data } = await createAdminClient()
-    .from('contact_submissions')
-    .select('nombre, email, clickup_task_id')
     .eq('id', leadId)
     .maybeSingle()
   return data ?? null
@@ -81,21 +69,11 @@ export async function POST(req: NextRequest) {
       }
 
       case 'schedule_completed': {
-        // SPEC-10: idempotente — actualizar flag y enviar Slack una sola vez.
-        // El email propio se eliminó: GHL ya envía la confirmación al visitante.
+        // Solo el flag, como fallback del cliente (detección por postMessage del
+        // iframe GHL, best-effort). El Slack de "llamada agendada" lo envía el
+        // webhook server-to-server del WF de GHL: /api/webhooks/ghl-booking.
         if (!conversation.call_scheduled) {
           await updateConversationFlags(conversation.id, { call_scheduled: true })
-          if (conversation.lead_id) {
-            const lead = await getLeadWithClickup(conversation.lead_id)
-            if (lead) {
-              const clickupLink = lead.clickup_task_id
-                ? ` · <https://app.clickup.com/t/${lead.clickup_task_id}|Ver en ClickUp>`
-                : ''
-              await sendSlackNotification(
-                `📅 *Llamada agendada*: ${lead.nombre} — ${lead.email} · Conversación ${conversation.id}${clickupLink}`,
-              ).catch(err => console.error('Slack schedule_completed:', err))
-            }
-          }
         }
         break
       }

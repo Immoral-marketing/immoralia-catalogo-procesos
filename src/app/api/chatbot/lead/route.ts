@@ -194,10 +194,17 @@ export async function POST(req: NextRequest) {
         ip_address: clientIP,
         interested_process_slugs: interestedSlugs,
         primary_interested_slug: primaryInterestedSlug,
+        conversation_id: conversation.id,
       })
       .select('id')
       .single()
     if (insertError || !leadRow) {
+      // 23505 = índice único contact_submissions_conversation_id_key: otro submit
+      // concurrente (doble click, retry de red) ganó la carrera. El check de
+      // lead_captured del paso 2 es read-then-write y no cubre este caso.
+      if (insertError?.code === '23505') {
+        return NextResponse.json({ success: true, alreadyCaptured: true })
+      }
       console.error('ERROR insertando lead del chatbot:', insertError)
       return NextResponse.json({ error: 'No se pudo registrar. Inténtalo de nuevo.' }, { status: 500 })
     }
