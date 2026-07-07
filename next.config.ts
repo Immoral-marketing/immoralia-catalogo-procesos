@@ -41,6 +41,24 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 
+  // SPEC-13/20: noindex en cualquier host no canónico, declarado también aquí
+  // porque el matcher del middleware no captura la raíz del basePath (/procesos
+  // externo = path interno vacío). Cubre todos los paths de todos los hosts.
+  async headers() {
+    let canonicalHost = 'immoralia.es'
+    try {
+      canonicalHost = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://immoralia.es/procesos').host
+    } catch { /* fallback ya asignado */ }
+    return [
+      {
+        source: '/:path*',
+        basePath: false,
+        missing: [{ type: 'host', value: canonicalHost }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ]
+  },
+
   async redirects() {
     return [
       // SPEC-20: el subdominio antiguo redirige permanentemente al subdirectorio.
