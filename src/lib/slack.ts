@@ -168,6 +168,87 @@ export async function sendSlackNewLead({ lead, clickupTask, source, dedupeKey }:
   }
 }
 
+interface BookingSlackPayload {
+  nombre: string
+  email: string
+  telefono?: string | null
+  /** Fecha ya formateada en Europe/Madrid */
+  fechaFormateada: string
+  calendario?: string | null
+  clickupTaskUrl?: string | null
+  /** Clave de idempotencia (ej. `booking:<email>:<startTime>`) — GHL puede reintentar el webhook */
+  dedupeKey: string
+}
+
+/**
+ * Slack de "llamada agendada" — lo dispara el webhook del WF de GHL
+ * (/api/webhooks/ghl-booking). Idempotente vía slack_notifications_log.
+ */
+export async function sendSlackBookingScheduled(payload: BookingSlackPayload) {
+  const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
+  const SLACK_CHANNEL_ID = getSlackChannelId()
+
+  if (!SLACK_BOT_TOKEN) {
+    console.error('SLACK_BOT_TOKEN no configurado. Saltando notificación Slack.')
+    return
+  }
+
+  const supabase = getAdminClient()
+
+  const { data: existingLog } = await supabase
+    .from('slack_notifications_log')
+    .select('clickup_task_id')
+    .eq('clickup_task_id', payload.dedupeKey)
+    .single()
+  if (existingLog) {
+    console.log(`Slack de reserva ya enviado para ${payload.dedupeKey}. Skipping.`)
+    return
+  }
+
+  const blocks: any[] = [
+    { type: 'header', text: { type: 'plain_text', text: '📅 Nueva llamada agendada', emoji: true } },
+    {
+      type: 'section',
+      fields: [
+        { type: 'mrkdwn', text: `*Contacto:*\n${payload.nombre}` },
+        { type: 'mrkdwn', text: `*Email:*\n${payload.email}` },
+        { type: 'mrkdwn', text: `*Teléfono:*\n${payload.telefono || '—'}` },
+        { type: 'mrkdwn', text: `*Fecha y hora:*\n${payload.fechaFormateada}` },
+      ],
+    },
+  ]
+  if (payload.calendario) {
+    blocks.push({ type: 'section', text: { type: 'mrkdwn', text: `*Tipo:* ${payload.calendario}` } })
+  }
+  if (payload.clickupTaskUrl) {
+    blocks.push({
+      type: 'actions',
+      elements: [{ type: 'button', text: { type: 'plain_text', text: 'Ver en ClickUp', emoji: true }, url: payload.clickupTaskUrl, action_id: 'view_clickup' }],
+    })
+  }
+
+  try {
+    const response = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SLACK_BOT_TOKEN}` },
+      body: JSON.stringify({
+        channel: SLACK_CHANNEL_ID,
+        blocks,
+        text: `Nueva llamada agendada con ${payload.nombre} (${payload.email}) — ${payload.fechaFormateada}`,
+      }),
+    })
+    const result = await response.json()
+    if (result.ok) {
+      await supabase.from('slack_notifications_log').insert({ clickup_task_id: payload.dedupeKey, success: true })
+    } else {
+      throw new Error(`Slack API error: ${result.error}`)
+    }
+  } catch (err: any) {
+    console.error('Fallo enviando Slack de reserva:', err.message)
+    await supabase.from('slack_notifications_log').insert({ clickup_task_id: payload.dedupeKey, success: false, error_message: err.message })
+  }
+}
+
 /** Envía notificación genérica de texto a Slack. */
 export async function sendSlackNotification(text: string) {
   const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN

@@ -396,6 +396,7 @@ export type Database = {
         Row: {
           clickup_task_id: string | null
           comentario: string | null
+          conversation_id: string | null
           created_at: string | null
           email: string
           empresa: string
@@ -410,6 +411,7 @@ export type Database = {
         Insert: {
           clickup_task_id?: string | null
           comentario?: string | null
+          conversation_id?: string | null
           created_at?: string | null
           email: string
           empresa: string
@@ -424,6 +426,7 @@ export type Database = {
         Update: {
           clickup_task_id?: string | null
           comentario?: string | null
+          conversation_id?: string | null
           created_at?: string | null
           email?: string
           empresa?: string
@@ -435,7 +438,15 @@ export type Database = {
           primary_interested_slug?: string | null
           selected_processes?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contact_submissions_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_logs: {
         Row: {
