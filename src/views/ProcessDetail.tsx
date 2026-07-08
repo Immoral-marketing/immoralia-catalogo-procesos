@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -823,7 +824,6 @@ const ProcessDetail = () => {
                                                 background: pSelected ? `${accent}10` : `${accent}06`,
                                                 boxShadow: `0 0 0 1px ${accent}30, 0 4px 20px ${accent}12`,
                                             }}
-                                            onClick={() => router.push(dest)}
                                             onMouseEnter={e => {
                                                 e.currentTarget.style.background = `linear-gradient(to right, ${accent}20, ${accent}0a, ${accent}06)`;
                                                 e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}80, 0 0 24px ${accent}35, 0 8px 32px ${accent}20`;
@@ -848,9 +848,13 @@ const ProcessDetail = () => {
                                                 {/* Contenido */}
                                                 <div className="flex items-center gap-4 pl-4 pr-4 py-4 flex-1">
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="text-[17px] font-bold text-white/75 group-hover:text-white transition-colors duration-200 leading-snug">
-                                                            {p.nombre}
-                                                        </p>
+                                                        {/* Enlace real (crawlable) estirado a toda la tarjeta con
+                                                            ::before — antes solo navegaba por onClick+router.push. */}
+                                                        <Link href={dest} className="static before:absolute before:inset-0 before:content-['']">
+                                                            <p className="text-[17px] font-bold text-white/75 group-hover:text-white transition-colors duration-200 leading-snug">
+                                                                {p.nombre}
+                                                            </p>
+                                                        </Link>
                                                         {p.tagline && (
                                                             <p
                                                                 className="text-[14px] leading-relaxed overflow-hidden transition-all duration-300"
@@ -867,9 +871,9 @@ const ProcessDetail = () => {
                                                             </p>
                                                         )}
                                                     </div>
-                                                    <div className="flex items-center gap-2.5 shrink-0">
+                                                    <div className="relative z-10 flex items-center gap-2.5 shrink-0">
                                                         <button
-                                                            onClick={e => { e.stopPropagation(); toggleProcess(p.id); }}
+                                                            onClick={() => toggleProcess(p.id)}
                                                             className="w-7 h-7 rounded-lg border flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
                                                             style={{
                                                                 borderColor: pSelected ? accent : 'hsl(var(--border))',
