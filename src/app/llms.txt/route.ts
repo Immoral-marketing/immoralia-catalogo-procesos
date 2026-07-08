@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export const revalidate = 86400
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://procesos.immoralia.es').replace(/\/$/, '')
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://immoralia.es/procesos').replace(/\/$/, '')
 
 // Lista blanca declarativa — LL-006: nunca escanear filesystem
 const SECTORS = [
@@ -73,13 +73,13 @@ function buildContent(): string {
     s => `- [${s.name}](${BASE}/sector/${s.slug}) — ${s.description}`
   ).join('\n')
 
-  return `# procesos.immoralia.es
+  return `# Catálogo de Procesos — immoralia.es/procesos
 
 > Catálogo de automatizaciones de negocio para pymes españolas. Índice para rastreadores de IA (ChatGPT, Claude, Perplexity, Gemini).
 
 ## Descripción
 
-procesos.immoralia.es es el catálogo de referencia de Immoralia para la automatización de procesos empresariales en pymes españolas. Recoge más de 150 automatizaciones organizadas en 10 sectores (salud, gestorías, centros deportivos, construcción, desarrolladoras, gastronomía y hostelería, academias, agencias, e-commerce e industrial) y las clasifica en seis bloques de negocio: captación, administración, operaciones, comunicación, fidelización y dirección.
+El Catálogo de Procesos de Immoralia (immoralia.es/procesos) es el catálogo de referencia de Immoralia para la automatización de procesos empresariales en pymes españolas. Recoge más de 150 automatizaciones organizadas en 10 sectores (salud, gestorías, centros deportivos, construcción, desarrolladoras, gastronomía y hostelería, academias, agencias, e-commerce e industrial) y las clasifica en seis bloques de negocio: captación, administración, operaciones, comunicación, fidelización y dirección.
 
 Cada proceso del catálogo describe un problema concreto del día a día del negocio y la automatización que lo resuelve, con pasos detallados, herramientas implicadas y criterios de personalización. El catálogo está pensado para que un directivo o responsable de operaciones identifique de un vistazo qué puede automatizar en su empresa sin necesidad de conocimientos técnicos.
 

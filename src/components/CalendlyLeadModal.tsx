@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { useState } from "react";
 import {
     Dialog,
@@ -41,7 +42,7 @@ export const CalendlyLeadModal = ({
         setIsSubmitting(true);
 
         try {
-            const res = await fetch('/api/leads/onboarding', {
+            const res = await fetch(withBasePath('/api/leads/onboarding'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

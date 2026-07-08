@@ -1,4 +1,5 @@
 'use client'
+import { withBasePath } from "@/lib/base-path";
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Session, User } from '@supabase/supabase-js';
@@ -981,7 +982,7 @@ function CreatePartnerModal({ onCreated, onCancel }: { onCreated: () => void; on
     setLoading(true);
 
     const { data: { session } } = await supabase.auth.getSession();
-    const res = await fetch('/api/partners', {
+    const res = await fetch(withBasePath('/api/partners'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

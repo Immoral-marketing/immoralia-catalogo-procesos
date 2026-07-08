@@ -15,4 +15,4 @@ Disallow: /admin
 Disallow: /afiliado
 Disallow: /api/
 
-Sitemap: https://procesos.immoralia.es/sitemap.xml
+Sitemap: https://immoralia.es/procesos/sitemap.xml
