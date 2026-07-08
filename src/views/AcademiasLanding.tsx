@@ -758,26 +758,32 @@ const AcademiasLanding = () => {
                               )}
                             </button>
                           </div>
-                          {isOpen && (
-                            <div className="pl-[52px] pr-2 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                              <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto mb-3">
-                                {m.descripcion}
-                              </p>
-                              {m.linkedProcessSlug && (
-                                <Link
-                                  href={`/catalogo/procesos/${m.linkedProcessSlug}`}
-                                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3.5 py-1.5 rounded-lg border transition-all hover:translate-x-0.5"
-                                  style={{
-                                    borderColor: `${b.accent}50`,
-                                    color: b.accent,
-                                    backgroundColor: `${b.accent}10`,
-                                  }}
-                                >
-                                  Ver ficha completa <ArrowRight className="w-3.5 h-3.5" />
-                                </Link>
-                              )}
-                            </div>
-                          )}
+                          {/* Siempre montado (no {isOpen &&}) para que el enlace a
+                              la ficha exista en el HTML del servidor — visible para
+                              Google y bots de IA aunque el módulo esté colapsado.
+                              El colapso es visual (CSS), no un desmontaje del JSX. */}
+                          <div
+                            className={`pl-[52px] pr-2 overflow-hidden transition-all duration-300 ${
+                              isOpen ? "max-h-[500px] opacity-100 pb-4" : "max-h-0 opacity-0 pb-0 pointer-events-none"
+                            }`}
+                          >
+                            <p className="text-sm text-gray-400 leading-relaxed text-justify hyphens-auto mb-3">
+                              {m.descripcion}
+                            </p>
+                            {m.linkedProcessSlug && (
+                              <Link
+                                href={`/catalogo/procesos/${m.linkedProcessSlug}`}
+                                className="inline-flex items-center gap-1.5 text-xs font-medium px-3.5 py-1.5 rounded-lg border transition-all hover:translate-x-0.5"
+                                style={{
+                                  borderColor: `${b.accent}50`,
+                                  color: b.accent,
+                                  backgroundColor: `${b.accent}10`,
+                                }}
+                              >
+                                Ver ficha completa <ArrowRight className="w-3.5 h-3.5" />
+                              </Link>
+                            )}
+                          </div>
                         </div>
                       );
                     })}

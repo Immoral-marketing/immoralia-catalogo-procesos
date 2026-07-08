@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Check, ChevronRight, Star, Sparkles, CreditCard, Calendar, Building2, MessageSquare, Search } from "lucide-react";
 import { Process } from "@/data/processes";
 import { Badge } from "./ui/badge";
@@ -38,11 +39,16 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
   const onboardingAnswers = getOnboardingAnswers();
   const finalComplexity = computeFinalComplexity(process, onboardingAnswers);
 
+  // Antes la tarjeta solo navegaba vía onClick + router.push: para un rastreador
+  // que no ejecuta JavaScript (Google en primera oleada, GPTBot, ClaudeBot,
+  // PerplexityBot) no existía ningún <a href> que seguir hacia la ficha. El
+  // título ahora es un Link real, estirado a toda la tarjeta con ::before.
+  const href = sectorSlug
+    ? `/catalogo/procesos/${process.slug}?sector=${sectorSlug}`
+    : `/catalogo/procesos/${process.slug}`;
+
   const handleViewDetails = () => {
-    const url = sectorSlug
-      ? `/catalogo/procesos/${process.slug}?sector=${sectorSlug}`
-      : `/catalogo/procesos/${process.slug}`;
-    router.push(url);
+    router.push(href);
   };
 
   const handleToggleSelect = () => {
@@ -85,7 +91,6 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
         isSpecialized && "border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.08)]"
       )}
       style={{ ...cardHoverStyle, ...selectedCardStyle }}
-      onClick={handleViewDetails}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => setIsCardHovered(false)}
     >
@@ -114,7 +119,8 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
         </div>
       </div>
 
-      {/* Process Name */}
+      {/* Process Name — enlace real (crawlable) estirado a toda la tarjeta con
+          ::before. Los botones de abajo llevan z-10 para seguir siendo clicables. */}
       <h3
         className={cn(
           "text-lg font-semibold mb-2 text-white transition-colors",
@@ -122,7 +128,9 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
         )}
         style={titleHoverStyle}
       >
-        {process.nombre}
+        <Link href={href} className="static before:absolute before:inset-0 before:content-['']">
+          {process.nombre}
+        </Link>
       </h3>
 
       {process.tagline && (
@@ -133,8 +141,8 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
 
       <div className="flex-1" />
 
-      {/* Actions */}
-      <div className="flex items-center justify-between gap-2 mt-4 flex-wrap">
+      {/* Actions — z-10 para quedar por encima del enlace estirado del título */}
+      <div className="relative z-10 flex items-center justify-between gap-2 mt-4 flex-wrap">
         <Button
           variant="ghost"
           size="sm"
@@ -147,10 +155,7 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
             : {}}
           onMouseEnter={() => setIsInfoHovered(true)}
           onMouseLeave={() => setIsInfoHovered(false)}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewDetails();
-          }}
+          onClick={handleViewDetails}
         >
           Más información
           <ChevronRight className="w-4 h-4 ml-1" />
@@ -171,10 +176,7 @@ export const ProcessCard = ({ process, isSpecialized, accentColor, sectorSlug }:
             : {}}
           onMouseEnter={() => setIsSelectHovered(true)}
           onMouseLeave={() => setIsSelectHovered(false)}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleToggleSelect();
-          }}
+          onClick={handleToggleSelect}
         >
           {isSelected ? (
             <>
