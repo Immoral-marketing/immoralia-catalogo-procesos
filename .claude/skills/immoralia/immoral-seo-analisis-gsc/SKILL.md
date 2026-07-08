@@ -32,7 +32,7 @@ Si el archivo no existe, usa estos valores por defecto:
 ```yaml
 site: https://procesos.immoralia.es/
 processes_file: src/data/processes.ts
-clickup_parent_page_id: knvz4-239675
+clickup_parent_page_id: knvz4-239855
 thresholds:
   position_drop_alert: 5
   ctr_low_alert: 0.005
@@ -226,7 +226,7 @@ URLs en GSC sin proceso correspondiente en el catálogo actual (posiblemente ren
 
 Crea una subpágina nueva en ClickUp:
 - **Tool:** `clickup_create_document_page`
-- **Página padre ID:** el valor de `clickup_parent_page_id` de la config (default: `knvz4-239675`)
+- **Página padre ID:** el valor de `clickup_parent_page_id` de la config (default: `knvz4-239855`)
 - **Título:** `Informe SEO — {FECHA HOY EN FORMATO YYYY-MM-DD}`
 - **Contenido:** el informe Markdown generado en el paso 5.
 
