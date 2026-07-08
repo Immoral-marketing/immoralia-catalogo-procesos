@@ -19,7 +19,7 @@ report_destinations:
   - clickup_subpage
 
 clickup:
-  parent_page_id: knvz4-239675
+  parent_page_id: knvz4-239855
   workspace_id: "20639716"
   page_title_prefix: "Informe SEO"
 
