@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
+import { withBasePath } from "@/lib/base-path";
 import { processes, type Process } from "@/data/processes";
 import { gestoriasBlocks, type GestoriasBlockId } from "@/data/gestoriasBlocks";
 import { gestoriasModules, getGestoriasModulesByBlock } from "@/data/gestoriasModules";
@@ -220,7 +221,7 @@ const GestoriasLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/gestorias/hero.webp')" }}
+          style={{ backgroundImage: `url('${withBasePath('/gestorias/hero.webp')}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-green-900/10 blur-[120px] rounded-full" />

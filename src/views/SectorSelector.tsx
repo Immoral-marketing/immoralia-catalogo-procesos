@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { withBasePath } from "@/lib/base-path";
 import {
   Dumbbell,
   Briefcase,
@@ -164,7 +165,7 @@ const SectorSelector = () => {
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/home/hero.webp')" }}
+          style={{ backgroundImage: `url('${withBasePath('/home/hero.webp')}')` }}
         />
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d0d0d]" />
@@ -252,7 +253,7 @@ const SectorSelector = () => {
                   {sector.heroImage ? (
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                      style={{ backgroundImage: `url('${sector.heroImage}')` }}
+                      style={{ backgroundImage: `url('${withBasePath(sector.heroImage)}')` }}
                     />
                   ) : (
                     <div

@@ -1,18 +1,21 @@
 /**
  * Custom loader para <Image> — arregla el bug de basePath.
  *
- * next.config define basePath: '/procesos'. Next añade el basePath a la URL
- * pública que ve el navegador (`/procesos/_next/image?url=...`), PERO no lo
- * añade al parámetro `url=` que el optimizer usa internamente para localizar
- * la imagen. Como los ficheros se sirven bajo /procesos/... el optimizer
- * devuelve 404 y todas las imágenes locales quedan rotas.
+ * next.config define basePath: '/procesos'. Con el loader por defecto de
+ * Next, las imágenes se sirven vía `/procesos/_next/image?url=...&w=...&q=...`
+ * (el endpoint de optimización de Vercel). Ese endpoint devuelve 404 en este
+ * proyecto incluso con el parámetro `url=` correctamente prefijado con el
+ * basePath — es un fallo de la infraestructura de optimización de Vercel
+ * con basePath (vercel/next.js#48282), no de la URL generada.
  *
- * Referencia: vercel/next.js#48282.
+ * `images.unoptimized: true` tampoco sirve: en ese modo Next.js NO antepone
+ * el basePath al `src` de la imagen (otro comportamiento no documentado),
+ * así que el <img> apunta a la raíz del dominio en vez de a /procesos/... .
  *
- * Este loader prefija manualmente el basePath para imágenes LOCALES
- * (`src` que empieza por `/`). Las URLs absolutas (Supabase, etc.) se
- * pasan tal cual — el optimizer las fetchea por HTTP y no dependen del
- * basePath.
+ * Este loader evita el optimizer por completo: devuelve directamente la URL
+ * del fichero estático con el basePath prefijado a mano. Sin conversión
+ * automática a webp/avif ni resize server-side, pero las imágenes SE VEN,
+ * que es lo que importa. La mayoría ya están pre-optimizadas como .webp.
  */
 import { BASE_PATH } from './base-path'
 
@@ -22,10 +25,10 @@ interface LoaderProps {
   quality?: number
 }
 
-export default function catalogImageLoader({ src, width, quality }: LoaderProps): string {
+export default function catalogImageLoader({ src }: LoaderProps): string {
   const isAbsolute = /^https?:\/\//i.test(src)
-  const needsPrefix = !isAbsolute && src.startsWith('/') && BASE_PATH && !src.startsWith(`${BASE_PATH}/`)
-  const resolvedSrc = needsPrefix ? `${BASE_PATH}${src}` : src
-  const q = quality ?? 75
-  return `${BASE_PATH}/_next/image?url=${encodeURIComponent(resolvedSrc)}&w=${width}&q=${q}`
+  if (isAbsolute) return src
+
+  const needsPrefix = src.startsWith('/') && BASE_PATH && !src.startsWith(`${BASE_PATH}/`)
+  return needsPrefix ? `${BASE_PATH}${src}` : src
 }
