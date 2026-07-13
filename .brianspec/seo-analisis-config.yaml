@@ -1,8 +1,13 @@
 # Configuración de la skill immoral-seo-analisis-gsc para el Catálogo de Procesos
-# Proyecto: procesos.immoralia.es
+# Proyecto: immoralia.es/procesos (migrado de subdominio a subdirectorio el 08/07/2026)
 # Skill: C:\Users\david\.claude\skills\immoralia\immoral-seo-analisis-gsc\SKILL.md
 
-site: https://procesos.immoralia.es/
+# La propiedad de GSC ahora es el dominio completo (immoralia.es), compartida
+# con el blog (/blog). path_prefix acota los tools de análisis a las páginas
+# del catálogo — sin esto, el informe mezclaría tráfico del blog. Ver
+# gsc_top_queries/gsc_pages_with_low_ctr/gsc_indexed_count en el MCP.
+site: https://immoralia.es/
+path_prefix: /procesos
 
 processes_file: src/data/processes.ts
 

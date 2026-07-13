@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   env: { NEXT_PUBLIC_BASE_PATH: '/procesos' },
 
   images: {
+    // El endpoint /_next/image de Vercel devuelve 404 en este proyecto con
+    // basePath (bug vercel/next.js#48282, confirmado también con el parámetro
+    // url= correctamente prefijado — el fallo está en la infra del optimizer,
+    // no en la URL generada). Loader propio que evita el optimizer por
+    // completo: sirve el fichero estático directo con basePath.
+    // Nota: `unoptimized: true` NO sirve — Next tampoco antepone el basePath
+    // al src en ese modo, así que seguía rompiendo.
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
     remotePatterns: [
       {
         protocol: 'https',

@@ -30,7 +30,8 @@ Lee el archivo `.brianspec/seo-analisis-config.yaml` del directorio de trabajo a
 
 Si el archivo no existe, usa estos valores por defecto:
 ```yaml
-site: https://procesos.immoralia.es/
+site: https://immoralia.es/
+path_prefix: /procesos
 processes_file: src/data/processes.ts
 clickup_parent_page_id: knvz4-239855
 thresholds:
@@ -38,6 +39,8 @@ thresholds:
   ctr_low_alert: 0.005
   min_impressions_opportunity: 50
 ```
+
+**`path_prefix` (opcional):** desde que el catálogo migró a `immoralia.es/procesos`, la propiedad de GSC cubre todo el dominio (incluido el blog en `/blog`). Sin `path_prefix`, cualquier análisis mezclaría tráfico de ambas plataformas. Si `path_prefix` está presente en la config, pásalo a `gsc_top_queries`, `gsc_pages_with_low_ctr` y `gsc_indexed_count` (no aplica a `gsc_list_sitemaps`).
 
 ---
 
@@ -47,28 +50,30 @@ Ejecuta estas consultas **en paralelo** (todas a la vez):
 
 ### 2a. Top queries período actual (7 días)
 ```
-gsc_top_queries(site=<site>, days=7, limit=50)
+gsc_top_queries(site=<site>, path_prefix=<path_prefix>, days=7, limit=50)
 ```
 
 ### 2b. Top queries período de contexto (28 días)
 ```
-gsc_top_queries(site=<site>, days=28, limit=100)
+gsc_top_queries(site=<site>, path_prefix=<path_prefix>, days=28, limit=100)
 ```
 
 ### 2c. Páginas con CTR bajo (oportunidades)
 ```
-gsc_pages_with_low_ctr(site=<site>, days=28, min_impressions=<min_impressions_opportunity>, ctr_threshold=<ctr_low_alert>)
+gsc_pages_with_low_ctr(site=<site>, path_prefix=<path_prefix>, days=28, min_impressions=<min_impressions_opportunity>, ctr_threshold=<ctr_low_alert>)
 ```
 
 ### 2d. Conteo de páginas indexadas
 ```
-gsc_indexed_count(site=<site>)
+gsc_indexed_count(site=<site>, path_prefix=<path_prefix>)
 ```
 
 ### 2e. Sitemaps registrados
 ```
 gsc_list_sitemaps(site=<site>)
 ```
+
+*(`path_prefix` se omite si la config no lo define — los tools funcionan igual que antes sin él.)*
 
 ---
 
@@ -92,7 +97,7 @@ Lee `src/data/processes.ts` (o la ruta indicada en `processes_file` de la config
 Extrae el mapping: `slug → { nombre, landing_slug, bloque_negocio }` leyendo los campos `slug`, `nombre`, `landing_slug`, `bloque_negocio` de cada proceso.
 
 Para cada URL que aparezca en los resultados de GSC:
-1. Extrae el slug de la URL (la parte final del path, ej: `salud-voz-citas-247` de `https://procesos.immoralia.es/proceso/salud-voz-citas-247`).
+1. Extrae el slug de la URL (la parte final del path, ej: `salud-voz-citas-247` de `https://immoralia.es/procesos/catalogo/procesos/salud-voz-citas-247`).
 2. Busca ese slug en el mapping extraído.
 3. Si lo encuentras: enriquece la entrada con `nombre` y sector (`landing_slug`).
 4. Si no lo encuentras: marca la URL como **huérfana** (URL en GSC sin proceso correspondiente en el catálogo actual — posiblemente URL eliminada o renombrada).

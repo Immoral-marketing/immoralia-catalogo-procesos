@@ -199,7 +199,7 @@ const AcademiasLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/academias/hero.webp')" }}
+          style={{ backgroundImage: `url('${withBasePath('/academias/hero.webp')}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-fuchsia-900/10 blur-[120px] rounded-full" />
