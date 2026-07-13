@@ -4,6 +4,7 @@ import { GHLBookingModal } from "@/components/GHLBookingModal";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { withBasePath } from "@/lib/base-path";
 import { processes } from "@/data/processes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -377,7 +378,7 @@ const ProcessDetail = () => {
                         <div
                             className="absolute inset-0 bg-cover bg-right opacity-[0.22]"
                             style={{
-                                backgroundImage: `url('${sectorCfg.heroImage}')`,
+                                backgroundImage: `url('${withBasePath(sectorCfg.heroImage)}')`,
                                 filter: 'blur(3px)',
                                 transform: 'scale(1.1)',
                             }}
@@ -400,7 +401,7 @@ const ProcessDetail = () => {
                         <div
                             className="absolute inset-0 bg-cover bg-left opacity-[0.22]"
                             style={{
-                                backgroundImage: `url('${sectorCfg.heroImage}')`,
+                                backgroundImage: `url('${withBasePath(sectorCfg.heroImage)}')`,
                                 filter: 'blur(3px)',
                                 transform: 'scale(1.1)',
                             }}
@@ -507,7 +508,7 @@ const ProcessDetail = () => {
                         {/* Imagen full-bleed */}
                         <div
                             className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url('${sectorCfg.heroImage}')` }}
+                            style={{ backgroundImage: `url('${withBasePath(sectorCfg.heroImage)}')` }}
                         />
                         {/* Fade inferior: completamente opaco desde el 35% para abajo */}
                         <div className="absolute inset-0 bg-gradient-to-t from-background from-[35%] via-background/70 via-[58%] to-transparent to-[85%]" />

@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { GHLBookingModal } from "@/components/GHLBookingModal";
+import { withBasePath } from "@/lib/base-path";
 import { processes, type Process } from "@/data/processes";
 import { centrosDeportivosBlocks, type CentrosDeportivosBlockId } from "@/data/centrosDeportivosBlocks";
 import { centrosDeportivosModules, getCentrosDeportivosModulesByBlock } from "@/data/centrosDeportivosModules";
@@ -239,7 +240,7 @@ const SportsLanding = () => {
       <section className="relative pt-24 pb-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/centros-deportivos/hero.webp')" }}
+          style={{ backgroundImage: `url('${withBasePath('/centros-deportivos/hero.webp')}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/85 to-[#0d0d0d]/40" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-red-900/10 blur-[120px] rounded-full" />
