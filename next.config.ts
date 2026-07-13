@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   env: { NEXT_PUBLIC_BASE_PATH: '/procesos' },
 
   images: {
+    // Loader propio: el optimizer built-in ignora el basePath en su URL
+    // interna y devuelve 404 en imágenes locales (bug vercel/next.js#48282).
+    // Ver src/lib/image-loader.ts.
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
     remotePatterns: [
       {
         protocol: 'https',
