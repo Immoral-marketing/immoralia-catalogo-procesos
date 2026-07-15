@@ -67,8 +67,13 @@ export async function middleware(request: NextRequest) {
 
   // SPEC-13: si el host de la request no coincide exactamente con el host
   // canónico, marcar como noindex para evitar indexación de entornos no prod.
-  const requestHost = request.headers.get('host') ?? ''
-  if (CANONICAL_HOST && requestHost !== CANONICAL_HOST) {
+  // El rewrite de immoralia.es hacia este proyecto reescribe el Host al
+  // destino (immoralia-hub.vercel.app), no lo preserva -- x-forwarded-host
+  // sí conserva el host original del cliente. Comprobado en producción
+  // 15/07/2026: con el check antiguo sobre `host`, TODO el tráfico legítimo
+  // vía immoralia.es/procesos llegaba marcado noindex por error.
+  const effectiveHost = request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? ''
+  if (CANONICAL_HOST && effectiveHost !== CANONICAL_HOST) {
     supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow')
   }
 
