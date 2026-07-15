@@ -53,6 +53,18 @@ const nextConfig: NextConfig = {
   // SPEC-13/20: noindex en cualquier host no canónico, declarado también aquí
   // porque el matcher del middleware no captura la raíz del basePath (/procesos
   // externo = path interno vacío). Cubre todos los paths de todos los hosts.
+  // SPEC-13/20: noindex en cualquier host no canónico, declarado también aquí
+  // porque el matcher del middleware no captura la raíz del basePath (/procesos
+  // externo = path interno vacío). Cubre todos los paths de todos los hosts.
+  //
+  // FIX 15/07/2026: comprobar x-forwarded-host, no host. El rewrite de
+  // immoralia.es hacia este proyecto (SPEC-20) reescribe el Host header al
+  // destino real (immoralia-hub.vercel.app) -- no lo preserva, al contrario
+  // de lo que asumía la SPEC-20 original. x-forwarded-host sí conserva el
+  // host que vio el cliente. Con el check antiguo sobre `host`, el 100% del
+  // tráfico legítimo vía immoralia.es/procesos llegaba marcado noindex,
+  // confirmado en producción con 0 páginas indexadas semanas después del
+  // lanzamiento pese a sitemap y contenido correctos.
   async headers() {
     let canonicalHost = 'immoralia.es'
     try {
@@ -62,7 +74,7 @@ const nextConfig: NextConfig = {
       {
         source: '/:path*',
         basePath: false,
-        missing: [{ type: 'host', value: canonicalHost }],
+        missing: [{ type: 'header', key: 'x-forwarded-host', value: canonicalHost }],
         headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
       },
     ]
