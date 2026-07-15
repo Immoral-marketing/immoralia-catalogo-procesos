@@ -24,7 +24,9 @@ report_destinations:
   - clickup_subpage
 
 clickup:
-  parent_page_id: knvz4-239855
+  # Centralizado el 15/07/2026 en el hub de imseo (antes: knvz4-239855, doc knvz4-239675).
+  # Historial de informes previos a esta fecha sigue en esa página antigua.
+  parent_page_id: knvz4-242175
   workspace_id: "20639716"
   page_title_prefix: "Informe SEO"
 
